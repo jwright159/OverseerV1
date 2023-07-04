@@ -10,6 +10,8 @@ require 'includes/global_functions.php';
 
 <head>
 	<title>The Overseer Project</title>
+	<meta name="description" content="The Overseer Project is a free text-based roleplaying game based on Homestuck's SBURB system, featuring Alchemy, Strifing, Denizens, Quests and more">
+	<meta name="keywords" content="homestuck,SBURB,rpg,game,browser game,simulator,roleplaying,rp,overseer project,alchemy,strifing">
 	<link href="core.css?1" rel="stylesheet" />
 	<link href="coring.css?1" rel="stylesheet" media="screen and (max-width: 1000px)" />
 	<link href="mobile.css?1" rel="stylesheet" media="screen and (max-width: 800px)" />
