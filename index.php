@@ -1,7 +1,7 @@
 <?php
 require_once("header.php");
 if (empty($_SESSION['username'])) {
-include("tumblr.php");
+  echo 'This content is currently empty! This used to hold the Tumblr page before it went down.';
 } else {
 	//if($username == "The Overseer") sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "I LOADED THE INDEX PAGE WOOOOOO");
   echo '<a href="overview.php"><img src="/Images/title/playnew.png" width="200" /></a>';
