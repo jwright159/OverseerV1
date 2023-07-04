@@ -18,7 +18,7 @@ echo 'glamorousTrickster - The main person on text exploration sections. If you 
 echo '<a href="https://twitter.com/sevith">Sevith</a> - Sevith is working on procedurally generated content and also helping out with the text exploration</br></br>';
 echo "The players! - Yes, I know a lot of games do this and it's somewhat corny and overdone at this point. But I'm putting it in anyway because of the overwhelming emphasis this project has on user-submitted content compared to other similar games.<br>";
 echo '</br>';
-echo "TwofoldCatalcysm also works for the site. TAKE THAT, NONBELIEVERS.";
+echo "TwofoldCatalcysm also works for the site. TAKE THAT, NONBELIEVERS.<br>";
 echo '</br>';
 echo 'jadedDraconevix - Dev and hoster for Overseer: Reboot!<br>';
 require_once "footer.php";
