@@ -3,7 +3,7 @@ require_once 'additem.php';
 require_once 'monstermaker.php';
 require_once 'includes/chaincheck.php';
 require_once 'includes/glitches.php'; //For displaying glitchy nonsense
-require_once("header.php");
+require_once "header.php";
 require_once 'includes/fieldparser.php';
 if (!empty($_SESSION['username'])) {
       if ($userrow['dreamingstatus'] == "Awake") {
@@ -587,5 +587,5 @@ if (empty($_SESSION['username'])) {
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

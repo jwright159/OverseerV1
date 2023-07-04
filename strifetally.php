@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 echo 'The following is a list of every "main" abstratus and the number of weapons present in each.</br>';
   $itemresult = $mysqli->query("SELECT * FROM Captchalogue ORDER BY abstratus");
@@ -61,5 +61,5 @@ echo 'The following is a list of every "main" abstratus and the number of weapon
     $i++;
   }
   }
-  require_once("footer.php");
+  require_once "footer.php";
 ?>

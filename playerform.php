@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 $gristresult = $mysqli->query("SELECT * FROM Grist_Types");
 echo '<a href="index.php">Home</a>';
 echo '<p><span style="font-size: medium;">Enter Session</span></p>
@@ -38,5 +38,5 @@ echo '</select></br>';
 echo 'Dreaming status: <select name="dreamer"><option value="Unawakened">Unawakened</option><option value="Prospit">Prospit</option><option value="Derse">Derse</option></select></br>';
 echo '<input type="submit" value="Register" /> </form><br />
 IMPORTANT: For your prototyping to succeed, you must enter a prototyping strength between -999 and 999, and your first prototyping item field must not be empty!<br />';
-require_once("footer.php");
+require_once "footer.php";
 ?>

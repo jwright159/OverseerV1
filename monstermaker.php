@@ -1,9 +1,9 @@
 <?php
-require_once('includes/fieldparser.php'); //monstermaker implies fieldparser
+require_once 'includes/fieldparser.php'; //monstermaker implies fieldparser
 function generateEnemy($userrow,$gristtype,$grist,$enemytype,$canusespecibus,$tospooky = false) { //Takes a userrow, enemy, and grist type and level, and adds the enemy to the user's enemies.
   //Grist entries are blank for non-grist enemies.
   $max_enemies = 50; //Max number of enemies per encounter. May need changing. Probably not.
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   //$userrow = parseEnemydata($userrow);
   $username=$_SESSION['username'];
   $i = 1;

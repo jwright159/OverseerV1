@@ -3,8 +3,8 @@ require 'designix.php';
 require 'additem.php';
 require 'monstermaker.php'; //lol blade cloud
 require_once 'includes/effectprinter.php'; //for printing effects, consolidated into an include for simplicity (also includes glitches)
-require_once("header.php");
-require_once("includes/grist_icon_parser.php");
+require_once "header.php";
+require_once "includes/grist_icon_parser.php";
 
 $max_items = 50;
 
@@ -368,7 +368,7 @@ if (empty($_SESSION['username'])) {
 	    $itemname = $itemrow['name'];
 	    $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	    $alchitem = $itemname;
-	    //require_once("includes/SQLconnect.php"); //Reconnection appears necessary due to addItem making its own little connection.
+	    //require_once "includes/SQLconnect.php"; //Reconnection appears necessary due to addItem making its own little connection.
 	if (!$gristed) {
 		$gristname = initGrists();
 		$totalgrists = count($gristname);
@@ -405,7 +405,7 @@ if (empty($_SESSION['username'])) {
 		}
 	      }
 	  } else {
-	    //require_once("includes/SQLconnect.php");
+	    //require_once "includes/SQLconnect.php";
 	    echo "You have no room in your Sylladex for this item!</br>"; //May change this to do weird things. But probably not.
 	  }
 	  if ($actualstore > 0) {
@@ -744,5 +744,5 @@ if (empty($_SESSION['username'])) {
   }
   else echo "Your inventory is empty.</br>";
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

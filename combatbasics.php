@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 echo '<a href="strife.php">Back to strife page</a></br>';
 echo 'Each "round" of combat represents an extended period of fighting. You may choose an active action and a passive action every round: these reflect the method by which you will be fighting that round.</br></br>';
 echo 'The active commands are listed in order of attacking power: Aggrieve is the weakest and Assault the strongest, but using Assault lowers your defenses considerably. The passive commands are the opposite: The further down the list a passive command is, the more defensively-minded the action.</br></br>';
@@ -11,5 +11,5 @@ echo "Your base power is equal to the combined power of your weapons plus your S
 echo "Your base power can also be increased by having a power boost; this is a temporary state and will disappear the next time you succeed at strife, are defeated, or abscond from strife. You will not lose a power boost after assisting, but the boost will not help you assist either.</br></br>";
 echo "Assisting adds your power (both base and your various command bonuses and penalties) to the main combatant's power and command bonuses/penalties as long as you remain assisting. It also allows assisting players to use combat consumables to influence the combat (The Barbasol Bomb, for instance)</br></br>";
 echo 'It is possible to use one consumable item OR aspect pattern or ability per round. Choose wisely! Fraymotifs are much simpler to use, and so you can throw down as many tunes as you like each turn.';
-require_once("footer.php");
+require_once "footer.php";
 ?>

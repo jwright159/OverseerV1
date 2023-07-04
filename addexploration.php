@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods") {
 	echo "What are you doing here?";
@@ -116,5 +116,5 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

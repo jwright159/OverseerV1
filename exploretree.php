@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function buildTree($tablename) {
 	$exresult = $mysqli->query("SELECT * FROM `$tablename` WHERE 1;");
@@ -52,5 +52,5 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	echo "<br /><u>DERSE</u><br />";
 	buildTree("Explore_Derse");
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

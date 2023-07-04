@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 ?>
 <p>Alchemy is the process of combining any two items to make something new, unique, and usually more powerful. Any two items can be combined, as long as their codes interact.</p><br />
 <p>If you have any questions about alchemy that aren't answered by this page, the <a href="http://the-overseer.wikia.com/wiki/Alchemy">Alchemy page on the Wiki</a> attempts to cover anything else.</p><br />
@@ -15,4 +15,4 @@ require_once("header.php");
 <p>When you have a punched card and a blank dowel, the Totem Lathe is the next machine to use. You can select one or two Captchalogue Cards to insert into the Lathe. Inserting two cards will combine the two codes using the operation && (AND). It will automatically consume a blank Cruxite Dowel from your inventory and carve it into a totem with the new code.</p><br />
 <p>Finally, take your carved totem to the Alchemiter. Simply select a carved totem and a quantity, and the Alchemiter will scan the totem and attempt to produce that many of the corresponding item. Note that if you lack the required grist, you will see only the grist cost, with the missing grists in red.</p><br />
 <p>You can use the canon devices in a non-canon session if you're really curious. Likewise, a canon session can use the non-canon devices, but this requires alchemizing an upgrade.</p>
-<?php require_once("footer.php"); ?>
+<?php require_once "footer.php"; ?>

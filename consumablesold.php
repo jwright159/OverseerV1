@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to use consumable items.</br>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {

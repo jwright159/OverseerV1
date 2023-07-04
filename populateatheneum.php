@@ -1,9 +1,9 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to populate your atheneum.</br>";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   $invslots = 50;
   echo "Atheneum populator</br>This should only need to be done once across your entire session.</br>Any item you or any of your session-mates have acquired or previewed since the update will be in your Atheneum already.</br>";
   $athresult = $mysqli->query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
@@ -33,5 +33,5 @@ if (empty($_SESSION['username'])) {
   echo "That's everyone!</br>";
   $mysqli->query("UPDATE `Sessions` SET `atheneum` = '$athstring' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

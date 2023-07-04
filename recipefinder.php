@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function getCodename($tempcode) {
 	if (empty($tempcodestorage[$tempcode])) {
@@ -68,5 +68,5 @@ Name: <input type="text" name="compname"> / Code: <input type="text" name="compc
 Name: <input type="text" name="resname"> / Code: <input type="text" name="rescode"><br />
 <input type="submit" value="Search"></form>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

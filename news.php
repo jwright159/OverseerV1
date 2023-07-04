@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 $newsresult = $mysqli->query("SELECT * FROM News ORDER BY `ID` DESC LIMIT 1"); //the first row we pull here should be the latest news
   while ($row = $newsresult->fetch_array()) {
@@ -80,5 +80,5 @@ while ($row = $newsresult->fetch_array()) {
 	  if ($startpoint < $newestrow['ID']) echo '<div style = "float: right;"><a href="news.php?startpoint=' . strval($_GET['startpoint'] - 10) . '">Next 10 posts ==&gt;</a></div>';
 	  if ($endpoint > 1) echo '<a href="news.php?startpoint=' . strval($_GET['startpoint'] + 10) . '">&lt;== Previous 10 posts</a>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,7 +1,7 @@
 <?php
-require_once("header.php");
-require_once("includes/fieldparser.php");
-require_once("includes/glitches.php");
+require_once "header.php";
+require_once "includes/fieldparser.php";
+require_once "includes/glitches.php";
 require 'additem.php';
 $alreadywritten = false; //lol.
 if (empty($_SESSION['username'])) {
@@ -723,7 +723,7 @@ if (empty($_SESSION['username'])) {
 		    		$bonuseffects = $crow['effects'];
 		    		$currentstatus = $affectrow['strifestatus'];
 		    		$werow = $affectrow;
-		    		require('includes/strife_weaponeffects.php');
+		    		require 'includes/strife_weaponeffects.php';
 						$mysqli->query("UPDATE `Players` SET `strifestatus` = '" . $mysqli->real_escape_string($currentstatus) . "' WHERE `Players`.`username` = '" . $affectrow['username'] . "' LIMIT 1;");
 						echo $message;
 		    	}
@@ -868,5 +868,5 @@ if (empty($_SESSION['username'])) {
   echo '<a href="strife.php">Strife</a></br>';
 }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

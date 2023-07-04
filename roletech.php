@@ -1,6 +1,6 @@
 <?php
-require_once("header.php");
-require_once("includes/fieldparser.php");
+require_once "header.php";
+require_once "includes/fieldparser.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to access roletech.</br>";
 } elseif (empty($_SESSION['adjective'])) {
@@ -325,5 +325,5 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
   }
   if ($tech == False) echo "None!";
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

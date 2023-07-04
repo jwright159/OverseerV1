@@ -1,6 +1,6 @@
 <?php
-require_once("header.php");
-require_once("includes/fieldparser.php");
+require_once "header.php";
+require_once "includes/fieldparser.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to purchase and use fraymotifs.</br>";
 } else {
@@ -1303,5 +1303,5 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

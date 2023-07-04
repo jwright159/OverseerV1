@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 require 'includes/chaincheck.php';
 require 'includes/pricesandvaules.php';
 require 'additem.php';
@@ -562,5 +562,5 @@ else {
 	}
 }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

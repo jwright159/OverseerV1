@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 function convertHybrid($workrow, $isbodygear) { //when wearable defense is calculated, it will go here if it's a hybrid (both a weapon and wearable) and cut the power down
 	$bonusrow['abstain'] = $workrow['abstain'];
 	$bonusrow['abjure'] = $workrow['abjure'];
@@ -43,7 +43,7 @@ function convertHybrid($workrow, $isbodygear) { //when wearable defense is calcu
 if (empty($_SESSION['username'])) {
   echo "Log in to access this developer's tool.</br>";
 } else {
-	require_once("includes/SQLconnect.php");
+	require_once "includes/SQLconnect.php";
 	if ($userrow['session_name'] != "Doodlefluffer") {
 		echo "This is a balancing tool. It is for use by developers. It's super boring, so you're not missing out on much.</br>";
 	} else {

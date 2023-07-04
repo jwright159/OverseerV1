@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function initGrists() {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later

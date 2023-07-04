@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function refreshSingular($slot, $buddyrow) { //used for enemies that generate other enemies, so that it doesn't revert enemy data that has already been edited
 	$dummyrow = refreshEnemydata($buddyrow);
@@ -1579,5 +1579,5 @@ $mysqli->query("UPDATE `Sessions` SET `lastround` = '$lastescaped' WHERE `Sessio
 }
 }
 
-//require_once("footer.php");
+//require_once "footer.php";
 ?>

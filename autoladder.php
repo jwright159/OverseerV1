@@ -1,12 +1,12 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 //require 'log.php';
 if (empty($_SESSION['username'])) {
   echo "Log in to dingle your dangling dongle's danger.</br>";
 } 
 else {
-require_once("includes/SQLconnect.php");
+require_once "includes/SQLconnect.php";
   
 function randomFromArray(array $array) {
 	$rand = array_rand($array,1);
@@ -196,5 +196,5 @@ while ($i <= 611) {
 sixtwelve();
 
 }
-require_once("footer.php");
+require_once "footer.php";
 ?> 

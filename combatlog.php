@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to engage in strife.</br>";
 } else {
@@ -10,5 +10,5 @@ if (empty($_SESSION['username'])) {
   echo "Log of boss combat for $sessionrow[name]:</br>";
   echo $sessionrow['combatlog'];
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

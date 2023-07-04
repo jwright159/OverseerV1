@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 if (empty($_SESSION['username'])) {
   echo "Log in to do stuff.</br>";
@@ -97,5 +97,5 @@ if (empty($_SESSION['username'])) {
   echo '<form action="sessioncloner.php" method="post">Cloned session to clean up: <input type="text" name="clean" /><input type="submit" value="Clean it!" /></form><br />';
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

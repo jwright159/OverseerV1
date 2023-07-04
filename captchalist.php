@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to access the captchalogue list.</br>";
 } else {
@@ -25,5 +25,5 @@ if (empty($_SESSION['username'])) {
     $mysqli->query("UPDATE `System` SET `debuglog` = '$newaddlog' WHERE 1");
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

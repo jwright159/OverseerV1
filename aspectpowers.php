@@ -22,9 +22,9 @@ function getHintStr($effectiveness) { //Takes an effectiveness value (assume 10k
     return "completely ridiculous!";
   }
 }
-require_once("header.php");
-require_once("includes/fieldparser.php");
-require_once("includes/glitches.php"); //for witch of void
+require_once "header.php";
+require_once "includes/fieldparser.php";
+require_once "includes/glitches.php"; //for witch of void
 if (empty($_SESSION['username'])) {
   echo "Log in to manipulate your aspect.</br>";
 } elseif (empty($_SESSION['adjective'])) {
@@ -758,5 +758,5 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
   }
   if (!$hint) echo "Once you've used your aspect powers a bit more, you'll get hints here.";
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

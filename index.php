@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo 'This content is currently empty! This used to hold the Tumblr page before it went down.';
 } else {
@@ -32,5 +32,5 @@ AND `enemydata` != '';";
   
   //echo '<a href="events.php">Event Log</a></br>'; -- Will work on event log later.
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

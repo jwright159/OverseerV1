@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
 	echo "Log in to edit your Pesternote settings.</br>";
 } else {
@@ -57,5 +57,5 @@ Confirm Pesternote password: <input id="confirmpw" name="confirmpw" type="passwo
 		echo "Do post boss defeats to my Pesternote account</br>";
 	}
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

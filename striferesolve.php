@@ -2,9 +2,9 @@
 require 'additem.php'; //required for enemies who drop loot
 require 'monstermaker.php'; //Required for enemies who summon more enemies
 require_once 'includes/glitches.php'; //For displaying glitchy nonsense
-require_once("header.php");
-require_once("includes/grist_icon_parser.php");
-require_once("includes/fieldparser.php");
+require_once "header.php";
+require_once "includes/grist_icon_parser.php";
+require_once "includes/fieldparser.php";
 //NOTE - This file assumes you're coming from the strife.php file.
 
 function refreshSingular($slot, $target, $userrow) { //used for enemies that generate other enemies, so that it doesn't revert enemy data that has already been edited
@@ -771,7 +771,7 @@ if (empty($_SESSION['username'])) {
 					//Check the main row weapon for effects.
 					$mainoff = 1;
 					$werow = $userrow;
-					require('includes/strife_weaponeffects.php');
+					require 'includes/strife_weaponeffects.php';
 					$nodamage = False; //Damage was dealt.
 					if (empty($justmellowed)) { //Damage was dealt and we didn't apply mellow
 						$mellowstr = ($statustr . "MELLOW|");
@@ -1036,7 +1036,7 @@ if (empty($_SESSION['username'])) {
 				else $message = $message . $userrow[$enemystr] . " remains locked down and can't use special abilities.<br />";
 			}
 			$damage += $playerdamage;
-			require("includes/strife_enemyabilities.php");
+			require "includes/strife_enemyabilities.php";
 	  }
 	}
 	}
@@ -1187,7 +1187,7 @@ if (empty($_SESSION['username'])) {
 	}
       }
       //Finish checking passive abilities that trigger at end of turn here.
-	require_once("includes/strife_t3motifs.php");
+	require_once "includes/strife_t3motifs.php";
       //End-of-turn effects for player end here. Check end of turn on monsters here.
 
 	$i = 1;
@@ -1526,5 +1526,5 @@ if (empty($_SESSION['username'])) {
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

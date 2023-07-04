@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 if ($userrow['session_name'] != "Developers") {
 	echo "denied.";
@@ -17,5 +17,5 @@ if ($userrow['session_name'] != "Developers") {
 	echo "That's everyone!<br />";
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

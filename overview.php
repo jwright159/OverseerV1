@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function canFly($checkrow) {
 	if ($checkrow['Godtier'] > 0) return true; //player is godtier and can fly no matter what
@@ -22,7 +22,7 @@ if (empty($_SESSION['username'])) {
   echo "Log in to view your player overview.</br>";
   echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   //echo "Confirmed: the page I'm editing is indeed the page on the live build</br>";
 $fly = canFly($userrow);
   //--Begin naming/prototyping code here.--
@@ -481,5 +481,5 @@ $compugood = true;
   }
   echo "</br>The more players in your client/server chain have built up to their gates, the more Lands you can access.";
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

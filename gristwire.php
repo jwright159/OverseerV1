@@ -1,11 +1,11 @@
 <?php
   //This file is mostly vestigial now. It may function as a backup wire.
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to wire grist.";
 } else {
   
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   
   $result = $mysqli->query("SELECT * FROM Players where username = '$row[username]'");
   $result2 = $mysqli->query("SELECT * FROM Players where ");

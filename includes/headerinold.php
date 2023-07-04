@@ -11,7 +11,7 @@ function mdetect(){
   }
 }
 
-require_once("includes/SQLconnect.php");
+require_once "includes/SQLconnect.php";
 if (empty($_SESSION['username'])) {
 
   $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = 'default'");

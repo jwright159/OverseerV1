@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods") {
 	"You don't get to have a debug.</br>";
 } else {

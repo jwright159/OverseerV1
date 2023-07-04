@@ -1,12 +1,12 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to view your player overview.</br>";
   echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } elseif ($userrow['session_name'] != "Developers") {
   echo "This is a developer tool, I'm sorry to say.";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   if (!empty($_POST['username'])) {
     echo "Operating on user: $_POST[username]</br>";
     if (!empty($_POST['class']) && !empty($_POST['aspect'])) {
@@ -67,5 +67,5 @@ if (empty($_SESSION['username'])) {
   echo '</select></br><form action="playereditor.php" method="post">New echeladder rung: <input id="newrung" name="newrung" type="text" /></br>';
   echo '<input type="submit" value="Grant it." /> </form></br>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,7 +1,7 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 require 'additem.php';
-require_once("includes/grist_icon_parser.php");
+require_once "includes/grist_icon_parser.php";
 
 function initGrists() {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
@@ -308,5 +308,5 @@ if (empty($_SESSION['username'])) {
 	}
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

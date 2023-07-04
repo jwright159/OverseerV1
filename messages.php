@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to view your messages.</br>";
 } else {
@@ -231,5 +231,5 @@ $compugood = true;
   }
   echo '</br><form action="messages.php" method="post"><input type="hidden" name="msgfix" value="yes"><input type="submit" value="Click here if your message count on the header is wrong"></br>(a temporary solution, hopefully we can find out what the issue is soon)</form>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

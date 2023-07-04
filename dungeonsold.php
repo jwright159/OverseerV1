@@ -1,7 +1,7 @@
 <?php
 require 'monstermaker.php';
 require 'additem.php';
-require_once("header.php");
+require_once "header.php";
 $canusespecibus = True;
 function roomlink ($roomarray,$newrow,$newcol,$oldrow,$oldcol) {
   $newentry = strval($newrow) . "," . strval($newcol);
@@ -673,7 +673,7 @@ if (empty($_SESSION['username'])) {
 		    $itemslot = addItem($itemname,$userrow);
 		    if ($itemslot != "inv-1") $userrow[$itemslot] = $itemname;
 		    $itemname = str_replace("\\", "", $itemname); //Remove escape characters. (addItem does this too, so we do the removal afterwards.
-		    //require_once("includes/SQLconnect.php");
+		    //require_once "includes/SQLconnect.php";
 		    if ($itemslot != "inv-1") { //Give them the item and check to see if they got it. inv-1 is the failure return.
 		    if ($itemname == "Soviet Russia") echo "In the room, " . $itemname . " x1 finds you!</br>";
 		      else echo "You find " . $itemname . " x1 in the room!</br>";
@@ -1129,5 +1129,5 @@ echo "		</td>  </tr></table>";
     echo "</span>";
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 if (empty($username)) {
 	echo "Log in to do things.";
@@ -42,5 +42,5 @@ if (empty($username)) {
   echo '<input type="submit" value="Add that sucker"></form></br>';
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -7,8 +7,8 @@ function highestGate($gaterow, $grist) {
 	}
 	return 7;
 }
-require_once("header.php");
-require_once("includes/fieldparser.php");
+require_once "header.php";
+require_once "includes/fieldparser.php";
 if (!empty($_SESSION['username'])) $session = $userrow['session_name']; //automatically look up the user's session if logged in
 if (!empty($_GET['session'])) $session = $_GET['session'];
 echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
@@ -148,5 +148,5 @@ if (!empty($session)) { //Session to examine
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

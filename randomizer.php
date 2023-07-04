@@ -1,6 +1,6 @@
 <?php
 require 'designix.php';
-require_once("header.php");
+require_once "header.php";
 
 function initGrists() {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
@@ -352,5 +352,5 @@ if (empty($aotwstring)) $aotwstring = "None yet. Go vote for one!";
 echo '<input type="checkbox" name="baseonly" value="yes">Limit selections to base items</br>Make first item be one of a specified abstratus: <input name="userabstratus" type="text" /></br>Code to use for the first item: <input name="usercode" type="text" /></br>';
 echo '<input type="submit" value="Randomize it!" /></form>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

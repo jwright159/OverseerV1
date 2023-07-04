@@ -2,7 +2,7 @@
 require_once 'additem.php';
 require_once 'monstermaker.php';
 require_once 'includes/chaincheck.php';
-require_once("header.php");
+require_once "header.php";
 require_once 'includes/fieldparser.php';
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if (empty($_SESSION['username'])) {
@@ -17,7 +17,7 @@ if (empty($_SESSION['username'])) {
 } elseif ($userrow['sessionbossengaged'] == 1) {
   echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   $userrow = parseEnemydata($userrow);
 	  if ($username == $_POST['land']) { //if the player chose their own land, always admit (and don't bother checking the chain)
 	    $aok = True;
@@ -106,7 +106,7 @@ if (empty($_SESSION['username'])) {
       }
       if (empty($_POST['noassist'])) { //Assistance allowed. Check for auto-assisters.
 	  
-    require_once("includes/SQLconnect.php");
+    require_once "includes/SQLconnect.php";
 	$assisters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`autoassist` = '$username'") or die($mysqli->error());
 	while ($assistrow = $assisters->fetch_array()) {
 	  //We must process encounters in case they have earned any.
@@ -183,5 +183,5 @@ if (empty($_SESSION['username'])) {
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

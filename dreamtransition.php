@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to do the sleepy thing.</br>";
 } elseif ($userrow['enemydata'] != "" || $userrow['aiding'] != "") { 
@@ -100,5 +100,5 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
     echo "You're not supposed to be here.";
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

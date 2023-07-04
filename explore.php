@@ -21,7 +21,7 @@ function linkchecker($userrow,$explorow,$num) {
   //NOTE - Conditions on the link will be investigated for satisfaction here.
   return $pass;
 }
-require_once("header.php");
+require_once "header.php";
 $max_links = 5; //Both standard and random event.
 $max_enemies = 5;
 if (empty($_SESSION['username'])) {
@@ -29,7 +29,7 @@ if (empty($_SESSION['username'])) {
 } elseif ($userrow['dreamingstatus'] == "Awake" && $userrow['Godtier'] == 0 && $userrow['exploration'] != "7thgateout") { //Allow waking players exploring the Denizen palace in.
   echo "You cannot explore dream locations with your waking self until you have ascended to the god tiers.";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   //Begin travel code here.
   $travel = False;
   if (!empty($_POST['newevent'])) {
@@ -132,5 +132,5 @@ if (empty($_SESSION['username'])) {
     echo '<input type="submit" value=">Start Over" /></form>';
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

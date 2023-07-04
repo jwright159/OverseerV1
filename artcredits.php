@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to access the list of art credits.</br>";
 } else {
@@ -10,5 +10,5 @@ if (empty($_SESSION['username'])) {
       echo '<a href="Images/Items/' . $row['art'] . '">' . stripslashes($row['name']) . '</a> - ' . stripslashes($row['credit']) . '</br>';
       }
     }
-  require_once("footer.php");
+  require_once "footer.php";
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to do stuff.</br>";
 } else {
@@ -30,5 +30,5 @@ if (empty($_SESSION['username'])) {
   	echo '<form action="itemnamechange.php" method="post">Captcha code: <input type="text" name="changecode"></br>New item name: <input type="text" name="changename"></br>(Note: Backslashes will be automatically inserted where necessary.)</br><input type="submit" value="Change it!"></form>';
 	}
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

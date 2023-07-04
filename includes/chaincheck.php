@@ -26,7 +26,7 @@ function canFly($checkrow) {
 }
 
 function chainArray($startrow) {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   $gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
   $gaterow = $gateresult->fetch_array(); //Gates only has one row.
   $gaterow['gate0'] = 0;

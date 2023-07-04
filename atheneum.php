@@ -1,9 +1,9 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to view the Atheneum.</br>";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
  	echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</style></head><body>";
  	if ($_GET['show'] == "weapons") $showstring = "WHERE `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%'";
  	elseif ($_GET['show'] == "wearable") $showstring = "WHERE `Captchalogue`.`abstratus` LIKE '%headgear%' OR `Captchalogue`.`abstratus` LIKE '%accessory%' OR `Captchalogue`.`abstratus` LIKE '%facegear%' OR `Captchalogue`.`abstratus` LIKE '%bodygear%'";
@@ -61,5 +61,5 @@ if (empty($_SESSION['username'])) {
 	}
 	}
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

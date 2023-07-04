@@ -1,9 +1,9 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to access this developer tool.</br>";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   $allowall = true;
   if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods" && !$allowall) {
     echo "Public rewards are now closed.";
@@ -181,5 +181,5 @@ if (empty($_SESSION['username'])) {
     echo '<input type="submit" value="Give reward!" /></form>';
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,7 +1,7 @@
 <?php
 require 'additem.php';
-require_once("header.php");
-require_once("includes/effectprinter.php");
+require_once "header.php";
+require_once "includes/effectprinter.php";
 
 if (empty($_SESSION['username'])) {
   echo "Log in to view and manipulate your storage.</br>";
@@ -253,5 +253,5 @@ while ($i <= $max_items) {
 }
 echo '<input type="submit" value="Quickly relieve items."></form>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

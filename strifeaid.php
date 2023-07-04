@@ -3,14 +3,14 @@ require 'additem.php';
 require 'monstermaker.php';
 require_once 'includes/chaincheck.php';
 require_once 'includes/fieldparser.php';
-require_once("header.php");
+require_once "header.php";
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if (empty($_SESSION['username'])) {
   echo "Log in to assist in strife.</br>";
 } elseif ($userrow['sessionbossengaged'] == 1) {
   echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   if (!empty($_POST['aid'])) {
     $aid = $_POST['aid'];
     $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$aid'");
@@ -109,5 +109,5 @@ if (empty($_SESSION['username'])) {
     echo "You shouldn't be here.";
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

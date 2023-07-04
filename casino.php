@@ -1,11 +1,11 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to explore your dreams.</br>";
 } elseif ($userrow['dreamingstatus'] == "Awake" && $userrow['Godtier'] == 0 && $userrow['exploration'] != "7thgateout") { //Allow waking players exploring the Denizen palace in.
   echo "You cannot explore dream locations with your waking self until you have ascended to the god tiers.";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   
 	
 function store($tokens) {	
@@ -26,5 +26,5 @@ function tokens() {
 	
 
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,6 +1,6 @@
 <?php
-require_once("header.php");
-require_once("includes/SQLconnect.php");
+require_once "header.php";
+require_once "includes/SQLconnect.php";
 if ($username != "The Overseer") {
   echo "This is a developer script. It doesn't even do anything interesting, just some stuff related to updating the database. Seriously, total snoozefest.";
 } else {

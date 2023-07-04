@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to vote on or initiate boss fights.</br>";
 } else {
@@ -54,5 +54,5 @@ if (empty($_SESSION['username'])) {
     if ($userrow['sessionbossengaged'] == 0 && $userrow[$downstr] == 0) echo '<form action="sessionboss.php" method="post"><input type="hidden" id="newfighter" name="newfighter" value="' . $sessionrow['sessionbossname'] . '"><input type="submit" value="Join the fight"></form>';
   }
 } 
-require_once("footer.php");
+require_once "footer.php";
 ?>

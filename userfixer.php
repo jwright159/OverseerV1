@@ -1,6 +1,6 @@
 <?php
-require_once("header.php");
-require_once("includes/fieldparser.php");
+require_once "header.php";
+require_once "includes/fieldparser.php";
 
 if (empty($_SESSION['username']) || $userrow['session_name'] != "Developers") {
 	echo "go away plz";

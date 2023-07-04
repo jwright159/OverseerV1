@@ -3,8 +3,8 @@ require 'designix.php';
 require 'additem.php';
 require 'monstermaker.php'; //lol blade cloud
 require_once 'includes/effectprinter.php'; //for printing effects, consolidated into an include for simplicity (also includes glitches)
-require_once("header.php");
-require_once("includes/grist_icon_parser.php");
+require_once "header.php";
+require_once "includes/grist_icon_parser.php";
 $max_items = 50;
 
 function initGrists() {
@@ -145,5 +145,5 @@ if (!empty($holoCode)) {
   echo '<form action="tooly.php" method="post">Item to preview: <input id="holocode" name="holocode" type="text" /><br />';
   echo '<input type="submit" value="Observe it!" /></form></br>';
   echo '</br>';
-require_once("footer.php");
+require_once "footer.php";
 ?>

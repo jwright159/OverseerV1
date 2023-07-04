@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 require 'additem.php';
 require 'designix.php';
 $max_items = 50;
@@ -788,5 +788,5 @@ if (empty($_SESSION['username'])) {
 	
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

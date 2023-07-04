@@ -1,6 +1,6 @@
 <?php
-require_once("header.php");
-require_once("includes/grist_icon_parser.php");
+require_once "header.php";
+require_once "includes/grist_icon_parser.php";
 
 if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods") {
 	echo "What are you doing here?";
@@ -188,5 +188,5 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	echo '<form action="itemedit.php" method="post" id="publishaddlog"><input type="hidden" name="publishlog" value="yes">Title: <input type="text" name="publishtitle"></br>Body: <textarea name="publishbody" rows="6" cols="40" form="publishaddlog"></textarea></br><input type="submit" value="Publish addlog"></form>';
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

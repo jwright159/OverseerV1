@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 echo "The development team that makes The Overseer Project possible! (If I've left anyone out, they should tell me so I can include 'em)</br></br>";
 echo "The Overseer - Original creator of the project and still the main coder and designer, but probably doesn't even do half the work anymore! While the foundation I put down has undeniably been critical to the project's success, I simply don't have all the expertise required or the ability to process all these items and come up with all these ideas.</br></br>";
 echo 'Blahsadfeguie (a.k.a "Babby Overseer") - Head of content addition. The dude in charge of making sure your submissions make it into the game. Has produced some handy tools to help us do this. Now also works on various pieces of item-related code: the accessory system and alchemizing multiple items were coded by him. (Not to mention the randomizer, submission system, consort shop...)</br>';
@@ -19,5 +19,5 @@ echo '<a href="http://twitter.com/sevith">Sevith</a> - Sevith is working on proc
 echo "The players! - Yes, I know a lot of games do this and it's somewhat corny and overdone at this point. But I'm putting it in anyway because of the overwhelming emphasis this project has on user-submitted content compared to other similar games.";
 echo "TwofoldCatalcysm also works for the site. TAKE THAT, NONBELIEVERS.";
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 require_once 'time.php';
 
 if (empty($_SESSION['username'])) {
@@ -22,6 +22,6 @@ if (empty($_SESSION['username'])) {
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a>';
 ?>

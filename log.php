@@ -1,6 +1,6 @@
 <?php
 function logEvent($event,$username) {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
 
   $result = $mysqli->query("SELECT * FROM Logs");
   $logslots = $mysqli->num_fields($result);

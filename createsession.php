@@ -1,6 +1,6 @@
 
 <?php
-require_once("header.php");
+require_once "header.php";
 
 $_POST['session'] = str_replace(">", "", $_POST['session']); //this is why we can't have nice things
 $_POST['session'] = str_replace("<", "", $_POST['session']);
@@ -50,5 +50,5 @@ if ($_POST['session'] != "" && $_POST['sessionpw'] == $_POST['confirmpw']) {
 }
 $mysqli->close();
 echo '</br><a href="/">Home</a>';
-require_once("footer.php");
+require_once "footer.php";
 ?> 

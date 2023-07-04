@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 ?>
 <p>You likely have several questions about all this. I will do my best to answer you here.</p>
 <p>(If you have a question that isn't answered here, try <a href="http://the-overseer.wikia.com/wiki/FAQ" target="_blank">the Overseer Wiki FAQ</a>)</p>
@@ -28,4 +28,4 @@ require_once("header.php");
 <p>A: Your grist category determines which types of grist form the enemies on your Land. The grist types of everyone in your session will determine the types of grist available to your entire session without attempting to barter grist with other sessions, which will in turn determine what items you are able to produce.</p>
 <p><strong>Q: How does the Echeladder work?</strong></p>
 <p>A: You gain one rung per successful combat. Simple, really. You can go and beat up weak enemies for easy rungs if you really want to, but beware that you will find yourself grist-starved compared to other players of comparable level and therefore weaker due to possessing less effective equipment.</p>
-<?php require_once("footer.php"); ?>
+<?php require_once "footer.php"; ?>

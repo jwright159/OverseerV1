@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 ?>
 
 <link rel="stylesheet" type="text/css" href="CSS_includes/echeladder.css" media="screen" /> 

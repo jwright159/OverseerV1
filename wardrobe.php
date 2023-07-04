@@ -1,7 +1,7 @@
 <?php
 require 'additem.php';
-require_once("header.php");
-require_once("includes/effectprinter.php");
+require_once "header.php";
+require_once "includes/effectprinter.php";
 function heaviestBonus($workrow){
 	$bonusrow['abstain']=$workrow['abstain'];
 	$bonusrow['abjure']=$workrow['abjure'];
@@ -80,11 +80,11 @@ if(empty($_SESSION['username'])){
 	echo "Log in to view and manipulate your strife portfolio and options.</br>";
 }
 elseif($userrow['dreamingstatus']!="Awake"){
-	require_once("includes/SQLconnect.php");
+	require_once "includes/SQLconnect.php";
 	echo "As your dream self, your only wearables are your dream pajamas and whatever basic eyewear you happen to use.</br>";
 }
 else{
-	require_once("includes/SQLconnect.php");
+	require_once "includes/SQLconnect.php";
 	//--Begin equipping code here.--
 	if(!empty($_POST['equiphead'])){
 		//User is equipping an item to their head.
@@ -994,5 +994,5 @@ while(($col=$invresult->fetch_field()) && $terminateloop==False){
 		}
 	}
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

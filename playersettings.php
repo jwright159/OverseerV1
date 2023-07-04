@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 if (!empty($_POST['newpass'])) {
 	if (password_verify($mysqli->real_escape_string($_POST['oldpass']), $userrow['password'])) {
@@ -81,5 +81,5 @@ echo 'Remember: <b>deleting your account is permanent.</b> Only do this if you a
 echo 'If you wish to proceed, type your password in the box below for confirmation.</br>';
 echo '<form action="playersettings.php" method="post"><input type="password" name="deleteconfirm"></br><input type="submit" value="Yes, I want my account nuked! Do it already!"></form>';
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,11 +1,11 @@
  <?php
- require_once("header.php");
+ require_once "header.php";
  
 if (empty($_SESSION['username'])) {
   echo "Log in to upload art.</br>";
   echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   if ($userrow['session_name'] != "Developers") {
     echo "And just what do you think YOU'RE doing?";
   } else {
@@ -42,5 +42,5 @@ if (empty($_SESSION['username'])) {
          </html> ';
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?> 

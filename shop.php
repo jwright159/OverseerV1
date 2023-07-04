@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 require 'additem.php';
 require 'includes/chaincheck.php';
 require 'includes/pricesandvaules.php';
@@ -300,5 +300,5 @@ else {
 <?php } ?>
 </div>
 <?php
-require_once("footer.php");
+require_once "footer.php";
 ?>

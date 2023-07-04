@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 ?>
 All donations to The Overseer Project will be used to pay for the hosting costs. Excess donations will be passed on to MSPA. The Overseer Project is not run for profit, and even if that ever changes (which it almost certainly won't), donating will never provide any sort of bonus or advantage.
 
@@ -13,5 +13,5 @@ All donations to The Overseer Project will be used to pay for the hosting costs.
 
 Thanks! Beyond covering the server costs, knowing people are enjoying the game enough to help maintain it financially is encouraging for all of us developers.
 <?php
-require_once("footer.php");
+require_once "footer.php";
 ?>

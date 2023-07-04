@@ -1,9 +1,9 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to access the captchalogue list.</br>";
 } else {
-	require_once("includes/SQLconnect.php");
+	require_once "includes/SQLconnect.php";
   if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods") {
     echo "What are you doing here?";
   } else {
@@ -100,5 +100,5 @@ if (empty($_SESSION['username'])) {
     echo '<input type="checkbox" name="delete" value="delete">Delete feedback after loading</br><input type="submit" value="Pull feedback" /></form>';
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,6 +1,6 @@
 <?php
-require_once("header.php");
-require("monstermaker.php");
+require_once "header.php";
+require "monstermaker.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to engage bosses.</br>";
 } else {
@@ -85,5 +85,5 @@ if (empty($_SESSION['username'])) {
     break;
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

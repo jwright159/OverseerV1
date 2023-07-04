@@ -1,7 +1,7 @@
 <?php
 session_start();
 $supertime_begin = microtime(true);
-require('includes/headerin.php');
+require 'includes/headerin.php';
 ?>
 <!DOCTYPE html>
 <html>

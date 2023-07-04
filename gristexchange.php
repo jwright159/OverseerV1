@@ -1,8 +1,8 @@
 <?php
-require_once("header.php");
-require_once("time.php");
-require_once("includes/grist_icon_parser.php");
-require_once("includes/chaincheck.php");
+require_once "header.php";
+require_once "time.php";
+require_once "includes/grist_icon_parser.php";
+require_once "includes/chaincheck.php";
 
 $seisopen = false; //set to false to close the stock exchange to the public
 
@@ -465,5 +465,5 @@ if ($seisopen == false) {
 		}
 }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function updateSubmission($subid) {
 	$currenttime = time();
@@ -10,7 +10,7 @@ function updateSubmission($subid) {
 if (empty($_SESSION['username'])) {
   echo "Log in to view item submissions.</br>";
 } else {
- require_once("includes/SQLconnect.php");
+ require_once "includes/SQLconnect.php";
 echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</style><style>normal{color: #111111;}</style><style>urgent{color: #0000CC;}</style><style>defunct{color: #CC0000;}</style><style>clarify{color: #CCCC00;}</style><style>greenlit{color: #00AA00;}</style><style>suspended{color: #999999;}</style><style>randomized{color: #EE6606;}</style><style>halp{color: #FFFFFF;}</style></head><body>";
   if (empty($_GET['page'])) {
     $page = 1;
@@ -164,5 +164,5 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   }
   echo "<br />Total results: $alltotal</center>";
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

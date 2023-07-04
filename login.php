@@ -1,7 +1,7 @@
 <?php
 //This is a filler line.
 if ($_POST['mako'] == "kawaii") {
-require_once("includes/SQLconnect.php");
+require_once "includes/SQLconnect.php";
 $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $mysqli->real_escape_string($_POST['username']) . "'");
 $loggedin = False;
 

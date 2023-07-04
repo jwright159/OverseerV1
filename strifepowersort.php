@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function heaviestBonus($workrow){
 	$bonusrow['abstain']=$workrow['abstain'];
@@ -54,5 +54,5 @@ echo 'The following is a list of every weapon of a given abstratus, sorted by po
     }
     echo '<br /><form action="strifepowersort.php" method="get">Abstratus to look up: <input type="text" name="abs" /><input type="submit" value="Go" /></form>';
 
-  require_once("footer.php");
+  require_once "footer.php";
 ?>

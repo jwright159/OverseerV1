@@ -1,5 +1,5 @@
 <?php
-require_once("header.php"); ?>
+require_once "header.php"; ?>
 
 <script>
 $(document).ready(function () {
@@ -44,5 +44,5 @@ $(document).ready(function () {
 });
 </script>";
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>	

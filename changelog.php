@@ -1,4 +1,4 @@
-<?php require_once("header.php"); ?>
+<?php require_once "header.php"; ?>
 
   <style>
   blahdev{color: #FF8906;}
@@ -220,4 +220,4 @@
   Version Alpha 1.0:</br>
   The Overseer Project enters the alpha stage!
 
-<?php require_once("footer.php"); ?>
+<?php require_once "footer.php"; ?>

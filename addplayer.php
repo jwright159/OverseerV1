@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 /*$con = $mysqli->connect("localhost","theovers_DC","pi31415926535");
 if (!$con)
   {
@@ -8,7 +8,7 @@ if (!$con)
   }
 
 $mysqli->select_db("theovers_HS", $con);*/
-require_once("includes/SQLconnect.php");
+require_once "includes/SQLconnect.php";
 
 $inactivetime = 1209600; //the amount of time a head admin has to log in before their session is considered "inactive"
 //this number amounts to 14 days; if set to 0, the script won't care how long it's been
@@ -145,5 +145,5 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
 }
 $mysqli->close();
 echo '</br><a href="/">Home</a>';
-require_once("footer.php");
+require_once "footer.php";
 ?> 

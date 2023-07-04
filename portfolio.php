@@ -1,8 +1,8 @@
 <?php
 require 'additem.php';
 require_once 'includes/effectprinter.php'; //for printing effects, consolidated into an include for simplicity (also includes glitches)
-require_once("header.php");
-require_once("includes/fieldparser.php");
+require_once "header.php";
+require_once "includes/fieldparser.php";
 $max_items = 50;
 
 if (empty($_SESSION['username'])) {
@@ -60,7 +60,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
   echo "%</br>";
   echo "Aspect vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%</br>";
 } else {
-  require_once("includes/SQLconnect.php");
+  require_once "includes/SQLconnect.php";
   
   //if assigning abstratus, do so first so that equip selection can reflect change
  	if (!empty($_POST['new_abstratus'])) {
@@ -505,5 +505,5 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

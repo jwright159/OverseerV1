@@ -1,6 +1,6 @@
 <?php
 //require 'log.php';
-require_once("header.php");
+require_once "header.php";
 
 if (empty($_SESSION['username'])) {
   echo "Log in to view your virtual porkhollow.</br>";
@@ -101,5 +101,5 @@ if (empty($_SESSION['username'])) {
   } else echo "Boondollars: " . strval($userrow[$boon]);
   $mysqli->close();
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

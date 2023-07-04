@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 //require 'log.php';
 if (empty($_SESSION['username'])) {
   echo "Log in to view your grist cache.</br>";
@@ -160,5 +160,5 @@ if (empty($_SESSION['username'])) {
   echo "</div>";
   $mysqli->close();
 }
-require_once("footer.php");
+require_once "footer.php";
 ?> 

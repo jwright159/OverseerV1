@@ -2,7 +2,7 @@
 require 'log.php';
 require 'designix.php';
 require 'additem.php';
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to view and manipulate your inventory.</br>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
@@ -225,7 +225,7 @@ if (empty($_SESSION['username'])) {
 	    $itemname = $itemrow['name'];
 	    $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	    $alchitem = $itemname;
-	    require_once("includes/SQLconnect.php"); //Reconnection appears necessary due to addItem making its own little connection.
+	    require_once "includes/SQLconnect.php"; //Reconnection appears necessary due to addItem making its own little connection.
 	    $reachgrist = False;
 	    $terminateloop = False;
 	    $colresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object' LIMIT 1;");
@@ -557,5 +557,5 @@ if (empty($_SESSION['username'])) {
   }
   echo '</br><input type="hidden" name="recycle" value="multi"><input type="submit" value="Recycle selected items" /></form>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

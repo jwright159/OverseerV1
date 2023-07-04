@@ -46,7 +46,7 @@ require_once 'additem.php';
 require_once 'monstermaker.php';
 require_once 'includes/chaincheck.php';
 require_once 'includes/glitches.php'; //For displaying glitchy nonsense
-require_once("header.php");
+require_once "header.php";
 require_once 'includes/fieldparser.php';
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if ($userrow['sessionbossleader'] == 1 && !empty($_POST['newleader'])) {
@@ -79,7 +79,7 @@ $userrow = parseEnemydata($userrow);
 		$mysqli->query("UPDATE `Players` SET `sessionbossattack` = '$newactive', `sessionbossdefense` = '$newpassive' WHERE `Players`.`username` = '$username' LIMIT 1;");
 	}
 	if (!empty($_POST['execute']) && $userrow['sessionbossleader'] == 1) {
-		require_once("sessionbossresolve.php");
+		require_once "sessionbossresolve.php";
 		$sessionrow['lastround'] = $lastround;
 	}
 	if (!empty($_SESSION['username'])) {
@@ -391,5 +391,5 @@ echo '}</script></head><body>';
 	echo "</br>Last round:</br>";
 	echo $sessionrow['lastround'];
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

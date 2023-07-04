@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 require 'additem.php';
 if (empty($_SESSION['username'])) {
   echo "Log in to reset shit.</br>";
@@ -98,5 +98,5 @@ if (empty($_SESSION['username'])) {
   echo '</select><input type="submit" value="Reset it!" /> </form>';
   echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

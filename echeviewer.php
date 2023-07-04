@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to view your Echeladder.</br>";
 } else {
@@ -43,5 +43,5 @@ if (!empty($_POST['echename'])) {
   }
   echo "</p></div>";
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

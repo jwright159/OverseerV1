@@ -1,8 +1,8 @@
 <?php
-require_once("header.php");
-require_once("includes/chaincheck.php");
-require_once("includes/pricesandvaules.php");
-require_once("includes/effectprinter.php");
+require_once "header.php";
+require_once "includes/chaincheck.php";
+require_once "includes/pricesandvaules.php";
+require_once "includes/effectprinter.php";
 
 if (empty($_SESSION['username'])) {
   echo "Log in to interact with your allies.</br>";
@@ -249,5 +249,5 @@ if (empty($_SESSION['username'])) {
 	echo 'Boondollars to offer: <input type="text" name="boons" /><br /><input type="submit" value="Search (cost: 1 available quest)" /></form>';
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

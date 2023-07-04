@@ -1,5 +1,5 @@
 <?php
-require_once("header.php");
+require_once "header.php";
 
 function genRecoveryCode() {
 	$i = 0;
@@ -93,5 +93,5 @@ if (empty($_GET['user'])) {
 	} else echo "Error: Please use the URL provided with the recovery email.</br>";
 }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>

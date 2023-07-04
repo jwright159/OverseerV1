@@ -1,7 +1,7 @@
 <?php
 require 'designix.php';
 require 'additem.php';
-require_once("header.php");
+require_once "header.php";
 if (empty($_SESSION['username'])) {
   echo "Log in to access the catalogue.</br>";
 } else {
@@ -9,7 +9,7 @@ if (empty($_SESSION['username'])) {
     echo "Your dream self can't access your sylladex!";
   } else {
     echo "<!DOCTYPE html><html><head><style>gristvalue{color: #FF0000; font-size: 60px;}</style></head><body>";
-    require_once("includes/SQLconnect.php");
+    require_once "includes/SQLconnect.php";
     
     $captchalogue = 0;
     $sessionname = $userrow['session_name'];
@@ -42,7 +42,7 @@ if (empty($_SESSION['username'])) {
 	  if ($row['captchalogue_code'] == $_POST['catalogue'] || $_POST['catalogue'] == "random") {
 	    if ($row['catalogue'] == 1) {
 	      $itemadd = addItem($row['name'],$userrow);
-	      //require_once("includes/SQLconnect.php");
+	      //require_once "includes/SQLconnect.php";
 	      if ($itemadd != "inv-1") {
 					$captchalogue = 1;
 					$mysqli->query("UPDATE `Players` SET `captchalogues` = '" . strval($userrow['captchalogues']+1) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -117,5 +117,5 @@ if (empty($_SESSION['username'])) {
     }
   }
 }
-require_once("footer.php");
+require_once "footer.php";
 ?>
