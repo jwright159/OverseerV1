@@ -144,6 +144,6 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
   echo "Player entry failed: Player name empty or passwords do not match.";
 }
 $mysqli->close();
-require_once("footer.php");
 echo '</br><a href="/">Home</a>';
+require_once("footer.php");
 ?> 
