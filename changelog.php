@@ -20,12 +20,20 @@
 	gh {
 		color: #AA0001;
 	}
+
+	jd {
+		color: #03A9F4;
+	}
 </style>
 The colours are for changes by: <overseer>The Overseer</overseer> | <blahdev>Blahsadfeguie</blahdev> | <sho>Sho</sho> |
-<gh>GH</gh> | <vv>???</vv></br>
+<gh>GH</gh> | <vv>???</vv> | <jd>JD</jd></br>
 </br>
-Current version: Alpha 2.3 hot fudge sundae</br>
+Current version: Alpha 3.0 bepis</br>
 </br>
+Version Alpha 3.0 bepis - July 4, 2023:</br>
+<jd>- Rebooted the server! This includes upgrading the software this all runs on.<br>
+	- This section might be a work-in-progress until things settle down.</jd><br>
+<br>
 Version Alpha 2.3 hot fudge sundae:</br>
 <blahdev>- Consort quests have been expanded to allow for quests that aren't just item fetch quests. New quest
 	types:<br>
