@@ -16,7 +16,7 @@ if (empty($_SESSION['username'])) {
 	echo "You have already used a consumable or aspect ability during this round of strife!";
 	$fail = True;
       } else {
-	mysql_query("UPDATE `Players` SET `combatconsume` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `combatconsume` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       }
     }
     if ($fail != True) {
@@ -26,37 +26,37 @@ if (empty($_SESSION['username'])) {
 	  echo "You open the medkit and apply various bandages and salves to yourself. Naturally, your health improves.";
 	  $heal = 100;
 	  if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	  mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	} else {
 	  echo "You open the medkit and use the contents to perform first aid on your ally. It's a lot more effective than trying to do so on yourself.";
-	  $allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-	  while ($row = mysql_fetch_array($allyresult)) {
+	  $allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+	  while ($row = $allyresult->fetch_array()) {
 	    if ($row['username'] = $userrow['aiding']) $allyrow = $row;
 	  }
 	  $heal = 175;
 	  if ($allyrow['Health_Vial'] + $heal > $allyrow['Gel_Viscosity']) $heal = ($allyrow['Gel_Viscosity'] - $allyrow['Health_Vial']); //No overheals.
-	  mysql_query("UPDATE `Players` SET `Health_Vial` = $allyrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `Health_Vial` = $allyrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 	}
 	break;
       case "Kero-Kero Cola":
 	if ($userrow['enemy1name'] != "" || $userrow['enemy2name'] != "" || $userrow['enemy3name'] != "" || $userrow['enemy4name'] != "" && $userrow['enemy5name'] != "") {
 	  echo "You down the Kero-Kero Cola, finishing with a burp that sounds remarkably like a ribbit. You and all of your friends feel much better!";
 	  $heal = 1000;
-	  $aidresult = mysql_query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $username . "'"); //Look up all players aiding this player.
-	  while ($aidrow = mysql_fetch_array($aidresult)) {
-	    mysql_query("UPDATE `Players` SET `Health_Vial` = $aidrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $aidrow['username'] . "' LIMIT 1 ;");
+	  $aidresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $username . "'"); //Look up all players aiding this player.
+	  while ($aidrow = $aidresult->fetch_array()) {
+	    $mysqli->query("UPDATE `Players` SET `Health_Vial` = $aidrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $aidrow['username'] . "' LIMIT 1 ;");
 	  }
-	  mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	} elseif ($userrow['aiding'] != "") {
 	  echo "You down the Kero-Kero Cola, finishing with a burp that sounds remarkably like a ribbit. You and all of your friends feel much better!";
 	  $heal = 1000;
-	  $aidresult = mysql_query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $userrow['aiding'] . "'"); //Look up all players aiding the same player as this player.
-	  while ($aidrow = mysql_fetch_array($aidresult)) {
-	    mysql_query("UPDATE `Players` SET `Health_Vial` = $aidrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $aidrow['username'] . "' LIMIT 1 ;");
+	  $aidresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $userrow['aiding'] . "'"); //Look up all players aiding the same player as this player.
+	  while ($aidrow = $aidresult->fetch_array()) {
+	    $mysqli->query("UPDATE `Players` SET `Health_Vial` = $aidrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $aidrow['username'] . "' LIMIT 1 ;");
 	  }
-	  $targetresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['aiding'] . "'"); //Look up the aid target.
-	  $targetrow = mysql_fetch_array($targetresult);
-	  mysql_query("UPDATE `Players` SET `Health_Vial` = $targetrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $targetrow['username'] . "' LIMIT 1 ;");
+	  $targetresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['aiding'] . "'"); //Look up the aid target.
+	  $targetrow = $targetresult->fetch_array();
+	  $mysqli->query("UPDATE `Players` SET `Health_Vial` = $targetrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $targetrow['username'] . "' LIMIT 1 ;");
 	} else {
 	  echo "It seems like an awful waste to drink this thing outside of strife, although you're not entirely sure why.";
 	  $donotconsume = True;
@@ -72,8 +72,8 @@ if (empty($_SESSION['username'])) {
 	$boost -= 25;
 	$heal = 250;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Pan Galactic Gargle Blaster":
 	if ($userrow['enemy1name'] != "" || $userrow['enemy2name'] != "" || $userrow['enemy3name'] != "" || $userrow['enemy4name'] != "" && $userrow['enemy5name'] != "" || $userrow['aiding'] != "") {//User strifing
@@ -83,18 +83,18 @@ if (empty($_SESSION['username'])) {
 	  while ($k <= $max_enemies) {
 	    $enemystr = "enemy" . strval($k) . "name";
 	    if ($k == 1) {
-	      mysql_query("UPDATE `Players` SET `" . $enemystr . "` = 'The Mother of All Hangovers' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `enemy" . strval($i) . "power` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `enemy" . strval($i) . "health` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `enemy" . strval($i) . "maxhealth` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `enemy" . strval($i) . "desc` = 'Good luck with that.' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `enemy" . strval($i) . "category` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `" . $enemystr . "` = 'The Mother of All Hangovers' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `enemy" . strval($i) . "power` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `enemy" . strval($i) . "health` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `enemy" . strval($i) . "maxhealth` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `enemy" . strval($i) . "desc` = 'Good luck with that.' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `enemy" . strval($i) . "category` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	    } else {
-	      mysql_query("UPDATE `Players` SET `" . $enemystr . "` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `" . $enemystr . "` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	    }
 	    $k++;
 	  }
-	  mysql_query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	} else {
 	  echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a spaceship, and collapse on the spot.</br>";
 	  echo "You slowly and painfully come to an unknown amount of time later. It's a good thing you weren't out and about when you drank this, because you'll need as much time as you can get to overcome your monumental headache.";
@@ -103,16 +103,16 @@ if (empty($_SESSION['username'])) {
 	if ($boost > 0) $boost = $boost * -1;
 	$boost -= 100;
 	$harm = $userrow['Health_Vial'] - 1;
-	mysql_query("UPDATE `Players` SET `down` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `enemy1name` = 'The Mother of All Hangovers' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `enemy1power` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `enemy1health` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `enemy1maxhealth` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `enemy1desc` = 'Good luck with that.' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `enemy1category` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `combatmotifuses` = " . strval(floor($userrow['Echeladder'] / 100) + $userrow['Godtier']) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `down` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `enemy1name` = 'The Mother of All Hangovers' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `enemy1power` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `enemy1health` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `enemy1maxhealth` = 9999999999 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `enemy1desc` = 'Good luck with that.' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `enemy1category` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `combatmotifuses` = " . strval(floor($userrow['Echeladder'] / 100) + $userrow['Godtier']) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
 	/*case "Candy Corn Liquor":
 	echo "You chug the potent sugary brew. Fortunately you had the foresight to construct a fort beforehand, so you hide safely in there as the alcohol takes effect. You feel exceptionally drowsy...";
@@ -124,8 +124,8 @@ if (empty($_SESSION['username'])) {
 	$heal = 150;
 	$boost = 20;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Starman":
 	if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "") { //User is not personally strifing
@@ -136,12 +136,12 @@ if (empty($_SESSION['username'])) {
 	  $invuln = 5;
 	  $tempoffenseboost = ($userrow['Echeladder'] * pow(2,$userrow['Godtier'])) * 3;
 	  $tempoffenseduration = 5;
-	  mysql_query("UPDATE `Players` SET `invulnerability` = " . strval($userrow['invulnerability']+$invuln) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `invulnerability` = " . strval($userrow['invulnerability']+$invuln) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	  if ($tempoffenseboost > $userrow['tempoffenseboost']) {
-	    mysql_query("UPDATE `Players` SET `tempoffenseboost` = " . strval($tempoffenseboost) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `tempoffenseboost` = " . strval($tempoffenseboost) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	  }
 	  if ($tempoffenseduration < $userrow['tempoffenseduration'] || $userrow['tempoffenseduration'] == 0) {
-	    mysql_query("UPDATE `Players` SET `tempoffenseduration` = " . strval($tempoffenseduration) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `tempoffenseduration` = " . strval($tempoffenseduration) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	  }
 	}
 	break;
@@ -154,28 +154,28 @@ if (empty($_SESSION['username'])) {
 	    echo "You om nom nom the Nominomicon. It consumes some of your vitality to project sticky, unspeakable tentacles at your opponents.";
 	    $enemies = 1;
 	    $harm = floor($userrow['Health_Vial'] / 2);
-	    mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	    while ($enemies <= $max_enemies) {
 	      $enemystr = "enemy" . strval($enemies) . "name";
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      if ($harm > $userrow[$healthstr]) $harm = $userrow[$healthstr] - 1;
-	      if ($userrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $healthstr . "` = $userrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      if ($userrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = $userrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	      $enemies++;
 	    }
 	  } else { //Player is aiding
 	    echo "You om nom nom the Nominomicon. It consumes some of your vitality to project sticky, unspeakable tentacles at your ally's opponents.";	   
 	    $enemies = 1;
-	    $allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-	    while ($row = mysql_fetch_array($allyresult)) {
+	    $allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+	    while ($row = $allyresult->fetch_array()) {
 	      if ($row['username'] = $userrow['aiding']) $allyrow = $row;
 	    }
 	    $harm = floor($userrow['Health_Vial'] / 2);
-	    mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	    while ($enemies <= $max_enemies) {
 	      $enemystr = "enemy" . strval($enemies) . "name";
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      if ($harm > $allyrow[$healthstr]) $harm = $allyrow[$healthstr] - 1;
-	      if ($allyrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $healthstr . "` = $allyrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+	      if ($allyrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = $allyrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 	      $enemies++;
 	    }
 	  }
@@ -196,8 +196,8 @@ if (empty($_SESSION['username'])) {
 	  $boost = rand(10,50) * -1;
 	  $harm = 50;
 	  if ($harm >= $userrow['Health_Vial']) $harm = $userrow['Health_Vial'] - 1;
-	  mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	  mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	} else {
 	  if ($userrow['aiding'] == "") { //Player is main strifer
 	    echo "You lob the Sodabomb at your enemies. It explodes as soon as it touches the ground, showering them with aluminium shrapnel and shards of razor sharp, red-hot candy.";
@@ -207,14 +207,14 @@ if (empty($_SESSION['username'])) {
 	      $harm = rand(100,500);
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      if ($harm > $userrow[$healthstr]) $harm = $userrow[$healthstr] - 1;
-	      if ($userrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $healthstr . "` = $userrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      if ($userrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = $userrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	      $enemies++;
 	    }
 	  } else { //Player is aiding
 	    echo "You lob the Sodabomb at your ally's enemies. It explodes as soon as it touches the ground, showering them with aluminium shrapnel and shards of razor sharp, red-hot candy.";	   
 	    $enemies = 1;
-	    $allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-	    while ($row = mysql_fetch_array($allyresult)) {
+	    $allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+	    while ($row = $allyresult->fetch_array()) {
 	      if ($row['username'] = $userrow['aiding']) $allyrow = $row;
 	    }
 	    while ($enemies <= $max_enemies) {
@@ -222,7 +222,7 @@ if (empty($_SESSION['username'])) {
 	      $harm = rand(100,500);
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      if ($harm > $allyrow[$healthstr]) $harm = $allyrow[$healthstr] - 1;
-	      if ($allyrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $healthstr . "` = $allyrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+	      if ($allyrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = $allyrow[$healthstr]-$harm WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 	      $enemies++;
 	    }
 	  }
@@ -235,11 +235,11 @@ if (empty($_SESSION['username'])) {
 	echo "You quickly consume the jello shots. The ectoplasm reacts poorly with the alcohol, making you more than a little tipsy, but at least they restore some health.";
 	$heal = 600;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	$boost = $userrow['powerboost'];
 	if ($boost > 0) $boost = $boost * -1;
 	$boost -= 20;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Blueberry Pie":
 	echo "You eat the entire pie. Yumptious! Or scrummy, one of the two.";
@@ -262,44 +262,44 @@ if (empty($_SESSION['username'])) {
 	echo "You feed yourself some medicine from the end of the spoon. It tastes absolutely horrible, but you do feel a little better.";
 	$heal = 50;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	}
 	break;
       case "Shamrock Block":
 	echo "You quickly apply a light coating of the green cream to your skin. Feeling lucky yet? Or just damp?";
 	$luckboost = 5;
 	if ($userrow['Brief_Luck'] + $luckboost > 100) $luckboost = (100 - $userrow['Brief_Luck']);
-	mysql_query("UPDATE `Players` SET `Brief_Luck` = $userrow[Brief_Luck]+$luckboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Brief_Luck` = $userrow[Brief_Luck]+$luckboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Bandage":
 	echo "You apply the bandage to your wounds, reducing the bleeding somewhat.";
 	$heal = 10;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Blue ecto-bandage":
 	echo "You apply the ectoplasm-coated bandage to your wounds. The ectoplasm numbs the pain and accelerates the healing process fivefold!";
 	$heal = 50;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "One Use Band-Aid Brand Healing Tome":
 	echo "You begin to read from the healing tome, and as you do, a vortex of magic swirls around you, patching up some of your wounds. Magically. The now-empty tome drops to the ground, having served its purpose.";
 	$heal = 25;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Medi-gel":
 	echo "You apply the medi-gel to your wounds, and it immediately goes to work sterilizing and healing them.";
 	$heal = 100;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Stimpak":
 	echo "You inject the stimpak into your body. The medicine removes some of your wounds and helps you to ignore others.";
 	$heal = 30;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Green Apple Pop Rocks":
 	echo "You place the pop rocks in your mouth, where they predictably start popping. After a while, they are all gone. This makes you sad.";
@@ -314,30 +314,30 @@ if (empty($_SESSION['username'])) {
 	echo "The pop rocks jump around wildly in your mouth, and continue to do so in your stomach. You begin to get a bit jumpy yourself!";
 	$offenseboost = rand(1,30);
 	$defenseboost = rand(1,30);
-	mysql_query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]+$offenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]+$offenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;     
       case "Ogredose":
 	echo "You take a deep breath and ingest yourself with the thick, rancid goop. The pain is nigh unbearable, but you feel an ogre-sized surge of energy.";
 	$offenseboost = 30;
 	$harm = floor($userrow['Health_Vial'] / 2);
-	mysql_query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]+$offenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]+$offenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Blue Gelatin Man":
 	echo 'You consume the gelatin person. Your initial plan to make amusing "help meeee..." noises as you eat him goes out the window when he turns out to taste terrible.';
 	$heal = 275;
 	$defenseboost = -10;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defenseboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       case "Iced Tea":
 	echo "You drink the tea. It is cool and refreshing, huzzah!";
 	break;
       case "2 of Spades / Licorice Scotty Dogs":
 	echo "You eat the Scotty Dogs, feeling like a right proper gentleman the whole time. This encourages you!";
 	$boost = 20;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Magnetic Wodka":
 	echo "You drink the wodka. It's so useless you somehow manage to not even get drunk!";
@@ -349,7 +349,7 @@ if (empty($_SESSION['username'])) {
 	echo "You nom the blue donuts, the slime oozing into your mouth. The taste is a little odd, but the effect is pleasant!";
 	$heal = 50;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Massive Tropical Brain Hemorrhage flavour":
 	echo "You eat the Fruit Gushers. Apart from a slight sugar rush, nothing much happens.";
@@ -358,83 +358,83 @@ if (empty($_SESSION['username'])) {
 	echo "You eat the Fruit Gushers. You feel revitalized!";
 	$heal = 10;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Rockin' Poprock Rigor Mortis flavour":
 	echo "You consume the poppin' fruity candy. It restores some health, but the constant popping is getting distracting.";
 	$heal = 250;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	$boost = -15;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Froot Gushers - XTrEM Nacho Cheese Concussion flavour":
 	echo "You eat the cheesy candy. Aside from some slight artifacting, they taste great!";
 	$heal = 200;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Gnarly Cotton Candy Doomsday Prophecy Flavor":
 	echo "You eat the doom-flavoured sugary fruity candy. Fortunately, the doom appears to apply to your opponents and not you.";
 	$boost = 20;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Spooky Scary Skeletons Candy Corn Catastrophe flavour":
 	echo "You eat the Fruit Gushers. Their inherent spookiness fortifies you for your next combat. YES IT MAKES SENSE SHUT UP";
 	$boost = 5;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Ultimate Uranium Nuclear Apeshit Apocalypse Flavour":
 	echo "You eat the radioactive candy. You gain superpowers! Also radiation poisoning.";
 	$boost = ceil($userrow['Echeladder'] / 5);
 	$harm = floor($userrow['Health_Vial'] / 10);
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Bodacious Black Liquid Sorrow flavour":
 	echo "You choke down the poisonous candy for some reason. Predictably, you don't feel well.";
 	$harm = floor($userrow['Health_Vial'] / 3);
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Hellacious Hard Light Head Trauma flavour":
 	echo "You consume the copious candy. Hard light coats you, forming a barrier.";
 	$defboost = 100;
-	mysql_query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fruit Gushers - Carbonated Crimson Corruption Flavor":
 	echo "You down the blood-red gushers, and a spearhead of sugar courses through your veins. You have a sudden urge to appease some sanguine deity.";
 	$atkboost = 100;
 	$defboost = -50;
-	mysql_query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]+$atkboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]+$atkboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$defboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Fizzy Gushers - Bubble Cola Bomb Flavor":
 	echo "You pop a box of the hyper-sugary snacks. As the first wave of sugar enters your system, everything seems to slow down around you.";
 	$boost = 20;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Mountain Dew":
 	echo "You skull the entire bottle of Mountain Dew. You feel simultaneously hyper-alert and very ill.";
 	$harm = floor($userrow['Health_Vial'] / 20);
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	$boost = 2;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Mountain Dew of Premonition":
 	echo "You drink the Dew, and it goes straight to your brain. Your frontal lobe is now swarming with various ambiguous interpretations of the future.";
 	echo "You feel like you might be able to avoid a bit of damage, if you're lucky.";
 	$heal = 20;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	$boost = 10;
-	mysql_query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Elixir of Caffeinated Healing":
 	echo "You pour the off-colored liquid down your gullet. You're wide-awake now, and feeling marginally better.";
 	$heal = rand(1,100);
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	$boost = 15;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Mountain Dew: Pitch Black":
 	echo "You attempt to drink the pitch black Mountain Dew. Unfortunately it has the consistency of pitch and you can't get it out of the bottle.";
@@ -454,49 +454,49 @@ if (empty($_SESSION['username'])) {
 	echo "You drink the Nuka-Cola. It gives you a sizable chunk of rads, but you feel pumped up anyhow.";
 	$boost = ceil(($userrow['Echeladder'] * pow(2,$userrow['Godtier'])) / 2);
 	$harm = floor($userrow['Health_Vial'] / 8);
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Nuka-Cola Quantum":
 	echo "You drink the Nuka-Cola Quantum. You feel twice as strong as before, but you're also seeing double.";
 	$boost = ceil(($userrow['Echeladder'] * pow(2,$userrow['Godtier'])));
 	$harm = floor($userrow['Health_Vial'] / 4);
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Red Potion":
 	echo "The action seems to pause as you whip out your bottle of Red Potion, uncork it, and down the whole thing. You feel a rush of relief as your health vial refills a bit.";
 	$heal = 400;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Faygo - Blitzin' Blue Raspberry flavour":
 	echo "You drink the Faygo. A miraculous explosion of healing and flavour washes over you.";
 	$heal = 20;
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Faygo - Aquamarine Sugar Bomb flavour":
 	echo "You drink the Faygo. The incredibly pure sugar fused with sprite slime rushes through your system, accelerating damn near everything.";
 	$heal = 1000;
 	$boost = 100;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	if ($userrow['Health_Vial'] + $heal > $userrow['Gel_Viscosity']) $heal = ($userrow['Gel_Viscosity'] - $userrow['Health_Vial']); //No overheals.
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Wicked Elixir":
 	echo "You kick the wicked elixir. You feel sicker, but a bit slicker after drinking the wicked elixir. You also begin to wonder who let Dr. Seuss into the item database.";
 	$harm = 200;
 	if ($harm > $userrow['Health_Vial']) $harm = $userrow['Health_Vial'] - 1;
 	$boost = 50;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Betty Crocker Barbasol Bomb":
 	if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") { //User is not strifing
 	  echo "As you pick up the bomb to examine it, it explodes in your face. THE SHAVING CREAM, IT BUUUUURNS!";
 	  $boost = rand(1,5) * -1;
-	  mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	} else {
 	  if ($userrow['aiding'] == "") { //Player is main strifer
 	    echo "You lob the Barbasol Bomb at your enemies. It explodes, covering them in obscuring foam and making it harder for them to fight.";
@@ -505,21 +505,21 @@ if (empty($_SESSION['username'])) {
 	    while ($enemies <= $max_enemies) {
 	      $enemystr = "enemy" . strval($enemies) . "name";
 	      $powerstr = "enemy" . strval($enemies) . "power";
-	      if ($userrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $powerstr . "` = $userrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	      if ($userrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = $userrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	      $enemies++;
 	    }
 	  } else { //Player is aiding
 	    echo "You lob the Barbasol Bomb at your ally's enemies. It explodes, covering them in obscuring foam and making it harder for them to fight.";
 	    $enemies = 1;
 	    $afflict = rand(1,5);
-	    $allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-	    while ($row = mysql_fetch_array($allyresult)) {
+	    $allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+	    while ($row = $allyresult->fetch_array()) {
 	      if ($row['username'] = $userrow['aiding']) $allyrow = $row;
 	    }
 	    while ($enemies <= $max_enemies) {
 	      $enemystr = "enemy" . strval($enemies) . "name";
 	      $powerstr = "enemy" . strval($enemies) . "power";
-	      if ($allyrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $powerstr . "` = $allyrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+	      if ($allyrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = $allyrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 	      $enemies++;
 	    }
 	  }
@@ -534,8 +534,8 @@ if (empty($_SESSION['username'])) {
 	  } else {
 	    $harm = 100;
 	  }
-	  mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	  mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	} else {
 	  if ($userrow['aiding'] == "") { //Player is main strifer
 	    echo "You lob the Cream Grenade at your enemies. It explodes, covering them in obscuring, flaming foam and making it harder for them to fight. Also, y'know, burning them.";
@@ -547,11 +547,11 @@ if (empty($_SESSION['username'])) {
 	      $powerstr = "enemy" . strval($enemies) . "power";
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      if ($userrow[$enemystr] != "") {
-		mysql_query("UPDATE `Players` SET `" . $powerstr . "` = $userrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = $userrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 		if ($userrow[$healthstr] <= $damage) {
-		mysql_query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 		} else {
-		  mysql_query("UPDATE `Players` SET `" . $healthstr . "` = $userrow[$healthstr]-$damage WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = $userrow[$healthstr]-$damage WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 		}
 	      }
 	      $enemies++;
@@ -561,8 +561,8 @@ if (empty($_SESSION['username'])) {
 	    $enemies = 1;
 	    $afflict = rand(5,10);
 	    $damage = rand(50,150);
-	    $allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-	    while ($row = mysql_fetch_array($allyresult)) {
+	    $allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+	    while ($row = $allyresult->fetch_array()) {
 	      if ($row['username'] = $userrow['aiding']) $allyrow = $row;
 	    }
 	    while ($enemies <= $max_enemies) {
@@ -570,11 +570,11 @@ if (empty($_SESSION['username'])) {
 	      $powerstr = "enemy" . strval($enemies) . "power";
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      if ($allyrow[$enemystr] != "") {
-		mysql_query("UPDATE `Players` SET `" . $powerstr . "` = $allyrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = $allyrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 		if ($allyrow[$healthstr] <= $damage) {
-		  mysql_query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 		} else {
-		  mysql_query("UPDATE `Players` SET `" . $healthstr . "` = $allyrow[$healthstr]-$damage WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = $allyrow[$healthstr]-$damage WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 		}
 	      }
 	      $enemies++;
@@ -596,7 +596,7 @@ if (empty($_SESSION['username'])) {
 	      while ($enemies <= $max_enemies) {
 		$enemystr = "enemy" . strval($enemies) . "name";
 		$healthstr = "enemy" . strval($enemies) . "health";
-		if ($userrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		if ($userrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 		$enemies++;
 	      }
 	    }
@@ -609,7 +609,7 @@ if (empty($_SESSION['username'])) {
 	      while ($enemies <= $max_enemies) {
 		$enemystr = "enemy" . strval($enemies) . "name";
 		$healthstr = "enemy" . strval($enemies) . "health";
-		if ($allyrow[$enemystr] != "") mysql_query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
+		if ($allyrow[$enemystr] != "") $mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '" . $allyrow['username'] . "' LIMIT 1 ;");
 		$enemies++;
 	      }
 	    }
@@ -620,7 +620,7 @@ if (empty($_SESSION['username'])) {
 	if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") { //User is not strifing
 	  echo "You consume the cupcakes and proceed to mellow right out. Whooooooooooooaaaaaaaa...";
 	  $afflict = floor($userrow['Echeladder'] / 2);
-	  mysql_query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	} else {
 	  if ($userrow['aiding'] == "") { //Player is main strifer
 	    echo "You share out your cupcakes with your opponents. You all feel considerably more mellow now.";
@@ -631,13 +631,13 @@ if (empty($_SESSION['username'])) {
 	      $powerstr = "enemy" . strval($enemies) . "power";
 	      $afflict = 30;
 	      if ($userrow[$enemystr] != "") {
-		mysql_query("UPDATE `Players` SET `" . $powerstr . "` = $userrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = $userrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 		$total++;
 	      }
 	      $enemies++;
 	    }
 	    $afflict = floor($userrow['Echeladder'] / (2 * $total));
-	    mysql_query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	  } else { //Player is aiding
 	    echo "You share out your cupcakes with your ally's opponents. You all feel considerably more mellow now.";
 	    $enemies = 1;
@@ -647,39 +647,39 @@ if (empty($_SESSION['username'])) {
 	      $powerstr = "enemy" . strval($enemies) . "power";
 	      $afflict = 30;
 	      if ($allyrow[$enemystr] != "") {
-		mysql_query("UPDATE `Players` SET `" . $powerstr . "` = $allyrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = $allyrow[$powerstr]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 		$total++;
 	      }
 	      $enemies++;
 	    }
 	    $afflict = floor($userrow['Echeladder'] / (2 * $total));
-	    mysql_query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `offenseboost` = $userrow[offenseboost]-$afflict WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	  }
 	}
 	break;
       case "Hand-Shaped Poison Faygo Bottle":
 	echo "You drink the poisonous sugary swill. It's a miracle this crap doesn't kill you.";
 	$harm = floor($userrow['Health_Vial'] / 2);
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Bottle of Vodka":
 	echo "You down the entire bottle of vodka. This...wasn't a good idea."; //It negates your entire positive power boost or doubles a negative one, then subtracts a further ten.
 	$boost = $userrow['powerboost'];
 	if ($boost > 0) $boost = $boost * -1;
 	$boost -= 10;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Ethyl Coma":
 	echo "You snap into the bottle of Ethyl Coma. Your vitals enter a state of limbo, and you're left wondering whether the world around you is real or an illusion brought upon by a desperate, dying brain.";
 	$boost = $userrow['powerboost'];
 	if ($boost > 0) $boost = $boost * -1;
 	$boost -= 100;
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "nachons":
 	echo "You eat the nachons. just how HIGH do you have to BE to do something like that?";
 	$harm = floor($userrow['Health_Vial'] / 20);
-	mysql_query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]-$harm WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Mtn Dew Dorito Cupcake":
 	$boost = rand(0,200) - 100;
@@ -688,7 +688,7 @@ if (empty($_SESSION['username'])) {
 	} else {
 	  echo "You eat the...whatever this is. Ick. You feel all shitty and ARTIFACTED now.";
 	}
-	mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	break;
       case "Candy Corn":
 	echo "You eat the pieces of candy corn. Delicious!";
@@ -708,17 +708,17 @@ if (empty($_SESSION['username'])) {
     echo "</br>";
     if (!$fail && !$donotconsume) {
       $consumed = $_POST['consume'];
-      mysql_query("UPDATE `Players` SET `" . $_POST['consume'] . "` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-      if ($userrow['equipped'] == $_POST['consume']) mysql_query("UPDATE `Players` SET `equipped` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //If consumable equipped or offhand
-      if ($userrow['offhand'] == $_POST['consume']) mysql_query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //...then unequip that slot.
+      $mysqli->query("UPDATE `Players` SET `" . $_POST['consume'] . "` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      if ($userrow['equipped'] == $_POST['consume']) $mysqli->query("UPDATE `Players` SET `equipped` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //If consumable equipped or offhand
+      if ($userrow['offhand'] == $_POST['consume']) $mysqli->query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //...then unequip that slot.
     }
   }
   //--End consuming code here.--
   echo "Consumables Consumer v0.0.1a. Please select a consumable to consume.";
   echo '<form action="consumables.php" method="post"><select name="consume">';
   $reachinv = false;
-  $invresult = mysql_query("SELECT * FROM Players");
-  while ($col = mysql_fetch_field($invresult)) {
+  $invresult = $mysqli->query("SELECT * FROM Players");
+  while ($col = $mysqli->fetch_field($invresult)) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -728,8 +728,8 @@ if (empty($_SESSION['username'])) {
     }
     if ($reachinv == True && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
     $itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-    $captchalogue = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($captchalogue)) {
+    $captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $captchalogue->fetch_array()) {
 	$itemname = $row['name'];
 	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	if ($itemname == $userrow[$invslot] && $row['consumable'] != 0 && $invslot != $consumed) { //Item found in captchalogue database, and it is a consumable. Wasn't just nommed.

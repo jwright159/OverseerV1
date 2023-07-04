@@ -34,13 +34,13 @@ $foundspace = False;
 							$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
 							$gristlevel = 1;
 							while ($gristlevel <= 3) {
-								$gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+								$gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 								$totalgrists = 0;
-								while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+								while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 								$totalgrists--; //It counts from zero
 								$typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-								$selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-								$selectedrow = mysql_fetch_array($selectedresult);
+								$selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+								$selectedrow = $selectedresult->fetch_array();
 								$gristloot = 7000 + (rand(0,1) * 500) + (rand(0,1) * 3000) + (floor(rand(0,2) / 2) * 7500) + (rand(0,$luck) * 80);
 								if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 									$typestr = "grist" . strval($gristlevel);
@@ -61,13 +61,13 @@ $foundspace = False;
 							$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
 							$gristlevel = 1;
 							while ($gristlevel <= 6) {
-								$gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+								$gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 								$totalgrists = 0;
-								while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+								while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 								$totalgrists--; //It counts from zero
 								$typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-								$selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-								$selectedrow = mysql_fetch_array($selectedresult);
+								$selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+								$selectedrow = $selectedresult->fetch_array();
 								$gristloot = 14000 + (rand(0,1) * 1000) + (rand(0,1) * 6000) + (floor(rand(0,2) / 2) * 15000) + (rand(0,$luck) * 160);
 								if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 									$typestr = "grist" . strval($gristlevel);
@@ -88,13 +88,13 @@ $foundspace = False;
 							$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
 							$gristlevel = 1;
 							while ($gristlevel <= 9) {
-								$gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+								$gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 								$totalgrists = 0;
-								while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+								while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 								$totalgrists--; //It counts from zero
 								$typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-								$selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-								$selectedrow = mysql_fetch_array($selectedresult);
+								$selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+								$selectedrow = $selectedresult->fetch_array();
 								$gristloot = 70000 + (rand(0,1) * 5000) + (rand(0,1) * 30000) + (floor(rand(0,2) / 2) * 75000) + (rand(0,$luck) * 800);
 								if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 									$typestr = "grist" . strval($gristlevel);
@@ -115,13 +115,13 @@ $foundspace = False;
 		$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
 		$gristlevel = 1;
 		while ($gristlevel <= 9) {
-		  $gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+		  $gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 		  $totalgrists = 0;
-		  while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+		  while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 		  $totalgrists--; //It counts from zero
 		  $typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-		  $selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-		  $selectedrow = mysql_fetch_array($selectedresult);
+		  $selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+		  $selectedrow = $selectedresult->fetch_array();
 		  $gristloot = 25000 + (rand(0,1) * 2000) + (rand(0,1) * 6666) + (floor(rand(0,4) / 4) * 33000) + (rand(0,$luck) * 666);
 		  if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 		    $typestr = "grist" . strval($gristlevel);
@@ -138,13 +138,13 @@ $foundspace = False;
 		echo "Finally having taken more damage than it can handle, Progenitor falls to pieces in front of you. As it collapses into piles of grist, you hear a soft, synthetic voice: \"I don't hate you.\"</br>";
 		$gristlevel = 1;
 		while ($gristlevel <= 3) {
-		  $gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+		  $gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 		  $totalgrists = 0;
-		  while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+		  while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 		  $totalgrists--; //It counts from zero
 		  $typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-		  $selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-		  $selectedrow = mysql_fetch_array($selectedresult);
+		  $selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+		  $selectedrow = $selectedresult->fetch_array();
 		  $gristloot = 75000 + (rand(0,1) * 5000) + (rand(0,1) * 12500) + (floor(rand(0,4) / 4) * 75000) + (rand(0,$luck) * 1000);
 		  if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 		    $typestr = "grist" . strval($gristlevel);
@@ -164,13 +164,13 @@ $foundspace = False;
 		$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
 		$gristlevel = 1;
 		while ($gristlevel <= 9) {
-		  $gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+		  $gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 		  $totalgrists = 0;
-		  while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+		  while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 		  $totalgrists--; //It counts from zero
 		  $typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-		  $selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-		  $selectedrow = mysql_fetch_array($selectedresult);
+		  $selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+		  $selectedrow = $selectedresult->fetch_array();
 		  $gristloot = 21000 + (rand(0,1) * 1400) + (rand(0,1) * 7777) + (floor(rand(0,4) / 4) * 28000) + (rand(0,$luck) * 777);
 		  if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 		    $typestr = "grist" . strval($gristlevel);
@@ -191,13 +191,13 @@ $foundspace = False;
 					echo "<br />The $userrow[$headstr] is severed and crashes to the ground, degenerating into grist: ";
 		  $gristlevel = 1;
 		while ($gristlevel <= 3) {
-		  $gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+		  $gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 		  $totalgrists = 0;
-		  while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+		  while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 		  $totalgrists--; //It counts from zero
 		  $typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-		  $selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-		  $selectedrow = mysql_fetch_array($selectedresult);
+		  $selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+		  $selectedrow = $selectedresult->fetch_array();
 		  $gristloot = 5000 + (rand(0,1) * 500) + (rand(0,1) * 2500) + (floor(rand(0,4) / 4) * 5000) + (rand(0,$luck) * 100);
 		  if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 		    $typestr = "grist" . strval($gristlevel);
@@ -228,13 +228,13 @@ $foundspace = False;
 		  echo "The $userrow[$enemystr] is severed and crashes to the ground, degenerating into grist: ";
 		  $gristlevel = 1;
 		while ($gristlevel <= 3) {
-		  $gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+		  $gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 		  $totalgrists = 0;
-		  while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+		  while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 		  $totalgrists--; //It counts from zero
 		  $typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-		  $selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-		  $selectedrow = mysql_fetch_array($selectedresult);
+		  $selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+		  $selectedrow = $selectedresult->fetch_array();
 		  $gristloot = 5000 + (rand(0,1) * 500) + (rand(0,1) * 2500) + (floor(rand(0,4) / 4) * 5000) + (rand(0,$luck) * 100);
 		  if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 		    $typestr = "grist" . strval($gristlevel);
@@ -269,15 +269,15 @@ $foundspace = False;
 		if ($bossdead == true) $splitchance = 0; //hydra is dead, don't split
 		if ($roll < $splitchance) {
 		  echo "When you look up at the hydra again after collecting your grist, you notice that there are now two heads in the old one's place! It seems the sever was so clean that the hydra was able to regenerate its lost appendages twofold!<br />";
-		  $randomresult = mysql_query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head'");
+		  $randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head'");
 					$countr = 0;
-					while ($randrow = mysql_fetch_array($randomresult)) {
+					while ($randrow = $randomresult->fetch_array()) {
 						$countr++;
 					}
 					$whodat = rand(1,$countr);
 					$whodat--;
-					$randomresult = mysql_query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
-					$randrow = mysql_fetch_array($randomresult);
+					$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
+					$randrow = $randomresult->fetch_array();
 					$randenemy = $randrow['basename'];
 					if (!empty($randenemy)) { //this happens sometimes, no idea why, but might as well treat that as a failure to activate
 					$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
@@ -292,8 +292,8 @@ $foundspace = False;
 					} else echo "DEBUGNOTE: Tried to spawn hydra head with ID of $whodat, returned empty.<br />";
 					$whodat = rand(1,$countr);
 					$whodat--;
-					$randomresult = mysql_query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
-					$randrow = mysql_fetch_array($randomresult);
+					$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
+					$randrow = $randomresult->fetch_array();
 					$randenemy = $randrow['basename'];
 					if (!empty($randenemy)) { //this happens sometimes, no idea why, but might as well treat that as a failure to activate
 					$slot = generateEnemy($userrow,$userrow['grist_type'],"None",$randenemy,true);
@@ -328,13 +328,13 @@ $foundspace = False;
 		$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
 		$gristlevel = 1;
 		while ($gristlevel <= 9) {
-		  $gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+		  $gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 		  $totalgrists = 0;
-		  while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+		  while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 		  $totalgrists--; //It counts from zero
 		  $typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-		  $selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-		  $selectedrow = mysql_fetch_array($selectedresult);
+		  $selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+		  $selectedrow = $selectedresult->fetch_array();
 		  $gristloot = 21000 + (rand(0,1) * 1400) + (rand(0,1) * 7777) + (floor(rand(0,4) / 4) * 28000) + (rand(0,$luck) * 777);
 		  if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 		    $typestr = "grist" . strval($gristlevel);
@@ -356,13 +356,13 @@ $foundspace = False;
 		$userrow['Artifact_Grist'] = $userrow['Artifact_Grist'] + $buildgrist;
 		$gristlevel = 1;
 		while ($gristlevel <= 9) {
-		  $gristtyperesult = mysql_query("SELECT `name` FROM `Grist_Types`");
+		  $gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
 		  $totalgrists = 0;
-		  while ($countrow = mysql_fetch_array($gristtyperesult)) $totalgrists++;
+		  while ($countrow = $gristtyperesult->fetch_array()) $totalgrists++;
 		  $totalgrists--; //It counts from zero
 		  $typeselected = rand(0,$totalgrists); //Starting point for the grist type search.
-		  $selectedresult = mysql_query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
-		  $selectedrow = mysql_fetch_array($selectedresult);
+		  $selectedresult = $mysqli->query("SELECT * FROM `Grist_Types` LIMIT " . $typeselected . " , 1 ;");
+		  $selectedrow = $selectedresult->fetch_array();
 		  $gristloot = rand(1,9999999);
 		  if ($gristlevel <= 9) { //Paranoia: Grist type exists.
 		    $typestr = "grist" . strval($gristlevel);
@@ -380,14 +380,14 @@ $foundspace = False;
 		  $keepgoing = true;
 		  while ($keepgoing) {
 		  	$maxx = pow(rand(1,100),2);
-		  	$absresult = mysql_query("SELECT `power` FROM `Captchalogue` WHERE `power` < $maxx AND (`abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%')");
+		  	$absresult = $mysqli->query("SELECT `power` FROM `Captchalogue` WHERE `power` < $maxx AND (`abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%')");
 		  	$allblades = 0;
-		  	while ($arow = mysql_fetch_array($absresult)) {
+		  	while ($arow = $absresult->fetch_array()) {
 		    	$allblades++;
 		  	}
 		    $choice = rand(1,$allblades);
-		    $absresult = mysql_query("SELECT `name` FROM `Captchalogue` WHERE `power` < $maxx AND (`abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%') LIMIT $choice, 1");
-		    $arow = mysql_fetch_array($absresult);
+		    $absresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE `power` < $maxx AND (`abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%') LIMIT $choice, 1");
+		    $arow = $absresult->fetch_array();
 		    $arow['name'] = str_replace("\\", "", $arow['name']);
 		    $invstr = addItem($arow['name'], $userrow);
 		    if ($invstr != "inv-1") {
@@ -402,13 +402,13 @@ $foundspace = False;
 			echo "The Animated Blade clatters to the floor. You did so much damage to it that you doubt even your Recycler would accept it.<br />";
 			break;
 	      default:
-		$denizenresult = mysql_query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
-		$denizenrow = mysql_fetch_array($denizenresult);
+		$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
+		$denizenrow = $denizenresult->fetch_array();
 		if ($userrow[$enemystr] == $denizenrow[$userrow['Aspect']]) { //Denizen defeated.
 		  echo "You have defeated your denizen. You may now access the Battlefield, and you have contributed the Hoard to the session's victory requirement.</br>";
 		  	if (!empty($userrow['pesternoteUsername'])) sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Defeated $userrow[$enemystr], my Denizen.");
-			$gateresult = mysql_query("SELECT * FROM Gates");
-		  $gaterow = mysql_fetch_array($gateresult);
+			$gateresult = $mysqli->query("SELECT * FROM Gates");
+		  $gaterow = $gateresult->fetch_array();
 		  if ($userrow['buffstrip'] == 1 && $userrow['noassist'] == 1 && $userrow['house_build_grist'] >= $gaterow['gate7']) { //Legit
 			$userrow['denizendown'] = 1;
 			$userrow['battlefield_access'] = 1;
@@ -422,10 +422,10 @@ $foundspace = False;
 			} elseif ($enemyrow['appearson'] == "Battlefield") {
 				if ($userrow['battlefield_access'] == 1 || $userrow['dreamingstatus'] != "Awake") {
 						echo '</br>The ' . $userrow[$enemystr] . " is defeated! Derse's war machine grows weaker.</br>";
-			$sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]';");
-			$sessionrow = mysql_fetch_array($sessionresult);
+			$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]';");
+			$sessionrow = $sessionresult->fetch_array();
 			$sessionrow['battlefieldtotal'] = $sessionrow['battlefieldtotal']+$userrow[$maxpowerstr];
-			mysql_query("UPDATE `Sessions` SET `battlefieldtotal` = $sessionrow[battlefieldtotal] WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1 ;");
+			$mysqli->query("UPDATE `Sessions` SET `battlefieldtotal` = $sessionrow[battlefieldtotal] WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1 ;");
 		      } else {
 			echo "You're not supposed to be fighting battlefield enemies.</br>";
 		      }
@@ -509,14 +509,14 @@ $foundspace = False;
 							$itemstart = strlen($userrow[$descstr]) - $itemplace;
 							$itemname = substr($userrow[$descstr], ($itemstart * -1), ($itemstart - 1));
 							$itemuname = str_replace("'", "\\\\''", $itemname);
-							$lootresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '$itemuname' ;");
-							$lootrow = mysql_fetch_array($lootresult);
+							$lootresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '$itemuname' ;");
+							$lootrow = $lootresult->fetch_array();
 							$abstratus = explode(',', $lootrow['abstratus']);
 							$userrow = addSpecibus($userrow, $abstratus[0]);
 							$newitem = addItem($lootrow['name'],$userrow);
 							$userrow[$newitem] = str_replace("\\", "", $lootrow['name']); //that friggin EOT query
 							$userrow['abstrati']++; //actually give the player a new strife slot
-							mysql_query("UPDATE `Players` SET `abstrati` = " . strval($userrow['abstrati']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
+							$mysqli->query("UPDATE `Players` SET `abstrati` = " . strval($userrow['abstrati']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
 							//OVERSEER: I'm just grabbing the first item from the abstratus listing. That should be the kind if it has more than one, right?
 							if ($newabs != "abstratus-1") {
 								echo "It dropped a strife card, which contained " . $abstratus[0] . "! You waste no time putting it in your strife portfolio.</br>";

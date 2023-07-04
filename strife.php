@@ -64,8 +64,8 @@ if (empty($_SESSION['username'])) {
         $totalchain = count($chain);
         $landcount = 1; //0 should be the user's land which we already printed
         while ($landcount < $totalchain) {
-        	$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
-	    		$currentrow = mysql_fetch_array($currentresult);
+        	$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
+	    		$currentrow = $currentresult->fetch_array();
 	  			$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 	  			echo '<option value="' . $currentrow['username'] . '">' . $locationstr . '</option>';
 	  			$landcount++;
@@ -94,7 +94,7 @@ if (empty($_SESSION['username'])) {
 	  echo '<input type="hidden" name="' . $enemystr . '" value="' . $oldenemy . '">';
 	  $i++;
 	}
-	mysql_query("UPDATE `Players` SET `correctgristtype` = '$userrow[lastgristtype]' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Should be safe.
+	$mysqli->query("UPDATE `Players` SET `correctgristtype` = '$userrow[lastgristtype]' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Should be safe.
 	echo '<input type="hidden" name="land" value="LASTFOUGHT">';
 	echo '<input type="submit" value="Fight these enemies again!" /> </form>';
       } else { //Sleeping strifes
@@ -121,9 +121,9 @@ if (empty($_SESSION['username'])) {
 	echo '<input type="submit" value="Fight these enemies again!" /> </form>';
       }
       $sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-      $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
       $aidneeded = False;
-      while ($row = mysql_fetch_array($sessionmates)) {
+      while ($row = $sessionmates->fetch_array()) {
 	if ($row['session_name'] == $userrow['session_name'] && $row['username'] != $userrow['username'] && $row['dreamingstatus'] == $userrow['dreamingstatus']) { //No aiding yourself!
 	  //Note that we can only try to aid allies with the same current dreaming status.
 	  if (!empty($row['enemydata'])) { //Ally is strifing
@@ -143,20 +143,20 @@ if (empty($_SESSION['username'])) {
     }
     //Begin auto-assist form.
     $sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-    $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+    $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
     echo '<form action="strifeaid.php" method="post">Select an ally to auto-assist. You will be automatically made to assist this ally whenever they begin strifing and it is possible for you to aid them.</br>';
     if (!empty($userrow['autoassist'])) echo "You are currently auto-assisting: $userrow[autoassist]</br>";
     echo 'Select a player to auto-assist: <select name="autoassist"> ';
     echo '<option value="noautoassist">Nobody!</option>';
-    while ($row = mysql_fetch_array($sessionmates)) {
+    while ($row = $sessionmates->fetch_array()) {
       if ($row['session_name'] == $userrow['session_name'] && $row['username'] != $userrow['username']) { //No aiding yourself!
 	echo '<option value="' . $row['username'] . '">' . $row['username'] . '</option>'; //Add ally to list of aidable allies.
       }
     }
     echo '</select></br><input type="submit" value="Auto-assist this ally" /> </form></br>';
     //End auto-assist form.
-    $sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
-    $sessionrow = mysql_fetch_array($sessionresult);
+    $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
+    $sessionrow = $sessionresult->fetch_array();
     if ($sessionrow['sessionbossname'] == "") { //No current fight.
       echo '<a href="sessionbossvote.php">Vote on whole session boss strifes.</a>';
     } else {
@@ -166,8 +166,8 @@ if (empty($_SESSION['username'])) {
   } else { //Enemies currently engaged or currently aiding ally: Strife!
     if ($userrow['aiding'] != "") {
       $aiding = $userrow['aiding'];
-      $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$aiding'");
-      while ($row = mysql_fetch_array($sessionmates)) { //Look for whoever we're aiding.
+      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$aiding'");
+      while ($row = $sessionmates->fetch_array()) { //Look for whoever we're aiding.
 	if ($row['username'] == $aiding) {
 	  $aidrow = $row;
 	}
@@ -216,8 +216,8 @@ if (empty($_SESSION['username'])) {
     } else {
     	$dontechostrife = false;
     	if ($userrow['dungeonstrife'] == 6) {
-    		$qresult = mysql_query("SELECT `context` FROM `Consort_Dialogue` WHERE `ID` = $userrow[currentquest]");
-	    	$qrow = mysql_fetch_array($qresult);
+    		$qresult = $mysqli->query("SELECT `context` FROM `Consort_Dialogue` WHERE `ID` = $userrow[currentquest]");
+	    	$qrow = $qresult->fetch_array();
 	    	if (strpos($qrow['context'], "questrescue") !== false) { //player is doing a rescue quest, so check to see if power has been reduced to 0
     			$i = 0;
     			$threatremains = false;
@@ -231,7 +231,7 @@ if (empty($_SESSION['username'])) {
     			}
     			if (!$threatremains) { //the day is saved!
     				echo "The threat has been completely neutralized! You should talk to the quest giver and claim your reward.<br />";
-    				mysql_query("UPDATE `Players` SET `enemydata` = '' WHERE `Players`.`username` = '$username'");
+    				$mysqli->query("UPDATE `Players` SET `enemydata` = '' WHERE `Players`.`username` = '$username'");
     				echo "<a href='consortquests.php'>==&gt;</a></br>";
     				$dontechostrife = true;
     			}
@@ -364,8 +364,8 @@ if (empty($_SESSION['username'])) {
 	}
       if ($userrow['equipped'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['equipped']]) {
@@ -375,8 +375,8 @@ if (empty($_SESSION['username'])) {
       }
       if ($userrow['offhand'] != "" && $userrow['offhand'] != "2HAND") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['offhand']]) {
@@ -386,8 +386,8 @@ if (empty($_SESSION['username'])) {
       }
       if ($userrow['headgear'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['headgear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['headgear']]) {
@@ -398,8 +398,8 @@ if (empty($_SESSION['username'])) {
       }
       if ($userrow['facegear'] != "" && $userrow['facegear'] != "2HAND") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['facegear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['facegear']]) {
@@ -410,8 +410,8 @@ if (empty($_SESSION['username'])) {
       }
       if ($userrow['bodygear'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['bodygear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['bodygear']]) {
@@ -422,8 +422,8 @@ if (empty($_SESSION['username'])) {
       }
       if ($userrow['accessory'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['accessory']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['accessory']]) {
@@ -432,8 +432,8 @@ if (empty($_SESSION['username'])) {
 	  }
 	}
       }
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
-      $blankrow = mysql_fetch_array($itemresult);
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
+      $blankrow = $itemresult->fetch_array();
       if (empty($mainrow) || $userrow['dreamingstatus'] != "Awake") $mainrow = $blankrow;
       if (empty($offrow) || $userrow['dreamingstatus'] != "Awake") $offrow = $blankrow;
       if (empty($headrow) || $userrow['dreamingstatus'] != "Awake") $headrow = $blankrow;
@@ -547,8 +547,8 @@ if (empty($_SESSION['username'])) {
     			$statusarg = explode(":", $thisstatus[$st]);
     			if ($statusarg[0] == "PARTY") { //this is an ally's stats, and we only care about allies here
     				//format: ALLY:<basename>:<loyalty>:<nickname>:<desc>:<power>| with the last 3 args being optional
-    				$npcresult = mysql_query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
-    				$npcrow = mysql_fetch_array($npcresult);
+    				$npcresult = $mysqli->query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
+    				$npcrow = $npcresult->fetch_array();
     				if (!empty($statusarg[5])) $npcpower = $statusarg[5];
     				else $npcpower = $npcrow['basepower'];
     				if (!empty($statusarg[3])) $npcname = $statusarg[3];
@@ -567,8 +567,8 @@ if (empty($_SESSION['username'])) {
     		}
     	}
     	if ($npcechoed) echo "<br />";
-      $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`aiding` = '$username'");
-      while ($row = mysql_fetch_array($sessionmates)) {
+      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '$username'");
+      while ($row = $sessionmates->fetch_array()) {
 	if ($row['aiding'] == $username) { //Aiding character.
 	  echo "$row[username] is assisting you!</br>";
 	}

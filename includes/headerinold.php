@@ -14,15 +14,15 @@ function mdetect(){
 require_once("includes/SQLconnect.php");
 if (empty($_SESSION['username'])) {
 
-  $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = 'default'");
-  $userrow = mysql_fetch_array($result);
+  $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = 'default'");
+  $userrow = $result->fetch_array();
   //Should stop the "userrow undefined" spam.
 } else {
 
   $username=$_SESSION['username'];
-  $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
+  $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
 
-  while ($row = mysql_fetch_array($result)) { //Fetch the user's database row. We're going to need it several times.
+  while ($row = $result->fetch_array()) { //Fetch the user's database row. We're going to need it several times.
     if ($row['username'] == $username) { //Paranoia: Double-check.
       $userrow = $row;
     }
@@ -48,27 +48,27 @@ if (empty($_SESSION['username'])) {
     $bosstimer = 300; //Five minutes to act.
     $bosstime = time();
     $timeout = 30; //Number of seconds file has to perform boss actions.
-    $sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;");
-    $sessionrow = mysql_fetch_array($sessionresult);
+    $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;");
+    $sessionrow = $sessionresult->fetch_array();
     if ($sessionrow['sessionbossname'] == "") { //No boss! Paranoia: disengage.
-      mysql_query("UPDATE Players SET `sessionbossengaged` = 0 WHERE `Players`.`session_name` = '$username'");
+      $mysqli->query("UPDATE Players SET `sessionbossengaged` = 0 WHERE `Players`.`session_name` = '$username'");
     } else {
-      $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
+      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
       $chumroll = 0;
-      while ($buddyrow = mysql_fetch_array($sessionmates)) $chumroll++;
+      while ($buddyrow = $sessionmates->fetch_array()) $chumroll++;
       //Fish up the boss's entry in the enemy listing. It contains vital statistics. NOTE - The massive damage threshold should be divided by the number of players in the session and is a soft cap
-      $bossresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = $sessionrow[sessionbossname]");
-      $bossrow = mysql_fetch_array($bossresult);
+      $bossresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = $sessionrow[sessionbossname]");
+      $bossrow = $bossresult->fetch_array();
       //Below we check: Whether there needs to be an action, and whether either the mutex is free or the mutex user has timed out.
       //(If the mutex has been acquired for $timeout seconds or more, we assume the original person is not going to complete the boss update and try again)
       $turns = 0;
       if ($bosstime - $bosstimer > $sessionrow['actiontimer'] && ($sessionrow['mutexplayer'] == "" || $bosstime - $sessionrow['mutextimer'] >= $timeout)) { //This user triggers boss.
-	mysql_query("UPDATE Sessions SET `mutexplayer` = '$username' WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;");
-	mysql_query("UPDATE Sessions SET `mutextimer` = $bosstime WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;");
+	$mysqli->query("UPDATE Sessions SET `mutexplayer` = '$username' WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;");
+	$mysqli->query("UPDATE Sessions SET `mutextimer` = $bosstime WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;");
 	while ($bosstime - $bosstimer > $sessionrow['actiontimer']) { //This user has triggered the next attack. Or if for some reason no-one has checked in forever, the next <MATH> attacks.
 	  $turns++;
 	  $message = $sessionrow['combatlog'];
-	  $fighters = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`sessionbossengaged` = 1");
+	  $fighters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`sessionbossengaged` = 1");
 	  //Routine for boss's turn goes here. Everything will happen here (data contained here). We will make an array using the fighter names as indexes and assign damage and power reduction.
 	  $bossdamage = 0;
 	  $bossreduc = 0;
@@ -82,11 +82,11 @@ if (empty($_SESSION['username'])) {
 	  $defensereduc = array($username => 0);
 	  $fighterindex = array(1 => $username);
 	  $bosspower = $sessionrow['sessionbosspower']; //Power to be allocated to attacks by the boss.
-	  while ($fightrow = mysql_fetch_array($fighters)) { //Attackers do stuff here.
-	    $abilityresult = mysql_query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$fightrow[Aspect]','All') AND `Abilities`.`Class` IN ('$fightrow[Class]','All') 
+	  while ($fightrow = $fighters->fetch_array()) { //Attackers do stuff here.
+	    $abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$fightrow[Aspect]','All') AND `Abilities`.`Class` IN ('$fightrow[Class]','All') 
 AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $fightrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
 	    $abilities = array(0 => "Null ability. No, not void.");
-	    while ($temp = mysql_fetch_array($abilityresult)) {
+	    while ($temp = $abilityresult->fetch_array()) {
 	      $abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
 	      //as pulling the correct element out of the abilities array via the ID. Note that an ability with an empty usage message will be unusable since the empty function will spit empty at you.
 	    }
@@ -125,27 +125,27 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 	  if ($bossdamage > $sessionrow['sessionbosshealth']) { //Boss has been slain!
 	    //Boss is dead code here.
 	    $message = $message . "$sessionrow[sessionbossname] has been defeated! Congratulations!</br>";
-	    mysql_query("UPDATE Sessions SET `sessionbossname` = '' WHERE `Sessions`.`name` = '$userrow[session_name]'");
-	    mysql_query("UPDATE Sessions SET `checkmate` = 1 WHERE `Sessions`.`name` = '$userrow[session_name]'");
+	    $mysqli->query("UPDATE Sessions SET `sessionbossname` = '' WHERE `Sessions`.`name` = '$userrow[session_name]'");
+	    $mysqli->query("UPDATE Sessions SET `checkmate` = 1 WHERE `Sessions`.`name` = '$userrow[session_name]'");
 	    $p = 1;
 	    while ($p <= $max_enemies) {
 	      $enemystr = "enemy" . strval($p) . "name";
-	      mysql_query("UPDATE Players SET `$enemystr` = '' WHERE `Players`.`sessionbossengaged` = 1 AND `Players`.`session_name` = '$userrow[session_name]'");
+	      $mysqli->query("UPDATE Players SET `$enemystr` = '' WHERE `Players`.`sessionbossengaged` = 1 AND `Players`.`session_name` = '$userrow[session_name]'");
 	      $p++;
 	    }
-	    mysql_query("UPDATE Players SET `Echeladder` = 612 WHERE `Players`.`sessionbossengaged` = 1 AND `Players`.`session_name` = '$userrow[session_name]'"); //Maxxes out if it wasn't already
-	    mysql_query("UPDATE Players SET `sessionbossengaged` = 0 WHERE `Players`.`session_name` = '$userrow[session_name]'");
-	    mysql_query("UPDATE Players SET `sessionbossdefeated` = '$sessionrow[sessionbossname]' WHERE `Players`.`session_name` = '$userrow[session_name]'");
+	    $mysqli->query("UPDATE Players SET `Echeladder` = 612 WHERE `Players`.`sessionbossengaged` = 1 AND `Players`.`session_name` = '$userrow[session_name]'"); //Maxxes out if it wasn't already
+	    $mysqli->query("UPDATE Players SET `sessionbossengaged` = 0 WHERE `Players`.`session_name` = '$userrow[session_name]'");
+	    $mysqli->query("UPDATE Players SET `sessionbossdefeated` = '$sessionrow[sessionbossname]' WHERE `Players`.`session_name` = '$userrow[session_name]'");
 	    $sessionrow['actiontimer'] = $bosstime; //End ze loop.
 	  } else {
-	    $fighters = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`sessionbossengaged` = 1");
-	    $enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '$sessionrow[sessionbossname]'");
-	    $enemyrow = mysql_fetch_array($enemyresult);
-	    while ($fightrow = mysql_fetch_array($fighters)) { //Boss performs attacks starting here.
-	      $abilityresult = mysql_query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$fightrow[Aspect]','All') AND `Abilities`.`Class` IN ('$fightrow[Class]','All') 
+	    $fighters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`sessionbossengaged` = 1");
+	    $enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '$sessionrow[sessionbossname]'");
+	    $enemyrow = $enemyresult->fetch_array();
+	    while ($fightrow = $fighters->fetch_array()) { //Boss performs attacks starting here.
+	      $abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$fightrow[Aspect]','All') AND `Abilities`.`Class` IN ('$fightrow[Class]','All') 
 AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $fightrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
 	      $abilities = array(0 => "Null ability. No, not void.");
-	      while ($temp = mysql_fetch_array($abilityresult)) {
+	      while ($temp = $abilityresult->fetch_array()) {
 		$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
 		//as pulling the correct element out of the abilities array via the ID. An ability with an empty usage message will be unusable since the empty function will spit empty at you.
 	      }
@@ -184,7 +184,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		if ($targetvalue < 50) $targetvalue = 50; //Maximum 50% chance.
 		$rand = rand(1,100);
 		if ($rand > $targetvalue || $fightrow['dissipatefocus'] == 1) { //Ability triggers
-		  mysql_query("UPDATE `Players` SET `dissipatefocus` = 0 WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `dissipatefocus` = 0 WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
 		  //We don't update the actual array item, so dissipatefocus will trigger for every enemy in the combat.
 		  $message = $message . "$fightrow[username]: $abilities[4]</br>";
 		  $playerdamage = 0;
@@ -196,7 +196,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		//Formula: First divide incoming damage by 12. Then subtract the lower of the already existing offense boost (divided according to echeladder) and the damage / 15
 		$offenseplus = ceil(ceil($playerdamage / 12) - min(ceil($fightrow['offenseboost'] / ceil($fightrow['Echeladder'] / 100)), ceil($playerdamage / 13)));
 		$offenseplus = $offenseplus * ($fightrow['Godtier'] + 1); //Multiply by the "standard" non class affected godtier modifier.
-		mysql_query("UPDATE `Players` SET `offenseboost` = $fightrow[offenseboost]+$offenseplus WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `offenseboost` = $fightrow[offenseboost]+$offenseplus WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
 		$fightrow['offenseboost'] += $offenseplus;
 		$message = $message . "$fightrow[username]: $abilities[12]</br>";
 		$message = $message . "Offense boost: $offenseplus</br>";
@@ -214,55 +214,55 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  $message = $message . "$fightrow[username] has been KOed! As they fall to the ground, a shining light envelopes them, restoring their strength.</br>";
 		  $fightrow[$fightervialstr] = $fightrow['motifcounter'] * 500;
 		  if ($fightrow[$fightervialstr] > $fightrow['Gel_Viscosity']) $fightrow[$fightervialstr] = $fightrow['Gel_Viscosity'];
-		  mysql_query("UPDATE `Players` SET `" . $fightervialstr . "` = $fightrow[$fightervialstr] WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `" . $fightervialstr . "` = $fightrow[$fightervialstr] WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $powerboost = $fightrow['motifcounter'] * 100;
-		  mysql_query("UPDATE `Players` SET `powerboost` = $fightrow[powerboost]+$powerboost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `powerboost` = $fightrow[powerboost]+$powerboost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $fightrow['powerboost'] = $fightrow['powerboost'] + $powerboost;
-		  mysql_query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $fightrow['motifcounter'] = 0;
 		}
 		if (!empty($abilities[20]) && ($chancething <= ceil(($fightrow['Aspect_Vial'] * 100) / $fightrow['Gel_Viscosity']))) { //Hope Endures activated (ID 20)
 		  $message = $message . $fightrow['username'] . "'s " . $abilities[20] . "</br>";
-		  mysql_query("UPDATE `Players` SET `$fightervialstr` = 1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Health to 1
+		  $mysqli->query("UPDATE `Players` SET `$fightervialstr` = 1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Health to 1
 		  $aspectcost = floor($fightrow['Aspect_Vial'] / 2);
-		  mysql_query("UPDATE `Players` SET `Aspect_Vial` = $userrow[Aspect_Vial]-$aspectcost WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $userrow[Aspect_Vial]-$aspectcost WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
 		  $fightrow['Aspect_Vial'] = $fightrow['Aspect_Vial'] - $aspectcost;
 		} else {
 		  //Handle player KO here.
 		  $message = $message . "$fightrow[username] has been KOed!</br>";
-		  mysql_query("UPDATE `Players` SET `$fightervialstr` = 1 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;"); //Health to 1
-		  mysql_query("UPDATE `Players` SET `" . $fighterdownstr . "` = 1 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE Players SET `sessionbossengaged` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1;"); //No longer fighting
-		  mysql_query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `sessionbossactiontaken` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `$fightervialstr` = 1 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;"); //Health to 1
+		  $mysqli->query("UPDATE `Players` SET `" . $fighterdownstr . "` = 1 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE Players SET `sessionbossengaged` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1;"); //No longer fighting
+		  $mysqli->query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `sessionbossactiontaken` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;");
 		  $k = 1;
 		  while ($k <= $max_enemies) {
 		    $enemystr = "enemy" . strval($k) . "name";
-		    mysql_query("UPDATE `Players` SET `" . $enemystr . "` = '' WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;"); //Remove enemies from player profile.
+		    $mysqli->query("UPDATE `Players` SET `" . $enemystr . "` = '' WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;"); //Remove enemies from player profile.
 		    $k++;
 		  }
-		  mysql_query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;"); //Power boosts wear off.
-		  mysql_query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `temppowerboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `invulnerability` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;");
-		  $remainingfighters = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
+		  $mysqli->query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;"); //Power boosts wear off.
+		  $mysqli->query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `temppowerboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `invulnerability` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fightrow[$username]' LIMIT 1 ;");
+		  $remainingfighters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
 		  $chumroll = 0;
-		  while ($remainrow = mysql_fetch_array($remainingfighters)) {
+		  while ($remainrow = $remainingfighters->fetch_array()) {
 		    if ($remainrow['sessionbossengaged'] == 1) $chumroll++;
 		  }
 		  if ($chumroll == 0) { //No-one left fighting
 		    $message = $message . "$sessionrow[sessionbossname] has defeated all attackers, so the strife has been concluded.</br>";
-		    mysql_query("UPDATE Sessions SET `sessionbossname` = '' WHERE `Sessions`.`name` = '$userrow[session_name]'");
+		    $mysqli->query("UPDATE Sessions SET `sessionbossname` = '' WHERE `Sessions`.`name` = '$userrow[session_name]'");
 		    $sessionrow['actiontimer'] = $bosstime; //End ze loop.
 		  }
 		}
 	      } else {
-		mysql_query("UPDATE `Players` SET `$fightervialstr` = $fightrow[$fightervialstr]-$playerdamage WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Damage is dealt.
+		$mysqli->query("UPDATE `Players` SET `$fightervialstr` = $fightrow[$fightervialstr]-$playerdamage WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Damage is dealt.
 	      }
 	      //Handle boost reduction here.
 	      if ($fightrow['motifcounter'] == 0 || $fightrow['Aspect'] != "Void") { //Do not strip boosts and invuln if void III is running.
@@ -271,35 +271,35 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  if ($fightrow['powerboost'] > 0) {
 		    $newboost = $fightrow['powerboost'] - $enemyrow['boostdrain'];
 		    if ($newboost < 0) $newboost = 0;
-		    mysql_query("UPDATE `Players` SET `powerboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `powerboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
 		  }
 		  if ($fightrow['offenseboost'] > 0) {
 		    $newboost = $fightrow['offenseboost'] - $enemyrow['boostdrain'];
 		    if ($newboost < 0) $newboost = 0;
-		    mysql_query("UPDATE `Players` SET `offenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `offenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
 		  }
 		  if ($fightrow['defenseboost'] > 0) {
 		    $newboost = $fightrow['defenseboost'] - $enemyrow['boostdrain'];
 		    if ($newboost < 0) $newboost = 0;
-		    mysql_query("UPDATE `Players` SET `defenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `defenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
 		  }
 		  if ($fightrow['temppowerboost'] > 0) {
 		    $newboost = $fightrow['temppowerboost'] - $enemyrow['boostdrain'];
 		    if ($newboost < 0) $newboost = 0;
-		    mysql_query("UPDATE `Players` SET `temppowerboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `temppowerboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
 		  }
 		  if ($fightrow['tempoffenseboost'] > 0) {
 		    $newboost = $fightrow['tempoffenseboost'] - $enemyrow['boostdrain'];
 		    if ($newboost < 0) $newboost = 0;
-		    mysql_query("UPDATE `Players` SET `tempoffenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `tempoffenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
 		  }
 		  if ($fightrow['tempdefenseboost'] > 0) {
 		    $newboost = $userrow['tempdefenseboost'] - $enemyrow['boostdrain'];
 		    if ($newboost < 0) $newboost = 0;
-		    mysql_query("UPDATE `Players` SET `tempdefenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `tempdefenseboost` = " . $newboost . " WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;");
 		  }
 		}
-		mysql_query("UPDATE `Players` SET `invulnerability` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;"); //Knock off the invuln.
+		$mysqli->query("UPDATE `Players` SET `invulnerability` = 0 WHERE `Players`.`username` = '" . $fightrow[$username] . "' LIMIT 1 ;"); //Knock off the invuln.
 	      }
 	      //Finish handling boost reduction here.
 	    }
@@ -307,36 +307,36 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 	      $target = rand(1,count($fighterindex));
 	      $message = $message . "$sessionrow[sessionbossname] OBLITERATES $fighterindex[$target]! Looks like not engaging gave them a pretty big opening.</br>";
 	      //KO the obliterated target here.
-	      mysql_query("UPDATE `Players` SET `Health_Vial` = 1 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;"); //Health to 1
-	      mysql_query("UPDATE `Players` SET `Dream_Health_Vial` = 1 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;"); //Dream health to 1. Obliterated means obliterated :p
-	      mysql_query("UPDATE `Players` SET `down` = 1 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `dreamdown` = 1 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `sessionbossengaged` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1;"); //No longer fighting
-	      mysql_query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `sessionbossactiontaken` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `Health_Vial` = 1 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;"); //Health to 1
+	      $mysqli->query("UPDATE `Players` SET `Dream_Health_Vial` = 1 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;"); //Dream health to 1. Obliterated means obliterated :p
+	      $mysqli->query("UPDATE `Players` SET `down` = 1 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `dreamdown` = 1 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `sessionbossengaged` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1;"); //No longer fighting
+	      $mysqli->query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `sessionbossactiontaken` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;");
 	      $k = 1;
 	      while ($k <= $max_enemies) {
 		$enemystr = "enemy" . strval($k) . "name";
-		mysql_query("UPDATE `Players` SET `" . $enemystr . "` = '' WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;"); //Remove enemies from player profile.
+		$mysqli->query("UPDATE `Players` SET `" . $enemystr . "` = '' WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;"); //Remove enemies from player profile.
 		$k++;
 	      }
-	      mysql_query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;"); //Power boosts wear off.
-	      mysql_query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `temppowerboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `invulnerability` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;");
-	      $remainingfighters = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
+	      $mysqli->query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;"); //Power boosts wear off.
+	      $mysqli->query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `temppowerboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `invulnerability` = 0 WHERE `Players`.`username` = '" . $fighterindex[$target] . "' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fighterindex[$target]' LIMIT 1 ;");
+	      $remainingfighters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
 	      $chumroll = 0;
-	      while ($remainrow = mysql_fetch_array($remainingfighters)) {
+	      while ($remainrow = $remainingfighters->fetch_array()) {
 		if ($remainrow['sessionbossengaged'] == 1) $chumroll++;
 	      }
 	      if ($chumroll == 0) { //No-one left fighting
 		$message = $message . "$sessionrow[sessionbossname] has defeated all attackers, so the strife has been concluded.</br>";
-		mysql_query("UPDATE Sessions SET `sessionbossname` = '' WHERE `Sessions`.`name` = '$userrow[session_name]'");
+		$mysqli->query("UPDATE Sessions SET `sessionbossname` = '' WHERE `Sessions`.`name` = '$userrow[session_name]'");
 		$sessionrow['actiontimer'] = $bosstime; //End ze loop.
 	      }
 	    }
@@ -352,12 +352,12 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 	      $powerdamage -= $enemyrow['powerrecover'];
 	    }
 	    //Boss doing stuff ends here. Begin performing end-of-turn routines on fighters (tick down temporary boosts, reset consumable and action uses, regenerate aspect vial)
-	    $fighters = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`sessionbossengaged` = 1");
-	    while ($fightrow = mysql_fetch_array($fighters)) {
-	      $abilityresult = mysql_query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$fightrow[Aspect]','All') AND `Abilities`.`Class` IN ('$fightrow[Class]','All') 
+	    $fighters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`sessionbossengaged` = 1");
+	    while ($fightrow = $fighters->fetch_array()) {
+	      $abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$fightrow[Aspect]','All') AND `Abilities`.`Class` IN ('$fightrow[Class]','All') 
 AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $fightrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
 	      $abilities = array(0 => "Null ability. No, not void.");
-	      while ($temp = mysql_fetch_array($abilityresult)) {
+	      while ($temp = $abilityresult->fetch_array()) {
 		$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
 		//as pulling the correct element out of the abilities array via the ID. An ability with an empty usage message will be unusable since the empty function will spit empty at you.
 	      }
@@ -376,19 +376,19 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 	      if ($luck > 100) $luck = 100; //We work with luck as a percentage generally. This may be changed later. (Need luck for space motif)
 	      if ($fightrow['motifcounter'] == 0 || $fightrow['Aspect'] != "Time") { //Do not tick boosts if Time III is running
 		if ($fightrow['temppowerduration'] > 0) {
-		  mysql_query("UPDATE `Players` SET `temppowerduration` = $fightrow[temppowerduration]-1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `temppowerduration` = $fightrow[temppowerduration]-1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		} elseif ($fightrow['temppowerboost'] != 0) {
-		  mysql_query("UPDATE `Players` SET `temppowerboost` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `temppowerboost` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		}
 		if ($fightrow['tempoffenseduration'] > 0) {
-		  mysql_query("UPDATE `Players` SET `tempoffenseduration` = $fightrow[tempoffenseduration]-1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempoffenseduration` = $fightrow[tempoffenseduration]-1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		} elseif ($fightrow['tempoffenseboost'] != 0) {
-		  mysql_query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		}
 		if ($fightrow['tempdefenseduration'] > 0) {
-		  mysql_query("UPDATE `Players` SET `tempdefenseduration` = $fightrow[tempdefenseduration]-1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempdefenseduration` = $fightrow[tempdefenseduration]-1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		} elseif ($fightrow['tempdefenseboost'] != 0) {
-		  mysql_query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		}
 	      }
 	      if ($fightrow['Aspect_Vial'] + ceil($fightrow['Gel_Viscosity'] / 5) > $fightrow['Gel_Viscosity']) {
@@ -396,10 +396,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 	      } else {
 		$newaspectvial = $fightrow['Aspect_Vial'] + ceil($fightrow['Gel_Viscosity'] / 5);
 	      }
-	      mysql_query("UPDATE `Players` SET `Aspect_Vial` = $newaspectvial WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `sessionbossactiontaken` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
-	      mysql_query("UPDATE `Players` SET `sessionbossdefense` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Reset this.
+	      $mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $newaspectvial WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `sessionbossactiontaken` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `sessionbossdefense` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Reset this.
 	      //Begin checking passive abilities that trigger at end of turn here.
 	      if (!empty($abilities[11]) && ($fightrow['powerboost'] < 0 || $fightrow['offenseboost'] < 0 || $fightrow['defenseboost'] < 0 || $fightrow['temppowerboost'] < 0 || $fightrow['tempoffenseboost'] < 0 || $fightrow['tempdefenseboost'] < 0)) { //There's a boost below zero. Trigger Blockhead (ID 11)
 		$message = $message . "$abilities[11]</br>";
@@ -410,7 +410,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  if ($fightrow[$boost] < 0) {
 		    $fightrow[$boost] += floor($fightrow['Echeladder'] / 2);
 		    if ($fightrow[$boost] > 0) $fightrow[$boost] = 0;
-		    mysql_query("UPDATE `Players` SET `$boost` = $fightrow[$boost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `$boost` = $fightrow[$boost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
 		  }
 		  $type++;
 		}
@@ -418,8 +418,8 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 	      //Finish checking passive abilities that trigger at end of turn here.
 	      //We do tier 3 motifs here, they may have different effects. Note that they do not affect aggro or count towards "maximum damage" and any damage dealt is not massive resisted.
 	      if ($fightrow['motifcounter'] > 0) { //Motif is active.
-		$motifresult = mysql_query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $fightrow['Aspect'] . "'");
-		$motifrow = mysql_fetch_array($motifresult);
+		$motifresult = $mysqli->query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $fightrow['Aspect'] . "'");
+		$motifrow = $motifresult->fetch_array();
 		$usagestr = "Turn $fightrow[motifcounter] of $fightrow[username]'s $motifrow[solo3]:</br>";
 		switch ($fightrow['Aspect']) {
 		case "Breath": //Breathless Battaglia
@@ -427,12 +427,12 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		    $message = $message . "$fightrow[username]'s fraymotif continues! " . "The fraymotif steals the breath from $sessionrow[sessionbossname].</br>";
 		    $powerdrain = 2500;
 		    $powerdamage += $powerdrain;
-		    mysql_query("UPDATE `Players` SET `motifvar` = $fightrow[motifvar]+$powerdrain WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `motifvar` = $fightrow[motifvar]+$powerdrain WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  } else { //Use drained power to attack.
 		    $message = $message . "$fightrow[username]'s fraymotif continues! " . "The stolen power is unleashed in a massive tornado!</br>";
 		    $damage = $fightrow['motifvar'] * 5; //Results in 50k damage every five rounds.
 		    $bossdamage += $damage;
-		    mysql_query("UPDATE `Players` SET `motifvar` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Power expended.
+		    $mysqli->query("UPDATE `Players` SET `motifvar` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Power expended.
 		  }
 		  break;
 		case "Heart":
@@ -441,7 +441,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  if ($aspectregen > 2000) $aspectregen = 2000; //Rampup is complete after ten turns.
 		  $newaspect = $fightrow['Aspect_Vial'] + $aspectregen;
 		  if ($newaspect > $fightrow['Gel_Viscosity']) $newaspect = $fightrow['Gel_Viscosity'];
-		  mysql_query("UPDATE `Players` SET `Aspect_Vial` = $newaspect WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $newaspect WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $fightrow['Aspect_Vial'] = $newaspect; //Juuuust in case.
 		  break;
 		case "Life":
@@ -450,7 +450,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  if ($regen > 2000) $regen = 2000; //Rampup is complete after ten turns.
 		  $newhealth = $fightrow[$fightervialstr] + $regen;
 		  if ($newhealth > $fightrow['Gel_Viscosity']) $newhealth = $fightrow['Gel_Viscosity'];
-		  mysql_query("UPDATE `Players` SET `$fightervialstr` = $newhealth WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `$fightervialstr` = $newhealth WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $fightrow[$fightervialstr] = $newhealth; //Juuuust in case.
 		  break;
 		case "Hope":
@@ -463,7 +463,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		case "Mind":
 		  $message = $message . "$fightrow[username]'s fraymotif continues! The music helps $fightrow[username] relax and focus on the task at hand. That being delivering a righteous smackdown.</br>";
 		  $powerboost = 1000;
-		  mysql_query("UPDATE `Players` SET `powerboost` = $fightrow[powerboost]+$powerboost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `powerboost` = $fightrow[powerboost]+$powerboost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $fightrow['powerboost'] += $powerboost; //Juuuust in case.
 		  break;
 		case "Blood":
@@ -471,7 +471,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  $damage = 8000;
 		  $bossdamage += $damage;
 		  $boost = floor($damage / 20);
-		  mysql_query("UPDATE `Players` SET `powerboost` = $fightrow[powerboost]+$boost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `powerboost` = $fightrow[powerboost]+$boost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $fightrow['powerboost'] += $boost; //Juuuust in case.
 		  break;
 		case "Doom":
@@ -490,9 +490,9 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  $offenseboost = (10 - $fightrow['motifcounter']) * 1200;
 		  if ($offenseboost <= 0) {
 		    $offenseboost = 0; //Rampdown is complete after ten turns.
-		    mysql_query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Fraymotif over.
+		    $mysqli->query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Fraymotif over.
 		  }
-		  mysql_query("UPDATE `Players` SET `offenseboost` = $offenseboost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `offenseboost` = $offenseboost WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;");
 		  $fightrow['offenseboost'] = $offenseboost; //Juuuust in case.
 		  break;
 		case "Void": //Suppresses special monster abilities. Handled in the monster ability area.
@@ -543,13 +543,13 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		    $itemresult = ("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` = 9999;");
 		    $backup = $itemresult;
 		    $items = 0;
-		    while ($itemrow = mysql_fetch_array($itemresult)) {
+		    while ($itemrow = $itemresult->fetch_array()) {
 		      $items++;
 		    }
 		    $itemresult = $backup;
 		    $randomthing = 2;
 		    while ($randomthing != 1) {
-		      while ($itemrow = mysql_fetch_array($itemresult)) {
+		      while ($itemrow = $itemresult->fetch_array()) {
 			$randomthing = rand(1,$items);
 			$items--;
 		      }
@@ -566,15 +566,15 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 		  $fightrow['temppowerboost'] += 50;
 		  $fightrow['tempoffenseboost'] += 50;
 		  $fightrow['tempdefenseboost'] += 50;
-		  mysql_query("UPDATE `Players` SET `temppowerboost` = $fightrow[temppowerboost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `tempoffenseboost` = $fightrow[tempoffenseboost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `tempdefenseboost` = $fightrow[tempdefenseboost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `temppowerboost` = $fightrow[temppowerboost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempoffenseboost` = $fightrow[tempoffenseboost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `tempdefenseboost` = $fightrow[tempdefenseboost] WHERE `Players`.`username` = '" . $fightrow['username'] . "' LIMIT 1 ;");
 		  break;
 		default:
 		  $message = $message . "Player $fightrow[username]'s aspect $fightrow[Aspect] unrecognized. This is probably a bug.</br>";
 		  break;
 		}
-		mysql_query("UPDATE `Players` SET `motifcounter` = $fightrow[motifcounter]+1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Increment the motif counter by one.
+		$mysqli->query("UPDATE `Players` SET `motifcounter` = $fightrow[motifcounter]+1 WHERE `Players`.`username` = '$fightrow[username]' LIMIT 1 ;"); //Increment the motif counter by one.
 		$message = $message . $usagestr;
 	      }
 	    }
@@ -582,20 +582,20 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
 	    //May check damage and power against maximums here. May not. Probably should to handle health vial.
 	    if ($sessionrow['sessionbosshealth'] - $bossdamage > $sessionrow['sessionbossmaxhealth']) $bossdamage = $sessionrow['sessionbosshealth'] - $sessionrow['sessionbossmaxhealth'];
 	    if ($sessionrow['sessionbosshealth'] < $bossdamage) $bossdamage = $sessionrow['sessionbosshealth'] - 1; //Cannot have been slain if he wasn't above.
-	    mysql_query("UPDATE Sessions SET `sessionbosshealth` = $sessionrow[sessionbosshealth]-$bossdamage WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Do damage
-	    mysql_query("UPDATE Sessions SET `sessionbosspower` = $sessionrow[sessionbosspower]-$powerdamage WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Reduce power
-	    mysql_query("UPDATE Players SET `enemy1power` = $bossmax WHERE `Players`.`kingvote` = 1 AND `Players`.`session_name` = '$userrow[session_name]'"); //Reset dummies on all fighters.
-	    mysql_query("UPDATE Players SET `enemy1health` = $bossmax WHERE `Players`.`kingvote` = 1 AND `Players`.`session_name` = '$userrow[session_name]'");
+	    $mysqli->query("UPDATE Sessions SET `sessionbosshealth` = $sessionrow[sessionbosshealth]-$bossdamage WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Do damage
+	    $mysqli->query("UPDATE Sessions SET `sessionbosspower` = $sessionrow[sessionbosspower]-$powerdamage WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Reduce power
+	    $mysqli->query("UPDATE Players SET `enemy1power` = $bossmax WHERE `Players`.`kingvote` = 1 AND `Players`.`session_name` = '$userrow[session_name]'"); //Reset dummies on all fighters.
+	    $mysqli->query("UPDATE Players SET `enemy1health` = $bossmax WHERE `Players`.`kingvote` = 1 AND `Players`.`session_name` = '$userrow[session_name]'");
 	    $sessionrow['actiontimer'] += $bosstimer;
 	    $message = $message . "----------</br>";
 	    if ($turns >= 5) $sessionrow['actiontimer'] = time(); //Only execute five turns in succession.
 	  }
 	}
-	mysql_query("UPDATE Sessions SET `actiontimer` = $sessionrow[actiontimer] WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Update boss's action timer.
-	mysql_query("UPDATE Sessions SET `mutexplayer` = '' WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Free the mutex.
-	mysql_query("UPDATE Sessions SET `combatlog` = '$message' WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Log the round.
-	$result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
-	while ($row = mysql_fetch_array($result)) { //Fetch the user's database row. We're going to need it several times.
+	$mysqli->query("UPDATE Sessions SET `actiontimer` = $sessionrow[actiontimer] WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Update boss's action timer.
+	$mysqli->query("UPDATE Sessions SET `mutexplayer` = '' WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Free the mutex.
+	$mysqli->query("UPDATE Sessions SET `combatlog` = '$message' WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1;"); //Log the round.
+	$result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
+	while ($row = $result->fetch_array()) { //Fetch the user's database row. We're going to need it several times.
 	  if ($row['username'] == $username) { //Paranoia: Double-check.
 	    $userrow = $row; //Reload the user row since it may well have been changed in several places.
 	  }
@@ -624,12 +624,12 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $fightrow[Echeladder] AND `Abilities`.`G
   }
   if ($encounters > $userrow['encounters'] && ($userrow['down'] == 1 || $userrow['dreamdown'] == 1)) { //Both downs recover after a single encounter is earned.
     $encounters -= 1;
-    mysql_query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Player recovers.
+    $mysqli->query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Player recovers.
     $up = True;
   }
   if ($encounters > 100) $encounters = 100;
   if ($lasttick != $userrow['lasttick']) {
-    mysql_query("UPDATE `Players` SET `encounters` = $encounters, `lasttick` = $lasttick WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `encounters` = $encounters, `lasttick` = $lasttick WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
     $userrow['encounters'] = $encounters;
   }
 }

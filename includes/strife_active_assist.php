@@ -1,7 +1,7 @@
 <?php
       $aiding = $userrow['aiding'];
-      $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$aiding'");
-      while ($row = mysql_fetch_array($sessionmates)) { //Look for whoever we're aiding.
+      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$aiding'");
+      while ($row = $sessionmates->fetch_array()) { //Look for whoever we're aiding.
 	if ($row['username'] == $aiding) {
 	  $aidrow = $row;
 	}

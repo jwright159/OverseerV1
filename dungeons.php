@@ -6,11 +6,11 @@ require 'includes/chaincheck.php';
 require_once("header.php");
 $canusespecibus = True;
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -98,9 +98,9 @@ function generateLoot($roomarray,$row,$col,$distance,$gate,$lootonly,$boonbucks,
   	}
   }
     $selected = False;
-    $itemsresult = mysql_query("SELECT `name` FROM `Captchalogue` $exstr");
+    $itemsresult = $mysqli->query("SELECT `name` FROM `Captchalogue` $exstr");
     $totalitems = 0;
-    while ($row = mysql_fetch_array($itemsresult)) $totalitems++;
+    while ($row = $itemsresult->fetch_array()) $totalitems++;
     $item = rand(1,$totalitems); //Starting point for the item search.
     $item--; //otherwise it will eliminate 1 item from the search and if there's only 1 item dats bad
     $loopies = $totalitems;
@@ -108,8 +108,8 @@ function generateLoot($roomarray,$row,$col,$distance,$gate,$lootonly,$boonbucks,
     $max = ceil($max * (1 + ($distance / 16)));
     while (!$selected) {
       $loopies--;
-      $itemresult = mysql_query("SELECT * FROM Captchalogue $exstr LIMIT " . $item . " , 1 ;");
-      $itemrow = mysql_fetch_array($itemresult);
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue $exstr LIMIT " . $item . " , 1 ;");
+      $itemrow = $itemresult->fetch_array();
       $itemname = $itemrow['name'];
       //if ($debugprintbossloots) echo "checking $itemname<br />";
       $total = 0;
@@ -157,15 +157,15 @@ function generateEncounter($roomarray,$row,$col,$distance,$gate,$enemies,$isboss
       	$hcount = 2; //1 is the hydra itself
       	while ($hcount <= 8) { //7 heads in total~
       		$boss .= "|ENEMY" . strval($hcount) . ":";
-      		$randomresult = mysql_query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head'");
+      		$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head'");
 					$countr = 0;
-					while ($randrow = mysql_fetch_array($randomresult)) {
+					while ($randrow = $randomresult->fetch_array()) {
 						$countr++;
 					}
 					$whodat = rand(1,$countr);
 					$whodat--;
-					$randomresult = mysql_query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
-					$randrow = mysql_fetch_array($randomresult);
+					$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
+					$randrow = $randomresult->fetch_array();
 					$randenemy = $randrow['basename'];
 					if (empty($randenemy)) echo "DEBUGNOTE: Tried to spawn G3F3 boss thing with ID of $whodat, returned empty. This is no cause for alarm if you are not a dev, unless you see this message a bunch of times.<br />";
 					$boss .= $randenemy;
@@ -227,7 +227,7 @@ function generateEncounter($roomarray,$row,$col,$distance,$gate,$enemies,$isboss
       	$equery = "SELECT * FROM `Enemy_Types` WHERE (";
       	$eexplode = explode("|", $trow['enemies']);
       	while (!empty($eexplode[$ecount])) {
-      		$equery .= "basename = '" . mysql_real_escape_string($eexplode[$ecount]) . "' OR ";
+      		$equery .= "basename = '" . $mysqli->real_escape_string($eexplode[$ecount]) . "' OR ";
       		$ecount++;
       	}
       	$equery = substr($equery, 0, -4);
@@ -235,11 +235,11 @@ function generateEncounter($roomarray,$row,$col,$distance,$gate,$enemies,$isboss
       } else { //if not, populate the dungeon with underlings from lands/dungeons
       	$equery = "SELECT * FROM `Enemy_Types` WHERE `basepower` > $realmin AND `basepower` < $realmax AND (`appearson` = 'Lands' OR `appearson` = 'Dungeons')";
       }
-      $potentialresult = mysql_query($equery);
+      $potentialresult = $mysqli->query($equery);
       $options = 0;
-      while ($potentialrow = mysql_fetch_array($potentialresult)) $options++;
-      $potentialresult = mysql_query($equery);
-      while (($potentialrow = mysql_fetch_array($potentialresult)) && $options > 0) {
+      while ($potentialrow = $potentialresult->fetch_array()) $options++;
+      $potentialresult = $mysqli->query($equery);
+      while (($potentialrow = $potentialresult->fetch_array()) && $options > 0) {
 	$selected = floor(rand(1,$options) / $options); //1 in $options chance
 	if ($selected) {
 	  $options = 0;
@@ -261,12 +261,12 @@ function generateDoor($roomarray,$row,$col,$brow,$bcol,$gate) {
 	$square = strval($row) . "," . strval($col);
 	$bsquare = strval($brow) . "," . strval($bcol); //the square that the door is blocking
 	$totaldoors = 0;
-	$doorresult = mysql_query("SELECT `ID` FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`gate` <= $gate");
-	while (mysql_fetch_array($doorresult)) $totaldoors++;
+	$doorresult = $mysqli->query("SELECT `ID` FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`gate` <= $gate");
+	while ($doorresult->fetch_array()) $totaldoors++;
 	if ($totaldoors > 0) { //if there ARE any results
 		$door = rand(1,$totaldoors);
-		$doorresult = mysql_query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`gate` <= $gate LIMIT " . $door . " , 1 ;");
-		$drow = mysql_fetch_array($doorresult); //SHOULD return exactly 1 row
+		$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`gate` <= $gate LIMIT " . $door . " , 1 ;");
+		$drow = $doorresult->fetch_array(); //SHOULD return exactly 1 row
 		if (strpos($drow['keys'], "|") === false) {
 			$spawnkey = $drow['keys'];
 		} else {
@@ -357,8 +357,8 @@ function makeSidepath($roomarray,$entryrow,$entrycol,$baselength,$gate,$reps,$tr
 
 function makeDungeon($userrow,$gate,$floor,$finalfloor,$land,$basedistance,$lolname,$trow) {
 	$dgnstring = $lolname . "_" . strval($floor);
-	mysql_query("DELETE FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Wipe the dungeon row.
-	mysql_query("INSERT INTO `Dungeons` (`username`) VALUES ('$dgnstring');");
+	$mysqli->query("DELETE FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Wipe the dungeon row.
+	$mysqli->query("INSERT INTO `Dungeons` (`username`) VALUES ('$dgnstring');");
 	//Remake it, but empty. Note that this means a dungeon row will appear if the user has never entered a dungeon before.
 	//Procedurally generate a dungeon here. Don't forget to reload the user row to reflect the new "in a dungeon" status
 	if (!empty($trow['name'])) {
@@ -559,15 +559,15 @@ function makeDungeon($userrow,$gate,$floor,$finalfloor,$land,$basedistance,$loln
 	while ($i <= 10) {
 	  while ($j <= 10) {
 	    $tile = strval($i) . "," . strval($j);
-	    if (!empty($roomarray[$tile])) mysql_query("UPDATE `Dungeons` SET `$tile` = '" . mysql_real_escape_string($roomarray[$tile]) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+	    if (!empty($roomarray[$tile])) $mysqli->query("UPDATE `Dungeons` SET `$tile` = '" . $mysqli->real_escape_string($roomarray[$tile]) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
 	    $j++;
 	  }
 	  $j = 1;
 	  $i++;
 	}
-	mysql_query("UPDATE `Dungeons` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol,`dungeongate` = $gate,`dungeonland` = '$land' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+	$mysqli->query("UPDATE `Dungeons` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol,`dungeongate` = $gate,`dungeonland` = '$land' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
 	if ($floor == 1) {
-	  mysql_query("UPDATE `Players` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol WHERE `Players`.`username` = '" . $userrow['username'] . "'"); //put the player on the entrance
+	  $mysqli->query("UPDATE `Players` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol WHERE `Players`.`username` = '" . $userrow['username'] . "'"); //put the player on the entrance
 	}
 	return $armlength[$longest];
 }
@@ -615,7 +615,7 @@ if (empty($_SESSION['username'])) {
   $allowallescape = true;
   if ($_GET['emergency'] == "escape") {
   	if ($userrow['session_name'] == "Developers" || $allowallescape == true) {
-    	mysql_query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
+    	$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 	$userrow['indungeon'] = 0;
   	} else echo "You can't do that, sorry!<br />";
   }
@@ -628,8 +628,8 @@ if (empty($_SESSION['username'])) {
       echo "You are not currently in a dungeon, so you can't use a transportalizer.</br>";
     } else {
       $playertile = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
-      $dungeonresult = mysql_query("SELECT `$playertile` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
-      $dungeonrow = mysql_fetch_array($dungeonresult);
+      $dungeonresult = $mysqli->query("SELECT `$playertile` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+      $dungeonrow = $dungeonresult->fetch_array();
       if (strpos($dungeonrow[$playertile],"STAIRS") !== False) { //are there stairs here?
 	$flags = explode("|", $dungeonrow[$playertile]);
 	$i = 0;
@@ -638,14 +638,14 @@ if (empty($_SESSION['username'])) {
           $args = explode(":", $flag);
 	  if ($args[0] == "STAIRS") { //these are the stairs we just detected (there should never be more than one flight of stairs in the same room)
 	    if ($args[1] == $_POST['ascend']) { //make sure the floor the user is trying to get to matches the stairs' destination
-	      $floorresult = mysql_query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $_POST['ascend'] . "'");
-	      $floorrow = mysql_fetch_array($floorresult);
+	      $floorresult = $mysqli->query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $_POST['ascend'] . "'");
+	      $floorrow = $floorresult->fetch_array();
 	      $newlocation = findStairs($floorrow,$userrow['currentdungeon']);
 	      if ($newlocation != "0,0") {
 	        $dgnstring = $args[1];
-	        mysql_query("UPDATE `Players` SET `currentdungeon` = '$dgnstring' WHERE `Players`.`username` = '$username' LIMIT 1;");
+	        $mysqli->query("UPDATE `Players` SET `currentdungeon` = '$dgnstring' WHERE `Players`.`username` = '$username' LIMIT 1;");
 	        $coords = explode(",", $newlocation);
-	        mysql_query("UPDATE `Players` SET `dungeonrow` = " . strval($coords[0]) . ",`dungeoncol` = " . strval($coords[1]) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
+	        $mysqli->query("UPDATE `Players` SET `dungeonrow` = " . strval($coords[0]) . ",`dungeoncol` = " . strval($coords[1]) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
 	        $userrow['dungeonrow'] = $coords[0];
 	        $userrow['dungeoncol'] = $coords[1];
 	        echo "The transportalizer whisks you away to another floor of the dungeon.<br />";
@@ -669,10 +669,10 @@ if (empty($_SESSION['username'])) {
       echo "You are not currently in a dungeon, so you can't exit one.</br>";
     } else {
       $playertile = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
-      $dungeonresult = mysql_query("SELECT `$playertile` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
-      $dungeonrow = mysql_fetch_array($dungeonresult);
+      $dungeonresult = $mysqli->query("SELECT `$playertile` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+      $dungeonrow = $dungeonresult->fetch_array();
       if (strpos($dungeonrow[$playertile],"ENTRANCE") !== False) {
-	mysql_query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
+	$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 	$userrow['indungeon'] = 0;
       } else {
 	echo "You may only exit the dungeon while standing on the entrance!</br>";
@@ -698,14 +698,14 @@ if (empty($_SESSION['username'])) {
       } else {
         $thisdungeon = $dgnstring;
       }
-      $materesult = mysql_query("SELECT `username`,`session_name` FROM `Players` WHERE `Players`.`username` = '$thisdungeon'"); //find the player whose dungeon this is
-      while ($materow = mysql_fetch_array($materesult)) {
+      $materesult = $mysqli->query("SELECT `username`,`session_name` FROM `Players` WHERE `Players`.`username` = '$thisdungeon'"); //find the player whose dungeon this is
+      while ($materow = $materesult->fetch_array()) {
       	if ($materow['session_name'] != $userrow['session_name']) { //this player isn't in the same session as the user! either that or the user is in a special dungeon
       		$dgnstring = "LOLHAX"; //force it to print the error. this'll confuse "hackers"
       	}
       }
-      $dungeonresult = mysql_query("SELECT `username`,`dungeonland`,`dungeonrow`,`dungeoncol` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
-      $dungeonrow = mysql_fetch_array($dungeonresult);
+      $dungeonresult = $mysqli->query("SELECT `username`,`dungeonland`,`dungeonrow`,`dungeoncol` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+      $dungeonrow = $dungeonresult->fetch_array();
       if ($dungeonrow['username'] == $dgnstring) { //dungeon found
       	$chain = chainArray($userrow);
       	$totalchain = count($chain);
@@ -717,7 +717,7 @@ if (empty($_SESSION['username'])) {
         }
         if ($aok) {
         	chargeEncounters($userrow, 3, 0); //not actually getting into strife
-        	mysql_query("UPDATE `Players` SET `indungeon` = 1, `currentdungeon` = '$dgnstring', `dungeonrow` = $dungeonrow[dungeonrow], `dungeoncol` = $dungeonrow[dungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
+        	$mysqli->query("UPDATE `Players` SET `indungeon` = 1, `currentdungeon` = '$dgnstring', `dungeonrow` = $dungeonrow[dungeonrow], `dungeoncol` = $dungeonrow[dungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
 					//note that the original dungeonrow/dungeoncol variables will always mark the dungeon's initial entrance
 					$dungeongen = true;
         } else echo "You can't reach the land that dungeon is on!<br />";
@@ -730,17 +730,17 @@ if (empty($_SESSION['username'])) {
     } elseif ($userrow['encounters'] < 3) {
       echo "You fail to encounter a dungeon.</br>";
     } else {
-      if ($userrow['dungeonstrife'] <= 4) mysql_query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;"); //Paranoia: Ensure dungeonstrife not active.
+      if ($userrow['dungeonstrife'] <= 4) $mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;"); //Paranoia: Ensure dungeonstrife not active.
       //Check the input here.
       $tfound = false;
       $trow = array();
       if ($_POST['questdungeon'] == "yes") {
       	if ($userrow['currentquest'] != 0) {
-      		$qresult = mysql_query("SELECT * FROM Consort_Dialogue WHERE ID = " . strval($userrow['currentquest']));
-      		$qrow = mysql_fetch_array($qresult);
+      		$qresult = $mysqli->query("SELECT * FROM Consort_Dialogue WHERE ID = " . strval($userrow['currentquest']));
+      		$qrow = $qresult->fetch_array();
       		if ($qrow['context'] == "questdungeon" || $qrow['context'] == "questdungeon+") {
-      			$tresult = mysql_query("SELECT * FROM Dungeon_Templates WHERE name = '" . mysql_real_escape_string($qrow['req_keyword']) . "'");
-						$trow = mysql_fetch_array($tresult);
+      			$tresult = $mysqli->query("SELECT * FROM Dungeon_Templates WHERE name = '" . $mysqli->real_escape_string($qrow['req_keyword']) . "'");
+						$trow = $tresult->fetch_array();
 						if ($trow['name'] != $qrow['req_keyword']) {
 							echo "ERROR: Cannot find dungeon template '$template'; generating normal dungeon instead<br />";
 							logDebugMessage($userrow['username'] . " - tried to spawn dungeon of template $template and could not find template row");
@@ -753,8 +753,8 @@ if (empty($_SESSION['username'])) {
       		} else echo "The quest you are on either doesn't exist or is not a dungeon quest.<br />";
       	} else echo "You are not currently on a quest.<br />";
       }
-      $gateresult = mysql_query("SELECT * FROM Gates");
-      $gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+      $gateresult = $mysqli->query("SELECT * FROM Gates");
+      $gaterow = $gateresult->fetch_array(); //Gates only has one row.
       $currentrow = $userrow;
       $done = False;
       $access = False;
@@ -783,8 +783,8 @@ if (empty($_SESSION['username'])) {
 	  $i++;
 	}
 	if (!empty($currentrow['server_player']) && $currentrow['server_player'] != $username && !$access) {
-	  $currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
-	  $currentrow = mysql_fetch_array($currentresult);
+	  $currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
+	  $currentrow = $currentresult->fetch_array();
 	  if ($currentrow['house_build_grist'] < $gaterow["gate2"] && !$fly) $done = True; //This house is unreachable. Chain is broken here.
 	} else { //Player has no server, gates go nowhere. This is not canonical behaviour, but canonical behaviour is impossible since it relies on prediction. Alternatively, loop is complete.
 	  //Note that if gate 1 has not been reached, then gate 2 wasn't either and the Land was never accessed in the first place! ($access being true also cancels out here)
@@ -799,14 +799,14 @@ if (empty($_SESSION['username'])) {
       //Finish checking input here. $access must be True for success
       if ($access) {
 	chargeEncounters($userrow, 3, 1); //strifing with dungeon guardian = 1 encounter
-	mysql_query("DELETE FROM `Dungeons` WHERE `Dungeons`.`username` = '$username' LIMIT 1;"); //ensure that old dungeons are cleaned up; new dungeons will never just have the player's username
+	$mysqli->query("DELETE FROM `Dungeons` WHERE `Dungeons`.`username` = '$username' LIMIT 1;"); //ensure that old dungeons are cleaned up; new dungeons will never just have the player's username
 	$dungeongen = True;
 	$lolname = $username;
-	$materesult = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`currentdungeon` LIKE '" . $lolname . "_%' AND `Players`.`indungeon` = 1 AND `Players`.`username` != '" . $lolname . "'");
+	$materesult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`currentdungeon` LIKE '" . $lolname . "_%' AND `Players`.`indungeon` = 1 AND `Players`.`username` != '" . $lolname . "'");
 	$i = 0;
-	while ($materow = mysql_fetch_array($materesult)) {
+	while ($materow = $materesult->fetch_array()) {
 	  $lolname = $materow['username'];
-	  $materesult = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`currentdungeon` LIKE '" . $lolname . "_%' AND `Players`.`indungeon` = 1 AND `Players`.`username` != '" . $lolname . "'");
+	  $materesult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`currentdungeon` LIKE '" . $lolname . "_%' AND `Players`.`indungeon` = 1 AND `Players`.`username` != '" . $lolname . "'");
 	  //this will keep going between players until it finds one whose dungeon isn't occupied
 	  $i++;
 	  if ($i > 100) {
@@ -826,8 +826,8 @@ if (empty($_SESSION['username'])) {
 	  $thisdistance = makeDungeon($userrow,$gate,$i,$finalfloor,$land,$fulldistance,$lolname,$trow);
 	  $fulldistance += $thisdistance;
 	  if ($tfound && $finalfloor) { //on a quest
-	  	$finalfloorresult = mysql_query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $lolname . "_" . strval($i) . "'");
-	  	$ffrow = mysql_fetch_array($finalfloorresult);
+	  	$finalfloorresult = $mysqli->query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $lolname . "_" . strval($i) . "'");
+	  	$ffrow = $finalfloorresult->fetch_array();
 	  	if (!$onboss) { //goal specified, spawn it somewhere on the final floor
 	  		$row = rand(1,10);
 	  		$col = rand(1,10);
@@ -862,8 +862,8 @@ if (empty($_SESSION['username'])) {
 	  		logDebugMessage($userrow['username'] . " - goal specified for quest $questgoal, found nowhere to spawn (dungeon: " . $lolname . "_" . strval($i) . ")");
 	  	} else {
 	  		if (!empty($questgoal)) {
-	  			$goalresult = mysql_query("SELECT * FROM Consort_Dialogue WHERE ID = " . strval($questgoal) . " LIMIT 1;");
-	  			$goalrow = mysql_fetch_array($goalresult);
+	  			$goalresult = $mysqli->query("SELECT * FROM Consort_Dialogue WHERE ID = " . strval($questgoal) . " LIMIT 1;");
+	  			$goalrow = $goalresult->fetch_array();
 	  			if (!empty($goalrow['req_keyword'])) { //there are enemies in the goal room. may or may not be a separate encounter from any existing enemies
 	  				$ffrow[$room] .= "ENCOUNTER|";
 						$enemygrists = explode("|", $goalrow['req_grist']);
@@ -885,10 +885,10 @@ if (empty($_SESSION['username'])) {
 	  		}
 	  	}
 	  	$ffrow[$room] = preg_replace("/\\|{2,}/","|",$ffrow[$room]); //eliminate all blanks
-	  	mysql_query("UPDATE `Dungeons` SET `$room` = '" . mysql_real_escape_string($ffrow[$room]) . "' WHERE `Dungeons`.`username` = '" . $lolname . "_" . strval($i) . "' LIMIT 1;");
+	  	$mysqli->query("UPDATE `Dungeons` SET `$room` = '" . $mysqli->real_escape_string($ffrow[$room]) . "' WHERE `Dungeons`.`username` = '" . $lolname . "_" . strval($i) . "' LIMIT 1;");
 	 	}
 	}
-	mysql_query("UPDATE `Players` SET `indungeon` = 1, `currentdungeon` = '" . $lolname . "_1' WHERE `Players`.`username` = '$username' LIMIT 1;");
+	$mysqli->query("UPDATE `Players` SET `indungeon` = 1, `currentdungeon` = '" . $lolname . "_1' WHERE `Players`.`username` = '$username' LIMIT 1;");
 	$dgnstring = $username . "_1";
       } else {
 	echo "You do not have access to that gate for dungeoneering purposes.</br>";
@@ -897,25 +897,25 @@ if (empty($_SESSION['username'])) {
   }
   if ($userrow['dungeonstrife'] != 0 && $userrow['indungeon'] != 0) { //User returning from dungeon-based strife. Paranoia: Make sure actually in dungeon.
   	if ($userrow['dungeonstrife'] != 6) //Paranoia: make sure this doesn't overwrite the player's quest completion status
-    mysql_query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;"); //We'll be handling this here.
+    $mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;"); //We'll be handling this here.
     if ($userrow['dungeonstrife'] == 1) { //Failure.
-      mysql_query("UPDATE `Players` SET `dungeonrow` = $userrow[olddungeonrow] WHERE `Players`.`username` = '$username' LIMIT 1;"); //RUN AWAY!
-      mysql_query("UPDATE `Players` SET `dungeoncol` = $userrow[olddungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
+      $mysqli->query("UPDATE `Players` SET `dungeonrow` = $userrow[olddungeonrow] WHERE `Players`.`username` = '$username' LIMIT 1;"); //RUN AWAY!
+      $mysqli->query("UPDATE `Players` SET `dungeoncol` = $userrow[olddungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
       $userrow['dungeonrow'] = $userrow['olddungeonrow']; //I don't think this is actually necessary, but just in case
       $userrow['dungeoncol'] = $userrow['olddungeoncol'];
       header('location:/dungeons.php');
     } elseif ($userrow['dungeonstrife'] == 2) { //Victory!
       echo "You have defeated the enemies guarding this room!</br>";
       $room = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
-      $dungeonresult = mysql_query("SELECT `dungeonrow`,`dungeoncol`,`$room` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
-      $dungeonrow = mysql_fetch_array($dungeonresult);
-      mysql_query("UPDATE `Dungeons` SET `$room` = '" . "CLEARED|" . mysql_real_escape_string($dungeonrow[$room]) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+      $dungeonresult = $mysqli->query("SELECT `dungeonrow`,`dungeoncol`,`$room` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+      $dungeonrow = $dungeonresult->fetch_array();
+      $mysqli->query("UPDATE `Dungeons` SET `$room` = '" . "CLEARED|" . $mysqli->real_escape_string($dungeonrow[$room]) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
       if (strpos($dungeonrow[$room], "LOOT|") !== false) { //there is loot to be looted
       	echo "<form action='dungeons.php#display' method='post'><input type='hidden' name='targetrow' value='$userrow[dungeonrow]'><input type='hidden' name='targetcol' value='$userrow[dungeoncol]'>";
       	echo "<input type='submit' value='Loot the room'></form>";
       }
     } elseif ($userrow['dungeonstrife'] == 3) { //Failure (dungeon guardian)
-      mysql_query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
+      $mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 			$userrow['indungeon'] = 0;
 			header('location:/dungeons.php');
     } elseif ($userrow['dungeonstrife'] == 4) { //Victory (dungeon guardian)!
@@ -932,11 +932,11 @@ if (empty($_SESSION['username'])) {
 	echo "That location is out of bounds.</br>";
       } else {
 	$newroom = strval($row) . "," . strval($col);
-	$dungeonresult = mysql_query("SELECT `$newroom`,`dungeongate`,`dungeonrow`,`dungeoncol`,`dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //land needed if encounter appears
-	$dungeonrow = mysql_fetch_array($dungeonresult);
+	$dungeonresult = $mysqli->query("SELECT `$newroom`,`dungeongate`,`dungeonrow`,`dungeoncol`,`dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //land needed if encounter appears
+	$dungeonrow = $dungeonresult->fetch_array();
 	if ($dgnvision == 1) { //player has permanent "lens of truth" effect
-		$dungeonresult = mysql_query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
-		$drow = mysql_fetch_array($dungeonresult);
+		$dungeonresult = $mysqli->query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+		$drow = $dungeonresult->fetch_array();
 		$dquery = "UPDATE `Dungeons` SET ";
 		$updated = false;
 		if ($userrow['dungeonrow'] > 1) {
@@ -974,7 +974,7 @@ if (empty($_SESSION['username'])) {
 		if ($updated) {
 			$dquery = substr($dquery, 0, -2);
 			$dquery .= " WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;";
-			mysql_query($dquery);
+			$mysqli->query($dquery);
 		}
 	}
 	$ourgate = $dungeonrow['dungeongate']; //seems pointless but this is a very important step trust me
@@ -1015,8 +1015,8 @@ if (empty($_SESSION['username'])) {
 	      if ($encounter) { //Encounter being initiated at this stage.
 		if ($userrow['encounters'] > 0 && $userrow[$downstr] == 0) {
 		  $encounterargs = array();
-		  mysql_query("UPDATE `Players` SET `combatmotifuses` = " . strval(floor($userrow['Echeladder'] / 100) + $userrow['Godtier']) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-		  mysql_query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
+		  $mysqli->query("UPDATE `Players` SET `combatmotifuses` = " . strval(floor($userrow['Echeladder'] / 100) + $userrow['Godtier']) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		  $mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
 		  chargeEncounters($userrow, 1, 1);
 		} else {
 		  echo "There are enemies in this room, but you do not have any encounters remaining or you're still down. You are therefore unable to fight them, and are forced to turn back.</br>";
@@ -1068,12 +1068,12 @@ if (empty($_SESSION['username'])) {
 	      if ($argument[1] == $oldroom) {
 	      	if (empty($argument[2])) $connection = True; //This room is indeed connected to the other one.
 	      	elseif (!empty($argument[2]) && !empty($_POST['dooritem'])) {
-	      		$doorresult = mysql_query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flags[2]"); //look up the door
-			$drow = mysql_fetch_array($doorresult);
+	      		$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flags[2]"); //look up the door
+			$drow = $doorresult->fetch_array();
 			if (!empty($drow['ID'])) {
 				$itemname = str_replace("'", "\\\\''", $userrow[$_POST['dooritem']]);
-				$itemresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`name` = '$itemname' LIMIT 1"); //look up the item used
-				$irow = mysql_fetch_array($itemresult);
+				$itemresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`name` = '$itemname' LIMIT 1"); //look up the item used
+				$irow = $itemresult->fetch_array();
 				if (!empty($irow['name'])) {
 					$keys = explode("|", $drow['keys']);
 					$keyn = count($keys);
@@ -1110,8 +1110,8 @@ if (empty($_SESSION['username'])) {
 			}
 	      	} else {
 	    		echo "A locked door blocks your path to the $blockstr.</br>";
-			$doorresult = mysql_query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flag[2]");
-			$drow = mysql_fetch_array($doorresult);
+			$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flag[2]");
+			$drow = $doorresult->fetch_array();
 			if (!empty($drow['ID'])) {
 				echo $drow['description'] . "</br>";
 				echo '<form action="dungeons.php#display" method="post"> Select an item to use on the door: <select name="dooritem">';
@@ -1184,7 +1184,7 @@ if (empty($_SESSION['username'])) {
 		    } else {
 		      echo "You loot $argument[1] $argument[0] from the room!</br>";
 		    }
-		    mysql_query("UPDATE `Players` SET `$argument[0]` = " . strval($userrow[$argument[0]]+$argument[1]) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
+		    $mysqli->query("UPDATE `Players` SET `$argument[0]` = " . strval($userrow[$argument[0]]+$argument[1]) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
 		    //Increment the quantity here. $argument[0] is the quantity to be incremented.
 		    $flag = ""; //Loot collected, blank the flag.
 		  }
@@ -1223,18 +1223,18 @@ if (empty($_SESSION['username'])) {
 			echo 'You reach these stairs for the first time and, realizing there\'s at least one more floor to this dungeon, you decide to take a quick break. You recover 3 encounters.<br />';
 			$encounters = 100 - $userrow['encounters'];
 			if ($encounters > 3) $encounters = 3;
-			mysql_query("UPDATE Players SET encounters = $userrow[encounters]+$encounters WHERE Players.username = '$username'");
+			$mysqli->query("UPDATE Players SET encounters = $userrow[encounters]+$encounters WHERE Players.username = '$username'");
 		}
 	}
 	//ABOVE: Note that that function will not evaluate to 0 under any circumstances since there needs to either be a link in or the tile needs to be the entrance.
 	if (!empty($encounterargs)) { //Enemies in this room. Generate 'em!
-	  mysql_query("UPDATE `Players` SET `dungeonstrife` = 2 WHERE `Players`.`username` = '$username' LIMIT 1;"); //This is set to 1 by striferesolve if the player fails.
+	  $mysqli->query("UPDATE `Players` SET `dungeonstrife` = 2 WHERE `Players`.`username` = '$username' LIMIT 1;"); //This is set to 1 by striferesolve if the player fails.
 	  //see if there are any players in the same room who are also engaging enemies, and select only the one who is the main strifer
-	  $allyquery = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`currentdungeon` = '$dgnstring' AND `Players`.`dungeonrow` = $row AND `Players`.`dungeoncol` = $col AND `Players`.`aiding` = '' AND `Players`.`indungeon` = 1");
-	  $allyrow = mysql_fetch_array($allyquery);
+	  $allyquery = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`currentdungeon` = '$dgnstring' AND `Players`.`dungeonrow` = $row AND `Players`.`dungeoncol` = $col AND `Players`.`aiding` = '' AND `Players`.`indungeon` = 1");
+	  $allyrow = $allyquery->fetch_array();
 	  if (!empty($allyrow['username'])) { //found someone!
 	    echo "You enter the room to find " . $allyrow['username'] . " engaging in strife!<br />";
-	    mysql_query("UPDATE `Players` SET `aiding` = '" . $allyrow['username'] . "' WHERE `Players`.`username` = '$username' LIMIT 1;"); //help them out
+	    $mysqli->query("UPDATE `Players` SET `aiding` = '" . $allyrow['username'] . "' WHERE `Players`.`username` = '$username' LIMIT 1;"); //help them out
 	  } else {
 	  echo "As you examine the room, you are ";
 	  $random = rand(1,10);
@@ -1292,20 +1292,20 @@ if (empty($_SESSION['username'])) {
 		$maxhealthstr = "enemy" . strval($i) . "maxhealth";
 		$descstr = "enemy" . strval($i) . "desc";
 		$categorystr = "enemy" . strval($i) . "category";
-		mysql_query("UPDATE `Players` SET `" . $namestr . "` = '" . mysql_real_escape_string($encounterargs[$nameflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-		mysql_query("UPDATE `Players` SET `" . $powerstr . "` = '" . strval($encounterargs[$powerflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-		mysql_query("UPDATE `Players` SET `" . $maxpowerstr . "` = '" . strval($encounterargs[$powerflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-		mysql_query("UPDATE `Players` SET `" . $healthstr . "` = '" . strval($encounterargs[$healthflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-		mysql_query("UPDATE `Players` SET `" . $maxhealthstr . "` = '" . strval($encounterargs[$healthflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-		mysql_query("UPDATE `Players` SET `" . $descstr . "` = '" . mysql_real_escape_string($encounterargs[$descflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-		mysql_query("UPDATE `Players` SET `" . $categorystr . "` = '" . $encounterargs[$categoryflag] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $namestr . "` = '" . $mysqli->real_escape_string($encounterargs[$nameflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = '" . strval($encounterargs[$powerflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $maxpowerstr . "` = '" . strval($encounterargs[$powerflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = '" . strval($encounterargs[$healthflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $maxhealthstr . "` = '" . strval($encounterargs[$healthflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $descstr . "` = '" . $mysqli->real_escape_string($encounterargs[$descflag]) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $categorystr . "` = '" . $encounterargs[$categoryflag] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	      } else {
 		if (!empty($encounterargs["TIER" . strval($i)])) $tier = intval($encounterargs["TIER" . strval($i)]);
 		if (!empty($tier)) { //Grist enemy.
-		  $gristtype = mysql_query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;"); //Pull grist type for this dungeon's Land.
-		  $gristrow = mysql_fetch_array($gristtype);
-		  $gristtype = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$gristrow[grist_type]' LIMIT 1;");
-		  $typerow = mysql_fetch_array($gristtype);
+		  $gristtype = $mysqli->query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;"); //Pull grist type for this dungeon's Land.
+		  $gristrow = $gristtype->fetch_array();
+		  $gristtype = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$gristrow[grist_type]' LIMIT 1;");
+		  $typerow = $gristtype->fetch_array();
 		  $griststr = "grist" . strval($tier); //Pull the correct tier of grist.
 		  $grist = $typerow[$griststr];
 		} else { //Gristless enemy.
@@ -1330,23 +1330,23 @@ if (empty($_SESSION['username'])) {
 	  }
 	  if (!empty($encounterargs['BOSS'])) { //BOSS BATTLE
 	    echo '<a href="http://homestuck.bandcamp.com/track/cascade" target="_blank">Music befitting an epic struggle</a> begins playing.</br>';
-	    mysql_query("UPDATE `Players` SET `noassist` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	    mysql_query("UPDATE `Players` SET `cantabscond` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	    mysql_query("UPDATE `Players` SET `buffstrip` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	    mysql_query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Power boosts wear off.
-	    mysql_query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	    mysql_query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	    mysql_query("UPDATE `Players` SET `bossbegintime` = " . strval(time()) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `noassist` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `cantabscond` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `buffstrip` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Power boosts wear off.
+	    $mysqli->query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `bossbegintime` = " . strval(time()) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	  }
 	  echo '<a href="strife.php">==&gt;</a></br>';
 	}
 	if ($connection) {
-	  mysql_query("UPDATE `Dungeons` SET `$newroom` = '" . mysql_real_escape_string($newflags) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Set the flags for this room on entry. 
+	  $mysqli->query("UPDATE `Dungeons` SET `$newroom` = '" . $mysqli->real_escape_string($newflags) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Set the flags for this room on entry. 
 	  //Note that "entry" may mean performing an action in the room (i.e. "entering" the room from itself) at some stage.
-	  mysql_query("UPDATE `Players` SET `olddungeonrow` = $userrow[dungeonrow] WHERE `Players`.`username` = '$username' LIMIT 1;"); //Save these for things like fleeing the room.
-	  mysql_query("UPDATE `Players` SET `olddungeoncol` = $userrow[dungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
-	  mysql_query("UPDATE `Players` SET `dungeonrow` = $row WHERE `Players`.`username` = '$username' LIMIT 1;");
-	  mysql_query("UPDATE `Players` SET `dungeoncol` = $col WHERE `Players`.`username` = '$username' LIMIT 1;");
+	  $mysqli->query("UPDATE `Players` SET `olddungeonrow` = $userrow[dungeonrow] WHERE `Players`.`username` = '$username' LIMIT 1;"); //Save these for things like fleeing the room.
+	  $mysqli->query("UPDATE `Players` SET `olddungeoncol` = $userrow[dungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
+	  $mysqli->query("UPDATE `Players` SET `dungeonrow` = $row WHERE `Players`.`username` = '$username' LIMIT 1;");
+	  $mysqli->query("UPDATE `Players` SET `dungeoncol` = $col WHERE `Players`.`username` = '$username' LIMIT 1;");
 	  $userrow['olddungeonrow'] = $userrow['dungeonrow'];
 	  $userrow['olddungeoncol'] = $userrow['dungeoncol'];
 	  $userrow['dungeonrow'] = $row;
@@ -1393,10 +1393,10 @@ if (empty($_SESSION['username'])) {
       	echo "<a href='dungeons.php'>==&gt;</a>";
       } else {
       	if ($gtier != 0) { //guardian is tiered
-      		$gristtype = mysql_query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$land' LIMIT 1;"); //Pull grist type for this dungeon's Land.
-		  		$gristrow = mysql_fetch_array($gristtype);
-		  		$gristtype = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$gristrow[grist_type]' LIMIT 1;");
-		  		$typerow = mysql_fetch_array($gristtype);
+      		$gristtype = $mysqli->query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$land' LIMIT 1;"); //Pull grist type for this dungeon's Land.
+		  		$gristrow = $gristtype->fetch_array();
+		  		$gristtype = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$gristrow[grist_type]' LIMIT 1;");
+		  		$typerow = $gristtype->fetch_array();
 		  		$griststr = "grist" . strval($gtier); //Pull the correct tier of grist.
 		  		$grist = $typerow[$griststr];
       	} else {
@@ -1405,16 +1405,16 @@ if (empty($_SESSION['username'])) {
       	}
 		  	$monsterpower = generateEnemy($userrow,$gristrow['grist_type'],$grist,$guardian,True);
 		  	$userrow = refreshEnemydata($userrow);
-		  	mysql_query("UPDATE `Players` SET `dungeonstrife` = 4 WHERE `Players`.`username` = '$username' LIMIT 1;"); //This is set to 3 by striferesolve if the player fails.
+		  	$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 4 WHERE `Players`.`username` = '$username' LIMIT 1;"); //This is set to 3 by striferesolve if the player fails.
       	echo 'You find yourself at the entrance to a dungeon. An underling stands before it, likely tasked with keeping out thieves who might steal the treasures within.</br>';
 	      echo '<a href="strife.php">The underling notices you and initiates strife!</a></br>';
-      	mysql_query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
+      	$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
       }
       }
     } else {
       echo "You are not currently exploring a dungeon.</br>";
-      $gateresult = mysql_query("SELECT * FROM Gates");
-      $gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+      $gateresult = $mysqli->query("SELECT * FROM Gates");
+      $gaterow = $gateresult->fetch_array(); //Gates only has one row.
       $currentrow = $userrow;
       $fly = canFly($userrow);
       $done = False;
@@ -1439,8 +1439,8 @@ if (empty($_SESSION['username'])) {
 	//Basically, checking on gate access here.
 	if (!empty($currentrow['server_player']) && $currentrow['server_player'] != $username && empty($usedname[$currentrow['username']])) {
 	  $usedname[$currentrow['username']] = true;
-	  $currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
-	  $currentrow = mysql_fetch_array($currentresult);
+	  $currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
+	  $currentrow = $currentresult->fetch_array();
 	  if ($currentrow['house_build_grist'] < $gaterow["gate2"] && !$fly) $done = True; //This house is unreachable. Chain is broken here.
 	} else { //Player has no server, gates go nowhere. This is not canonical behaviour, but canonical behaviour is impossible since it relies on prediction. Alternatively, loop is complete.
 	  //Note that if gate 1 has not been reached, then gate 2 wasn't either and the Land was never accessed in the first place!
@@ -1450,13 +1450,13 @@ if (empty($_SESSION['username'])) {
       }
       if (strpos($userrow['storeditems'], "GLITCHGATE.") !== false) echo '<option value="' . $username . ':6">Unknown Gate</option>';
       echo '</select> <input type="submit" value="Explore a dungeon at this location (cost: 3 encounters)" /> </form>';
-      $materesult = mysql_query("SELECT `username`,`currentdungeon` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`indungeon` = 1");
+      $materesult = $mysqli->query("SELECT `username`,`currentdungeon` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`indungeon` = 1");
       $firstone = true;
       $chain = chainArray($userrow);
       $totalchain = count($chain);
-      while ($materow = mysql_fetch_array($materesult)) {
-      	$dgnresult = mysql_query("SELECT `dungeonland` FROM `Dungeons` WHERE `username` = '" . $materow['currentdungeon'] . "'");
-      	$dgnrow = mysql_fetch_array($dgnresult);
+      while ($materow = $materesult->fetch_array()) {
+      	$dgnresult = $mysqli->query("SELECT `dungeonland` FROM `Dungeons` WHERE `username` = '" . $materow['currentdungeon'] . "'");
+      	$dgnrow = $dgnresult->fetch_array();
         $landcount = 0;
         $aok = false;
         while ($landcount < $totalchain && !$aok) { //check to see if the user can reach the land this dungeon is on
@@ -1486,8 +1486,8 @@ if (empty($_SESSION['username'])) {
       if (!$firstone) echo '</select><input type="submit" value="Join them" /></form>';
     }
   } else { //User already inside a dungeon.
-    $dungeonresult = mysql_query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Need to display whole dungeon.
-    $dungeonrow = mysql_fetch_array($dungeonresult);
+    $dungeonresult = $mysqli->query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Need to display whole dungeon.
+    $dungeonrow = $dungeonresult->fetch_array();
     $row = $userrow['dungeonrow'];
     $col = $userrow['dungeoncol'];
     $currentroom = strval($row) . ',' . strval($col);
@@ -1535,8 +1535,8 @@ if (empty($_SESSION['username'])) {
     //End code to check adjacency here. (Note that adjacency includes transportalization)
     $playerarray = array();
     $symbolarray = array();
-    $allyquery = mysql_query("SELECT `username`,`symbol`,`indungeon`,`dungeonrow`,`dungeoncol` FROM `Players` WHERE `Players`.`currentdungeon` = '$dgnstring'");
-    while ($allyrow = mysql_fetch_array($allyquery)) { //found someone!
+    $allyquery = $mysqli->query("SELECT `username`,`symbol`,`indungeon`,`dungeonrow`,`dungeoncol` FROM `Players` WHERE `Players`.`currentdungeon` = '$dgnstring'");
+    while ($allyrow = $allyquery->fetch_array()) { //found someone!
       if ($allyrow['username'] != $username && $allyrow['indungeon'] == 1) { //somebody who isn't you and is actually in a dungeon
         $thisroom = strval($allyrow['dungeonrow']) . "," . strval($allyrow['dungeoncol']);
         $playerarray[$thisroom] = $allyrow['username'];
@@ -1700,8 +1700,8 @@ if (empty($_SESSION['username'])) {
 	  }
 	  	  if (!empty($blockstr)) {
 	    		echo "A locked door blocks your path to the $blockstr.</br>";
-					$doorresult = mysql_query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flag[2]");
-					$drow = mysql_fetch_array($doorresult);
+					$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flag[2]");
+					$drow = $doorresult->fetch_array();
 					if (!empty($drow['ID'])) {
 						echo $drow['description'] . "</br>";
 						echo '<form action="dungeons.php#display" method="post"> Select an item to use on the door: <select name="dooritem">';

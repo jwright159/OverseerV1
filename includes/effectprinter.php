@@ -125,8 +125,8 @@ function printEffects($currentarray) {
 		echo "$currentarray[1]% of this weapon's power can pierce through enemy defenses.<br />";
 		break;
 	case 'HASABILITY':
-		$rtresult = mysql_query("SELECT `ID`,`Name` FROM `Abilities` WHERE `Abilities`.`ID` = $currentarray[1]");
-		$rtrow = mysql_fetch_array($rtresult);
+		$rtresult = $mysqli->query("SELECT `ID`,`Name` FROM `Abilities` WHERE `Abilities`.`ID` = $currentarray[1]");
+		$rtrow = $rtresult->fetch_array();
 		if (!empty($rtrow['Name'])) $roletech = $rtrow['Name'];
 		else $roletech = "UNKNOWN";
 		echo "Grants access to the roletech $roletech when equipped.<br />";
@@ -279,15 +279,15 @@ function descvarConvert($userrow, $desc, $var) { //no idea if ANY of this stuff 
 					break;
 				case 'SESSION':
 					if (empty($sessionrow['name'])) {
-						$sessionresult = mysql_query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
-						$sessionrow = mysql_fetch_array($sessionresult);
+						$sessionresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
+						$sessionrow = $sessionresult->fetch_array();
 					}
 					$newthing = $sessionrow[$varararray[3]];
 					break;
 				case 'CLIENT':
 					if (empty($clientrow['name'])) {
-						$sessionresult = mysql_query("SELECT * FROM `Players` WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
-						$clientrow = mysql_fetch_array($sessionresult);
+						$sessionresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
+						$clientrow = $sessionresult->fetch_array();
 					}
 					$newthing = $clientrow[$varararray[3]];
 					break;

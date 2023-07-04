@@ -1,8 +1,8 @@
 <?php
 if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The effect of the fraymotif is stored and performed here. "motifvar" is a wildcard variable that may or
 	//may not be used depending on what the specific fraymotif does. Some motifs have their effect elsewhere in the file.
-	$motifresult = mysql_query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $userrow['Aspect'] . "'");
-	$motifrow = mysql_fetch_array($motifresult);
+	$motifresult = $mysqli->query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $userrow['Aspect'] . "'");
+	$motifrow = $motifresult->fetch_array();
 	if (!empty($motifrow['solo3'])) {
 	  $usagestr = "Turn $userrow[motifcounter] of $motifrow[solo3]:</br>";
 	} else {
@@ -18,8 +18,8 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 	    while ($enemies <= $max_enemies) {
 	      $enemystr = "enemy" . strval($enemies) . "name";
 	      if (!empty($userrow[$enemystr])) {
-		$enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
-		$enemyrow = mysql_fetch_array($enemyresult);
+		$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
+		$enemyrow = $enemyresult->fetch_array();
 		$powerstr = "enemy" . strval($enemies) . "power";
 		if (!empty($enemyrow)) { //Not a grist enemy.
 		  if ($enemyrow['reductionresist'] != 0 && $powerdrain > $enemyrow['reductionresist']) { //Enemy resists power reduction.
@@ -33,7 +33,7 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 	      }
 	      $enemies++;
 	    }
-	    mysql_query("UPDATE `Players` SET `motifvar` = $userrow[motifvar]+$powerdrained WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `motifvar` = $userrow[motifvar]+$powerdrained WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 		$userrow['motifvar'] += $powerdrained;
 	  } else { //Use drained power to attack.
 	    $usagestr = $usagestr . "The stolen power is unleashed in a massive tornado!</br>";
@@ -41,8 +41,8 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 	    $damage = $userrow['motifvar'] * 10; //Results in 40k after four rounds of stealing from one enemy, or a whopping 200k after four turns of stealing from five.
 	    while ($enemies <= $max_enemies) {
 	      $enemystr = "enemy" . strval($enemies) . "name";
-	      $enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
-	      $enemyrow = mysql_fetch_array($enemyresult);
+	      $enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
+	      $enemyrow = $enemyresult->fetch_array();
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      $maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
 	      if (!empty($enemyrow)) { //Not a grist enemy.
@@ -93,8 +93,8 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 	  while ($enemies <= $max_enemies) {
 	    $enemystr = "enemy" . strval($enemies) . "name";
 	    if (!empty($userrow[$enemystr])) {
-	      $enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
-	      $enemyrow = mysql_fetch_array($enemyresult);
+	      $enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
+	      $enemyrow = $enemyresult->fetch_array();
 	      $healthstr = "enemy" . strval($enemies) . "health";
 	      $maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
 	      if (!empty($enemyrow)) { //Not a grist enemy.
@@ -116,8 +116,8 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 	  $enemies = 1;
 	  while ($enemies <= $max_enemies) {
 	    $enemystr = "enemy" . strval($enemies) . "name";
-	    $enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
-	    $enemyrow = mysql_fetch_array($enemyresult);
+	    $enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
+	    $enemyrow = $enemyresult->fetch_array();
 	    $healthstr = "enemy" . strval($enemies) . "health";
 	    $maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
 	    $damage = ceil($userrow[$maxhealthstr] * 0.0625 * $userrow['motifcounter']);
@@ -189,15 +189,15 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 	    $damage = 30000; 
 	    break;
 	  default: //Code to randomly select an item goes here since we didn't get a zillyweapon. :(
-	    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` = 9999;");
+	    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` = 9999;");
 	    $items = 0;
-	    while ($itemrow = mysql_fetch_array($itemresult)) {
+	    while ($itemrow = $itemresult->fetch_array()) {
 	      $items++;
 	    }
-	    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` = 9999;");
+	    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` = 9999;");
 	    $randomthing = 4; //Guaranteed to be random.
 	    while ($randomthing != 1 && $items > 0) {
-	      $itemrow = mysql_fetch_array($itemresult);
+	      $itemrow = $itemresult->fetch_array();
 	      $randomthing = rand(1,$items);
 	      $items--;
 	    }
@@ -209,8 +209,8 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 	  $enemies = 1;
 	  while ($enemies <= $max_enemies) {
 	    $enemystr = "enemy" . strval($enemies) . "name";
-	    $enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
-	    $enemyrow = mysql_fetch_array($enemyresult);
+	    $enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
+	    $enemyrow = $enemyresult->fetch_array();
 	    $healthstr = "enemy" . strval($enemies) . "health";
 	    $maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
 	    if (!empty($enemyrow)) { //Not a grist enemy.

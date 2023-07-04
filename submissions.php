@@ -3,7 +3,7 @@ require_once("header.php");
 
 function updateSubmission($subid) {
 	$currenttime = time();
-	mysql_query("UPDATE `Feedback` SET `lastupdated` = $currenttime WHERE `Feedback`.`ID` = $subid ;");
+	$mysqli->query("UPDATE `Feedback` SET `lastupdated` = $currenttime WHERE `Feedback`.`ID` = $subid ;");
 	$feedrow['lastupdated'] = $currenttime;
 }
 
@@ -38,12 +38,12 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
     }
 
   if (!empty($_POST['delete'])) {
-    $feedresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
-    $feedrow = mysql_fetch_array($feedresult);
+    $feedresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
+    $feedrow = $feedresult->fetch_array();
     if ($feedrow['user'] == $username || $userrow['session_name'] == "Developers" || $userrow['modlevel'] >= 3) {
       if ($userrow['session_name'] == "Developers") echo $feedrow['user'] . " - Item suggestion. " . $feedrow['name'] . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
       if ($feedrow['type'] == "item") {
-        mysql_query("DELETE FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
+        $mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
 				echo 'Submission deleted.</br>';
 				$modmsg = $username . " (Level " . strval($userrow['modlevel']) . " Mod) <b>deleted submission</b>";
 				logModMessage($modmsg, 0);
@@ -52,13 +52,13 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   }
 
   if (!empty($_POST['moderatethis'])) {
-    $feedresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
-    $feedrow = mysql_fetch_array($feedresult);
+    $feedresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
+    $feedrow = $feedresult->fetch_array();
     if ($userrow['modlevel'] >= 1) {
       if ($feedrow['type'] == "item") {
       	if ($_POST['modaction'] == "clear") {
       		if ($userrow['modlevel'] >= 2) {
-      			mysql_query("UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
+      			$mysqli->query("UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
       			echo 'All flags cleared.</br>';
       		} else echo "Your mod level is not yet high enough to clear or overwrite existing flags (need level 2).<br />";
       	} else {
@@ -74,8 +74,8 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
       					$aok = true;
       				}
       				if ($aok == true) {
-      					mysql_query("UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
-      		  		mysql_query("UPDATE `Feedback` SET `$dostring` = 1 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
+      					$mysqli->query("UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
+      		  		$mysqli->query("UPDATE `Feedback` SET `$dostring` = 1 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
       		  		echo 'Submission moderated.</br>';
       		  		if ($dostring == "halp") echo '<iframe width="1" height="1" frameborder=false src="http://www.youtube.com/embed/0ApstMKNEMI?autoplay=1"></iframe>';
       				}
@@ -88,18 +88,18 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 
   //first thing's first, view the submission if the player clicked on one
   if (!empty($_GET['view'])) {
-    $feedresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
-    $feedrow = mysql_fetch_array($feedresult);
+    $feedresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+    $feedrow = $feedresult->fetch_array();
     if ($feedrow['ID'] == $_GET['view']) {
       if ($feedrow['type'] == "item") {
         if (!empty($_POST['vote'])) {
 	  if ($feedrow['user'] != $username) {
 	    if (strrpos($feedrow['likers'], $username) === false) {
-	      mysql_query("UPDATE `Feedback` SET `likes` = '" . strval($feedrow['likes'] + 1) . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+	      $mysqli->query("UPDATE `Feedback` SET `likes` = '" . strval($feedrow['likes'] + 1) . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 	      $feedrow['likes']++;
 	      echo "Your vote has been cast.</br>";
 	      $newlikerlist = $feedrow['likers'] . $username . "|";
-	      mysql_query("UPDATE `Feedback` SET `likers` = '" . $newlikerlist . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+	      $mysqli->query("UPDATE `Feedback` SET `likers` = '" . $newlikerlist . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 	      } else echo "You have already cast a vote for this submission.</br>";
 	    } else echo "You can't vote up your own submission.</br>";
 	  }
@@ -121,8 +121,8 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 	  		$rainbows = $dostring;
 	  	}
 	  	$realbody = "<" . $rainbows . ">" . $realbody . "</" . $rainbows . ">";
-	  	$msgresult = mysql_query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $feedrow['user'] . "' LIMIT 1;");
-  		$msgrow = mysql_fetch_array($msgresult);
+	  	$msgresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $feedrow['user'] . "' LIMIT 1;");
+  		$msgrow = $msgresult->fetch_array();
   		if ($msgrow['feedbacknotice'] == 1) {
   			$check = 0;
   			$foundempty = false;
@@ -142,13 +142,13 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 	  			} elseif ($dostring == "suspended") {
 	  				$newmsgstring = $newmsgstring . "Your submission was suspended (ID " . strval($feedrow['ID']) . ")|";
 	  			}
-	  			$newmsgstring = mysql_real_escape_string($newmsgstring . 'A moderator flagged <a href="submissions.php?view=' . strval($feedrow['ID']) . '">' . $feedrow['name'] . "</a> and said the following:</br>" . $realbody);
+	  			$newmsgstring = $mysqli->real_escape_string($newmsgstring . 'A moderator flagged <a href="submissions.php?view=' . strval($feedrow['ID']) . '">' . $feedrow['name'] . "</a> and said the following:</br>" . $realbody);
 	  			if (!empty($_POST['greenenc']) && $dostring == "greenlight") {
 	  				if ($userrow['modlevel'] >= 3) {
 	  				$reward = intval($_POST['greenenc']);
 	  				if ($reward > 0) {
-	  					$subresult = mysql_query("SELECT `username`,`encounters` FROM `Players` WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
-	  					$subrow = mysql_fetch_array($subresult);
+	  					$subresult = $mysqli->query("SELECT `username`,`encounters` FROM `Players` WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
+	  					$subrow = $subresult->fetch_array();
 	  					if ($subrow['encounters'] + $reward < 100) {
 	  						$newenc = $subrow['encounters'] + $reward;
 	  						echo "The submitter was gifted $reward encounters.<br />";
@@ -156,13 +156,13 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 	  						$newenc = 100;
 	  						echo "The submitter was gifted $reward encounters, topping them off at 100.<br />";
 	  					}
-	  					mysql_query("UPDATE Players SET `encounters` = $newenc WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
+	  					$mysqli->query("UPDATE Players SET `encounters` = $newenc WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
 	  					$newmsgstring .= "</br>You were also granted $reward encounter(s) for your creativity!";
 	  				}
 	  				} else echo "Your mod level is not yet high enough to grant encounters (need level 3).<br />";
 	  			}
-	  			mysql_query("UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `Messages`.`username` = '" . $feedrow['user'] . "'");
-	  			mysql_query("UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
+	  			$mysqli->query("UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `Messages`.`username` = '" . $feedrow['user'] . "'");
+	  			$mysqli->query("UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
   			}
   		}
 	  }
@@ -175,14 +175,14 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 	  	logModMessage($modmsg, $_GET['view']);
 	  }
 	  $newcomments = $feedrow['usercomments'] . $username . $exstring . $realbody . "|";
-	  $newncomments = mysql_real_escape_string($newcomments);
+	  $newncomments = $mysqli->real_escape_string($newcomments);
 	  //echo $newcomments . "</br>";
-	  mysql_query("UPDATE `Feedback` SET `usercomments` = '" . $newncomments . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+	  $mysqli->query("UPDATE `Feedback` SET `usercomments` = '" . $newncomments . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 	  $feedrow['usercomments'] = $newcomments;
 	  echo "Your comment has been posted.</br>";
 	  updateSubmission($_GET['view']);
 	  if ($feedrow['clarify'] == 1 && !empty($_POST['clearedup'])) {
-	  	mysql_query("UPDATE `Feedback` SET `clarify` = 0 WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+	  	$mysqli->query("UPDATE `Feedback` SET `clarify` = 0 WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 	  	echo 'Yellow flag unset. A mod will get back to this submission shortly.</br>';
 	  }
 		} else echo "You are unable to post comments because you have a negative mod level. This is probably because some of your previous comments have been inappropriate or hurtful in some fashion.<br />";
@@ -331,7 +331,7 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   echo '<randomized>orange</randomized>: the submission came from the Randomizer.</br>';
   echo '<halp>white</halp>: I need an adult!</br>';
   //let's generate that message table~
-    //$feedresult = mysql_query("SELECT `ID`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight` FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`user` = '" . $username . "' ORDER BY `Feedback`.`ID` ASC ;");
+    //$feedresult = $mysqli->query("SELECT `ID`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight` FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`user` = '" . $username . "' ORDER BY `Feedback`.`ID` ASC ;");
   
   if ($sort == "name") $sortstring = "ORDER BY `Feedback`.`name` $order ";
   elseif ($sort == "like") $sortstring = "ORDER BY `Feedback`.`likes` $order ";
@@ -349,8 +349,8 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   elseif ($mode == "white") $modestring = "AND `Feedback`.`halp` = 1 ";
   elseif ($mode == "black") $modestring = "AND `Feedback`.`defunct` = 0 AND `Feedback`.`clarify` = 0 AND `Feedback`.`greenlight` = 0 AND `Feedback`.`suspended` = 0 ";
   elseif ($mode == "aotw") {
-  	$aotwresult = mysql_query("SELECT `abstratusoftheweek` FROM System WHERE 1");
-  	$aotwrow = mysql_fetch_array($aotwresult);
+  	$aotwresult = $mysqli->query("SELECT `abstratusoftheweek` FROM System WHERE 1");
+  	$aotwrow = $aotwresult->fetch_array();
   	$aotwstring = $aotwrow['abstratusoftheweek'];
   	$modestring = "AND `Feedback`.`comments` LIKE '%" . $aotwstring . "%' ";
   }
@@ -366,11 +366,11 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
     $startpoint = strval(($page - 1) * 20);
     //add ,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight` before dev build is pushed
     //echo "SELECT `ID`,`name`,`likes`,`usercomments` FROM `Feedback` WHERE `Feedback`.`type` = 'item' " . $modestring . $sortstring . "LIMIT " . $startpoint . ",20 ;</br>";
-    $feedresult = mysql_query("SELECT `ID`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight`,`urgent`,`suspended`,`randomized`,`halp`,`lastupdated` FROM `Feedback` WHERE `Feedback`.`type` = 'item' " . $modestring . $sortstring . "LIMIT " . $startpoint . ",20 ;");
+    $feedresult = $mysqli->query("SELECT `ID`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight`,`urgent`,`suspended`,`randomized`,`halp`,`lastupdated` FROM `Feedback` WHERE `Feedback`.`type` = 'item' " . $modestring . $sortstring . "LIMIT " . $startpoint . ",20 ;");
   echo '<table border="1" bordercolor="#CCCCCC" style="background-color:#EEEEEE" width="100%" cellpadding="3" cellspacing="3">';
   echo '<tr><td>ID</td><td>Item Name</td><td>Rating</td><td>Comments</td></tr>';
   $results = false;
-  while ($showrow = mysql_fetch_array($feedresult)) {
+  while ($showrow = $feedresult->fetch_array()) {
   	$results = true;
   	$stylestring = "normal";
   	if ($showrow['defunct'] == 1) {
@@ -394,7 +394,7 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   }
   if (!$results) echo '<tr><td colspan="4">No submissions found. Either this is an invalid page number, or nothing matches those parameters.</td></tr>';
   echo '</table></br>';
-  $countresult = mysql_query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'item' " . $modestring . $sortstring);
+  $countresult = $mysqli->query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'item' " . $modestring . $sortstring);
   $pcount = 20;
   $ptotal = 0;
   $alltotal = 0;
@@ -404,7 +404,7 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   } else {
   	echo 'Previous page | ';
   }
-  while ($row = mysql_fetch_array($countresult)) {
+  while ($row = $countresult->fetch_array()) {
   	$alltotal++;
   	if ($pcount == 20) {
   		$ptotal++;

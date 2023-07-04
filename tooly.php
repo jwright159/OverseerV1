@@ -8,11 +8,11 @@ require_once("includes/grist_icon_parser.php");
 $max_items = 50;
 
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -36,12 +36,12 @@ function initGrists() {
   //--Begin designix code here.--
     //Grabs names from forms and looks up their captcha codes and stores to $code1 and $code2
   if (!empty($_POST['code1']) && !empty($_POST['code2'])) {
-      $itemresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `name` LIKE '" . $_POST['code1'] . "'");
-      while ($itemrow = mysql_fetch_array($itemresult)){
+      $itemresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `name` LIKE '" . $_POST['code1'] . "'");
+      while ($itemrow = $itemresult->fetch_array()){
       $code1 = $itemrow['captchalogue_code'];
       }
-      $itemresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `name` LIKE '" . $_POST['code2'] . "'");
-      while ($itemrow = mysql_fetch_array($itemresult)){
+      $itemresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `name` LIKE '" . $_POST['code2'] . "'");
+      while ($itemrow = $itemresult->fetch_array()){
       $code2 = $itemrow['captchalogue_code'];
       }
         if (!empty($code1) && !empty($code2)) { //User is performing designix operations.
@@ -62,15 +62,15 @@ function initGrists() {
   if (!empty($code)) { //User is using the holopad.
     $holoCode = $code;
 } else if (!empty($_POST['holocode'])) {
-      $itemresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `name` LIKE '" . $_POST['holocode'] . "'");
-      while ($itemrow = mysql_fetch_array($itemresult)){
+      $itemresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `name` LIKE '" . $_POST['holocode'] . "'");
+      while ($itemrow = $itemresult->fetch_array()){
       $holoCode = $itemrow['captchalogue_code'];
       }
   }
 if (!empty($holoCode)) {
-    $itemresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `captchalogue_code` = '" . $holoCode . "'");
+    $itemresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `captchalogue_code` = '" . $holoCode . "'");
     $itemfound = False;
-    while ($itemrow = mysql_fetch_array($itemresult)) {
+    while ($itemrow = $itemresult->fetch_array()) {
 	$itemfound = True;
 	$nothing = True;
 	$itemname = $itemrow['name'];

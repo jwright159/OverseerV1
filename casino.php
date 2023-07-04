@@ -10,7 +10,7 @@ if (empty($_SESSION['username'])) {
 	
 function store($tokens) {	
 	global $userrow;
-	mysql_query("UPDATE `Players` SET `tokens` = '" . mysql_real_escape_string($tokens) . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `tokens` = '" . $mysqli->real_escape_string($tokens) . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
 	return $userrow['tokens'];
 }
 

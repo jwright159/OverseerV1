@@ -2,10 +2,10 @@
 require_once("header.php");
 
 echo 'The following is a list of every "main" abstratus and the number of weapons present in each.</br>';
-  $itemresult = mysql_query("SELECT * FROM Captchalogue ORDER BY abstratus");
+  $itemresult = $mysqli->query("SELECT * FROM Captchalogue ORDER BY abstratus");
   $currentabstratus = "";
   $k = 0;
-  while ($itemrow = mysql_fetch_array($itemresult)) {
+  while ($itemrow = $itemresult->fetch_array()) {
     $mainabstratus = "";
     $alreadydone = False;
     $foundcomma = False;
@@ -30,10 +30,10 @@ echo 'The following is a list of every "main" abstratus and the number of weapon
       $currentabstratus = $mainabstratus;
     }
     if ($alreadydone == False && $mainabstratus != "notaweapon" && $mainabstratus != "headgear" && $mainabstratus != "bodygear" && $mainabstratus != "facegear" && $mainabstratus != "accessory" && $mainabstratus != "computer") { //I HAVE NEW WEAPON!
-      $absresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE '" . $mainabstratus . "%' OR `abstratus` LIKE '%, " . $mainabstratus . "%'");
+      $absresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE '" . $mainabstratus . "%' OR `abstratus` LIKE '%, " . $mainabstratus . "%'");
       //ensures that we don't catch dartkind with artkind, inflatablekind with tablekind, etc
       $total = 0;
-      while ($itemrow = mysql_fetch_array($absresult)) {
+      while ($itemrow = $absresult->fetch_array()) {
         $total++;
       }
       $ordered[$mainabstratus] = $total;
@@ -51,8 +51,8 @@ echo 'The following is a list of every "main" abstratus and the number of weapon
     while ($k < $allabs) {
       if ($ordered[$abs[$k]] == $i) {
         echo $abs[$k] . ": " . strval($ordered[$abs[$k]]) . "<br />";
-        $countresult = mysql_query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`comments` LIKE '%" . $abs[$k] . "%' AND `Feedback`.`suspended` = 0");
-        while ($row = mysql_fetch_array($countresult)) {
+        $countresult = $mysqli->query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`comments` LIKE '%" . $abs[$k] . "%' AND `Feedback`.`suspended` = 0");
+        while ($row = $countresult->fetch_array()) {
           echo ' - Submission <a href="submissions.php?view=' . strval($row['ID']) . '">' . strval($row['ID']) . '</a><br />';
         }
       }

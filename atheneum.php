@@ -23,13 +23,13 @@ if (empty($_SESSION['username'])) {
   } else {
   	$lookups = $userrow['session_name'];
   }
-  $sessionresult = mysql_query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '$lookups' LIMIT 1;");
-  $sesrow = mysql_fetch_array($sessionresult);
+  $sessionresult = $mysqli->query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '$lookups' LIMIT 1;");
+  $sesrow = $sessionresult->fetch_array();
   //echo $sesrow['atheneum'];
-	$captcharesult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue $showstring ORDER BY `name` ASC");
+	$captcharesult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue $showstring ORDER BY `name` ASC");
 	$founditems = 0;
 	$totalitems = 0;
-	while ($crow = mysql_fetch_array($captcharesult)) {
+	while ($crow = $captcharesult->fetch_array()) {
 		$totalitems++;
 		if (strrpos($sesrow['atheneum'], $crow['captchalogue_code'])) {
 			$founditems++;

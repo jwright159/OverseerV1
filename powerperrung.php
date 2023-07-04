@@ -47,13 +47,13 @@ if (empty($_SESSION['username'])) {
 	if ($userrow['session_name'] != "Doodlefluffer") {
 		echo "This is a balancing tool. It is for use by developers. It's super boring, so you're not missing out on much.</br>";
 	} else {
-		$database = mysql_query("SELECT * FROM `Players`");
+		$database = $mysqli->query("SELECT * FROM `Players`");
 		$i = 1;
 		$rungarrays = array();
 		while ($i <= 612) {
 			$rungarrays[$i] = array();
 		}
-		while ($userrow = mysql_fetch_array($database)) {
+		while ($userrow = $database->fetch_array()) {
 			$mainpower = 0;
 			$offpower = 0;
 			$headdef = 0;
@@ -65,8 +65,8 @@ if (empty($_SESSION['username'])) {
 			$spritepower = $userrow['sprite_strength'];
 			if ($userrow['equipped'] != "" && $userrow['dreamingstatus'] == "Awake") {
 				$equipname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
-				while ($row = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
+				while ($row = $itemresult->fetch_array()) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['equipped']]) {
@@ -79,8 +79,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($userrow['offhand'] != "" && $userrow['offhand'] != "2HAND" && $userrow['dreamingstatus'] == "Awake") {
 				$offname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
-				while ($row = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
+				while ($row = $itemresult->fetch_array()) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['offhand']]) {
@@ -93,8 +93,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($userrow['headgear'] != "" && $userrow['dreamingstatus'] == "Awake") {
 				$headname = str_replace("'", "\\\\''", $userrow[$userrow['headgear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $headname . "'");
-				while ($row = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $headname . "'");
+				while ($row = $itemresult->fetch_array()) {
 				$itemname = $row['name'];
 				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['headgear']]) {
@@ -108,8 +108,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($userrow['facegear'] != "" && $userrow['facegear'] != "2HAND" && $userrow['dreamingstatus'] == "Awake") {
 				$facename = str_replace("'", "\\\\''", $userrow[$userrow['facegear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $facename . "'");
-				while ($row = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $facename . "'");
+				while ($row = $itemresult->fetch_array()) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['facegear']]) {
@@ -123,8 +123,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($userrow['bodygear'] != "" && $userrow['dreamingstatus'] == "Awake") {
 				$bodyname = str_replace("'", "\\\\''", $userrow[$userrow['bodygear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $bodyname . "'");
-				while ($row = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $bodyname . "'");
+				while ($row = $itemresult->fetch_array()) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['bodygear']]) {
@@ -138,8 +138,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($userrow['accessory'] != "" && $userrow['dreamingstatus'] == "Awake") {
 				$accname = str_replace("'", "\\\\''", $userrow[$userrow['accessory']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $accname . "'");
-				while ($row = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $accname . "'");
+				while ($row = $itemresult->fetch_array()) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['accessory']]) {
@@ -152,8 +152,8 @@ if (empty($_SESSION['username'])) {
 				$accdef = 0;
 			}
 			$totaldef = $headdef + $facedef + $bodydef + $accdef;
-			$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
-			$blankrow = mysql_fetch_array($itemresult);
+			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
+			$blankrow = $itemresult->fetch_array();
 			$spritepower = 0; //Not counting sprite power in these calcs.
 			$powerlevel = $unarmedpower + $mainpower + $offpower; //Note that this will be relatively undervalued because it does not count boosts yet.
 			$rungarrays[$userrow['Echeladder']][] = $powerlevel;

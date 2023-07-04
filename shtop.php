@@ -7,13 +7,13 @@ require 'includes/pricesandvaules.php';
 if (empty($_SESSION['username'])) {
   echo "Log in to purchase items from your consorts.</br>";
 } else {
-	$gateresult = mysql_query("SELECT * FROM Gates"); //we'll need this to determine the level of the shops
-  $gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
-  $result2 = mysql_query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$gateresult = $mysqli->query("SELECT * FROM Gates"); //we'll need this to determine the level of the shops
+  $gaterow = $gateresult->fetch_array(); //Gates only has one row.
+  $result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;
@@ -38,16 +38,16 @@ else {
 	  echo '<option value="' . $userrow['username'] . '">' . $locationstr . '</option>';
     $landcount = 1; //0 should be the user's land which we already printed
     while ($landcount < $totalchain) {
-    	$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
-	    $currentrow = mysql_fetch_array($currentresult);
+    	$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
+	    $currentrow = $currentresult->fetch_array();
 	  	$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 	  	echo '<option value="' . $currentrow['username'] . '">' . $locationstr . '</option>';
 	  	$landcount++;
     }
     echo '</select><input type="submit" value="Shop here"></form>';
     /*$debugitem = randomItem('Amber_Cost', 1000, $gristname, $totalgrists);
-    $landresult = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
-  	$landrow = mysql_fetch_array($landresult);
+    $landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
+  	$landrow = $landresult->fetch_array();
     $debugprice = totalBooncost($debugitem, $landrow, $gristname, $totalgrists);
     echo strval($debugprice);*/
     echo '</br></br><a href="shop.php">Click here to use the fancy shop page.</a>';
@@ -63,8 +63,8 @@ else {
 		}
 		if (!$aok) echo "You can't reach that player's land with your current gate setup!</br>";
 		else { //good to go!
-			$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
-	    $currentrow = mysql_fetch_array($currentresult);
+			$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
+	    $currentrow = $currentresult->fetch_array();
 	  	$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 			echo "Shopping on: $locationstr</br>";
 			if (!empty($currentrow['shopstock'])) { //shop is current and exists, so let's parse it.
@@ -90,9 +90,9 @@ else {
 					$newitem = addItem($shopitem[$pid],$userrow);
 					if ($newitem != "inv-1") { //player has room in their inventory
 						$newboons = $userrow['Boondollars'] - $shopprice[$pid]; //make them pay.
-						mysql_query("UPDATE `Players` SET `Boondollars` = $newboons WHERE `Players`.`username` = '$username' LIMIT 1;");
+						$mysqli->query("UPDATE `Players` SET `Boondollars` = $newboons WHERE `Players`.`username` = '$username' LIMIT 1;");
 						echo "You purchase " . $shopitem[$pid] . " x1 for " . $shopprice[$pid] . " Boondollars.</br>";
-						mysql_query("UPDATE `Players` SET `econony` = " . strval($currentrow['econony']+$shopprice[$pid]) . " WHERE `Players`.`username` = '" . $currentrow['username'] . "'");
+						$mysqli->query("UPDATE `Players` SET `econony` = " . strval($currentrow['econony']+$shopprice[$pid]) . " WHERE `Players`.`username` = '" . $currentrow['username'] . "'");
 					} else echo "You don't have room in your inventory for this item! You'll have to clear some space before you can buy it.</br>";
 				}
 			}
@@ -108,8 +108,8 @@ else {
   			$tsi = 0; //total shop items
   			$shopstring = "";
   			$maxshopitems = 3 + ($shopgate * 2) + rand(0,$shopgate); //the amount of items this shop will have when we're done
-  			$landresult = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
-  			$landrow = mysql_fetch_array($landresult);
+  			$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
+  			$landrow = $landresult->fetch_array();
   			while ($tsi < $maxshopitems) {
   				$thisgrist = $landrow['grist' . strval(rand(1,9))]; //pick a random grist type from that land
   				$shopitemrow = randomItem($thisgrist . '_Cost', $gaterow['gate' . strval($shopgate)], $gristname, $totalgrists, "");
@@ -120,7 +120,7 @@ else {
   				$shopstring = $shopstring . $shopitem[$tsi] . "==" . strval($shopprice[$tsi]) . "==" . strval($shoppower[$tsi]) . "==" . strval($shopkind[$tsi]) . "|";
   				$tsi++;
   			}
-  			mysql_query("UPDATE `Players` SET `shopstock` = '$shopstring', `lastshoptick` = " . strval(time()) . " WHERE `Players`.`username` = '" . $currentrow['username'] . "'");
+  			$mysqli->query("UPDATE `Players` SET `shopstock` = '$shopstring', `lastshoptick` = " . strval(time()) . " WHERE `Players`.`username` = '" . $currentrow['username'] . "'");
   			$currentrow['lastshoptick'] = time();
 			}
 			$time = 86400 - (time() - $currentrow['lastshoptick']);

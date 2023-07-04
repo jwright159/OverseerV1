@@ -2,34 +2,34 @@
 //This is a filler line.
 if ($_POST['mako'] == "kawaii") {
 require_once("includes/SQLconnect.php");
-$result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . mysql_real_escape_string($_POST['username']) . "'");
+$result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $mysqli->real_escape_string($_POST['username']) . "'");
 $loggedin = False;
 
-while ($userrow = mysql_fetch_array($result)) {
-  if ($userrow['username'] == mysql_real_escape_string($_POST['username']) && $userrow['password'] == crypt(mysql_real_escape_string($_POST['password']), $userrow['password'])) {
+while ($userrow = $result->fetch_array()) {
+  if ($userrow['username'] == $mysqli->real_escape_string($_POST['username']) && $userrow['password'] == crypt($mysqli->real_escape_string($_POST['password']), $userrow['password'])) {
     session_start(); //Begin initializing the session here. This involves initializing anything we don't want to call from the database all the time.
-    $username = mysql_real_escape_string($_POST['username']);
+    $username = $mysqli->real_escape_string($_POST['username']);
     $_SESSION['username'] = $username;
-    $titleresult = mysql_query("SELECT * FROM `Titles` WHERE `Titles`.`Class` = 'Adjective'");
-    $titlerow = mysql_fetch_array($titleresult);
+    $titleresult = $mysqli->query("SELECT * FROM `Titles` WHERE `Titles`.`Class` = 'Adjective'");
+    $titlerow = $titleresult->fetch_array();
 	//Grab aspect and class modifiers.
     if (!empty($titlerow[$userrow['Aspect']])) {
 		$_SESSION['adjective'] = $titlerow[$userrow['Aspect']];
-		$classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
-		$_SESSION['classrow'] = mysql_fetch_array($classresult);
-		$aspectresult = mysql_query("SELECT * FROM `Aspect_modifiers` WHERE `Aspect_modifiers`.`Aspect` = '$userrow[Aspect]';");
-		$_SESSION['aspectrow'] = mysql_fetch_array($aspectresult);
+		$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
+		$_SESSION['classrow'] = $classresult->fetch_array();
+		$aspectresult = $mysqli->query("SELECT * FROM `Aspect_modifiers` WHERE `Aspect_modifiers`.`Aspect` = '$userrow[Aspect]';");
+		$_SESSION['aspectrow'] = $aspectresult->fetch_array();
 	}
 	//Grab grist types.
-	$gristresult = mysql_query("SELECT * FROM `Grist_Types`");
-	while ($row = mysql_fetch_array($gristresult)) {
+	$gristresult = $mysqli->query("SELECT * FROM `Grist_Types`");
+	while ($row = $gristresult->fetch_array()) {
 		$_SESSION[$row['name']] = $row;
 	}
-    mysql_query("UPDATE `Players` SET `active` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `active` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
     if ($userrow['equipped'] != "") {
       $equipname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
+      while ($row = $itemresult->fetch_array()) {
 		$itemname = $row['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemname == $userrow[$userrow['equipped']]) {
@@ -39,8 +39,8 @@ while ($userrow = mysql_fetch_array($result)) {
     }
     if ($userrow['offhand'] != "" && $userrow['offhand'] != "2HAND") {
       $offname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
+      while ($row = $itemresult->fetch_array()) {
 		$itemname = $row['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemname == $userrow[$userrow['offhand']]) {
@@ -50,8 +50,8 @@ while ($userrow = mysql_fetch_array($result)) {
     }
     if ($userrow['headgear'] != "") {
       $headname = str_replace("'", "\\\\''", $userrow[$userrow['headgear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $headname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $headname . "'");
+      while ($row = $itemresult->fetch_array()) {
 		$itemname = $row['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemname == $userrow[$userrow['headgear']]) {
@@ -61,8 +61,8 @@ while ($userrow = mysql_fetch_array($result)) {
     }
     if ($userrow['facegear'] != "" && $userrow['facegear'] != "2HAND" && $userrow['dreamingstatus'] == "Awake") {
       $facename = str_replace("'", "\\\\''", $userrow[$userrow['facegear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $facename . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $facename . "'");
+      while ($row = $itemresult->fetch_array()) {
 		$itemname = $row['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemname == $userrow[$userrow['facegear']]) {		
@@ -72,8 +72,8 @@ while ($userrow = mysql_fetch_array($result)) {
     }
     if ($userrow['bodygear'] != "") {
       $bodyname = str_replace("'", "\\\\''", $userrow[$userrow['bodygear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $bodyname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $bodyname . "'");
+      while ($row = $itemresult->fetch_array()) {
 		$itemname = $row['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemname == $userrow[$userrow['bodygear']]) {
@@ -83,8 +83,8 @@ while ($userrow = mysql_fetch_array($result)) {
     }
     if ($userrow['accessory'] != "" && $userrow['dreamingstatus'] == "Awake") {
       $accname = str_replace("'", "\\\\''", $userrow[$userrow['accessory']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $accname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $accname . "'");
+      while ($row = $itemresult->fetch_array()) {
 		$itemname = $row['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemname == $userrow[$userrow['accessory']]) {
@@ -97,13 +97,13 @@ while ($userrow = mysql_fetch_array($result)) {
   }
 }
 if ($loggedin == False) {
-  if (mysql_real_escape_string($_POST['username']) == "The Overseer") {
+  if ($mysqli->real_escape_string($_POST['username']) == "The Overseer") {
     echo "DEBUG (password): $_POST[password]</br>";
-    echo "DEBUG (encrypted password): " . crypt(mysql_real_escape_string($_POST['password']), $row['password']) . "</br>";
+    echo "DEBUG (encrypted password): " . crypt($mysqli->real_escape_string($_POST['password']), $row['password']) . "</br>";
   }
   echo"false";
 }
-mysql_close($con);
+$mysqli->close();
 }
 else {
 echo '<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>

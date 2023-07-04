@@ -6,20 +6,20 @@ $SQLhostName = $_ENV['SQL_HOSTNAME'];
 $SQLuserName = $_ENV['SQL_USERNAME'];
 $SQLpassword = $_ENV['SQL_PASSWORD'];
 $SQLdatabase = $_ENV['SQL_DATABASE'];
-$SQLconnect = mysql_connect($SQLhostName, $SQLuserName, $SQLpassword);
+$SQLconnect = $mysqli->connect($SQLhostName, $SQLuserName, $SQLpassword);
 
 
 
 if (!$SQLconnect) {
-   die('Could not connect: ' . mysql_error());
+   die('Could not connect: ' . $mysqli->error());
 }
 else{
 }
 // make dbname the current db
 //
-$db_selected = mysql_select_db($SQLdatabase,$SQLconnect);
+$db_selected = $mysqli->select_db($SQLdatabase,$SQLconnect);
 if (!$db_selected) {
-   die ('could not connect to MySQL database : ' . mysql_error());
+   die ('could not connect to mysqli database : ' . $mysqli->error());
 }
 $con = $SQLconnect;
 // Server:      Database: 

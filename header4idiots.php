@@ -257,14 +257,14 @@ if (empty($_SESSION['username'])) {
     $gristed =  number_format($userrow['Build_Grist']);
     $ecchi = $userrow['Echeladder'];
     $classy = "Class";
-    $classresulta = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[$classy]';");
-    $classrowa = mysql_fetch_array($classresulta);
+    $classresulta = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[$classy]';");
+    $classrowa = $classresulta->fetch_array();
     $unarmedpowera = floor($userrow['Echeladder'] * (pow(($classrowa['godtierfactor'] / 100),$userrow['Godtier'])));
     $equippedmain = $_POST['equipmain'];
     if ($equippedmain != "") {
       $itemname = str_replace("'", "\\\\''", $userrow[$equippedmain]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $itemresult->fetch_array()) {
         $itemname = $row['name'];
         $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
         if ($itemname == $userrow[$equippedmain]) {
@@ -274,8 +274,8 @@ if (empty($_SESSION['username'])) {
     } else {
       if ($userrow['equipped'] != "") {
         $itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-        $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-        while ($row = mysql_fetch_array($itemresult)) {
+        $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+        while ($row = $itemresult->fetch_array()) {
   	$itemname = $row['name'];
   	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
   	if ($itemname == $userrow[$userrow['equipped']]) {
@@ -288,8 +288,8 @@ if (empty($_SESSION['username'])) {
     }
     if ($equippedoff != "") {
       $itemname = str_replace("'", "\\\\''", $userrow[$equippedoff]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $itemresult->fetch_array()) {
         $itemname = $row['name'];
         $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
         if ($itemname == $userrow[$equippedoff]) {
@@ -299,8 +299,8 @@ if (empty($_SESSION['username'])) {
     } else {
       if ($userrow['offhand'] != "" && $userrow['offhand'] != $equippedmain && $equippedoff != "2HAND") {
       $itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-        while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+        while ($row = $itemresult->fetch_array()) {
         $itemname = $row['name'];
         $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
         if ($itemname == $userrow[$userrow['offhand']]) {

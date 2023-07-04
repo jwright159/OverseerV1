@@ -17,9 +17,9 @@ echo 'Session to retrieve info about: <input id="session" name="session" type="t
 if (!empty($_POST['session'])) $session = $_POST['session'];
 if (!empty($session)) { //Session to examine
   $sessionesc = str_replace("'", "''", $session); //Add escape characters so we can find session correctly in database.
-  $sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionesc'");
+  $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionesc'");
   $sessionexists = False;
-  while ($row = mysql_fetch_array($sessionresult)) {
+  while ($row = $sessionresult->fetch_array()) {
     if ($row['name'] == $session) {
       $sessionexists = True;
       $sessionrow = $row; //This is currently not needed but may be useful later.
@@ -28,8 +28,8 @@ if (!empty($session)) { //Session to examine
   if ($sessionexists != True) {
     echo "ERROR - Session does not exist.</br>";
   } else {
-  	$gateresult = mysql_query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
-  	$gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+  	$gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
+  	$gaterow = $gateresult->fetch_array(); //Gates only has one row.
   	$gaterow['gate0'] = 0;
   	$adv = false;
   	if (strpos($userrow['storeditems'], "ADVSESSIONVIEW.") !== false || strpos($userrow['permstatus'], "SVISION") !== false) $adv = true;
@@ -43,16 +43,16 @@ if (!empty($session)) { //Session to examine
     echo "This session's Stock Exchange is not yet available.<br />";
     echo "Dersite army power destroyed by this session: $sessionrow[battlefieldtotal]</br></br>";
     if ($sessionrow['checkmate'] == 1) echo "This session has successfully defeated The Black King!</br></br>";
-    $sessionplayers = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$sessionesc'");
-    while ($row = mysql_fetch_array($sessionplayers)) {
+    $sessionplayers = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$sessionesc'");
+    while ($row = $sessionplayers->fetch_array()) {
       if ($row['session_name'] == $session) { //Paranoia: Player is a participant in this session.
 	echo "Player: $row[username]";
 	if (!empty($row['Class']) && !empty ($row['Aspect'])) echo ", $row[Class] of $row[Aspect]";
 	echo "</br>Dream status: $row[dreamer]</br>";
 	$status = str_replace("\'", "'", $row['status']);
 	echo "Currently: $status</br>";
-	$echeresult = mysql_query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $row['username'] . "'");
-	$echerow = mysql_fetch_array($echeresult);
+	$echeresult = $mysqli->query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $row['username'] . "'");
+	$echerow = $echeresult->fetch_array();
 	$echestr = "rung" . strval($row['Echeladder']);
 	$echename = $echerow[$echestr];
 	echo "Echeladder height: $row[Echeladder] ($echename)</br>";
@@ -104,8 +104,8 @@ if (!empty($session)) { //Session to examine
 	echo "</br>";
 	echo "Land: Land of $row[land1] and $row[land2]</br>";
 	echo "Grist types available on this player's Land: ";
-	$gristresult = mysql_query("SELECT * FROM Grist_Types");
-	while ($gristrow = mysql_fetch_array($gristresult)) {
+	$gristresult = $mysqli->query("SELECT * FROM Grist_Types");
+	while ($gristrow = $gristresult->fetch_array()) {
 	  if ($gristrow['name'] == $row['grist_type']) $gristtype = $gristrow;
 	}
 	$i = 1;

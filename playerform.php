@@ -1,6 +1,6 @@
 <?php
 require_once("header.php");
-$gristresult = mysql_query("SELECT * FROM Grist_Types");
+$gristresult = $mysqli->query("SELECT * FROM Grist_Types");
 echo '<a href="index.php">Home</a>';
 echo '<p><span style="font-size: medium;">Enter Session</span></p>
 <p>If you are having trouble getting started, check out <a href="http://the-overseer.wikia.com/wiki/Beginner%27s_Guide_to_the_Overseer_Project">this guide!</a></p>
@@ -23,7 +23,7 @@ Second prototyping item: <input id="protoitem2" name="protoitem2" type="text" />
 Client player: <input id="client" name="client" type="text" /> (this can be left blank, you will have the opportunity to register a client afterwards)<br />
 Land of <input id="land1" name="land1" type="text" / >and <input id="land2" name="land2" type="text" /><br />
 Grist category: <select name="grist_type">';
-while ($gristrow = mysql_fetch_array($gristresult)) {
+while ($gristrow = $gristresult->fetch_array()) {
   echo '<option value="' . $gristrow['name'] . '">' . $gristrow['name'] . ' - ';
   $i = 1;
   while ($i <= 9) { //Nine types of grist. Magic numbers >_>

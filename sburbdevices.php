@@ -11,8 +11,8 @@ if (empty($_SESSION['username'])) {
 	echo "<style>itemcode{font-family:'Courier New'}</style>";
 	$dcount = 0;
 	$sessionname = $userrow['session_name'];
-	$sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
-	$sessionrow = mysql_fetch_array($sessionresult);
+	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
+	$sessionrow = $sessionresult->fetch_array();
 	$canon = $sessionrow['canon'];
 	$challenge = $sessionrow['challenge'];
 	
@@ -35,8 +35,8 @@ if (empty($_SESSION['username'])) {
 			$sendpos = strpos($breakdowna[$i], "COMBOFINDER");
 			if ($sendpos !== false) {
 				$breakdownb = explode(":", $breakdowna[$i]);
-				$fresult = mysql_query("SELECT `captchalogue_code`,`name` FROM `Captchalogue` WHERE `captchalogue_code` = '" . $breakdownb[0] . "'");
-				while ($frow = mysql_fetch_array($fresult)) {
+				$fresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM `Captchalogue` WHERE `captchalogue_code` = '" . $breakdownb[0] . "'");
+				while ($frow = $fresult->fetch_array()) {
 					$cf++;
 					$combofind['code'][$cf] = $breakdownb[0];
 					$combofind['name'][$cf] = str_replace("\\", "", $frow['name']);
@@ -75,8 +75,8 @@ if (empty($_SESSION['username'])) {
       		$jnvstr = "inv" . strval($j);
       		$compuname = str_replace("'", "\\\\''", $userrow[$jnvstr]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       		$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-      		$compuresult = mysql_query("SELECT `name`, `effects` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-      		while ($compurow = mysql_fetch_array($compuresult)) {
+      		$compuresult = $mysqli->query("SELECT `name`, `effects` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+      		while ($compurow = $compuresult->fetch_array()) {
       			$ghosters = specialArray($compurow['effects'], "GHOSTER");
       			if ($ghosters[0] == "GHOSTER") {
       				$canghost = true;
@@ -97,11 +97,11 @@ if (empty($_SESSION['username'])) {
 					$combinecode = orcombine($oldcode, $newcode);
 					echo "You punch the card with the code <itemcode>$newcode</itemcode>. The card now contains the code <itemcode>$combinecode</itemcode>.</br>";
 					$nucardname = "Captchalogue Card (CODE:$combinecode)";
-					mysql_query("UPDATE `Players` SET `" . $_POST['punchcard'] . "` = '$nucardname' WHERE `Players`.`username` = '$username'");
+					$mysqli->query("UPDATE `Players` SET `" . $_POST['punchcard'] . "` = '$nucardname' WHERE `Players`.`username` = '$username'");
 					$userrow[$_POST['punchcard']] = $nucardname;
 					if (!strrpos($sessionrow['atheneum'], $combinecode)) {
       			$newatheneum = $sessionrow['atheneum'] . $combinecode . "|";
-      			mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
+      			$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
       		}
 				}
 			} else echo "You can't punch holes in that for the purposes of alchemy!</br>";
@@ -182,7 +182,7 @@ if (empty($_SESSION['username'])) {
 						echo "The dowel now corresponds to the code <itemcode>$combinecode</itemcode>.</br>";
 						if (!strrpos($sessionrow['atheneum'], $combinecode)) {
       				$newatheneum = $sessionrow['atheneum'] . $combinecode . "|";
-      				mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
+      				$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
       			}
 						$newname = "Cruxite Dowel (CODE:" . $combinecode . ")";
 					} else {
@@ -191,7 +191,7 @@ if (empty($_SESSION['username'])) {
 						echo "The dowel now corresponds to the code <itemcode>$code1</itemcode>.</br>";
 						$newname = "Cruxite Dowel (CODE:" . $code1 . ")";
 					}
-					mysql_query("UPDATE `Players` SET `$cruxinv` = '$newname' WHERE `Players`.`username` = '$username'");
+					$mysqli->query("UPDATE `Players` SET `$cruxinv` = '$newname' WHERE `Players`.`username` = '$username'");
 					$userrow[$cruxinv] = $newname;
 				} else echo "You don't have a spare cruxite dowel to carve that isn't already carved. You'll have to pick one up from the Cruxtruder or from storage.</br>";
 			} else echo "One or both of the items you selected aren't captchalogue cards.</br>";
@@ -226,7 +226,7 @@ if (empty($_SESSION['username'])) {
 				if ($allquery != "UPDATE `Players` SET ") { //make sure there are changes to make
 					$allquery = substr($allquery, 0, -2);
 					$allquery .= " WHERE `Players`.`username` = '$username';";
-					mysql_query($allquery);
+					$mysqli->query($allquery);
 					echo "Items destroyed successfully.<br />";
 				} else echo "You don't have any of those in your inventory.<br />";
 			} elseif (strpos($_POST['disposalaction'], "store") !== false) {
@@ -242,7 +242,7 @@ if (empty($_SESSION['username'])) {
 				}
 				if ($updatestorage != $userrow['storeditems']) {
 					$userrow['storeditems'] = $updatestorage;
-					mysql_query("UPDATE `Players` SET `storeditems` = '$updatestorage' WHERE `Players`.`username` = '$username';");
+					$mysqli->query("UPDATE `Players` SET `storeditems` = '$updatestorage' WHERE `Players`.`username` = '$username';");
 					echo "Items destroyed successfully.<br />";
 				} else echo "You don't have any of those in storage.<br />";
 			}
@@ -257,13 +257,13 @@ if (empty($_SESSION['username'])) {
     	} else {
 				$compuname = str_replace("'", "\\\\''", $userrow[$_POST['ilitem']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       	$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-      	$compuresult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-      	$compurow = mysql_fetch_array($compuresult);
+      	$compuresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+      	$compurow = $compuresult->fetch_array();
       	$ilcode = $compurow['captchalogue_code'];
       	echo "The Intellibeam Laserstation scans the card using its ultra-fine laser and eventually prints out the code: <itemcode>$ilcode</itemcode></br>";
       	if (!strrpos($sessionrow['atheneum'], $ilcode)) {
       		$newatheneum = $sessionrow['atheneum'] . $ilcode . "|";
-      		mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
+      		$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
       	}
     	}
 		} else echo "You don't have a machine that can read captchalogue codes, and you're quite certain that such a thing could not possibly exist.</br>";
@@ -281,17 +281,17 @@ if (empty($_SESSION['username'])) {
 			  }
 				$compuname = str_replace("'", "\\\\''", $userrow[$_POST['senditem']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       	$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-      	$compuresult = mysql_query("SELECT `captchalogue_code`,`name`,`size` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-      	$compurow = mysql_fetch_array($compuresult);
+      	$compuresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`size` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+      	$compurow = $compuresult->fetch_array();
       	if (itemSize($compurow['size']) <= itemSize($maxsendsize)) {
-      		$materesult = mysql_query("SELECT * FROM `Players` WHERE `Players`.`username` = '" . $_POST['sendplayer'] . "'");
-      		$materow = mysql_fetch_array($materesult);
+      		$materesult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '" . $_POST['sendplayer'] . "'");
+      		$materow = $materesult->fetch_array();
       		if ($materow['session_name'] == $userrow['session_name']) {
       			$actualstore = storeItem($userrow[$_POST['senditem']], 1, $materow);
       			if ($actualstore != 0) {
       				echo "You put your " . $userrow[$_POST['senditem']] . " in the Sendificator, and it is promptly transported to " . $materow['username'] . "'s house.<br />";
       				autoUnequip($userrow, "none", $_POST['senditem']);
-      				mysql_query("UPDATE `Players` SET `" . $_POST['senditem'] . "` = '' WHERE `Players`.`username` = '$username'");
+      				$mysqli->query("UPDATE `Players` SET `" . $_POST['senditem'] . "` = '' WHERE `Players`.`username` = '$username'");
       				$userrow[$_POST['senditem']] = "";
       			} else echo "Target player does not have enough storage space for that item.<br />";
       		} else echo "You can't send items to players outside of your own session.<br />";
@@ -303,18 +303,18 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['ghostitem'])) {
 		if ($canghost) {
 			if (strpos($userrow['storeditems'], $_POST['ghostitem'] . ":") !== false) {
-				$compuresult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['ghostitem'] . "' LIMIT 1;");
-      	$compurow = mysql_fetch_array($compuresult);
+				$compuresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['ghostitem'] . "' LIMIT 1;");
+      	$compurow = $compuresult->fetch_array();
       	$ghostadd = addItem($compurow['name'] . " (ghost image)",$userrow);
       	if ($ghostadd == "inv-1") {
       		echo "You don't have room in your inventory for a ghost item.<br />";
       	} else {
       		echo $compurow['name'] . " successfully ghosted!<br />";
-      		$athenresult = mysql_query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
-      		$athenrow = mysql_fetch_array($athenresult);
+      		$athenresult = $mysqli->query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
+      		$athenrow = $athenresult->fetch_array();
       		if (!strrpos($athenrow['atheneum'], $compurow['captchalogue_code']) && strpos($compurow['effects'], "OBSCURED|") === false) {
 	      		$newatheneum = $athenrow['atheneum'] . $compurow['captchalogue_code'] . "|";
-  	    		mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
+  	    		$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
     	  	}
       	}
 			} else echo "You don't have that item in storage!<br />";
@@ -337,7 +337,7 @@ if (empty($_SESSION['username'])) {
 				$code1 = substr($userrow[$_POST['shuntcard']], -9, 8);
 				$userrow[$cruxinv] = "Punch Card Shunt (CODE:" . $code1 . ")";
 				$userrow[$_POST['shuntcard']] = "";
-				mysql_query("UPDATE `Players` SET `$cruxinv` = '" . $userrow[$cruxinv] . "', `" . $_POST['shuntcard'] . "` = '' WHERE `Players`.`username` = '$username'");
+				$mysqli->query("UPDATE `Players` SET `$cruxinv` = '" . $userrow[$cruxinv] . "', `" . $_POST['shuntcard'] . "` = '' WHERE `Players`.`username` = '$username'");
 				echo "You insert the card containing the code $code1 into one of your empty Punch Card Shunts. You can now put it in storage to see what effect it has on your Alchemiter.<br />";
 			} else echo "You don't have any empty shunts into which to put that!<br />";
 		} else echo "You can't insert that into a shunt!<br />";
@@ -350,7 +350,7 @@ if (empty($_SESSION['username'])) {
 			if ($retrieve != "inv-1") {
 				$userrow[$_POST['clearshunt']] = "Punch Card Shunt";
 				$userrow[$retrieve] = "Captchalogue Card (CODE:" . $code1 . ")";
-				mysql_query("UPDATE `Players` SET `" . $_POST['clearshunt'] . "` = '" . $userrow[$_POST['clearshunt']] . "' WHERE `Players`.`username` = '$username'");	
+				$mysqli->query("UPDATE `Players` SET `" . $_POST['clearshunt'] . "` = '" . $userrow[$_POST['clearshunt']] . "' WHERE `Players`.`username` = '$username'");	
 				echo "You retrieve the card containing the code $code1 from the Punch Card Shunt.<br />";
 			} else echo "You don't have room in your Sylladex to get the card out!<br />";
 		} else echo "You can't insert that into a shunt!<br />";
@@ -405,9 +405,9 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 				$captchalogue = substr($captchalogue, 0, -4);
-  			$captchalogueresult = mysql_query($captchalogue);
+  			$captchalogueresult = $mysqli->query($captchalogue);
  				$rcount = 0;
- 				while ($row = mysql_fetch_array($captchalogueresult)) {
+ 				while ($row = $captchalogueresult->fetch_array()) {
  					$rcount++;
  					$irow[$rcount] = $row;
  				}
@@ -420,16 +420,16 @@ if (empty($_SESSION['username'])) {
 					while ($j <= $rcount) {
 						$testcode = orcombine($irow[$i]['captchalogue_code'], $irow[$j]['captchalogue_code']);
 						if ($testcode != $irow[$i]['captchalogue_code'] && $testcode != $irow[$j]['captchalogue_code'] && $testcode != "00000000" && $testcode != "!!!!!!!!") {
-							$testresult = mysql_query("SELECT `captchalogue_code` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$testcode'");
-							while ($testrow = mysql_fetch_array($testresult)) {
+							$testresult = $mysqli->query("SELECT `captchalogue_code` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$testcode'");
+							while ($testrow = $testresult->fetch_array()) {
 								$foundcombos++;
 								$foundcombo[$foundcombos] = $irow[$i]['name'] . " || " . $irow[$j]['name'];
 							}
 						}
 						$testcode = andcombine($irow[$i]['captchalogue_code'], $irow[$j]['captchalogue_code']);
 						if ($testcode != $irow[$i]['captchalogue_code'] && $testcode != $irow[$j]['captchalogue_code'] && $testcode != "00000000" && $testcode != "!!!!!!!!") {
-							$testresult = mysql_query("SELECT `captchalogue_code` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$testcode'");
-							while ($testrow = mysql_fetch_array($testresult)) {
+							$testresult = $mysqli->query("SELECT `captchalogue_code` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$testcode'");
+							while ($testrow = $testresult->fetch_array()) {
 								$foundcombos++;
 								$foundcombo[$foundcombos] = $irow[$i]['name'] . " && " . $irow[$j]['name'];
 							}
@@ -577,8 +577,8 @@ if (empty($_SESSION['username'])) {
 					if (strpos($args[2], "CODE=") !== false) {
 						$thiscode = substr($args[2], 5, 8);
 					} else $thiscode = "00000000"; //assume no card inserted which will default to PGO
-					$itemresult = mysql_query("SELECT `captchalogue_code`,`name`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$thiscode' LIMIT 1");
-					$irow = mysql_fetch_array($itemresult);
+					$itemresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$thiscode' LIMIT 1");
+					$irow = $itemresult->fetch_array();
 					$shunttag = specialArray($irow['effects'], "SHUNT");
 					if ($shunttag[0] != "SHUNT") {
 						$shunttag = specialArray($irow['effects'], "STORAGE"); //if no shunt effect exists, check for a storage effect and apply it
@@ -651,7 +651,7 @@ if (empty($_SESSION['username'])) {
 		else {
 			if ($userrow['storeditems'] != $newstorage && $newstorage != "") {
 				//echo "DEBUG: Storage refresh imminent.<br />OLD: " . $userrow['storeditems'] . "<br />NEW: $newstorage<br />";
-				mysql_query("UPDATE `Players` SET `storeditems` = '$newstorage' WHERE `Players`.`username` = '$username'");
+				$mysqli->query("UPDATE `Players` SET `storeditems` = '$newstorage' WHERE `Players`.`username` = '$username'");
 			}
 		}
 		echo "To get an upgrade, insert a punched card into an empty shunt from your inventory and then store it. It will automatically be placed on your Alchemiter and its upgrade will be applied to it.<br />";
@@ -754,8 +754,8 @@ if (empty($_SESSION['username'])) {
 			$i++;
 		}
   	echo '</select><br />Target player: <select name="sendplayer">';
-  	$materesult = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . mysql_real_escape_string($userrow['session_name']) . "'");
-  	while ($materow = mysql_fetch_array($materesult)) {
+  	$materesult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $mysqli->real_escape_string($userrow['session_name']) . "'");
+  	while ($materow = $materesult->fetch_array()) {
   		if ($materow['username'] != $username) //don't send items to yourself because that's silly
   		echo '<option value="' . $materow['username'] . '">' . $materow['username'] . '</option>';
   	}
@@ -774,8 +774,8 @@ if (empty($_SESSION['username'])) {
 		$i = 0;
 		while ($i <= $totalstored) {
 			$thisarray = explode(":", $storedstuff[$i]);
-			$storesult = mysql_query("SELECT `captchalogue_code`,`name` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $thisarray[0] . "' LIMIT 1;");
-			while ($storow = mysql_fetch_array($storesult)) {
+			$storesult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $thisarray[0] . "' LIMIT 1;");
+			while ($storow = $storesult->fetch_array()) {
 				echo '<option value="' . $storow['captchalogue_code'] . '">' . $storow['name'] . '</option>';
 			}
 			$i++;

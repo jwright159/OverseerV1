@@ -14,8 +14,8 @@ function mdetect(){
 require_once("includes/SQLconnect.php");
 if (empty($_SESSION['username'])) {
 
-  $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = 'default'");
-  $userrow = mysql_fetch_array($result);
+  $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = 'default'");
+  $userrow = $result->fetch_array();
   if ($userrow['session_name'] != 'Developers' && $userrow['session_name'] != 'Itemods') {
   	//die('The dev area is only available to developers/moderators!');
   }
@@ -23,9 +23,9 @@ if (empty($_SESSION['username'])) {
 } else {
 
   $username=$_SESSION['username'];
-  $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
+  $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
 
-  while ($row = mysql_fetch_array($result)) { //Fetch the user's database row. We're going to need it several times.
+  while ($row = $result->fetch_array()) { //Fetch the user's database row. We're going to need it several times.
     if ($row['username'] == $username) { //Paranoia: Double-check.
       $userrow = $row;
     }
@@ -86,18 +86,18 @@ if (empty($_SESSION['username'])) {
     $lasttick = $time;
   }
   if ($encounters > $userrow['encounters'] && ($userrow['down'] == 1 || $userrow['dreamdown'] == 1)) { //Both downs recover after a single encounter is earned.
-    $sessionresult = mysql_query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
-    $sessionrow = mysql_fetch_array($sessionresult);
+    $sessionresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
+    $sessionrow = $sessionresult->fetch_array();
     if ($sessionrow['sessionbossname'] == '') {
    	 $encounters -= 1;
-  	  mysql_query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Player recovers.
+  	  $mysqli->query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Player recovers.
   	  $up = True;
     }
   }
   if ($encounters > 100) $encounters = 100;
   if ($quests > 50) $quests = 50;
   if ($lasttick != $userrow['lasttick']) {
-    mysql_query("UPDATE `Players` SET `encounters` = $encounters, `lasttick` = $lasttick, `availablequests` = $quests, `lastquesttick` = $lastquesttick WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `encounters` = $encounters, `lasttick` = $lasttick, `availablequests` = $quests, `lastquesttick` = $lastquesttick WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
     $userrow['encounters'] = $encounters;
     $userrow['availablequests'] = $quests;
     $userrow['lasttick'] = $lasttick;

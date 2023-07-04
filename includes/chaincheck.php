@@ -16,8 +16,8 @@ function canFly($checkrow) {
 		$invstring = 'inv' . strval($invcheck);
 		if (!empty($checkrow[$invstring])) {
 			$chname = str_replace("'", "\\\\''", $checkrow[$invstring]);
-			$chresult = mysql_query("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
-			$chrow = mysql_fetch_array($chresult);
+			$chresult = $mysqli->query("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
+			$chrow = $chresult->fetch_array();
 			if (strrpos($chrow['abstratus'], "flying")) return true;
 		}
 		$invcheck++;
@@ -27,8 +27,8 @@ function canFly($checkrow) {
 
 function chainArray($startrow) {
   require_once("includes/SQLconnect.php");
-  $gateresult = mysql_query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
-  $gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+  $gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
+  $gaterow = $gateresult->fetch_array(); //Gates only has one row.
   $gaterow['gate0'] = 0;
   $fly = canFly($startrow); //flying items disregard just about all gate-checking limitations
   $currentrow = $startrow;
@@ -45,8 +45,8 @@ function chainArray($startrow) {
   $subgatecount = 0;
   $countb = 1;
   $canusesubgate = false;
-  $sgates = mysql_query("SELECT `username` FROM Players WHERE session_name = '" . $userrow['session_name'] . "' AND storeditems LIKE '%SUBGATE.%'");
-  while ($sgaterow = mysql_fetch_array($sgates)) {
+  $sgates = $mysqli->query("SELECT `username` FROM Players WHERE session_name = '" . $userrow['session_name'] . "' AND storeditems LIKE '%SUBGATE.%'");
+  while ($sgaterow = $sgates->fetch_array()) {
   	$subgates[$sgaterow['username']] = 1; //user has a subgate
   	if ($sgaterow['username'] == $startrow['username']) {
   		$subgates[$sgaterow['username']] = 2;
@@ -60,8 +60,8 @@ function chainArray($startrow) {
   		$minus3row = $minus2row;
   		$minus2row = $minus1row;
   		$minus1row = $currentrow;
-    	$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
-    	$currentrow = mysql_fetch_array($currentresult);
+    	$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
+    	$currentrow = $currentresult->fetch_array();
     	$currentrow['highgate'] = highestGate($gaterow, $currentrow['house_build_grist']);
     	if ($step == 1 && $minus1row['highgate'] >= 1) $clientcan = true;
     	if ($step == 2 && $minus2row['highgate'] >= 3) $clientcan = true;
@@ -85,8 +85,8 @@ function chainArray($startrow) {
 	 	if ($done == true && $canusesubgate) {
 	 		while ($countb <= $subgatecount) {
 	 			if ($subgates[$subgate[$countb]] == 1) { //user with a subgate that can't be reached via standard gates
-	 				$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$subgate[$countb]';");
-    			$currentrow = mysql_fetch_array($currentresult);
+	 				$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$subgate[$countb]';");
+    			$currentrow = $currentresult->fetch_array();
     			$minus3row = $currentrow;
   				$minus2row = $currentrow;
   				$minus1row = $currentrow;

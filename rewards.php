@@ -12,13 +12,13 @@ if (empty($_SESSION['username'])) {
       if ($userrow['modlevel'] < 10) {
 	$_POST['user'] = $username; //get rid of this when public rewards are removed
       }
-      $_POST['user'] = mysql_real_escape_string($_POST['user']);
-      $_POST['gift'] = mysql_real_escape_string($_POST['gift']);
-      $_POST['quantity'] = intval(mysql_real_escape_string($_POST['quantity']));
-      $_POST['captcha'] = mysql_real_escape_string($_POST['captcha']);
+      $_POST['user'] = $mysqli->real_escape_string($_POST['user']);
+      $_POST['gift'] = $mysqli->real_escape_string($_POST['gift']);
+      $_POST['quantity'] = intval($mysqli->real_escape_string($_POST['quantity']));
+      $_POST['captcha'] = $mysqli->real_escape_string($_POST['captcha']);
       if ($_POST['gift'] == "lookup") {
-        $targetresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
-	$targetrow = mysql_fetch_array($targetresult);
+        $targetresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
+	$targetrow = $targetresult->fetch_array();
 	if ($targetrow['username'] == $_POST['user']) {
 	  echo 'Username: ' . $targetrow['username'] . '</br>';	 
 	  echo 'Session: ' . $targetrow['session_name']  . '</br>';
@@ -32,8 +32,8 @@ if (empty($_SESSION['username'])) {
 	  echo 'Boondollars: ' . $targetrow['Boondollars'] . '</br>';
 	  echo 'Encounters: ' . $targetrow['encounters'] . '</br>';
 	  $reachgrist = False;
-    	  $result2 = mysql_query("SELECT * FROM Players LIMIT 1;");
-    	  while ($col = mysql_fetch_field($result2)) {
+    	  $result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
+    	  while ($col = $mysqli->fetch_field($result2)) {
       	    $gristtype = $col->name;
       	    if ($gristtype == "Build_Grist") { //Reached the start of the grists.
               $reachgrist = True;
@@ -47,8 +47,8 @@ if (empty($_SESSION['username'])) {
     	    }
 	  } else echo 'No player by the username of ' . $_POST['user'] . ' found.</br>';
 	} else {
-	$targetresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
-	$targetrow = mysql_fetch_array($targetresult);
+	$targetresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
+	$targetrow = $targetresult->fetch_array();
 	$quantity = intval($_POST['quantity']);
 	if (is_int($quantity) == false || $quantity < 0) {
 	  echo "Invalid quantity! Defaulting to 1.";
@@ -56,8 +56,8 @@ if (empty($_SESSION['username'])) {
 	}
 	if ($targetrow['username'] == $_POST['user']) {
 	  if ($_POST['gift'] == "item") {
-	    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['captcha'] . "' LIMIT 1;");
-	    $itemrow = mysql_fetch_array($itemresult);
+	    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['captcha'] . "' LIMIT 1;");
+	    $itemrow = $itemresult->fetch_array();
 	    if ($itemrow['captchalogue_code'] == $_POST['captcha']) {
 	      $k = 1;
 	      $itemsgiven = 0;
@@ -74,7 +74,7 @@ if (empty($_SESSION['username'])) {
 		  }
       		}
 		if ($k <= 50) {
-		  mysql_query("UPDATE Players SET `inv" . strval($k) . "` = '" . $itemrow['name'] . "' WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
+		  $mysqli->query("UPDATE Players SET `inv" . strval($k) . "` = '" . $itemrow['name'] . "' WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 		  $itemsgiven++;
 		  $k++;
 		}
@@ -90,8 +90,8 @@ if (empty($_SESSION['username'])) {
 	    if ($field == "Echeladder" && $amount + $targetrow['Echeladder'] < 1) $amount = 1 - $targetrow['Echeladder'];
 	    if ($field == "allgrists") {
 	      $reachgrist = False;
-	      $result2 = mysql_query("SELECT * FROM Players LIMIT 1;");
-	      while ($col = mysql_fetch_field($result2)) {
+	      $result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
+	      while ($col = $mysqli->fetch_field($result2)) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 		  $reachgrist = True;
@@ -100,13 +100,13 @@ if (empty($_SESSION['username'])) {
 		  $reachgrist = False;
 		}
 		if ($reachgrist == True) {
-		  mysql_query("UPDATE Players SET `$gristtype` = " . strval($targetrow[$gristtype]+$amount) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
+		  $mysqli->query("UPDATE Players SET `$gristtype` = " . strval($targetrow[$gristtype]+$amount) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 		}
 	      }
 	      echo $_POST['user'] . " was given " . strval($amount) . " of all grist types!</br>";
 	      $giftstring = strval($amount) . " of all grist types";
 	    } else {
-	      mysql_query("UPDATE Players SET `$field` = " . strval($targetrow[$field]+$amount) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
+	      $mysqli->query("UPDATE Players SET `$field` = " . strval($targetrow[$field]+$amount) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 	      if ($field == "Echeladder") {
 		echo $_POST['user'] . " was given " . strval($amount) . " Echeladder rungs!</br>";
 		$giftstring = strval($amount) . " Echeladder rungs";
@@ -121,7 +121,7 @@ if (empty($_SESSION['username'])) {
 		} else {
 		  $gelviscosity = $currentrung*15-30;
 		}
-		mysql_query("UPDATE Players SET `Gel_Viscosity` = " . strval($gelviscosity) . ", `Health_Vial` = LEAST(" . strval($gelviscosity) . "," . strval($targetrow['Health_Vial']) . "), `Dream_Health_Vial` = LEAST(" . strval($gelviscosity) . "," . strval($targetrow['Dream_Health_Vial']) . "), `Aspect_Vial` = LEAST(" . strval($gelviscosity) . "," . strval($targetrow['Aspect_Vial']) . ") WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
+		$mysqli->query("UPDATE Players SET `Gel_Viscosity` = " . strval($gelviscosity) . ", `Health_Vial` = LEAST(" . strval($gelviscosity) . "," . strval($targetrow['Health_Vial']) . "), `Dream_Health_Vial` = LEAST(" . strval($gelviscosity) . "," . strval($targetrow['Dream_Health_Vial']) . "), `Aspect_Vial` = LEAST(" . strval($gelviscosity) . "," . strval($targetrow['Aspect_Vial']) . ") WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 	      } else {
 		echo $_POST['user'] . " was given " . strval($amount) . " " . $field . "!</br>";
 		$giftstring = strval($amount) . " " . $field;
@@ -129,8 +129,8 @@ if (empty($_SESSION['username'])) {
 	    }
 	    }
 	  if (!empty($_POST['body'])) {
-	    $sendresult = mysql_query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $sendto[$rcount] . "' LIMIT 1;");
-	    $sendrow = mysql_fetch_array($sendresult);
+	    $sendresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $sendto[$rcount] . "' LIMIT 1;");
+	    $sendrow = $sendresult->fetch_array();
 	    $check = 1;
 	    $max_inbox = 50;	
 	    $foundempty = False;
@@ -141,8 +141,8 @@ if (empty($_SESSION['username'])) {
 	    if ($foundempty) {
               $sendstring = "<i>" . $username . "</i>" . "|The devs have gifted you " . $giftstring . "!|" . $_POST['body'];
 	      $sendstring = str_replace("'", "''", $sendstring); //god dang these apostrophes
-	      mysql_query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
-	      mysql_query("UPDATE `Players` SET `Players`.`newmessage` = 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
+	      $mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
+	      $mysqli->query("UPDATE `Players` SET `Players`.`newmessage` = 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
 	      } else echo "Attempted to send a message, but the user's inbox was full.</br>";
 	    }
 	  } else echo 'No player by the username of ' . $_POST['user'] . ' found.</br>';
@@ -159,8 +159,8 @@ if (empty($_SESSION['username'])) {
     echo '<option value="Echeladder">Echeladder rungs</option>';
     echo '<option value="abstrati">Strife abstrati</option>';
     $reachgrist = False;
-    $result2 = mysql_query("SELECT * FROM Players LIMIT 1;");
-    while ($col = mysql_fetch_field($result2)) {
+    $result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
+    while ($col = $mysqli->fetch_field($result2)) {
       $gristtype = $col->name;
       if ($gristtype == "Build_Grist") { //Reached the start of the grists.
         $reachgrist = True;

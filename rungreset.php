@@ -23,7 +23,7 @@ if (empty($_SESSION['username'])) {
 			if ($newdhealth < 1) $newdhealth = 1;
 			$newaspect = ceil($fixhealth * $oldapercent);
 			if ($newaspect < 0) $newaspect = 0;
-			mysql_query("UPDATE `Players` SET `Echeladder` = $newrung, `Gel_Viscosity` = $fixhealth, `Health_Vial` = $newhealth, `Dream_Health_Vial` = $newdhealth, `Aspect_Vial` = $newaspect WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
+			$mysqli->query("UPDATE `Players` SET `Echeladder` = $newrung, `Gel_Viscosity` = $fixhealth, `Health_Vial` = $newhealth, `Dream_Health_Vial` = $newdhealth, `Aspect_Vial` = $newaspect WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
 			echo "Your rung has been updated. Have a nice day!";
 		} else echo "You cannot make that your Echeladder rung.<br />";
 	} else {

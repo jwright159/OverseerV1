@@ -98,9 +98,9 @@ function produceIST($init) { //Returns Incipisphere Standard Time when given the
 }
 
 function initTime($con) { //Grabs the initialization time from the System table (in seconds since the Epoch)
-  mysql_select_db("theovers_HS", $con);
-  $result = mysql_query("SELECT * FROM System");
-  $row = mysql_fetch_array($result);
+  $mysqli->select_db("theovers_HS", $con);
+  $result = $mysqli->query("SELECT * FROM System");
+  $row = $result->fetch_array();
   return $row['time'];
 }
 ?>

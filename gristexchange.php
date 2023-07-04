@@ -7,11 +7,11 @@ require_once("includes/chaincheck.php");
 $seisopen = false; //set to false to close the stock exchange to the public
 
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -114,12 +114,12 @@ if ($seisopen == false) {
 } else {
 	echo "<!DOCTYPE html><html><head><style>defunct{color: #CC0000;}</style><style>clarify{color: #CCCC00;}</style><style>greenlit{color: #00AA00;}</style></head><body>";
 	
-	$sessionresult = mysql_query("SELECT `exchangeland` FROM `Sessions` WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
-	$sessionrow = mysql_fetch_array($sessionresult);
+	$sessionresult = $mysqli->query("SELECT `exchangeland` FROM `Sessions` WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
+	$sessionrow = $sessionresult->fetch_array();
 	if (empty($sessionrow['exchangeland'])) {
 		if ($userrow['econony'] >= 4000000) {
 			if (!empty($_POST['setupland'])) {
-				mysql_query("UPDATE `Sessions` SET `exchangeland` = '$username' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
+				$mysqli->query("UPDATE `Sessions` SET `exchangeland` = '$username' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
 				echo "The Stock Exchange has been established on the Land of $userrow[land1] and $userrow[land2]! You and your sessionmates will now be able to trade with the multiverse and, if you play your cards right, strike it rich!<br />";
 				echo "<a href='gristexchange.php'>==&gt;</a>";
 			} else {
@@ -151,10 +151,10 @@ if ($seisopen == false) {
 		} else {
 	
 	//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
-    $abilityresult = mysql_query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
+    $abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
 	AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
     $abilities = array(0 => "Null ability. No, not void.");
-    while ($temp = mysql_fetch_array($abilityresult)) {
+    while ($temp = $abilityresult->fetch_array()) {
 		$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
 		//as pulling the correct element out of the abilities array via the ID. Note that an ability with an empty usage message will be unusable since the empty function will spit empty at you.
     }
@@ -178,8 +178,8 @@ if ($seisopen == false) {
 		elseif ($_GET['devaction'] == "update")
 		$forceupdate = true;
 		elseif ($_GET['devaction'] == "scramble") {
-			$stockresult = mysql_query("SELECT * FROM `Grist_Exchange` WHERE `name` = '$xchangename'");
-			$stockrow = mysql_fetch_array($stockresult);
+			$stockresult = $mysqli->query("SELECT * FROM `Grist_Exchange` WHERE `name` = '$xchangename'");
+			$stockrow = $stockresult->fetch_array();
 			$i = 0;
 			while ($i < $totalgrists) {
 				$buystr = $gristname[$i] . "_bought";
@@ -188,7 +188,7 @@ if ($seisopen == false) {
 				$newbuy = rand(1,1000000);
 				$newsell = rand(1,1000000);
 				$newsupply = $stockrow[$supplystr] + $newsell - $newbuy;
-				mysql_query("UPDATE `Grist_Exchange` SET `$buystr` = $newbuy, `$sellstr` = $newsell, `$supplystr` = $newsupply WHERE `Grist_Exchange`.`name` = '$xchangename'");
+				$mysqli->query("UPDATE `Grist_Exchange` SET `$buystr` = $newbuy, `$sellstr` = $newsell, `$supplystr` = $newsupply WHERE `Grist_Exchange`.`name` = '$xchangename'");
 				$stockrow[$buystr] = $newbuy;
 				$stockrow[$sellstr] = $newsell;
 				$stockrow[$supplystr] = $newsupply;
@@ -200,8 +200,8 @@ if ($seisopen == false) {
 	$xchangename = "Default";
 	}
 	
-	$stockresult = mysql_query("SELECT * FROM `Grist_Exchange` WHERE `name` = '$xchangename'");
-	$stockrow = mysql_fetch_array($stockresult);
+	$stockresult = $mysqli->query("SELECT * FROM `Grist_Exchange` WHERE `name` = '$xchangename'");
+	$stockrow = $stockresult->fetch_array();
 	
 	if ($forcereset) {
 		$i = 0;
@@ -212,7 +212,7 @@ if ($seisopen == false) {
 			$changestr = $gristname[$i] . "_change";
 			$supplystr = $gristname[$i] . "_supply";
 			$newprice = getBasecost($gristname[$i]);
-			mysql_query("UPDATE `Grist_Exchange` SET `$griststr` = $newprice, `$buystr` = 0, `$sellstr` = 0, `$changestr` = 0, `$supplystr` = 10000000 WHERE `Grist_Exchange`.`name` = '$xchangename'");
+			$mysqli->query("UPDATE `Grist_Exchange` SET `$griststr` = $newprice, `$buystr` = 0, `$sellstr` = 0, `$changestr` = 0, `$supplystr` = 10000000 WHERE `Grist_Exchange`.`name` = '$xchangename'");
 			$stockrow[$griststr] = $newprice;
 			$stockrow[$buystr] = 0;
 			$stockrow[$sellstr] = 0;
@@ -258,7 +258,7 @@ if ($seisopen == false) {
 			if ($newprice < 1) $newprice = 1;
 			if ($gristname[$i] == "Artifact_Grist") $newprice = 0; //Artifact will always be worth absolutely nothing but it's on the exchange because of reasons
 			$difference = $newprice - $stockrow[$griststr];
-			mysql_query("UPDATE `Grist_Exchange` SET `$griststr` = $newprice, `$buystr` = 0, `$sellstr` = 0, `$changestr` = $difference WHERE `Grist_Exchange`.`name` = '$xchangename'");
+			$mysqli->query("UPDATE `Grist_Exchange` SET `$griststr` = $newprice, `$buystr` = 0, `$sellstr` = 0, `$changestr` = $difference WHERE `Grist_Exchange`.`name` = '$xchangename'");
 			$stockrow[$griststr] = intval($newprice * 100) / 100;
 			$stockrow[$buystr] = 0;
 			$stockrow[$sellstr] = 0;
@@ -268,7 +268,7 @@ if ($seisopen == false) {
 		while ($stockrow['tick'] + $updatetime < $currenttime) {
 			$stockrow['tick'] += $updatetime;
 		}
-		mysql_query("UPDATE `Grist_Exchange` SET `tick` = $stockrow[tick] WHERE `Grist_Exchange`.`name` = '$xchangename'");
+		$mysqli->query("UPDATE `Grist_Exchange` SET `tick` = $stockrow[tick] WHERE `Grist_Exchange`.`name` = '$xchangename'");
 	}
 	
 	if (!empty($_POST['buygrist'])) {
@@ -288,7 +288,7 @@ if ($seisopen == false) {
 					} else {
 						echo $abilities[27] . "<br />";
 						$userrow['encounters'] -= 1;
-						mysql_query("UPDATE `Players` SET `encounters` = $userrow[encounters] WHERE `Players`.`username` = '$username'");
+						$mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters] WHERE `Players`.`username` = '$username'");
 					}
 				}
 				$totalcost = ceil($xchangerate * $quantity);
@@ -302,11 +302,11 @@ if ($seisopen == false) {
 						}
 						$leftoverboon = $userrow['Boondollars'] - $totalcost;
 						$newgrist = $userrow[$_POST['buygrist']] + $quantity;
-						mysql_query("UPDATE Players SET `Boondollars` = $leftoverboon, `" . $_POST['buygrist'] . "` = $newgrist WHERE `Players`.`username` = '$username' LIMIT 1;");
+						$mysqli->query("UPDATE Players SET `Boondollars` = $leftoverboon, `" . $_POST['buygrist'] . "` = $newgrist WHERE `Players`.`username` = '$username' LIMIT 1;");
 						$buystr = $_POST['buygrist'] . "_bought";
 						$stockrow[$buystr] += $quantity;
 						$stockrow[$supplystr] -= $quantity;
-						mysql_query("UPDATE `Grist_Exchange` SET `$buystr` = $stockrow[$buystr], `$supplystr` = $stockrow[$supplystr] WHERE `Grist_Exchange`.`name` = '$xchangename'");
+						$mysqli->query("UPDATE `Grist_Exchange` SET `$buystr` = $stockrow[$buystr], `$supplystr` = $stockrow[$supplystr] WHERE `Grist_Exchange`.`name` = '$xchangename'");
 						echo "You have purchased $quantity " . $_POST['buygrist'] . " for $totalcost.</br>";
 					} else echo "The Exchange is out of " . $_POST['buygrist'] . "! You'll have to wait until the stock replenishes.<br />";
 				} else echo "It costs $totalcost boondollars to buy $quantity " . $_POST['buygrist'] . ". You don't have enough!</br>";
@@ -330,7 +330,7 @@ if ($seisopen == false) {
 					} else {
 						echo $abilities[27] . "<br />";
 						$userrow['encounters'] -= 1;
-						mysql_query("UPDATE `Players` SET `encounters` = $userrow[encounters] WHERE `Players`.`username` = '$username'");
+						$mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters] WHERE `Players`.`username` = '$username'");
 					}
 				}
 				$totalcost = ceil($xchangerate * $quantity);
@@ -338,12 +338,12 @@ if ($seisopen == false) {
 				if ($userrow[$_POST['sellgrist']] >= $quantity) {
 					$leftoverboon = $userrow['Boondollars'] + $totalcost;
 					$newgrist = $userrow[$_POST['sellgrist']] - $quantity;
-					mysql_query("UPDATE Players SET `Boondollars` = $leftoverboon, `" . $_POST['sellgrist'] . "` = $newgrist WHERE `Players`.`username` = '$username' LIMIT 1;");
+					$mysqli->query("UPDATE Players SET `Boondollars` = $leftoverboon, `" . $_POST['sellgrist'] . "` = $newgrist WHERE `Players`.`username` = '$username' LIMIT 1;");
 					$sellstr = $_POST['sellgrist'] . "_sold";
 					$supplystr = $_POST['sellgrist'] . "_supply";
 					$stockrow[$sellstr] += $quantity;
 					$stockrow[$supplystr] += $quantity;
-					mysql_query("UPDATE `Grist_Exchange` SET `$sellstr` = $stockrow[$sellstr], `$supplystr` = $stockrow[$supplystr] WHERE `Grist_Exchange`.`name` = '$xchangename'");
+					$mysqli->query("UPDATE `Grist_Exchange` SET `$sellstr` = $stockrow[$sellstr], `$supplystr` = $stockrow[$supplystr] WHERE `Grist_Exchange`.`name` = '$xchangename'");
 					echo "You have sold $quantity " . $_POST['sellgrist'] . " for $totalcost.</br>";
 				} else echo "You don't have that much " . $_POST['sellgrist'] . ".</br>";
 				} else echo "The transaction could not be performed.<br />";
@@ -387,8 +387,8 @@ if ($seisopen == false) {
 			$i++;
 		}
 	}
-	$lresult = mysql_query("SELECT `land1`,`land2` FROM `Players` WHERE `Players`.`username` = '$sessionrow[exchangeland]'");
-	$lrow = mysql_fetch_array($lresult);
+	$lresult = $mysqli->query("SELECT `land1`,`land2` FROM `Players` WHERE `Players`.`username` = '$sessionrow[exchangeland]'");
+	$lrow = $lresult->fetch_array();
 	$landshort = "LO";
 	$boom = explode(" ", $lrow['land1']);
 	$bcount = 0;

@@ -13,7 +13,7 @@ and the code itself may be terrible. You've been warned.
 ## Installation
 
 First up, you're gonna need a webserver. On Linux, this can be Nginx or Apache. You'll also need PHP, 
-and MySQL. For Windows, you can use XAMPP to set it all up easily.
+and mysqli. For Windows, you can use XAMPP to set it all up easily.
 
 Once that's all installed, it's time to set up the database. Import `install/Overseerv1.sql` - this
 contains everything you need to get started, including items. Set up users etc. 

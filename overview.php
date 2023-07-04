@@ -9,8 +9,8 @@ function canFly($checkrow) {
 		$invstring = 'inv' . strval($invcheck);
 		if (!empty($checkrow[$invstring])) {
 			$chname = str_replace("'", "\\\\''", $checkrow[$invstring]);
-			$chresult = mysql_query("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
-			$chrow = mysql_fetch_array($chresult);
+			$chresult = $mysqli->query("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
+			$chrow = $chresult->fetch_array();
 			if (strrpos($chrow['abstratus'], "flying")) return true;
 		}
 		$invcheck++;
@@ -28,20 +28,20 @@ $fly = canFly($userrow);
   //--Begin naming/prototyping code here.--
 
   if (!empty($_POST['spritename'])) { //Renaming sprite.
-    $spritename = mysql_real_escape_string($_POST['spritename']) . "sprite";
-    mysql_query("UPDATE `Players` SET `sprite_name` = '$spritename' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+    $spritename = $mysqli->real_escape_string($_POST['spritename']) . "sprite";
+    $mysqli->query("UPDATE `Players` SET `sprite_name` = '$spritename' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
   }
   if (!empty($_POST['item1'])) { //First prototyping. LOL FAILED SESSION
     if (empty($userrow['prototype_item_1'])) {
       if (intval($_POST['strength1']) < 1000 && intval($_POST['strength1']) > -1000) { //Valid prototype strength
 	$strengthone = intval($_POST['strength1']);
 	$newstrength = ($strengthone * 2) + $userrow['sprite_strength']; //Sprite receives double the item's native prototyping strength.
-	$itemone = mysql_real_escape_string($_POST['item1']);
+	$itemone = $mysqli->real_escape_string($_POST['item1']);
 	if ($newstrength > ($userrow['sprite_strength'] * 2) || $newstrength > 2050) {
 	  echo "The sprite dodges the prototyping item! Looks like it was too powerful for the sprite to sustain.</br>";
 	} else {
-	  mysql_query("UPDATE `Players` SET `prototype_item_1` = '$itemone' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-	  mysql_query("UPDATE `Players` SET `sprite_strength` = '$newstrength' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `prototype_item_1` = '$itemone' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `sprite_strength` = '$newstrength' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	}
       }
     } else {
@@ -51,14 +51,14 @@ $fly = canFly($userrow);
   if (!empty($_POST['item2'])) { //Second prototyping
     if (empty($userrow['prototype_item_2'])) {
       if (intval($_POST['strength2']) < 1000 && intval($_POST['strength2']) > -1000) { //Valid prototype strength
-	$itemtwo = mysql_real_escape_string($_POST['item2']);
+	$itemtwo = $mysqli->real_escape_string($_POST['item2']);
 	$strengthtwo = intval($_POST['strength2']);
 	$newstrength = ($strengthtwo * 2) + $userrow['sprite_strength']; //Sprite receives double the item's native prototyping strength.
 	if ($newstrength > ($userrow['sprite_strength'] * 2) || $newstrength > 2050) {
 	  echo "The sprite dodges the prototyping item! Looks like it was too powerful for the sprite to sustain.</br>";
 	} else {
-	  mysql_query("UPDATE `Players` SET `prototype_item_2` = '$itemtwo' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-	  mysql_query("UPDATE `Players` SET `sprite_strength` = '$newstrength' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `prototype_item_2` = '$itemtwo' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `sprite_strength` = '$newstrength' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	}
       }
     } else {
@@ -70,9 +70,9 @@ $fly = canFly($userrow);
   if (!empty($_POST['class']) && !empty($_POST['aspect'])) {
     if ((empty($userrow['Class']) || $userrow['Class'] == "Default") && empty($userrow['Aspect'])) {
     	$titlegood = 0;
-    	$aspects = mysql_query("SELECT * FROM Titles LIMIT 1;");
+    	$aspects = $mysqli->query("SELECT * FROM Titles LIMIT 1;");
     	$reachaspect = False;
-    	while ($col = mysql_fetch_field($aspects)) {
+    	while ($col = $mysqli->fetch_field($aspects)) {
 	      $aspect = $col->name;
   	    if ($aspect == "Breath") $reachaspect = True;
     	  if ($aspect == "General") $reachaspect = False;
@@ -80,35 +80,35 @@ $fly = canFly($userrow);
       		if ($_POST['aspect'] == $aspect) $titlegood++;
       	}
     	}
-    	$classes = mysql_query("SELECT * FROM Titles");
+    	$classes = $mysqli->query("SELECT * FROM Titles");
     	$reachclass = True;
-    	while ($row = mysql_fetch_array($classes)) {
-	      $classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
-  	    $classrow = mysql_fetch_array($classresult);
+    	while ($row = $classes->fetch_array()) {
+	      $classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
+  	    $classrow = $classresult->fetch_array();
     	  if ($row['Class'] == "General") $reachclass = False;
       	if ($reachclass == True) {
       		if ($_POST['class'] == $row['Class']) $titlegood++;
       	}
     	}
     	if ($titlegood == 2) {
-      $newclass = mysql_real_escape_string($_POST['class']);
+      $newclass = $mysqli->real_escape_string($_POST['class']);
       $newclass = str_replace("<", "&lt;", $newclass);
-      $newaspect = mysql_real_escape_string($_POST['aspect']);
+      $newaspect = $mysqli->real_escape_string($_POST['aspect']);
       $newaspect = str_replace("<", "&lt;", $newaspect);
-      $titleresult = mysql_query("SELECT * FROM `Titles` WHERE `Titles`.`Class` = 'Adjective'");
-      $titlerow = mysql_fetch_array($titleresult);
+      $titleresult = $mysqli->query("SELECT * FROM `Titles` WHERE `Titles`.`Class` = 'Adjective'");
+      $titlerow = $titleresult->fetch_array();
       $sesname = $userrow['session_name'];
-      $sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sesname' LIMIT 1;"); //select session so we know if uniques are on
-      $sesrow = mysql_fetch_array($sessionresult);
+      $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sesname' LIMIT 1;"); //select session so we know if uniques are on
+      $sesrow = $sessionresult->fetch_array();
       $aok = False;
       if ($sesrow['uniqueclasspects'] == 1) {
-      	$teamresult = mysql_query("SELECT `Class`,`Aspect` FROM Players WHERE `Players`.`session_name` = '$sesname'");
+      	$teamresult = $mysqli->query("SELECT `Class`,`Aspect` FROM Players WHERE `Players`.`session_name` = '$sesname'");
       	$totalplayers = 0;
       	$classclash = False;
       	$aspectclash = False;
       	$doubleclash = False;
       	$failreason = "nothing";
-      	while ($row = mysql_fetch_array($teamresult)) {
+      	while ($row = $teamresult->fetch_array()) {
       		$totalplayers++;
       		if ($row['Class'] == $newclass) $classclash = True;
       		if ($row['Aspect'] == $newaspect) $aspectclash = True;
@@ -124,8 +124,8 @@ $fly = canFly($userrow);
       	}
       } else $aok = True;
       if ($aok) {
-      mysql_query("UPDATE `Players` SET `Class` = '$newclass' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-      mysql_query("UPDATE `Players` SET `Aspect` = '$newaspect' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `Class` = '$newclass' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `Aspect` = '$newaspect' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       $_SESSION['adjective'] = $titlerow[$newaspect];
       } else echo "Class/aspect failed to set: Unique classpects is on, and $failreason already belongs to a player in this session</br>";
     	} else echo "pfft what are you smoking that's not even a real title</br>";
@@ -135,27 +135,27 @@ $fly = canFly($userrow);
   }
   //--End class/aspect assignment code here. Begin status code here.--
   if (!empty($_POST['status'])) { //Renaming sprite.
-    $newstatus = mysql_real_escape_string($_POST['status']);
+    $newstatus = $mysqli->real_escape_string($_POST['status']);
     $newstatus = str_replace("<", "&lt;", $newstatus);
-    mysql_query("UPDATE `Players` SET `status` = '$newstatus' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `status` = '$newstatus' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
   }
   //End status code here. Begin symbol code
   if (!empty($_POST['newimage'])) { //Reimagining image.
     if ($newimg == "nobody.png") {
       echo "You're not a nobody, you're a special snowflake!<br />";
     } else {
-      $newimg = mysql_real_escape_string($_POST['newimage']);
+      $newimg = $mysqli->real_escape_string($_POST['newimage']);
       $newimg = str_replace("<", "&lt;", $newimg);
       $userrow['symbol'] = $newimg;
-      mysql_query("UPDATE `Players` SET `symbol` = '$newimg' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `symbol` = '$newimg' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
     }
   }
   //End symbol code here. Begin awakening code here.
   if (!empty($_POST['dreamer'])) { //Choosing dream affiliation.
     if (empty($userrow['Dreamer'])) {
     	if ($_POST['dreamer'] == "Prospit" || $_POST['dreamer'] == "Derse") { //pretty sure prospit and derse will forever remain the only two moons
-      $dreamstatus = mysql_real_escape_string($_POST['dreamer']);
-      mysql_query("UPDATE `Players` SET `dreamer` = '" . $dreamstatus . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $dreamstatus = $mysqli->real_escape_string($_POST['dreamer']);
+      $mysqli->query("UPDATE `Players` SET `dreamer` = '" . $dreamstatus . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
     	} else echo "suddenly, WEED DREAMS.</br>";
     } else {
       echo "WHAT THE FUCK. YOU CAN'T JUST CHANGE DREAMING MOONS, YOU MORON.";
@@ -164,8 +164,8 @@ $fly = canFly($userrow);
   //End awakening code here. Begin colouring code here.
 
   if (!empty($_POST['colour'])) {
-    mysql_query("UPDATE `Players` SET `colour` = '" . mysql_real_escape_string($_POST['colour']) . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-    $userrow['colour'] = mysql_real_escape_string($_POST['colour']);
+    $mysqli->query("UPDATE `Players` SET `colour` = '" . $mysqli->real_escape_string($_POST['colour']) . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+    $userrow['colour'] = $mysqli->real_escape_string($_POST['colour']);
     $colournew = $userrow['colour']; //So we don't double-post with the header.
   }
 
@@ -174,8 +174,8 @@ $fly = canFly($userrow);
   if (!empty($_POST['consortcolor'])) {
   	if (empty($userrow['consort_name'])) {
   		$newconsortname = $_POST['consortcolor'] . " " . $_POST['consorttype'];
-    	mysql_query("UPDATE `Players` SET `consort_name` = '" . mysql_real_escape_string($newconsortname) . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-    	$userrow['consort_name'] = mysql_real_escape_string($newconsortname);
+    	$mysqli->query("UPDATE `Players` SET `consort_name` = '" . $mysqli->real_escape_string($newconsortname) . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+    	$userrow['consort_name'] = $mysqli->real_escape_string($newconsortname);
   	} else echo "Two kinds of consorts on the same land?! You're not entirely sure they'll be able to get along...</br>";
   }
   
@@ -184,8 +184,8 @@ $fly = canFly($userrow);
   if (empty($client)) $client = "";
   echo "Username: $username </br>";
   if (!empty($userrow['Class']) && !empty($userrow['Aspect'])) {
-    $classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
-    $classrow = mysql_fetch_array($classresult);
+    $classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
+    $classrow = $classresult->fetch_array();
     if ($classrow['activefactor'] > 100) {
       $activepassivestr = "(Active, $classrow[activefactor]%)";
     } else {
@@ -193,8 +193,8 @@ $fly = canFly($userrow);
     }
     echo "Title: $userrow[Class] of $userrow[Aspect] $activepassivestr</br>";
   } elseif (!empty($newclass) && !empty($newaspect)) {
-    $classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$newclass';");
-    $classrow = mysql_fetch_array($classresult);
+    $classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$newclass';");
+    $classrow = $classresult->fetch_array();
     if ($classrow['activefactor'] > 100) {
       $activepassivestr = "(Active, $classrow[activefactor]%)";
     } else {
@@ -204,11 +204,11 @@ $fly = canFly($userrow);
   } else {
     echo "Both your class and aspect must be accepted simultaneously.";
     echo '<form action="overview.php" method="post">Select class:<select name="class"> '; //Select a class
-    $classes = mysql_query("SELECT * FROM Titles");
+    $classes = $mysqli->query("SELECT * FROM Titles");
     $reachclass = True;
-    while ($row = mysql_fetch_array($classes)) {
-      $classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
-      $classrow = mysql_fetch_array($classresult);
+    while ($row = $classes->fetch_array()) {
+      $classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
+      $classrow = $classresult->fetch_array();
       if ($classrow['activefactor'] > 100) {
 	$activepassivestr = "(Active, $classrow[activefactor]%)";
       } else {
@@ -219,9 +219,9 @@ $fly = canFly($userrow);
     }
     echo '</select></br>';
     echo 'Select aspect:<select name="aspect"> '; //Select an aspect
-    $aspects = mysql_query("SELECT * FROM Titles LIMIT 1;");
+    $aspects = $mysqli->query("SELECT * FROM Titles LIMIT 1;");
     $reachaspect = False;
-    while ($col = mysql_fetch_field($aspects)) {
+    while ($col = $mysqli->fetch_field($aspects)) {
       $aspect = $col->name;
       if ($aspect == "Breath") $reachaspect = True;
       if ($aspect == "General") $reachaspect = False;
@@ -240,8 +240,8 @@ $fly = canFly($userrow);
   } else {
     echo "</br>";
   }
-  $exploresult = mysql_query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
-  $explorow = mysql_fetch_array($exploresult);
+  $exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
+  $explorow = $exploresult->fetch_array();
   if ($explorow['canleave'] == 1 || $userrow['dreamingstatus'] == "Awake") {
     echo '<form action="dreamtransition.php" method="post"><input type="hidden" name="sleep" value="sleep" /><input type="submit" value="Sleep?" /></form></br>';
     echo '<form action="wasteoftime.php" method="post"><input type="hidden" name="timewaster" value="timewaster" /><input type="submit" value="Sit around wasting time" /></form></br>';
@@ -250,8 +250,8 @@ $fly = canFly($userrow);
   }
   if (!empty($userrow['colour'])) echo "Color: <favcolour>$userrow[colour]</favcolour>";
   echo '<form action="overview.php" method="post"><select name="colour">';
-  $colouresult = mysql_query("SELECT * FROM Colours");
-  while ($colourow = mysql_fetch_array($colouresult)) {
+  $colouresult = $mysqli->query("SELECT * FROM Colours");
+  while ($colourow = $colouresult->fetch_array()) {
     echo '<option value="' . $colourow['Name'] . '">' . $colourow['Name'] . '</option>';
   }
   echo "</select></br>";
@@ -282,8 +282,8 @@ $fly = canFly($userrow);
   if (empty($userrow['consort_name'])) {
   	echo 'Consorts: Your consorts are currently undefined. Define them below by choosing a color and species.</br>';
   	echo '<form action="overview.php" method="post"><select name="consortcolor">';
-  	$colouresult = mysql_query("SELECT * FROM Colours");
-  	while ($colourow = mysql_fetch_array($colouresult)) {
+  	$colouresult = $mysqli->query("SELECT * FROM Colours");
+  	while ($colourow = $colouresult->fetch_array()) {
 	    echo '<option value="' . $colourow['Name'] . '">' . $colourow['Name'] . '</option>';
   	}
   	echo '</select><select name="consorttype">';
@@ -310,8 +310,8 @@ $fly = canFly($userrow);
   }
   echo '<form action="overview.php" method="post">What are you doing? <input id="status" name="status" type="text" /> <input type="submit" value="Do it!" /></form>';
   echo "Session designation: $userrow[session_name] </br>";
-  $sessionpwresult = mysql_query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "';");
-  $sessionpwrow = mysql_fetch_array($sessionpwresult);
+  $sessionpwresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "';");
+  $sessionpwrow = $sessionpwresult->fetch_array();
   echo "Session password: $sessionpwrow[password]</br>";
   if ($userrow['dreamingstatus'] == "Awake") { //Only deal with sprite while awake.
     if (!empty($spritename)) {
@@ -347,9 +347,9 @@ $fly = canFly($userrow);
 
   //begin chain-displaying code (replaces current player listing as it achieves the same effect)
   echo "Players in your session, organized by client ==&gt; server (if a connection exists):</br>";
-  $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' ;");
+  $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' ;");
   $buddies = 0;
-  while ($row = mysql_fetch_array($sessionmates)) {
+  while ($row = $sessionmates->fetch_array()) {
     if ($row['session_name'] == $userrow['session_name']) {
       //echo "$row[username] </br>";
       $buddyname[$buddies] = $row['username'];
@@ -358,8 +358,8 @@ $fly = canFly($userrow);
     }
   }
   echo "Known server/client chains in your session:</br>";
-  $clientless = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`client_player` = '' ;");
-  while ($currentrow = mysql_fetch_array($clientless)) { //first show the chains of those without clients to ensure that chains aren't repeated
+  $clientless = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`client_player` = '' ;");
+  while ($currentrow = $clientless->fetch_array()) { //first show the chains of those without clients to ensure that chains aren't repeated
   	$done = False;
   	echo $currentrow['username'];
   	$printed[$currentrow['username']] = True;
@@ -367,8 +367,8 @@ $fly = canFly($userrow);
   	while (!$done) {
       if (!empty($currentrow['server_player']) && $currentrow['server_player'] != $namebeingchecked) {
         echo " ==&gt; ";
-        $currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
-        $currentrow = mysql_fetch_array($currentresult);
+        $currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
+        $currentrow = $currentresult->fetch_array();
         echo $currentrow['username'];
 				$printed[$currentrow['username']] = True;
       } else { 
@@ -395,8 +395,8 @@ $fly = canFly($userrow);
     while (!$done) {
       if (!empty($currentrow['server_player']) && $currentrow['server_player'] != $namebeingchecked && $printed[$currentrow['server_player']] == false) {
         echo " ==&gt; ";
-        $currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
-        $currentrow = mysql_fetch_array($currentresult);
+        $currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
+        $currentrow = $currentresult->fetch_array();
         echo $currentrow['username'];
 				$printed[$currentrow['username']] = True;
       } else { 
@@ -407,8 +407,8 @@ $fly = canFly($userrow);
     while ($check < $buddies && $done) {
       if (!$printed[$buddyname[$check]]) { //see if this person was already listed as part of a chain
         $namebeingchecked = $buddyname[$check];
-        $currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $buddyname[$check] . "';");
-        $currentrow = mysql_fetch_array($currentresult);
+        $currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $buddyname[$check] . "';");
+        $currentrow = $currentresult->fetch_array();
         echo $currentrow['username'];
 	$printed[$currentrow['username']] = True;
 	$done = False; //break this while loop and go print the chain of this person
@@ -450,8 +450,8 @@ $compugood = true;
   echo "House gates accessible on your Land: ";
   $gates = 0;
   $i = 1;
-  $gateresult = mysql_query("SELECT * FROM Gates");
-  $gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+  $gateresult = $mysqli->query("SELECT * FROM Gates");
+  $gaterow = $gateresult->fetch_array(); //Gates only has one row.
   while ($i <= 7) {
     $gatestr = "gate" . strval($i);
     if ($gaterow[$gatestr] <= $userrow['house_build_grist']) {
@@ -464,8 +464,8 @@ $compugood = true;
   echo strval($gates) . "</br>";
   if (($gates == 7 && $userrow['dreamingstatus'] == "Awake" && $userrow['denizendown'] == 0 && !empty($userrow['Aspect'])) || $fly) {
     if ($userrow['enemydata'] == "" && $userrow['aiding'] == "") {
-      $denizenresult = mysql_query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
-      $denizenrow = mysql_fetch_array($denizenresult);
+      $denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
+      $denizenrow = $denizenresult->fetch_array();
       echo '<form action="strifebegin.php" method="post">';
       echo '<input type="hidden" name="gristtype" value="None">'; //Gristless enemies.
       echo '<input type="hidden" name="noassist" value="noassist">';

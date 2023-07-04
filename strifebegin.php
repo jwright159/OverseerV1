@@ -51,8 +51,8 @@ if (empty($_SESSION['username'])) {
       $oldenemystr = $oldenemyprestr . strval($enemies);
       if (!empty($_POST[$enemystr]) && !empty($_POST[$griststr])) { //Enemy selected for this combat slot.
 	$cheatyface = True;
-	$enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $_POST[$enemystr] . "';");
-	if ($enemyrow = mysql_fetch_array($enemyresult)) { 
+	$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $_POST[$enemystr] . "';");
+	if ($enemyrow = $enemyresult->fetch_array()) { 
 	  if (($userrow['battlefield_access'] == 1 && $enemyrow['appearson'] == "Battlefield" && $_POST[$griststr] == "None") || $enemyrow['appearson'] == "Event" || ($userrow['dreamingstatus'] == "Awake" && $enemyrow['appearson'] == "Lands") || ($enemyrow['appearson'] == $userrow['dreamingstatus'] && $_POST[$griststr] == "None")) $cheatyface = False; //Event foes have different protected setups.
 	}
 	if ($cheatyface == False) {
@@ -60,8 +60,8 @@ if (empty($_SESSION['username'])) {
 	  generateEnemy($userrow,$_POST['gristtype'],$_POST[$griststr],$_POST[$enemystr],False); //Make the enemy and assign them to combat.
 	  $userrow = refreshEnemydata($userrow);
 	  if (empty($_POST['noprevious'])) {
-	    $result2 = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $_POST[$enemystr] . "'");
-	    $row = mysql_fetch_array($result2); //Only enemies on Lands use the overly complicated grist dropping system.
+	    $result2 = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $_POST[$enemystr] . "'");
+	    $row = $mysqli->fetch_array($result2); //Only enemies on Lands use the overly complicated grist dropping system.
 	    if ($_POST[$griststr] != "None" || $userrow['dreamingstatus'] == "Awake") {
 	    	$userrow[$oldgriststr] = $_POST[$griststr];
 	    }
@@ -83,32 +83,32 @@ if (empty($_SESSION['username'])) {
       $enemies++;
     }
     if ($enemyexists) {
-      if ($userrow['dreamingstatus'] == "Awake") mysql_query("UPDATE `Players` SET `lastgristtype` = '" . $_POST['gristtype'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      if ($userrow['dreamingstatus'] == "Awake") $mysqli->query("UPDATE `Players` SET `lastgristtype` = '" . $_POST['gristtype'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       //Above: Set the grist type used for this encounter IF the player is awake.
-      mysql_query("UPDATE `Players` SET `combatmotifuses` = " . strval(floor($userrow['Echeladder'] / 100) + $userrow['Godtier']) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-      mysql_query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
+      $mysqli->query("UPDATE `Players` SET `combatmotifuses` = " . strval(floor($userrow['Echeladder'] / 100) + $userrow['Godtier']) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
       chargeEncounters($userrow, 1, 1); //by this point, the user is guaranteed to have encounters
       if (!empty($_POST['success']) && !empty($_POST['failure'])) { //User exploring!
-	mysql_query("UPDATE `Players` SET `strifesuccessexplore` = '" . $_POST['success'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `strifefailureexplore` = '" . $_POST['failure'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `strifeabscondexplore` = '" . $_POST['absconded'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `strifesuccessexplore` = '" . $_POST['success'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `strifefailureexplore` = '" . $_POST['failure'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `strifeabscondexplore` = '" . $_POST['absconded'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       }
       if (!empty($_POST['noassist'])) {
 	echo "You will be unable to receive assistance in this fight.</br>";
-	mysql_query("UPDATE `Players` SET `noassist` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `noassist` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       }
       if (!empty($_POST['stripbuffs'])) {
 	echo "As the battle begins, you are mysteriously stripped of all ongoing power boosts.</br>";
-	mysql_query("UPDATE `Players` SET `buffstrip` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Power boosts wear off.
-	mysql_query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-	mysql_query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `buffstrip` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Power boosts wear off.
+	$mysqli->query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       }
       if (empty($_POST['noassist'])) { //Assistance allowed. Check for auto-assisters.
 	  
     require_once("includes/SQLconnect.php");
-	$assisters = mysql_query("SELECT * FROM Players WHERE `Players`.`autoassist` = '$username'") or die(mysql_error());
-	while ($assistrow = mysql_fetch_array($assisters)) {
+	$assisters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`autoassist` = '$username'") or die($mysqli->error());
+	while ($assistrow = $assisters->fetch_array()) {
 	  //We must process encounters in case they have earned any.
 	  $up = False;
 	  $time = time();
@@ -125,12 +125,12 @@ if (empty($_SESSION['username'])) {
 	  }
 	  if ($encounters > $assistrow['encounters'] && ($assistrow['down'] == 1 || $assistrow['dreamdown'] == 1)) { //Both downs recover after a single encounter is earned.
 	    $encounters -= 1;
-	    mysql_query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;"); //Player recovers.
+	    $mysqli->query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;"); //Player recovers.
 	    $up = True;
 	  }
 	  if ($encounters > 100) $encounters = 100;
 	  if ($lasttick != $assistrow['lasttick']) {
-	    mysql_query("UPDATE `Players` SET `encounters` = $encounters, `lasttick` = $lasttick WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `encounters` = $encounters, `lasttick` = $lasttick WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
 	    $assistrow['encounters'] = $encounters;
 	  }
 	  if (($assistrow['down'] == 1 && $assistrow['dreamingstatus'] == "Awake") || ($assistrow['dreamdown'] == 1 && $assistrow['dreamingstatus'] != "Awake")) {
@@ -145,19 +145,19 @@ if (empty($_SESSION['username'])) {
 	    echo "$assistrow[username] is unable to assist you as they are currently strifing!</br>";
 	  } else {
 	    echo "$assistrow[username] has automatically begun assisting you.</br>";
-	    mysql_query("UPDATE `Players` SET `aiding` = '$username' WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
-	    mysql_query("UPDATE `Players` SET `encounters` = $assistrow[encounters]-1 WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `aiding` = '$username' WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `encounters` = $assistrow[encounters]-1 WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
 	  }
 	}
       }
       writeLastfought($userrow);
       if ($userrow['dreamingstatus'] == "Prospit") {
 	echo '<a href="strife.php">&quot;Strife&quot; initiated.</a></br>';
-		$userrow = mysql_fetch_array(mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;")) or die(mysql_error());
+		$userrow = $mysqli->fetch_array($mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;")) or die($mysqli->error());
 		include("strife.php");
       } else {
 	echo '<a href="strife.php">Strife initiated.</a></br>';
-	$userrow = mysql_fetch_array(mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;"));
+	$userrow = $mysqli->fetch_array($mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;"));
 	include("strife.php");
       }
     } else {
@@ -179,7 +179,7 @@ if (empty($_SESSION['username'])) {
       }
     }
     if (!empty($_POST['success']) && !empty($_POST['failure'])) { //User exploring!
-      mysql_query("UPDATE `Players` SET `exploration` = '" . $_POST['failure'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `exploration` = '" . $_POST['failure'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
     }
   }
 }

@@ -7,8 +7,8 @@ if (empty($_SESSION['username'])) {
     echo "Hey! This tool is for the developers only. Nice try, pal.";
   } else {
   	if (!empty($_POST['changecode']) && !empty($_POST['changename'])) {
-  		$itemresult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['changecode'] . "'");
-  		$itemrow = mysql_fetch_array($itemresult);
+  		$itemresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['changecode'] . "'");
+  		$itemrow = $itemresult->fetch_array();
   		if ($itemrow['captchalogue_code'] == $_POST['changecode']) {
   			$oldname = $itemrow['name'];
   			echo "Old item name: $oldname</br>";
@@ -18,11 +18,11 @@ if (empty($_SESSION['username'])) {
   			$invslot = 1;
   			while ($invslot <= 50) {
   				$invstring = 'inv' . strval($invslot);
-  				mysql_query("UPDATE Players SET `$invstring` = '$newname' WHERE `Players`.`$invstring` = '$oldname'");
+  				$mysqli->query("UPDATE Players SET `$invstring` = '$newname' WHERE `Players`.`$invstring` = '$oldname'");
   				$invslot++;
   			}
   			$newname = str_replace("''", "\\\\''", $newname);
-  			mysql_query("UPDATE Captchalogue SET `name` = '$newname' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['changecode'] . "'");
+  			$mysqli->query("UPDATE Captchalogue SET `name` = '$newname' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['changecode'] . "'");
   			echo "Done. The item name has been changed, and this should be reflected in all players' inventories.</br>";
   		} else echo "That code doesn't match any existing item!</br>";
   	}

@@ -50,11 +50,11 @@ require_once("header.php");
 require_once 'includes/fieldparser.php';
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if ($userrow['sessionbossleader'] == 1 && !empty($_POST['newleader'])) {
-	$sessionmates = mysql_query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`username` = $_POST[newleader] LIMIT 1;");
-	if ($buddyrow = mysql_fetch_array($sessionmates)) {
-		mysql_query("UPDATE `Players` SET `sessionbossleader` = 0 WHERE `Players`.`username` = '$userrow[username]' LIMIT 1;");
+	$sessionmates = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`username` = $_POST[newleader] LIMIT 1;");
+	if ($buddyrow = $sessionmates->fetch_array()) {
+		$mysqli->query("UPDATE `Players` SET `sessionbossleader` = 0 WHERE `Players`.`username` = '$userrow[username]' LIMIT 1;");
 		$userrow['sessionbossleader'] = 0;
-		mysql_query("UPDATE `Players` SET `sessionbossleader` = 1 WHERE `Players`.`username` = '$buddyrow[username]' LIMIT 1;");
+		$mysqli->query("UPDATE `Players` SET `sessionbossleader` = 1 WHERE `Players`.`username` = '$buddyrow[username]' LIMIT 1;");
 		echo "";
 	} else {
 		echo "ERROR: Player $buddyrow[username] not found in your session.</br>";
@@ -70,13 +70,13 @@ if (empty($_SESSION['username'])) {
 	}
 } else {
 $sessioname = $userrow['session_name'];
-$sessionresult = mysql_query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
-$sessionrow = mysql_fetch_array($sessionresult);
+$sessionresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
+$sessionrow = $sessionresult->fetch_array();
 $userrow = parseEnemydata($userrow);
 	if (!empty($_POST['offense'])) { //Changing actions.
 		$newactive = $_POST['offense'];
 		$newpassive = $_POST['defense'];
-		mysql_query("UPDATE `Players` SET `sessionbossattack` = '$newactive', `sessionbossdefense` = '$newpassive' WHERE `Players`.`username` = '$username' LIMIT 1;");
+		$mysqli->query("UPDATE `Players` SET `sessionbossattack` = '$newactive', `sessionbossdefense` = '$newpassive' WHERE `Players`.`username` = '$username' LIMIT 1;");
 	}
 	if (!empty($_POST['execute']) && $userrow['sessionbossleader'] == 1) {
 		require_once("sessionbossresolve.php");
@@ -88,8 +88,8 @@ echo '</body><head><script src="jquery.min.js"></script><style type="text/css"><
 		<script src="html5slider.js" type="text/javascript" charset="utf-8"></script>
 		<script src="vials.js" type="text/javascript" charset="utf-8"></script>
 		<script>window.onload = function () {';
-		$sessionmates = mysql_query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`sessionbossengaged` = 1;");
-		while ($buddyrow = mysql_fetch_array($sessionmates)) {
+		$sessionmates = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`sessionbossengaged` = 1;");
+		while ($buddyrow = $sessionmates->fetch_array()) {
 		      if ($buddyrow['dreamingstatus'] == "Awake") {
 			$healthcurrent = strval(floor(($buddyrow['Health_Vial'] / $buddyrow['Gel_Viscosity']) * 100));
 		      } else {
@@ -165,8 +165,8 @@ echo '}</script></head><body>';
 	$i++;
       }
       echo "</br><div class='grister'>";
-      $sessionmates = mysql_query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`sessionbossengaged` = 1;");
-      while ($buddyrow = mysql_fetch_array($sessionmates)) {
+      $sessionmates = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`sessionbossengaged` = 1;");
+      while ($buddyrow = $sessionmates->fetch_array()) {
       	if ($buddyrow['dreamingstatus'] == "Awake") {
 		$healthcurrent = strval(floor(($buddyrow['Health_Vial'] / $buddyrow['Gel_Viscosity']) * 100));
 	} else {
@@ -217,8 +217,8 @@ echo '}</script></head><body>';
 	}
       if ($userrow['equipped'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['equipped']]) {
@@ -228,8 +228,8 @@ echo '}</script></head><body>';
       }
       if ($userrow['offhand'] != "" && $userrow['offhand'] != "2HAND") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['offhand']]) {
@@ -239,8 +239,8 @@ echo '}</script></head><body>';
       }
       if ($userrow['headgear'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['headgear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['headgear']]) {
@@ -251,8 +251,8 @@ echo '}</script></head><body>';
       }
       if ($userrow['facegear'] != "" && $userrow['facegear'] != "2HAND") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['facegear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['facegear']]) {
@@ -263,8 +263,8 @@ echo '}</script></head><body>';
       }
       if ($userrow['bodygear'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['bodygear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['bodygear']]) {
@@ -275,8 +275,8 @@ echo '}</script></head><body>';
       }
       if ($userrow['accessory'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['accessory']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-	$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-	while ($row = mysql_fetch_array($itemresult)) {
+	$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+	while ($row = $itemresult->fetch_array()) {
 	  $itemname = $row['name'];
 	  $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	  if ($itemname == $userrow[$userrow['accessory']]) {
@@ -291,8 +291,8 @@ echo '}</script></head><body>';
       } else {
         echo $userrow['sessionbossattack'] . "/" . $userrow['sessionbossdefense'];
       }
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
-      $blankrow = mysql_fetch_array($itemresult);
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
+      $blankrow = $itemresult->fetch_array();
       if (empty($mainrow) || $userrow['dreamingstatus'] != "Awake") $mainrow = $blankrow;
       if (empty($offrow) || $userrow['dreamingstatus'] != "Awake") $offrow = $blankrow;
       if (empty($headrow) || $userrow['dreamingstatus'] != "Awake") $headrow = $blankrow;

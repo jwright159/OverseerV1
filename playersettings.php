@@ -2,28 +2,28 @@
 require_once("header.php");
 
 if (!empty($_POST['newpass'])) {
-	$pass = crypt(mysql_real_escape_string($_POST['oldpass']), $userrow['password']);
+	$pass = crypt($mysqli->real_escape_string($_POST['oldpass']), $userrow['password']);
 	if ($pass == $userrow['password']) {
 		if ($_POST['newpass'] == $_POST['cnewpass'] && !empty($_POST['newpass'])) {
-			$newpass = crypt(mysql_real_escape_string($_POST['newpass']));
-			mysql_query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '$username' LIMIT 1;");
+			$newpass = crypt($mysqli->real_escape_string($_POST['newpass']));
+			$mysqli->query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '$username' LIMIT 1;");
 			echo "Password changed successfully!</br>";
 		} else echo "Error changing password: Confirmation does not match new password, or the new password was left blank.</br>";
 	} else echo "Error changing password: Current password was incorrect.</br>";
 }
 
 if (!empty($_POST['deleteconfirm'])) {
-	$pass = crypt(mysql_real_escape_string($_POST['deleteconfirm']), $userrow['password']);
+	$pass = crypt($mysqli->real_escape_string($_POST['deleteconfirm']), $userrow['password']);
 	if ($pass == $userrow['password']) { //clear all record of the player existing
-		mysql_query("UPDATE `Players` SET `server_player` = '' WHERE `Players`.`server_player` = '$username'");
-		mysql_query("UPDATE `Players` SET `client_player` = '' WHERE `Players`.`client_player` = '$username'");
-		mysql_query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`aiding` = '$username'");
-		mysql_query("UPDATE `Players` SET `autoassist` = '' WHERE `Players`.`autoassist` = '$username'");
-		mysql_query("UPDATE `Sessions` SET `exchangeland` = '' WHERE `Sessions`.`exchangeland` = '$username'");
-		mysql_query("DELETE FROM `Players` WHERE `Players`.`username` = '$username' LIMIT 1;");
-		mysql_query("DELETE FROM `Echeladders` WHERE `Echeladders`.`username` = '$username' LIMIT 1;");
-		mysql_query("DELETE FROM `Ability_Patterns` WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
-		mysql_query("DELETE FROM `Messages` WHERE `Messages`.`username` = '$username' LIMIT 1;");
+		$mysqli->query("UPDATE `Players` SET `server_player` = '' WHERE `Players`.`server_player` = '$username'");
+		$mysqli->query("UPDATE `Players` SET `client_player` = '' WHERE `Players`.`client_player` = '$username'");
+		$mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`aiding` = '$username'");
+		$mysqli->query("UPDATE `Players` SET `autoassist` = '' WHERE `Players`.`autoassist` = '$username'");
+		$mysqli->query("UPDATE `Sessions` SET `exchangeland` = '' WHERE `Sessions`.`exchangeland` = '$username'");
+		$mysqli->query("DELETE FROM `Players` WHERE `Players`.`username` = '$username' LIMIT 1;");
+		$mysqli->query("DELETE FROM `Echeladders` WHERE `Echeladders`.`username` = '$username' LIMIT 1;");
+		$mysqli->query("DELETE FROM `Ability_Patterns` WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
+		$mysqli->query("DELETE FROM `Messages` WHERE `Messages`.`username` = '$username' LIMIT 1;");
 		echo "Done! The player account $username has been completely removed from the database. Have a nice day!</br>";
 		$_SESSION['username'] = "";
 		echo "<script>
@@ -37,15 +37,15 @@ $(document).ready(function () {
 
 if (!empty($_POST['newemail'])) {
 		if ($_POST['newemail'] == $_POST['cnewemail'] && !empty($_POST['newemail'])) {
-			$newemail = mysql_real_escape_string($_POST['newemail']);
-			mysql_query("UPDATE Players SET `email` = '$newemail' WHERE `Players`.`username` = '$username' LIMIT 1;");
+			$newemail = $mysqli->real_escape_string($_POST['newemail']);
+			$mysqli->query("UPDATE Players SET `email` = '$newemail' WHERE `Players`.`username` = '$username' LIMIT 1;");
 			echo "Email address updated successfully!</br>";
 		} else echo "Error changing email: Confirmation does not match new email, or the new email field was left blank.</br>";
 }
 
 $msgquerysuccess = false;
-$msgresult = mysql_query("SELECT `username`,`feedbacknotice`,`newsnotice` FROM Messages WHERE `Messages`.`username` = '$username'");
-while ($msgrow = mysql_fetch_array($msgresult)) {
+$msgresult = $mysqli->query("SELECT `username`,`feedbacknotice`,`newsnotice` FROM Messages WHERE `Messages`.`username` = '$username'");
+while ($msgrow = $msgresult->fetch_array()) {
 	$msgquerysuccess = true;
 }
 if (!$msgquerysuccess) echo "ERROR: Message query didn't go through! Either you don't have a messages row or Blahdev really screwed up somewhere. In either case, please notify a developer immediately.</br>";

@@ -1,11 +1,11 @@
 <?php
 require 'header.php';
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -28,12 +28,12 @@ if (empty($_SESSION['username'])) {
   echo "Dude go away this shit be private yo<br />";
 } else {
   $gristname = initGrists();
-  $keyresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`abstratus` LIKE '%keykind%'");
-  while ($krow = mysql_fetch_array($keyresult)) {
+  $keyresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`abstratus` LIKE '%keykind%'");
+  while ($krow = $keyresult->fetch_array()) {
     echo "Key: " . $krow['name'] . "<br />";
     $alreadyfound = false;
-    $doorresult = mysql_query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`keys` LIKE '%" . mysql_real_escape_string($krow['name']) . "%'");
-    while ($drow = mysql_fetch_array($doorresult)) {
+    $doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`keys` LIKE '%" . $mysqli->real_escape_string($krow['name']) . "%'");
+    while ($drow = $doorresult->fetch_array()) {
       $alreadyfound = true;
     }
     if (strpos($krow['abstratus'], "bladekind") !== false || strpos($krow['abstratus'], "birdkind") !== false || strpos($krow['description'], "blade") !== false || strpos($krow['description'], "sword") !== false) {
@@ -45,7 +45,7 @@ if (empty($_SESSION['username'])) {
       $newdesc = str_replace("key", "door", $krow['description']);
       $newdesc = str_replace("Key", "Door", $newdesc);
       $newdesc = str_replace("\\", "", $newdesc); //no backslashes before the escaping
-      $newdesc = mysql_real_escape_string($newdesc);
+      $newdesc = $mysqli->real_escape_string($newdesc);
       $total = 0;
       $grist = 0;
       while (!empty($gristname[$grist])) {
@@ -57,10 +57,10 @@ if (empty($_SESSION['username'])) {
       elseif ($total > 100000) $newgate = 5;
       elseif ($total > 1000) $newgate = 3;
       else $newgate = 1;
-      $newkeys = mysql_real_escape_string($krow['name']);
+      $newkeys = $mysqli->real_escape_string($krow['name']);
       $query = "INSERT INTO `Dungeon_Doors` (`gate`,`keys`,`description`,`strength`) VALUES ($newgate, '$newkeys', '$newdesc', $newpower);";
       echo $query . "<br />";
-      //mysql_query($query);
+      //$mysqli->query($query);
     }
   }
   echo "Done!<br />";

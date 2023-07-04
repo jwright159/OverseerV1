@@ -1,8 +1,8 @@
 <?php
 require_once("includes/SQLconnect.php");
 echo "let's see if there are deungeons</br>";
-$dungeonresult = mysql_query("SELECT * FROM `Dungeons`");
-while ($drow = mysql_fetch_array($dungeonresult)) {
+$dungeonresult = $mysqli->query("SELECT * FROM `Dungeons`");
+while ($drow = $dungeonresult->fetch_array()) {
 	echo $drow['username'] . "</br>";
 }
 ?>

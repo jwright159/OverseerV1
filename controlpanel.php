@@ -24,8 +24,8 @@ if (empty($_SESSION['username'])) {
   //echo '<a href="events.php">Event Log</a></br>'; -- Will work on event log later.
   echo '<a href="logout.php">Log Out</a></br>';
   
-  $sessionmates = mysql_query("SELECT * FROM Players");
-  while ($row = mysql_fetch_array($sessionmates)) {
+  $sessionmates = $mysqli->query("SELECT * FROM Players");
+  while ($row = $sessionmates->fetch_array()) {
     if ($row['session_name'] == $userrow['session_name']) {
       if (!empty($row['enemy1name']) || !empty($row['enemy2name']) || !empty($row['enemy3name']) || !empty($row['enemy4name']) || !empty($row['enemy5name'])) { //Ally is strifing
 	if ($row['username'] != $username) {

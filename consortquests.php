@@ -10,8 +10,8 @@ $max_items = 50; //number of items the player's inventory can hold
 function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow) {
 	global $gristname, $totalgrists;
 	$reward = rand(1,(100 - (($userrow['Luck'] + $userrow['Brief_Luck']) / 2))); //chance of getting an item instead of boons
-	$landresult = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
-  $landrow = mysql_fetch_array($landresult);
+	$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
+  $landrow = $landresult->fetch_array();
   $landgate = highestGate($gaterow, $currentrow['house_build_grist']);
   $inflation = rand(-90,-50) + econonyLevel($currentrow['econony']);
   if ($inflation > 100) $inflation = 100;
@@ -26,7 +26,7 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow) {
   		if (strpos($currentrow['landallies'], $unlockname[1]) === false) {
   			$currentrow['landallies'] .= $unlockname[1] . "|";
   			echo "$mercname is now unlocked for hire on The Land of " . $currentrow['land1'] . " and " . $currentrow['land2'] . "!<br />";
-  			mysql_query("UPDATE Players SET landallies = '" . mysql_real_escape_string($currentrow['landallies']) . "' WHERE username = '" . $currentrow['username'] . "'");
+  			$mysqli->query("UPDATE Players SET landallies = '" . $mysqli->real_escape_string($currentrow['landallies']) . "' WHERE username = '" . $currentrow['username'] . "'");
   		}
   	} else {
   	$thisgrist = $landrow['grist' . strval(rand(1,9))] . "_Cost"; //pick a random grist type from that land
@@ -76,9 +76,9 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow) {
   		}
   	} else $userrow[$rewarded] = $rewardname;
   }
-  mysql_query("UPDATE Players SET `Boondollars` = $userrow[Boondollars]+$basecost WHERE `Players`.`username` = '$userrow[username]'"); //reward player
+  $mysqli->query("UPDATE Players SET `Boondollars` = $userrow[Boondollars]+$basecost WHERE `Players`.`username` = '$userrow[username]'"); //reward player
   $userrow['Boondollars'] += $basecost;
-  mysql_query("UPDATE `Players` SET `econony` = " . strval($currentrow['econony']+$realbasecost) . " WHERE `Players`.`username` = '$currentrow[username]'");
+  $mysqli->query("UPDATE `Players` SET `econony` = " . strval($currentrow['econony']+$realbasecost) . " WHERE `Players`.`username` = '$currentrow[username]'");
   return $userrow;
 }
 
@@ -93,25 +93,25 @@ if (empty($_SESSION['username'])) {
 			$newquest = intval($_POST['questapproval']);
 			if ($newquest == $userrow['currentquest']) {
 				$userrow['questland'] = $_GET['land'];
-				//mysql_query("UPDATE `Players` SET `questland` = '" . $_GET['land'] . "' WHERE `Players`.`username` = '$username' ");
+				//$mysqli->query("UPDATE `Players` SET `questland` = '" . $_GET['land'] . "' WHERE `Players`.`username` = '$username' ");
 				//the quest was already "accepted" when it was received, this is just a formality
 				echo "Quest accepted!</br>";
 			} else echo "You seem to be trying to start a quest that you were never given.</br>";
 		} else {
-			mysql_query("UPDATE `Players` SET `currentquest` = 0, `questland` = '' WHERE `Players`.`username` = '$username' ");
+			$mysqli->query("UPDATE `Players` SET `currentquest` = 0, `questland` = '' WHERE `Players`.`username` = '$username' ");
 			echo "You turn the poor sap down and set off to find a different quest.</br>";
 			$userrow['currentquest'] = 0;
 			$userrow['questland'] = "";
 		}
 	}
 	
-	$gateresult = mysql_query("SELECT * FROM Gates"); //we'll need this to determine the level of the shops
-  $gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
-  $result2 = mysql_query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$gateresult = $mysqli->query("SELECT * FROM Gates"); //we'll need this to determine the level of the shops
+  $gaterow = $gateresult->fetch_array(); //Gates only has one row.
+  $result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;
@@ -130,26 +130,26 @@ else {
 	$chain = chainArray($userrow);
 	$totalchain = count($chain);
 	if ($userrow['currentquest'] != 0 && !empty($userrow['questland'])) { //user is on a quest
-		$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['questland'] . "';");
-	  $currentrow = mysql_fetch_array($currentresult);
+		$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['questland'] . "';");
+	  $currentrow = $currentresult->fetch_array();
 	  $locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
-	  $questresult = mysql_query("SELECT * FROM Consort_Dialogue WHERE `Consort_Dialogue`.`ID` = " . strval($userrow['currentquest']));
-	  $qrow = mysql_fetch_array($questresult);
+	  $questresult = $mysqli->query("SELECT * FROM Consort_Dialogue WHERE `Consort_Dialogue`.`ID` = " . strval($userrow['currentquest']));
+	  $qrow = $questresult->fetch_array();
 	  $qrow = parseDialogue($qrow, $userrow, $currentrow['land1'], $currentrow['land2']);
 	  if (!empty($currentrow['consort_name'])) $consort = $currentrow['consort_name'];
 		else $consort = "consort";
 		if (!empty($_POST['turnindungeonquest'])) {
 			if ($qrow['context'] == "questdungeon" || $qrow['context'] == "questdungeon+") {
 				$room = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
-				$dgnresult = mysql_query("SELECT `$room` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
-				$dgnrow = mysql_fetch_array($dgnresult);
+				$dgnresult = $mysqli->query("SELECT `$room` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
+				$dgnrow = $dgnresult->fetch_array();
 				if ((!(strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . ":") === false) || !(strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . "|") === false)) && strpos($dgnrow[$room], "ENCOUNTER|") === false) {
 					//user is at the quest goal and any encounter here was taken care of
 					$realbasecost = $qrow['req_power'] * 1000; //standard base cost for dungeon quests is variable; should be based on the difficulty
 					$newquest = 0;
 					if ($qrow['linked'] != 0) {
-						$nextresult = mysql_query("SELECT * FROM `Consort_Dialogue` WHERE `ID` = $qrow[linked]");
-						$nextrow = mysql_fetch_array($nextresult);
+						$nextresult = $mysqli->query("SELECT * FROM `Consort_Dialogue` WHERE `ID` = $qrow[linked]");
+						$nextrow = $nextresult->fetch_array();
 						$nextrow = parseDialogue($nextrow, $userrow, $currentrow['land1'], $currentrow['land2']);
 						if (strpos($nextrow['context'], "quest") !== false) { //linked dialogue entry is another quest
 							if ($userrow['availablequests'] > 0) {
@@ -165,10 +165,10 @@ else {
 					if ($newquest == 0) $newquestland = "";
 					else {
 						$newquestland = $userrow['questland'];
-						mysql_query("UPDATE `Players` SET `availablequests` = $userrow[availablequests]-1 WHERE `Players`.`username` = '$username'");
+						$mysqli->query("UPDATE `Players` SET `availablequests` = $userrow[availablequests]-1 WHERE `Players`.`username` = '$username'");
 					}
 					$userrow = phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow); //will echo rewards
-					mysql_query("UPDATE `Players` SET `dungeonstrife` = 0, `currentquest` = $newquest, `questland` = '$newquestland' WHERE `Players`.`username` = '$username'");
+					$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0, `currentquest` = $newquest, `questland` = '$newquestland' WHERE `Players`.`username` = '$username'");
 
 
 					$KABLOOEY = explode("|", $dgnrow[$room]); 
@@ -179,7 +179,7 @@ else {
 					  }
 					}
 					$dgnsquareminusgoal = implode("|", $KABLOOEY);
-					mysql_query("UPDATE `Dungeons` SET `$room` = '$dgnsquareminusgoal' WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
+					$mysqli->query("UPDATE `Dungeons` SET `$room` = '$dgnsquareminusgoal' WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
 
 
 					echo '<a href="consortquests.php">==&gt;</a>';
@@ -190,8 +190,8 @@ else {
 				echo "The quest you are undertaking isn't an item fetch quest!<br />";
 			} else {
 			$itemsearchname = str_replace("'", "\\\\''", $userrow[$_POST['questitem']]);
-			$questitemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '$itemsearchname' LIMIT 1");
-			$qirow = mysql_fetch_array($questitemresult);
+			$questitemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '$itemsearchname' LIMIT 1");
+			$qirow = $questitemresult->fetch_array();
 			$truename = str_replace("\\", "", $qirow['name']);
 			if ($truename == $userrow[$_POST['questitem']]) {
 				echo "The $consort appraises your $truename.</br>";
@@ -285,8 +285,8 @@ else {
 				if ($victory) { //moment of truth
 					$newquest = 0;
 					if ($qrow['linked'] != 0) {
-						$nextresult = mysql_query("SELECT * FROM `Consort_Dialogue` WHERE `ID` = $qrow[linked]");
-						$nextrow = mysql_fetch_array($nextresult);
+						$nextresult = $mysqli->query("SELECT * FROM `Consort_Dialogue` WHERE `ID` = $qrow[linked]");
+						$nextrow = $nextresult->fetch_array();
 						$nextrow = parseDialogue($nextrow, $userrow, $currentrow['land1'], $currentrow['land2']);
 						if (strpos($nextrow['context'], "quest") !== false) { //linked dialogue entry is another quest
 							if ($userrow['availablequests'] > 0) {
@@ -297,24 +297,24 @@ else {
 					} else echo "The consort is overjoyed, this item is perfect!";
 					echo "<br />";
 					$reward = rand(1,(100 - (($userrow['Luck'] + $userrow['Brief_Luck']) / 2))); //chance of getting an item instead of boons
-					$landresult = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
-  				$landrow = mysql_fetch_array($landresult);
+					$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
+  				$landrow = $landresult->fetch_array();
   				$landgate = highestGate($gaterow, $currentrow['house_build_grist']);
   				$offercost = totalGristcost($qirow, $gristname, $totalgrists);
   				if ($offercost <= $gaterow['gate' . strval($landgate)]) { //see if the consort has access to wealth sufficient to pay for the item
   					$realbasecost = totalBooncost($qirow, $landrow, $gristname, $totalgrists, $currentrow['session_name']);
   					autoUnequip($userrow,"none",$_POST['questitem']);
-  					mysql_query("UPDATE Players SET `$_POST[questitem]` = '' WHERE `Players`.`username` = '$username'"); //reward player and clear quest
+  					$mysqli->query("UPDATE Players SET `$_POST[questitem]` = '' WHERE `Players`.`username` = '$username'"); //reward player and clear quest
   					$userrow[$_POST['questitem']] = "";
   					if ($newquest == 0) $newquestland = "";
 						else {
 							$newquestland = $userrow['questland'];
-							mysql_query("UPDATE `Players` SET `availablequests` = $userrow[availablequests]-1 WHERE `Players`.`username` = '$username'");
+							$mysqli->query("UPDATE `Players` SET `availablequests` = $userrow[availablequests]-1 WHERE `Players`.`username` = '$username'");
 						}
 						echo "In exchange for the $truename, you are given ";
   					$userrow = phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow); //will echo rewards
   					compuRefresh($userrow);
-  					mysql_query("UPDATE `Players` SET `currentquest` = $newquest, `questland` = '$newquestland' WHERE `Players`.`username` = '$username'");
+  					$mysqli->query("UPDATE `Players` SET `currentquest` = $newquest, `questland` = '$newquestland' WHERE `Players`.`username` = '$username'");
   					echo '<a href="consortquests.php">==&gt;</a>';
   				} else echo 'Unfortunately, they don\'t seem to be capable of rewarding you with anything worth nearly as much as the offering. They insist that you keep it and try to find something more affordable.</br><a href="consortquests.php">==&gt;</a>';
 				} else echo 'The consort turns it away. ' . $failreason . '</br><a href="consortquests.php">==&gt;</a>';
@@ -330,10 +330,10 @@ else {
 			} else {
 			if (!empty($qrow['req_grist'])) {
 				$enemygrists = explode("|", $qrow['req_grist']);
-				$result1 = mysql_query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-				$prow = mysql_fetch_array($result1);
-				$result2 = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-				$lrow = mysql_fetch_array($result2);
+				$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
+				$prow = $mysqli->fetch_array($result1);
+				$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
+				$lrow = $mysqli->fetch_array($result2);
 			}
 			$enemynames = explode("|", $qrow['req_keyword']);
 			$i = 0;
@@ -356,7 +356,7 @@ else {
 				$i++;
 			}
 			$newenc = $userrow['encounters'] - 1;
-			mysql_query("UPDATE `Players` SET `dungeonstrife` = 6, `encounters` = $newenc WHERE `Players`.`username` = '$username'"); 
+			$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 6, `encounters` = $newenc WHERE `Players`.`username` = '$username'"); 
 			//using dungeonstrife because I highly doubt you'll be fighting dungeon enemies and quest enemies at the same time!
 			echo '<a href="strife.php">==&gt;</a>';
 			}
@@ -364,8 +364,8 @@ else {
 			$realbasecost = $qrow['req_power'] * 1000; //standard base cost for strife quests is variable; should be based on the power of the enemies involved
 			$newquest = 0;
 			if ($qrow['linked'] != 0) {
-				$nextresult = mysql_query("SELECT * FROM `Consort_Dialogue` WHERE `ID` = $qrow[linked]");
-				$nextrow = mysql_fetch_array($nextresult);
+				$nextresult = $mysqli->query("SELECT * FROM `Consort_Dialogue` WHERE `ID` = $qrow[linked]");
+				$nextrow = $nextresult->fetch_array();
 				$nextrow = parseDialogue($nextrow, $userrow, $currentrow['land1'], $currentrow['land2']);
 				if (strpos($nextrow['context'], "quest") !== false) { //linked dialogue entry is another quest
 					if ($userrow['availablequests'] > 0) {
@@ -381,10 +381,10 @@ else {
 			if ($newquest == 0) $newquestland = "";
 			else {
 				$newquestland = $userrow['questland'];
-				mysql_query("UPDATE `Players` SET `availablequests` = $userrow[availablequests]-1 WHERE `Players`.`username` = '$username'");
+				$mysqli->query("UPDATE `Players` SET `availablequests` = $userrow[availablequests]-1 WHERE `Players`.`username` = '$username'");
 			}
 			$userrow = phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow); //will echo rewards
-			mysql_query("UPDATE `Players` SET `dungeonstrife` = 0, `currentquest` = $newquest, `questland` = '$newquestland' WHERE `Players`.`username` = '$username'");
+			$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0, `currentquest` = $newquest, `questland` = '$newquestland' WHERE `Players`.`username` = '$username'");
 			echo '<a href="consortquests.php">==&gt;</a>';
 		} else {
 			if (empty($qrow['dialogue'])) $questtext = "Can you get me an item please?</br>";
@@ -414,15 +414,15 @@ else {
 				} else {
 					if ($userrow['dungeonstrife'] == 5) {
 						echo "You may have failed this time, but you can always try again!<br />";
-						mysql_query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username'");
+						$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username'");
 					}
 					echo "You are tasked with defeating the following:<br />";
 					if (!empty($qrow['req_grist'])) {
 						$enemygrists = explode("|", $qrow['req_grist']);
-						$result1 = mysql_query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-						$prow = mysql_fetch_array($result1);
-						$result2 = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-						$lrow = mysql_fetch_array($result2);
+						$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
+						$prow = $mysqli->fetch_array($result1);
+						$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
+						$lrow = $mysqli->fetch_array($result2);
 					}
 					$enemynames = explode("|", $qrow['req_keyword']);
 					$i = 0;
@@ -446,16 +446,16 @@ else {
 					else echo "You should finish up your current strife before taking on this quest!<br />";
 				} elseif ($userrow['dungeonstrife'] == 5) {
 					echo "You have failed this quest.<br />";
-					mysql_query("UPDATE `Players` SET `dungeonstrife` = 0, `currentquest` = 0 WHERE `Players`.`username` = '$username'");
+					$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0, `currentquest` = 0 WHERE `Players`.`username` = '$username'");
 					echo '<a href="consortquests.php">==&gt;</a>';
 				} else {
 					echo "You are tasked with neutralizing the following:<br />";
 					if (!empty($qrow['req_grist'])) {
 						$enemygrists = explode("|", $qrow['req_grist']);
-						$result1 = mysql_query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-						$prow = mysql_fetch_array($result1);
-						$result2 = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-						$lrow = mysql_fetch_array($result2);
+						$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
+						$prow = $mysqli->fetch_array($result1);
+						$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
+						$lrow = $mysqli->fetch_array($result2);
 					}
 					$enemynames = explode("|", $qrow['req_keyword']);
 					$i = 0;
@@ -500,8 +500,8 @@ else {
 	  echo '<option value="' . $userrow['username'] . '">' . $locationstr . '</option>';
     $landcount = 1; //0 should be the user's land which we already printed
     while ($landcount < $totalchain) {
-    	$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
-	    $currentrow = mysql_fetch_array($currentresult);
+    	$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
+	    $currentrow = $currentresult->fetch_array();
 	  	$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 	  	echo '<option value="' . $currentrow['username'] . '">' . $locationstr . '</option>';
 	  	$landcount++;
@@ -519,15 +519,15 @@ else {
 		}
 		if (!$aok) echo "You can't reach that player's land with your current gate setup!</br>";
 		else { //good to go!
-			$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
-	    $currentrow = mysql_fetch_array($currentresult);
+			$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
+	    $currentrow = $currentresult->fetch_array();
 	    $locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 			//echo "Location: $locationstr</br>";
 			if (!empty($currentrow['consort_name'])) $consort = $currentrow['consort_name'];
 			else $consort = "consort";
 		if ($userrow['availablequests'] > 0) {
 			$userrow['availablequests'] -= 1;
-			mysql_query("UPDATE Players SET `availablequests` = $userrow[availablequests] WHERE `Players`.`username` = '$username'");
+			$mysqli->query("UPDATE Players SET `availablequests` = $userrow[availablequests] WHERE `Players`.`username` = '$username'");
 			echo "You have $userrow[availablequests] quests available.</br>";
 			$i = 1;
 			$gate = 0;
@@ -552,7 +552,7 @@ else {
 			$questid = $qrow['ID'];
 			if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods") echo "This quest's ID is: $questid<br />";
 			echo "Will you accept this quest?</br>";
-			mysql_query("UPDATE `Players` SET `currentquest` = $questid, `questland` = '" . $_GET['land'] .  "' WHERE `Players`.`username` = '$username' "); //set this here so the player can't do weird things
+			$mysqli->query("UPDATE `Players` SET `currentquest` = $questid, `questland` = '" . $_GET['land'] .  "' WHERE `Players`.`username` = '$username' "); //set this here so the player can't do weird things
 			echo '<form action="consortquests.php?land=' . $_GET['land'] . '" method="post"><input type="hidden" name="questapproval" value="' . strval($questid) . '"><input type="submit" value="Accept it!"></form>';
 			echo '<form action="consortquests.php?land=' . $_GET['land'] . '" method="post"><input type="hidden" name="questapproval" value="no"><input type="submit" value="Find another quest (Cost: 1 available quest)"></form></br>';
 			echo '<a href="consortquests.php">Return to land selection</a>';

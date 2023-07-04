@@ -9,8 +9,8 @@ function replacer($userrow,$string) {
   } else {
     $string = str_replace("%colour%", "<favcolour>$userrow[colour]</favcolour>", $string);
   }
-  $denizenresult = mysql_query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen'");
-  $denizenrow = mysql_fetch_array($denizenresult);
+  $denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen'");
+  $denizenrow = $denizenresult->fetch_array();
   $string = str_replace("%denizen%", $denizenrow[$userrow['Aspect']], $string);
   return $string;
 }
@@ -38,10 +38,10 @@ if (empty($_SESSION['username'])) {
     echo '<p class="courier">' . $_POST['oldevent'] . "</p></br>";
     if (strpos($_POST['newevent'], "random_") !== false) { //new event should be randomly selected using a keyword
     	$keyword = str_replace("random_", "", $_POST['newevent']) . "_";
-    	$randresult = mysql_query("SELECT `name` FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` LIKE '" . $keyword . "%';");
+    	$randresult = $mysqli->query("SELECT `name` FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` LIKE '" . $keyword . "%';");
     	$randtotal = 0;
     	$randarray = array(0 => "nothing");
-    	while ($row = mysql_fetch_array($randresult)) {
+    	while ($row = $randresult->fetch_array()) {
     		$randtotal++;
     		$randarray[$randtotal] = $row['name'];
     	}
@@ -50,13 +50,13 @@ if (empty($_SESSION['username'])) {
 	    	$_POST['newevent'] = $randarray[$roll]; //done!
 	}
     }
-    mysql_query("UPDATE `Players` SET `exploration` = '" . $_POST['newevent'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `exploration` = '" . $_POST['newevent'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
     echo "=" . $_POST['newdesc'] . "</br></br>";
     $userrow['exploration'] = $_POST['newevent'];
     //We begin random transforms before anything else so that the transformed into event takes place rather than the original.
     //We do them here so that the random event can't be obtained by spam-refreshing the page.
-    $exploresult = mysql_query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
-    $explorow = mysql_fetch_array($exploresult);
+    $exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
+    $explorow = $exploresult->fetch_array();
     $i = 1;
     while ($i <= $max_links) {
       $randomstr = "random" . strval($i) . "chance";
@@ -64,9 +64,9 @@ if (empty($_SESSION['username'])) {
       $random = rand(1,100);
       if ($explorow[$randomstr] > 0) { //There's an event here.
 	if ($random <= $explorow[$randomstr]) { //Random event selected. Change current event to selected random event.
-	  mysql_query("UPDATE `Players` SET `exploration` = '" . $explorow[$randomnamestr] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-	  $exploresult = mysql_query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $explorow[$randomnamestr] . "';");
-	  $explorow = mysql_fetch_array($exploresult);
+	  $mysqli->query("UPDATE `Players` SET `exploration` = '" . $explorow[$randomnamestr] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $explorow[$randomnamestr] . "';");
+	  $explorow = $exploresult->fetch_array();
 	  $i = $max_links; //Done.
 	} else { //Random event not selected.
 	  $random -= $explorow[$randomstr];
@@ -77,13 +77,13 @@ if (empty($_SESSION['username'])) {
   }
   //End travel code here.
   if ($travel == False) { //We didn't move. If we did, we did this in the travel code to facilitate randoming.
-    $exploresult = mysql_query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
-    $explorow = mysql_fetch_array($exploresult);
+    $exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
+    $explorow = $exploresult->fetch_array();
   }
   $oldevent = replacer($userrow,$explorow['description']) . "</br>";
   echo '<p class="courier">' . $oldevent . "</p>";
-  if (!empty($explorow['transform'])) mysql_query("UPDATE `Players` SET `exploration` = '" . $explorow['transform'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Transform event.
-  if ($explorow['boonreward'] != 0) mysql_query("UPDATE `Players` SET `Boondollars` = " . strval($userrow['Boondollars']+$explorow['boonreward']) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+  if (!empty($explorow['transform'])) $mysqli->query("UPDATE `Players` SET `exploration` = '" . $explorow['transform'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Transform event.
+  if ($explorow['boonreward'] != 0) $mysqli->query("UPDATE `Players` SET `Boondollars` = " . strval($userrow['Boondollars']+$explorow['boonreward']) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
   $i = 1;
   while ($i <= $max_links) {
     $linkstr = "link" . strval($i) . "name";

@@ -22,8 +22,8 @@ if (empty($_SESSION['username'])) {
 	} else {
 	  move_uploaded_file($_FILES["file"]["tmp_name"], "/www/overseer/Images/Items/" . $_FILES["file"]["name"]);
 	  echo "Art file stored in: " . "/www/overseer/Images/Items/" . $_FILES["file"]["name"];
-	  mysql_query("UPDATE `Captchalogue` SET `art` = '" . $_FILES['file']['name'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
-	  mysql_query("UPDATE `Captchalogue` SET `credit` = '" . $_POST['credit'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Captchalogue` SET `art` = '" . $_FILES['file']['name'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Captchalogue` SET `credit` = '" . $_POST['credit'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
 	}
       }
     }

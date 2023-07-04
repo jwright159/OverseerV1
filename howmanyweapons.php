@@ -1,9 +1,9 @@
 <?php
 require_once("header.php");
 if (!empty($_POST['abstratus'])) {
-  $itemresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE '%" . $_POST['abstratus'] . "%'");
+  $itemresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE '%" . $_POST['abstratus'] . "%'");
   $total = 0;
-  while ($itemrow = mysql_fetch_array($itemresult)) {
+  while ($itemrow = $itemresult->fetch_array()) {
     $total++;
   }
   echo "Weapons available for " . $_POST['abstratus'] . ": $total</br>";

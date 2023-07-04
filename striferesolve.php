@@ -18,8 +18,8 @@ function refreshSingular($slot, $target, $userrow) { //used for enemies that gen
 	$userrow[$tenstr . 'maxpower'] = $dummyrow[$enstr . 'maxpower'];
 	$userrow[$tenstr . 'desc'] = $dummyrow[$enstr . 'desc'];
 	$userrow[$tenstr . 'category'] = $dummyrow[$enstr . 'category'];
-	$stresult = mysql_query("SELECT `strifestatus` FROM `Players` WHERE `Players`.`username` = '" . $userrow['username'] . "'");
-	$strow = mysql_fetch_array($stresult);
+	$stresult = $mysqli->query("SELECT `strifestatus` FROM `Players` WHERE `Players`.`username` = '" . $userrow['username'] . "'");
+	$strow = $stresult->fetch_array();
 	$userrow['strifestatus'] = $strow['strifestatus'];
 	return $userrow;
 }
@@ -34,8 +34,8 @@ if (empty($_SESSION['username'])) {
 } elseif ($userrow['sessionbossengaged'] == 1) {
 	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
 } elseif (!empty($_POST['abscond']) && $userrow['cantabscond'] == 1) {
-	mysql_query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
-	mysql_query("UPDATE `Players` SET `strifemessage` = '" . mysql_real_escape_string("CAN'T ABSCOND, BRO!") . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
+	$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
+	$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string("CAN'T ABSCOND, BRO!") . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
 	include("strife.php");
 } elseif (!empty($_POST['abscond'])) {
 	if ($userrow['dreamingstatus'] == "Prospit") {
@@ -69,7 +69,7 @@ if (empty($_SESSION['username'])) {
    		$st++;
    	}
   }
-  mysql_query("UPDATE Players SET allies = '" . mysql_real_escape_string($userrow['allies']) . "' WHERE username = '$username'");
+  $mysqli->query("UPDATE Players SET allies = '" . $mysqli->real_escape_string($userrow['allies']) . "' WHERE username = '$username'");
 	include("strife.php");
 } else {
 	$dontcheckvictory = false;
@@ -83,8 +83,8 @@ if (empty($_SESSION['username'])) {
 	  //since we're refreshing enemy data from the database, there's no need to store it temporarily somewhere EXCEPT FOR STATUSES. yep.
 	}
 	if (empty($userrow['Class'])) $userrow['Class'] = "Default";
-	$classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
-	$classrow = mysql_fetch_array($classresult);
+	$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
+	$classrow = $classresult->fetch_array();
 	$unarmedpower = floor($userrow['Echeladder'] * (pow(($classrow['godtierfactor'] / 100),$userrow['Godtier'])));
 	$factor = ((612 - $userrow['Echeladder']) / 611);
 	$unarmedpower = ceil($unarmedpower * ((($classrow['level1factor'] / 100) * $factor) + (($classrow['level612factor'] / 100) * (1 - $factor))));
@@ -177,8 +177,8 @@ if (empty($_SESSION['username'])) {
 		$accdef = 0;
     }
     $totaldef = $headdef + $facedef + $bodydef + $accdef;
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
-    $blankrow = mysql_fetch_array($itemresult);
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
+    $blankrow = $itemresult->fetch_array();
     //Define rows as effectively empty when player dreaming or has nothing equipped. Track number of blanks for the purposes of the Void roletech (and maybe some other stuff)
     $blanks = 0;
     $voidvalid = 0; //Roletech ID 15 "One with Nothing" only activates if both weapon slots are empty.
@@ -223,11 +223,11 @@ if (empty($_SESSION['username'])) {
     $aidaccuse = 0;
     $aidabjure = 0;
     $aidabstain = 0;
-    $userescape = mysql_real_escape_string($username); //Add escape characters so we can find session correctly in database.
-    $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $userescape . "'");
-    while ($row = mysql_fetch_array($sessionmates)) {
+    $userescape = $mysqli->real_escape_string($username); //Add escape characters so we can find session correctly in database.
+    $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $userescape . "'");
+    while ($row = $sessionmates->fetch_array()) {
 		if ($row['aiding'] == $username) { //Aiding character.
-			$classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
+			$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
 			$classrow = $_SESSION['classrow'];
 			$unarmedaidpower = floor($row['Echeladder'] * (pow(($classrow['godtierfactor'] / 100),$row['Godtier'])));
 			$factor = ((612 - $row['Echeladder']) / 611);
@@ -237,8 +237,8 @@ if (empty($_SESSION['username'])) {
 			$aidabilities = loadAbilities($row); //it's a function now wooo
 			if ($row['equipped'] != "") {
 				$equipname = str_replace("'", "\\\\''", $row[$row['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
-				while ($itemrow = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
+				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $row[$row['equipped']]) {
@@ -250,8 +250,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($row['offhand'] != "" && $row['offhand'] != "2HAND") {
 				$offname = str_replace("'", "\\\\''", $row[$row['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
-				while ($itemrow = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
+				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $row[$row['offhand']]) {
@@ -263,8 +263,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($row['headgear'] != "") {
 				$headname = str_replace("'", "\\\\''", $row[$row['headgear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $headname . "'");
-				while ($itemrow = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $headname . "'");
+				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $row[$row['headgear']]) {
@@ -277,8 +277,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($row['facegear'] != "" && $row['facegear'] != "2HAND") {
 				$facename = str_replace("'", "\\\\''", $row[$row['facegear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $facename . "'");
-				while ($itemrow = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $facename . "'");
+				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $row[$row['facegear']]) {
@@ -291,8 +291,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($row['bodygear'] != "") {
 				$bodyname = str_replace("'", "\\\\''", $row[$row['bodygear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $bodyname . "'");
-				while ($itemrow = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $bodyname . "'");
+				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $row[$row['bodygear']]) {
@@ -305,8 +305,8 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($row['accessory'] != "") {
 				$accname = str_replace("'", "\\\\''", $row[$row['accessory']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-				$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $accname . "'");
-				while ($itemrow = mysql_fetch_array($itemresult)) {
+				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $accname . "'");
+				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $row[$row['accessory']]) {
@@ -318,8 +318,8 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 			if ($row['sprite_strength'] > 0 && $row['dreamingstatus'] == "Awake") $aidsprite += $row['sprite_strength'];
-			$itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
-			$blankrow = mysql_fetch_array($itemresult);
+			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object'");
+			$blankrow = $itemresult->fetch_array();
 			$aidblanks = 0;
 			$aidvoidvalid = 0;
 			if (empty($aidmainrow) || $row['dreamingstatus'] != "Awake") {
@@ -361,9 +361,9 @@ if (empty($_SESSION['username'])) {
 			if (!empty($aidabilities[17])) { //Blood Bonds activates. Increase power. We know it activated because this is an assister!
 				$message = $message . "$row[username]'s $aidabilities[17]</br>";
 				$aidbloodbond = 0;
-				$testuserescape = mysql_real_escape_string($row['aiding']); //Add escape characters so we can find session correctly in database.
-				$testsessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $testuserescape . "'");
-				while ($testrow = mysql_fetch_array($testsessionmates)) {
+				$testuserescape = $mysqli->real_escape_string($row['aiding']); //Add escape characters so we can find session correctly in database.
+				$testsessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $testuserescape . "'");
+				while ($testrow = $testsessionmates->fetch_array()) {
 					if ($testrow['aiding'] == $row['aiding']) $aidbloodbond += $unarmedaidpower; //Grab everyone assisting. Grabs this player but NOT main strifer, so number comes out the same.
 				}				
 				$message = $message . "Blood bond strength:" . strval($aidbloodbond) . "</br>";
@@ -429,8 +429,8 @@ if (empty($_SESSION['username'])) {
     		$statusarg = explode(":", $thisstatus[$st]);
     		if ($statusarg[0] == "PARTY") { //this ally is in the active party
     			//format: <status>:<basename>:<loyalty>:<nickname>:<desc>:<power>| with the last 3 args being optional
-    			$npcresult = mysql_query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
-    			$npcrow = mysql_fetch_array($npcresult);
+    			$npcresult = $mysqli->query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
+    			$npcrow = $npcresult->fetch_array();
     			if (!empty($statusarg[5])) $npcpower = $statusarg[5];
     			else $npcpower = $npcrow['basepower'];
     			if (!empty($statusarg[3])) $npcname = $statusarg[3];
@@ -506,9 +506,9 @@ if (empty($_SESSION['username'])) {
 		}
 		if (!empty($abilities[17])) { //Blood Bonds activates. Increase power. Note that it doesn't ACTUALLY trigger unless someone is found.
 			$bloodbond = 0;
-			$testuserescape = mysql_real_escape_string($username); //Add escape characters so we can find session correctly in database.
-			$testsessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $testuserescape . "'");
-			while ($testrow = mysql_fetch_array($testsessionmates)) {
+			$testuserescape = $mysqli->real_escape_string($username); //Add escape characters so we can find session correctly in database.
+			$testsessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $testuserescape . "'");
+			while ($testrow = $testsessionmates->fetch_array()) {
 				if ($testrow['aiding'] == $username) $bloodbond += $unarmedpower; //Grab everyone assisting.
 			}
 			if ($bloodbond > 0) { //Ability actually triggers. Print message etc.
@@ -585,9 +585,9 @@ if (empty($_SESSION['username'])) {
 			echo "You and your opponents trade a series of blows.</br>";
 		}
 		$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-		$sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $username . "'");
+		$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $username . "'");
 		$aides = 0;
-		while ($row = mysql_fetch_array($sessionmates)) {
+		while ($row = $sessionmates->fetch_array()) {
 			if ($row['aiding'] == $username) { //Aiding character.
 				$message = $message . "$row[username] contributes to the fight!</br>";
 				$aides += 1;
@@ -622,8 +622,8 @@ if (empty($_SESSION['username'])) {
 			if ($userrow[$enemystr] != "") { //Enemy spotted!
 				$enemyrowexists = False;
 				if (empty($_SESSION[$userrow[$enemystr]])) {
-					$enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE '" . $userrow[$enemystr] . "' LIKE CONCAT ('%', `Enemy_Types`.`basename`, '%')");
-					while ($temprow = mysql_fetch_array($enemyresult)) { //Enemy showed up in the table.
+					$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE '" . $userrow[$enemystr] . "' LIKE CONCAT ('%', `Enemy_Types`.`basename`, '%')");
+					while ($temprow = $enemyresult->fetch_array()) { //Enemy showed up in the table.
 						if ($enemyrowexists) { //if the query yielded multiple results...
 							if (strlen($temprow['basename']) > strlen($enemyrow['basename'])) { //see if the new result has a longer name than the previous
 								$enemyrow = $temprow; //if it does, this is the one we want
@@ -852,8 +852,8 @@ if (empty($_SESSION['username'])) {
 	      if ($userrow['Echeladder'] < 612) {
 		$rungs = climbEcheladder($userrow, 5);
 		echo "Defeating the boss of this dungeon has earned you $rungs rungs on your Echeladder!<br>";
-		$refreshresult = mysql_query("SELECT `Gel_Viscosity`,`Health_Vial`,`Dream_Health_Vial`,`Aspect_Vial`,`Boondollars` FROM `Players` WHERE `Players`.`username` = '$username'");
-		$refreshrow = mysql_fetch_array($refreshresult); //kinda wish this wasn't necessary but that megaquery be dangerous yo
+		$refreshresult = $mysqli->query("SELECT `Gel_Viscosity`,`Health_Vial`,`Dream_Health_Vial`,`Aspect_Vial`,`Boondollars` FROM `Players` WHERE `Players`.`username` = '$username'");
+		$refreshrow = $refreshresult->fetch_array(); //kinda wish this wasn't necessary but that megaquery be dangerous yo
 		$userrow['Echeladder'] += $rungs; //Set these values so that the regular level-up code will handle them properly.
 		$userrow['Gel_Viscosity'] = $refreshrow['Gel_Viscosity'];
 		$userrow['Health_Vial'] = $refreshrow['Health_Vial'];
@@ -1050,18 +1050,18 @@ if (empty($_SESSION['username'])) {
 	  $damage = 0;
 	  $userrow[$healthvialstr] = $userrow['motifcounter'] * 500;
 	  if ($userrow[$healthvialstr] > $userrow['Gel_Viscosity']) $userrow[$healthvialstr] = $userrow['Gel_Viscosity'];
-	  mysql_query("UPDATE `Players` SET `" . $healthvialstr . "` = $userrow[$healthvialstr] WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `" . $healthvialstr . "` = $userrow[$healthvialstr] WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	  $powerboost = $userrow['motifcounter'] * 100;
-	  mysql_query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$powerboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `powerboost` = $userrow[powerboost]+$powerboost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	  $userrow['powerboost'] = $userrow['powerboost'] + $powerboost;
-	  mysql_query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	  $userrow['motifcounter'] = 0;
 	} elseif (!empty($abilities[20]) && ($chancething <= ceil(($userrow['Aspect_Vial'] * 100) / $userrow['Gel_Viscosity']))) { //Hope Endures activated (ID 20)
 	  $endured = True;
 	  $message = $message . $abilities[20] . "</br>";
 	  $damage = ($userrow[$healthvialstr] - 1); //So their health goes to one.
 	  $aspectcost = floor($userrow['Aspect_Vial'] / 2);
-	  mysql_query("UPDATE `Players` SET `Aspect_Vial` = $userrow[Aspect_Vial]-$aspectcost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $userrow[Aspect_Vial]-$aspectcost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	  $userrow['Aspect_Vial'] = $userrow['Aspect_Vial'] - $aspectcost;
 	} elseif (!empty($endured)) { //Hope Endures has activated. The player will not die.
 	  $damage = ($userrow[$healthvialstr] - 1); //So their health goes to one.
@@ -1165,10 +1165,10 @@ if (empty($_SESSION['username'])) {
 		$userrow['combatconsume'] = 1;
 	} else $userrow['combatconsume'] = 0;
       $sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-      $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-      while ($row = mysql_fetch_array($sessionmates)) {
+      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+      while ($row = $sessionmates->fetch_array()) {
 	if ($row['aiding'] == $username) { //Aiding character. Reset their consumable use.
-	  if ($row['combatconsume'] != 0) mysql_query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;");
+	  if ($row['combatconsume'] != 0) $mysqli->query("UPDATE `Players` SET `combatconsume` = 0 WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;");
 	  //Reset combat consumable use for player aiding. Only if they have actually used a consumable.
 	}
       }
@@ -1202,8 +1202,8 @@ if (empty($_SESSION['username'])) {
 		$descstr = "enemy" . strval($i) . "desc";
 		$statustr = "ENEMY" . strval($i) . ":";
 		if (empty($_SESSION[$userrow[$enemystr]])) {
-			$enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE '" . $userrow[$enemystr] . "' LIKE CONCAT ('%', `Enemy_Types`.`basename`, '%')");
-			while ($temprow = mysql_fetch_array($enemyresult)) { //Enemy showed up in the table.
+			$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE '" . $userrow[$enemystr] . "' LIKE CONCAT ('%', `Enemy_Types`.`basename`, '%')");
+			while ($temprow = $enemyresult->fetch_array()) { //Enemy showed up in the table.
 				if ($enemyrowexists) { //if the query yielded multiple results...
 					if (strlen($temprow['basename']) > strlen($enemyrow['basename'])) { //see if the new result has a longer name than the previous
 						$enemyrow = $temprow; //if it does, this is the one we want
@@ -1461,25 +1461,25 @@ if (empty($_SESSION['username'])) {
 	  } else {
 	  	$userrow['strifestatus'] = $currentstatus;
 	  }
-	  $oldresult = mysql_query("SELECT * FROM `Players` WHERE `Players`.`username` = '$username' LIMIT 1;");
-	  $colresult = mysql_query("SELECT * FROM `Players` WHERE `Players`.`username` = '$username' LIMIT 1;");
-	  $oldrow = mysql_fetch_array($oldresult);
-	  $megaquery = "UPDATE `Players` SET `strifestatus` = '" . mysql_real_escape_string($userrow['strifestatus']) . "'";
-	  while ($column = mysql_fetch_field($colresult)) {
+	  $oldresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '$username' LIMIT 1;");
+	  $colresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '$username' LIMIT 1;");
+	  $oldrow = $oldresult->fetch_array();
+	  $megaquery = "UPDATE `Players` SET `strifestatus` = '" . $mysqli->real_escape_string($userrow['strifestatus']) . "'";
+	  while ($column = $mysqli->fetch_field($colresult)) {
 		if (($userrow[$column->name] != $oldrow[$column->name]) && !strpos($column->name,"inv") && !strpos($column->name,"abstratus") && $column->name != "strifestatus") {
 			//This entry has been changed, and is not an item or abstratus. (Addition of items and abstrati is handled via separate functions,
 			//and we don't want to interfere with those)
 			if (is_numeric($userrow[$column->name])) { //Item is a number. Convert to string.
 				$newvalue = strval($userrow[$column->name]);
 			} else { //Not a number. Place quotes around it.
-				$newvalue = "'" . mysql_real_escape_string($userrow[$column->name]) . "'";
+				$newvalue = "'" . $mysqli->real_escape_string($userrow[$column->name]) . "'";
 			}
 			$megaquery = $megaquery . ", `" . $column->name . "` = " . $newvalue;
 			//This will produce a megaquery that does all these changes at once in the future.
 	    }		
 	  }
 	  $megaquery = $megaquery . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;";
-	  mysql_query($megaquery);
+	  $mysqli->query($megaquery);
 	  writeEnemydata($userrow);
       if ($once) $once = False; //Don't run through more than once unless repeat is true.
       if ($nodamage == True) $nodamagecounter++;
@@ -1489,8 +1489,8 @@ if (empty($_SESSION['username'])) {
     if (!$dontcheckvictory) { //something happened mid-calculation that ended strife, such as TH's "deny invuln" thing
     if ($alldead) { //They're dead, Dave.
       $sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-      $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-      while ($row = mysql_fetch_array($sessionmates)) {
+      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+      while ($row = $sessionmates->fetch_array()) {
 				if ($row['aiding'] == $username) { //Aiding character.
 	  			$aidrow = $row;
 	  			echo "</br>Victory! $aidrow[username] gains another Echeladder rung.";
@@ -1498,7 +1498,7 @@ if (empty($_SESSION['username'])) {
 	  			if ($rungs == 0) {
 	    			echo " Or at least they would, if they weren't already maxed out.";
 	  			}
-	  			mysql_query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;"); //Player no longer assisting.
+	  			$mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;"); //Player no longer assisting.
 				}
       }
       echo "</br>Victory! You climb another rung on your Echeladder.";
@@ -1507,7 +1507,7 @@ if (empty($_SESSION['username'])) {
 				echo " Or at least you would, if you weren't already at the top of it!";
 				if (!empty($abilities[19]) && $userrow['Luck'] < 20) { //Light's Favour catchup activates. This is to set the luck of players at 612 who have insufficient quantities.
 	  			echo "</br>Your Luck catches up with you!";
-	  			mysql_query("UPDATE `Players` SET `Luck` = 20 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	  			$mysqli->query("UPDATE `Players` SET `Luck` = 20 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				}
       }
       $userrow = terminateStrife($userrow, 0);
@@ -1515,11 +1515,11 @@ if (empty($_SESSION['username'])) {
     	$userrow = refreshEnemydata($userrow);
       include("strife.php");
       if ($userrow[$downstr] != 1 && $enemydown != True) { //Print this if neither player nor enemy slain
-	mysql_query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
-	mysql_query("UPDATE `Players` SET `strifemessage` = '" . mysql_real_escape_string($message) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
+	$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
+	$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string($message) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
       } else {
-	mysql_query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
-	mysql_query("UPDATE `Players` SET `strifemessage` = '" . mysql_real_escape_string($message) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
+	$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
+	$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string($message) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
 	echo "</br>" . $message;
       }
     }

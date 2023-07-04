@@ -3,8 +3,8 @@ require_once("header.php");
 
 function getCodename($tempcode) {
 	if (empty($tempcodestorage[$tempcode])) {
-		$nameresult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$tempcode' ");
-		while ($namerow = mysql_fetch_array($nameresult)) {
+		$nameresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$tempcode' ");
+		while ($namerow = $nameresult->fetch_array()) {
 			$tempcodestorage[$tempcode] = $namerow['name'];
 			return $namerow['name'];
 		}
@@ -16,33 +16,33 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 if (!empty($_POST['compname'])) {
 	$compuname = str_replace("'", "\\\\''", $_POST['compname']); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
   $compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-  $compuresult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-  while ($compurow = mysql_fetch_array($compuresult)) $compsearchcode = $compurow['captchalogue_code'];
+  $compuresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+  while ($compurow = $compuresult->fetch_array()) $compsearchcode = $compurow['captchalogue_code'];
   $tempcodestorage[$compsearchcode] = $compurow['name']; //this should make it so that it doesn't search for the same item more than once
 }
 if (!empty($_POST['compcode'])) {
 	$compsearchcode = $_POST['compcode'];	
 }
 if (!empty($compsearchcode)) {
-	$reciperesult = mysql_query("SELECT * FROM Recipes WHERE `Recipes`.`ingredient1` = '$compsearchcode' OR `Recipes`.`ingredient2` = '$compsearchcode'");
+	$reciperesult = $mysqli->query("SELECT * FROM Recipes WHERE `Recipes`.`ingredient1` = '$compsearchcode' OR `Recipes`.`ingredient2` = '$compsearchcode'");
 }
 if (!empty($_POST['resname'])) {
 	$compuname = str_replace("'", "\\\\''", $_POST['resname']); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
   $compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-  $compuresult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-  while ($compurow = mysql_fetch_array($compuresult)) $ressearchcode = $compurow['captchalogue_code'];
+  $compuresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+  while ($compurow = $compuresult->fetch_array()) $ressearchcode = $compurow['captchalogue_code'];
   $tempcodestorage[$compsearchcode] = $compurow['name'];
 }
 if (!empty($_POST['rescode'])) {
 	$ressearchcode = $_POST['rescode'];	
 }
 if (!empty($ressearchcode)) {
-	$reciperesult = mysql_query("SELECT * FROM Recipes WHERE `Recipes`.`result` = '$ressearchcode'");
+	$reciperesult = $mysqli->query("SELECT * FROM Recipes WHERE `Recipes`.`result` = '$ressearchcode'");
 }
 if (!empty($reciperesult)) {
 	$arrow = " ==&gt; ";
 	$totalfound = 0;
-	while ($rrow = mysql_fetch_array($reciperesult)) {
+	while ($rrow = $reciperesult->fetch_array()) {
 		$totalfound++;
 		$name1 = getCodename($rrow['ingredient1']);
 		$name2 = getCodename($rrow['ingredient2']);

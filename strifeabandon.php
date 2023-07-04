@@ -7,18 +7,18 @@ if (empty($_SESSION['username'])) {
   echo "Log in to stop assisting in strife.</br>";
   echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } elseif ($userrow['cantabscond'] == 1) {
-	$aidresult = mysql_query("SELECT * FROM `Players` WHERE `Players`.`username` = '$userrow[aiding]'");
-	$aidrow = mysql_fetch_array($aidresult);
+	$aidresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '$userrow[aiding]'");
+	$aidrow = $aidresult->fetch_array();
 	if (time() - $aidrow['bossbegintime'] > 86400) {
-		mysql_query("UPDATE `Players` SET `aiding` = '', `cantabscond` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `aiding` = '', `cantabscond` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
   	echo '<a href="strife.php">You are no longer aiding your ally.</a></br>';
   	if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
-			mysql_query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
+			$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
 			echo "You flee back the way you came.</br>";
 			echo "<a href='dungeons.php'>==&gt;</a></br>";
 		}
 		if ($userrow['dungeonstrife'] == 4) { //User fighting dungeon guardian
-	    mysql_query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '$username' LIMIT 1;");
+	    $mysqli->query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '$username' LIMIT 1;");
 	    echo "You flee from the guardian. Perhaps you should prepare a bit more before trying to enter the dungeon...</br>";
 	    echo "<a href='dungeons.php#display'>==&gt;</a></br>";
 		}
@@ -27,15 +27,15 @@ if (empty($_SESSION['username'])) {
 	}
 } else {
   require_once("includes/SQLconnect.php");
-  mysql_query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+  $mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
   echo '<a href="strife.php">You are no longer aiding your ally.</a></br>';
   if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
-		mysql_query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
+		$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
 		echo "You flee back the way you came.</br>";
 		echo "<a href='dungeons.php'>==&gt;</a></br>";
 	}
 	if ($userrow['dungeonstrife'] == 4) { //User fighting dungeon guardian
-	    mysql_query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '$username' LIMIT 1;");
+	    $mysqli->query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '$username' LIMIT 1;");
 	    echo "You flee from the guardian. Perhaps you should prepare a bit more before trying to enter the dungeon...</br>";
 	    echo "<a href='dungeons.php#display'>==&gt;</a></br>";
 	}

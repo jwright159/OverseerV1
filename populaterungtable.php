@@ -6,8 +6,8 @@ if (empty($_SESSION['username'])) {
 } else {
  
   $username=$_SESSION['username'];
-  $result = mysql_query("SELECT * FROM Players");
-  while ($row = mysql_fetch_array($result)) { //Fetch the user's database row. We're going to need it several times.
+  $result = $mysqli->query("SELECT * FROM Players");
+  while ($row = $result->fetch_array()) { //Fetch the user's database row. We're going to need it several times.
     if ($row['username'] == $username) {
       $userrow = $row;
     }
@@ -15,9 +15,9 @@ if (empty($_SESSION['username'])) {
   if ($userrow['session_name'] != "Developers") {
     echo "Hey! This tool is for the developers only. Nice try, pal.";
   } else {
-    $players = mysql_query("SELECT * FROM Players");
-    while ($row = mysql_fetch_array($players)) {
-      mysql_query("INSERT INTO `Echeladders` (`username`) VALUES ('" . mysql_real_escape_string($row['username']) . "');");
+    $players = $mysqli->query("SELECT * FROM Players");
+    while ($row = $players->fetch_array()) {
+      $mysqli->query("INSERT INTO `Echeladders` (`username`) VALUES ('" . $mysqli->real_escape_string($row['username']) . "');");
       echo $row['username'] . " added.</br>";
     }
   }

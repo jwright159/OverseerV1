@@ -27,10 +27,10 @@ echo 'The following is a list of every weapon of a given abstratus, sorted by po
     echo "<br />";
     $alltotalpower = 0;
       $mainabstratus = $_GET['abs'];
-      $absresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE '" . $mainabstratus . "%' OR `abstratus` LIKE '%, " . $mainabstratus . "%' ORDER BY `power` ASC");
+      $absresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE '" . $mainabstratus . "%' OR `abstratus` LIKE '%, " . $mainabstratus . "%' ORDER BY `power` ASC");
       //ensures that we don't catch dartkind with artkind, inflatablekind with tablekind, etc
       $total = 0;
-      while ($itemrow = mysql_fetch_array($absresult)) {
+      while ($itemrow = $absresult->fetch_array()) {
         $total++;
         if ($itemrow['size'] == "large") $hands = "2h";
         else $hands = "1h";

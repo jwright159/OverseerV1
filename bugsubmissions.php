@@ -3,7 +3,7 @@ require_once("header.php");
 
 function updateSubmission($subid) {
 	$currenttime = time();
-	mysql_query("UPDATE `Feedback` SET `lastupdated` = $currenttime WHERE `Feedback`.`ID` = $subid ;");
+	$mysqli->query("UPDATE `Feedback` SET `lastupdated` = $currenttime WHERE `Feedback`.`ID` = $subid ;");
 	$feedrow['lastupdated'] = $currenttime;
 }
 
@@ -19,11 +19,11 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
     }
     
   if (!empty($_POST['delete'])) {
-    $feedresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
-    $feedrow = mysql_fetch_array($feedresult);
+    $feedresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
+    $feedrow = $feedresult->fetch_array();
     if ($feedrow['user'] == $username || $userrow['session_name'] == "Developers") {
       if ($feedrow['type'] == "bug" || $feedrow['type'] == "misc") {
-        mysql_query("DELETE FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
+        $mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
 	echo 'Submission deleted.</br>';
       } else echo "You can't delete non-bug/misc submissions from here.</br>";
     } else echo "You don't have permission to delete that submission. (lol rhyme)</br>";
@@ -31,8 +31,8 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 
   //first thing's first, view the submission if the player clicked on one
   if (!empty($_GET['view'])) {
-    $feedresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
-    $feedrow = mysql_fetch_array($feedresult);
+    $feedresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+    $feedrow = $feedresult->fetch_array();
     if ($feedrow['ID'] == $_GET['view']) {
       if ($feedrow['type'] == "bug" || $feedrow['type'] == "misc") {
 	if (!empty($_POST['body'])) {
@@ -42,8 +42,8 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 	  if ($userrow['session_name'] == "Developers") $exstring = " (Developer): ";
 	  if ($userrow['session_name'] == "Itemods") $exstring = " (Moderator): ";
 	  if ($feedrow['user'] == $username) $exstring = " (Submitter): ";
-	  	$msgresult = mysql_query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $feedrow['user'] . "' LIMIT 1;");
-  		$msgrow = mysql_fetch_array($msgresult);
+	  	$msgresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $feedrow['user'] . "' LIMIT 1;");
+  		$msgrow = $msgresult->fetch_array();
   		if ($msgrow['feedbacknotice'] == 1) {
   			$check = 0;
   			$foundempty = false;
@@ -59,17 +59,17 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
 	  			} elseif ($feedrow['type'] == "misc") {
 	  				$newmsgstring = $newmsgstring . "Feedback Response (ID " . strval($feedrow['ID']) . ")|";
 	  			}
-	  			$newmsgstring = mysql_real_escape_string($newmsgstring . $realbody . "<br /><br />Original:<br />" . $feedrow['comments']);
-	  			mysql_query("UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `Messages`.`username` = '" . $feedrow['user'] . "'");
-	  			mysql_query("UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
+	  			$newmsgstring = $mysqli->real_escape_string($newmsgstring . $realbody . "<br /><br />Original:<br />" . $feedrow['comments']);
+	  			$mysqli->query("UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `Messages`.`username` = '" . $feedrow['user'] . "'");
+	  			$mysqli->query("UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
 	  			echo "Message sent!<br />";
   			} else echo "ERROR: Response could not be sent because this user's inbox is full.<br />";
   		} else echo "ERROR: Response could not be sent because this user has opted out of receiving feedback notices.<br />";
 	  //echo $_POST['body'] . "</br>";
 	  $newcomments = $feedrow['usercomments'] . $username . $exstring . $realbody . "|";
-	  $newncomments = mysql_real_escape_string($newcomments);
+	  $newncomments = $mysqli->real_escape_string($newcomments);
 	  //echo $newcomments . "</br>";
-	  mysql_query("UPDATE `Feedback` SET `usercomments` = '" . $newncomments . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+	  $mysqli->query("UPDATE `Feedback` SET `usercomments` = '" . $newncomments . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 	  $feedrow['usercomments'] = $newcomments;
 	  echo "Your comment has been posted.</br>";
 	  updateSubmission($_GET['view']);
@@ -113,11 +113,11 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   //let's generate that message table~
 
     $startpoint = strval(($page - 1) * 20);
-    $feedresult = mysql_query("SELECT `ID`,`type`,`user`,`comments`,`usercomments` FROM `Feedback` WHERE `Feedback`.`type` = 'bug' OR `Feedback`.`type` = 'misc' ORDER BY `Feedback`.`ID` ASC LIMIT " . $startpoint . ",20 ;");
+    $feedresult = $mysqli->query("SELECT `ID`,`type`,`user`,`comments`,`usercomments` FROM `Feedback` WHERE `Feedback`.`type` = 'bug' OR `Feedback`.`type` = 'misc' ORDER BY `Feedback`.`ID` ASC LIMIT " . $startpoint . ",20 ;");
   echo '<table border="1" bordercolor="#CCCCCC" style="background-color:#EEEEEE" width="100%" cellpadding="3" cellspacing="3">';
   echo '<tr><td>ID</td><td>Issue</td><td>Username</td></tr>';
   $results = false;
-  while ($showrow = mysql_fetch_array($feedresult)) {
+  while ($showrow = $feedresult->fetch_array()) {
   	$results = true;
   	$stylestring = "normal";
   	if (!empty($showrow['usercomments'])) {
@@ -134,7 +134,7 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   }
   if (!$results) echo '<tr><td colspan="3">No submissions found. Either this is an invalid page number, or nothing matches those parameters.</td></tr>';
   echo '</table></br>';
-  $countresult = mysql_query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'bug' OR `Feedback`.`type` = 'misc'");
+  $countresult = $mysqli->query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'bug' OR `Feedback`.`type` = 'misc'");
   $pcount = 20;
   $ptotal = 0;
   $alltotal = 0;
@@ -144,7 +144,7 @@ echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</sty
   } else {
   	echo 'Previous page | ';
   }
-  while ($row = mysql_fetch_array($countresult)) {
+  while ($row = $countresult->fetch_array()) {
   	$alltotal++;
   	if ($pcount == 20) {
   		$ptotal++;

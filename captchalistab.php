@@ -5,22 +5,22 @@ if (empty($_SESSION['username'])) {
 } else {
 
   if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods") {
-    $result = mysql_query("SELECT * FROM Captchalogue ORDER BY name");
-    while ($row = mysql_fetch_array($result)) {
+    $result = $mysqli->query("SELECT * FROM Captchalogue ORDER BY name");
+    while ($row = $result->fetch_array()) {
       $realname = str_replace("\\", "", $row['name']);
       echo "$realname</br>";
     }
   } else {
-    $result = mysql_query("SELECT * FROM Captchalogue ORDER BY name");
-    while ($row = mysql_fetch_array($result)) {
+    $result = $mysqli->query("SELECT * FROM Captchalogue ORDER BY name");
+    while ($row = $result->fetch_array()) {
       $realname = str_replace("\\", "", $row['name']);
       echo $realname . "=" . $row['captchalogue_code'] . "</br>";
     }
-    $sresult = mysql_query("SELECT * FROM System");
-    $srow = mysql_fetch_array($sresult);
+    $sresult = $mysqli->query("SELECT * FROM System");
+    $srow = $sresult->fetch_array();
     $newaddlog = $srow['debuglog'] . "<br />Dev Captchalist accessed by " . $username;
-    $newaddlog = mysql_real_escape_string($newaddlog);
-    mysql_query("UPDATE `System` SET `debuglog` = '$newaddlog' WHERE 1");
+    $newaddlog = $mysqli->real_escape_string($newaddlog);
+    $mysqli->query("UPDATE `System` SET `debuglog` = '$newaddlog' WHERE 1");
   }
 }
 ?>

@@ -23,8 +23,8 @@ $compugood = true;
   }
 
   if ($compugood) {
-  $msgresult = mysql_query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $username . "' LIMIT 1;");
-  $msgrow = mysql_fetch_array($msgresult);
+  $msgresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $username . "' LIMIT 1;");
+  $msgrow = $msgresult->fetch_array();
   
   if (!empty($_POST['msgfix'])) {
     $counter = 1;
@@ -35,7 +35,7 @@ $compugood = true;
     	if (empty($boom[3]) && !empty($msgstring)) $unreads++;
     	$counter++;
     }
-    mysql_query("UPDATE `Players` SET `newmessage` = $unreads WHERE `Players`.`username` = '$username' LIMIT 1;");
+    $mysqli->query("UPDATE `Players` SET `newmessage` = $unreads WHERE `Players`.`username` = '$username' LIMIT 1;");
     echo "Your unread message count has been refreshed. If you could send a bug report detailing the actions you took to make the count reflect your unreads improperly, it would be much appreciated!</br>";
   }
 
@@ -53,10 +53,10 @@ $compugood = true;
       echo '</br></br>';
       if (empty($boom[3])) {
 	$msgstring = str_replace("\\", "", $msgstring); //god dang these apostrophes
-	$msgstring = mysql_real_escape_string($msgstring);
-        mysql_query("UPDATE `Messages` SET `msg" . strval($_GET['view']) . "` = '" . $msgstring . "|READ' WHERE `username` = '" . $username . "' LIMIT 1;");
+	$msgstring = $mysqli->real_escape_string($msgstring);
+        $mysqli->query("UPDATE `Messages` SET `msg" . strval($_GET['view']) . "` = '" . $msgstring . "|READ' WHERE `username` = '" . $username . "' LIMIT 1;");
         $userrow['newmessage']--;
-        mysql_query("UPDATE `Players` SET `newmessage` = " . strval($userrow['newmessage']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
+        $mysqli->query("UPDATE `Players` SET `newmessage` = " . strval($userrow['newmessage']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
 	$marked[intval($_GET['view'])] = True;
 	}
 	if ($boom[0] != "Submissions" && $boom[0] != "Gristwire" && $boom[0] != "Porkhollow") {
@@ -83,16 +83,16 @@ $compugood = true;
         if (!empty($_POST['select' . strval($check)]) || !empty($_POST['selectall'])) {
 	  $marked[$check] = True;
 	  $sendstring = str_replace("\\", "", $msgrow['msg' . strval($check)]); //god dang these apostrophes
-	  $sendstring = mysql_real_escape_string($sendstring);
+	  $sendstring = $mysqli->real_escape_string($sendstring);
 	  if (!strpos($msgrow['msg' . strval($check)], "|READ") && !empty($msgrow['msg' . strval($check)])) {
-	  	mysql_query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "|READ' WHERE `username` = '" . $username . "' LIMIT 1;");
+	  	$mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "|READ' WHERE `username` = '" . $username . "' LIMIT 1;");
 	  	$userrow['newmessage']--;
 	  	}
 	  }
 	$check++;
 	}
 	if (!empty($_POST['selectall'])) $userrow['newmessage'] = 0;
-	mysql_query("UPDATE `Players` SET `newmessage` = " . strval($userrow['newmessage']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
+	$mysqli->query("UPDATE `Players` SET `newmessage` = " . strval($userrow['newmessage']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
       echo 'Message(s) marked as read.</br>';
       }
     if ($_POST['action'] == "delete") { //delete these messages
@@ -100,7 +100,7 @@ $compugood = true;
       while ($check <= $max_inbox) {
         if (!empty($_POST['select' . strval($check)]) || !empty($_POST['selectall'])) {
 	  $deleted[$check] = True;
-	  mysql_query("UPDATE `Messages` SET `msg" . strval($check) . "` = '' WHERE `username` = '" . $username . "' LIMIT 1;");
+	  $mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '' WHERE `username` = '" . $username . "' LIMIT 1;");
 	  if (!strpos($msgrow['msg' . strval($check)], "|READ") && !empty($msgrow['msg' . strval($check)])) {
 	  $userrow['newmessage']--;
     }
@@ -108,7 +108,7 @@ $compugood = true;
 	$check++;
 	}
 	if (!empty($_POST['selectall'])) $userrow['newmessage'] = 0;
-	mysql_query("UPDATE `Players` SET `newmessage` = " . strval($userrow['newmessage']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
+	$mysqli->query("UPDATE `Players` SET `newmessage` = " . strval($userrow['newmessage']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
       echo 'Message(s) deleted.</br>';
       }
     }
@@ -122,9 +122,9 @@ $compugood = true;
       $receivers = count($sendto);
       } else {
       if ($_POST['to'] == "SESSION") { //send to everyone in the user's session
-        $sessionresult = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' ;");
+        $sessionresult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' ;");
 	$receivers = 0;
-	while ($sesrow = mysql_fetch_array($sessionresult)) {
+	while ($sesrow = $sessionresult->fetch_array()) {
 	  if ($sesrow['username'] != $username) { 
 	    $sendto[$receivers] = $sesrow['username'];
 	    $receivers++;
@@ -138,8 +138,8 @@ $compugood = true;
     $rcount = 0;
     while ($rcount < $receivers) {
       $founduser = False;
-      $sendresult = mysql_query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $sendto[$rcount] . "' LIMIT 1;");
-      while ($sendrow = mysql_fetch_array($sendresult)) {
+      $sendresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $sendto[$rcount] . "' LIMIT 1;");
+      while ($sendrow = $sendresult->fetch_array()) {
         if ($sendrow['username'] == $sendto[$rcount]) {
           $check = 1;
 	  $founduser = True;
@@ -168,11 +168,11 @@ $compugood = true;
 	      if (empty($userrow['colour'])) $userrow['colour'] = "Black";
             $sendstring = $youstring . '|' . $realsubject . '|<font color="' . $userrow['colour'] . '">' . $realbody . '</font>';
 	    $sendstring = str_replace("\\", "", $sendstring); //god dang these apostrophes
-	    $sendstring = mysql_real_escape_string($sendstring);
+	    $sendstring = $mysqli->real_escape_string($sendstring);
 	    //echo "UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;</br>";
-            mysql_query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
+            $mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
 	    echo "Message sent to " . $sendto[$rcount] . " successfully.</br>";
-	    mysql_query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
+	    $mysqli->query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
             } else echo $sendto[$rcount] . " did not receive message: inbox full.</br>";
           }
         }
@@ -220,8 +220,8 @@ $compugood = true;
   //here's the send new message form
   echo 'Send a new message:</br>';
   echo '<form action="messages.php" method="post" id="newmsg">Send to someone in your session: <select name="into"><option value=""></option>';
-  $yoursessionresult = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-  while ($ysessionrow = mysql_fetch_array($yoursessionresult)) {
+  $yoursessionresult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+  while ($ysessionrow = $yoursessionresult->fetch_array()) {
   	if ($ysessionrow['username'] != $username) echo '<option value="' . $ysessionrow['username'] . '">' . $ysessionrow['username'] . '</option>';
   }
   echo '</select></br>To: <input id="to" name="to" type="text" /> (Separate multiple users with a semicolon followed by a space. Type SESSION to send to everyone in your session.)</br>';

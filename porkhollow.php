@@ -35,25 +35,25 @@ if (empty($_SESSION['username'])) {
 	} elseif (empty($_POST['target'])) {
 	  echo "You didn't specify a recipient!<br />";
 	} else {
-	  $wireresult2 = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
+	  $wireresult2 = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
 	  $targetfound = False;
 	  $poor = False;
 	  if (intval($_POST['amount']) <= $userrow['Boondollars']) {
-		while ($wirerow2 = mysql_fetch_array($wireresult2)) {
+		while ($wirerow2 = $mysqli->fetch_array($wireresult2)) {
 		  if ($wirerow2['username'] == $_POST['target']) {
 		    $targetfound = True;
 		    $modifier = intval($_POST['amount']);
-		    mysql_query("UPDATE `Players` SET `Boondollars` = $userrow[$boon]-$modifier WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `Boondollars` = $userrow[$boon]-$modifier WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 		    $quantity = $userrow[$boon]-$modifier;
-		    mysql_query("UPDATE `Players` SET `Boondollars` = $wirerow2[$boon]+$modifier WHERE `Players`.`username` = '$_POST[target]' LIMIT 1 ;");
+		    $mysqli->query("UPDATE `Players` SET `Boondollars` = $wirerow2[$boon]+$modifier WHERE `Players`.`username` = '$_POST[target]' LIMIT 1 ;");
 		    //$timestr = produceIST(initTime($con));
 		    //$event = $timestr . ": Sent $wirerow2[username] $modifier boondollars";
 		    //logEvent($event,$username);
 		    //$event = $timestr . ": Received $modifier boondollars from $wirerow[username]";
 		    //logEvent($event,$_POST['target']);
 	    	    $giftstring = strval($modifier) . " Boondollars";
-	    	    $sendresult = mysql_query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $_POST['target'] . "' LIMIT 1;");
-	    	    $sendrow = mysql_fetch_array($sendresult);
+	    	    $sendresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $_POST['target'] . "' LIMIT 1;");
+	    	    $sendrow = $sendresult->fetch_array();
 	    	    $check = 1;
 	    	    $max_inbox = 50;	
 	    	    $foundempty = False;
@@ -69,8 +69,8 @@ if (empty($_SESSION['username'])) {
 			}
               	      $sendstring = "Porkhollow|" . $username . " has wired you " . $giftstring . "!|" . $bodystring;
 	      	      $sendstring = str_replace("'", "''", $sendstring); //god dang these apostrophes
-	      	      mysql_query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
-	      	      mysql_query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
+	      	      $mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
+	      	      $mysqli->query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
 	      	      } else echo "Attempted to send a message, but the user's inbox was full.</br>";
 		  }
 		}
@@ -92,14 +92,14 @@ if (empty($_SESSION['username'])) {
       //--End wiring code here. Consider making this bit a function.--
       
       echo '<form action="porkhollow.php" method="post" id="wire">Target username (sessionmates): <select name="intarget"><option value=""></option>';
-  $yoursessionresult = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-  while ($ysessionrow = mysql_fetch_array($yoursessionresult)) {
+  $yoursessionresult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+  while ($ysessionrow = $yoursessionresult->fetch_array()) {
   	if ($ysessionrow['username'] != $username) echo '<option value="' . $ysessionrow['username'] . '">' . $ysessionrow['username'] . '</option>';
   }
   echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br />';
       echo 'Amount of boondollars to transfer: <input id="amount" name="amount" type="text" /><br />Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /></form>';
   } else echo "Boondollars: " . strval($userrow[$boon]);
-  mysql_close($con);
+  $mysqli->close();
 }
 require_once("footer.php");
 ?>

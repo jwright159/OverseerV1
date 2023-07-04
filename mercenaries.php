@@ -22,8 +22,8 @@ if (empty($_SESSION['username'])) {
 		    echo "You don't have that many Boondollars!<br />";
 		} else {
 			$aok = false;
-			$gateresult = mysql_query("SELECT * FROM Gates");
-  		$gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+			$gateresult = $mysqli->query("SELECT * FROM Gates");
+  		$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 			if ($_POST['land'] == $username) {
 				$yogate = highestGate($gaterow, $userrow['house_build_grist']);
 				if ($yogate >= 1 || canFly($userrow)) {
@@ -46,16 +46,16 @@ if (empty($_SESSION['username'])) {
 				if (!$aok) echo "You can't reach that land.<br />";
 			}
 			if ($aok) { //preliminary checks pass, let's look for someone to hire
-				$landresult = mysql_query("SELECT * FROM Players WHERE username = '" . $_POST['land'] . "'");
-				$landrow = mysql_fetch_array($landresult);
+				$landresult = $mysqli->query("SELECT * FROM Players WHERE username = '" . $_POST['land'] . "'");
+				$landrow = $landresult->fetch_array();
 				$landrow = mercRefresh($landrow); //might as well do this here
 				$landname = "The Land of " . $landrow['land1'] . " and " . $landrow['land2'];
 				$offer = $_POST['boons'];
 				echo "You visit a village tavern on $landname and put $offer Boondollars on the table.<br />";
-				$mercsresult = mysql_query("SELECT * FROM Enemy_Types WHERE appearson = 'Ally' AND minboons < $offer ORDER BY basepower ASC");
+				$mercsresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE appearson = 'Ally' AND minboons < $offer ORDER BY basepower ASC");
 				$types = 0;
 				$lowest = $offer;
-				while ($row = mysql_fetch_array($mercsresult)) {
+				while ($row = $mercsresult->fetch_array()) {
 					$types++;
 					$minboon[$types] = $row['minboons'];
 					$allyname[$types] = $row['basename'];
@@ -78,7 +78,7 @@ if (empty($_SESSION['username'])) {
 					echo "A $mercname steps forward, eager to serve you for your offered payment. Your party grows in number.<br />";
 					$userrow['allies'] .= $newally . "|";
 					$userrow['Boondollars'] -= $offer;
-					mysql_query("UPDATE Players SET Boondollars = $userrow[Boondollars], availablequests = $userrow[availablequests]-1 WHERE username = '$username'");
+					$mysqli->query("UPDATE Players SET Boondollars = $userrow[Boondollars], availablequests = $userrow[availablequests]-1 WHERE username = '$username'");
 				} else {
 					echo "Nobody even reacts. It seems there are no mercenaries on this land that are willing to work for that much.<br />";
 				}
@@ -126,8 +126,8 @@ if (empty($_SESSION['username'])) {
    	while (!empty($thisstatus[$st])) {
    		$justpickedup = false;
    		$statusarg = explode(":", $thisstatus[$st]);
-   		$npcresult = mysql_query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
-   		$npcrow = mysql_fetch_array($npcresult);
+   		$npcresult = $mysqli->query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
+   		$npcrow = $npcresult->fetch_array();
    		if (!empty($statusarg[5])) $npcpower = intval($statusarg[5]);
    		else $npcpower = $npcrow['basepower'];
    		if (!empty($statusarg[3])) $npcname = $statusarg[3];
@@ -201,8 +201,8 @@ if (empty($_SESSION['username'])) {
 				//don't update the allystr
 			} else {
 				$partyechostr = str_replace("!!!PENDING!!!", "In party.", $partyechostr);
-				$newallystr = mysql_real_escape_string($newallystr);
-				mysql_query("UPDATE Players SET allies = '$newallystr' WHERE username = '$username'");
+				$newallystr = $mysqli->real_escape_string($newallystr);
+				$mysqli->query("UPDATE Players SET allies = '$newallystr' WHERE username = '$username'");
 			}
 		}
 	}
@@ -236,8 +236,8 @@ if (empty($_SESSION['username'])) {
 	echo '<option value="' . $userrow['username'] . '">' . $locationstr . '</option>';
   $landcount = 1; //0 should be the user's land which we already printed
   while ($landcount < $totalchain) {
-   	$currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
-		$currentrow = mysql_fetch_array($currentresult);
+   	$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
+		$currentrow = $currentresult->fetch_array();
 		$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 		echo '<option value="' . $currentrow['username'] . '">' . $locationstr . '</option>';
 		$landcount++;

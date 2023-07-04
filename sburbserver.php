@@ -4,11 +4,11 @@ require 'additem.php';
 require_once("includes/grist_icon_parser.php");
 
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -67,14 +67,14 @@ if (empty($_SESSION['username'])) {
   	if (!empty($_POST['client'])) {
     	$playerfound = False;
     	$registered = "";
-    	$sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . mysql_real_escape_string($_POST['client']) . "'");
-    	while ($row = mysql_fetch_array($sessionmates)) {
+    	$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $mysqli->real_escape_string($_POST['client']) . "'");
+    	while ($row = $sessionmates->fetch_array()) {
       	if ($row['session_name'] == $userrow['session_name']) {
-					if ($row['username'] == mysql_real_escape_string($_POST['client']) && ($row['server_player'] == "" || $row['server_player'] == $username)) {
+					if ($row['username'] == $mysqli->real_escape_string($_POST['client']) && ($row['server_player'] == "" || $row['server_player'] == $username)) {
 	  				$playerfound = True;
-	  				$client = mysql_real_escape_string($_POST['client']);
-	  				mysql_query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '$client' LIMIT 1 ;");
-	  				mysql_query("UPDATE `Players` SET `client_player` = '$client' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  				$client = $mysqli->real_escape_string($_POST['client']);
+	  				$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '$client' LIMIT 1 ;");
+	  				$mysqli->query("UPDATE `Players` SET `client_player` = '$client' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	  				echo "Client registered.</br>";
 	  				$userrow['client_player'] = $client;
 					} else {
@@ -95,14 +95,14 @@ if (empty($_SESSION['username'])) {
   		echo '<form action="sburbserver.php" method="post">Register client player: <input id="client" name="client" type="text" /><br />';
   		echo '<input type="submit" value="Connect it!" /></form></br>';
 		} else {
-			$clientresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
-			$clientrow = mysql_fetch_array($clientresult);
-			$landresult = mysql_query("SELECT * FROM Grist_Types WHERE `Grist_Types`.`name` = '" . $clientrow['grist_type'] . "'");
-			$landrow = mysql_fetch_array($landresult);
+			$clientresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
+			$clientrow = $clientresult->fetch_array();
+			$landresult = $mysqli->query("SELECT * FROM Grist_Types WHERE `Grist_Types`.`name` = '" . $clientrow['grist_type'] . "'");
+			$landrow = $landresult->fetch_array();
 			$tier1grist = $landrow['grist1'];
 			if ($clientrow['server_player'] == "") {
 				echo "Something went amiss, and your client player doesn't have you set as their server! We've just attempted to fix this, but if you see this message multiple times, please submit a bug report.<br />";
-				mysql_query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
+				$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 			}
 			
 		  if (!empty($_POST['build'])) {
@@ -111,7 +111,7 @@ if (empty($_SESSION['username'])) {
 						$build = $_POST['build'];
 						$newtotal = $build + $clientrow['house_build_grist'];
 						$newgrist = $clientrow['Build_Grist'] - $build;
-						mysql_query("UPDATE `Players` SET `house_build_grist` = '$newtotal', `Build_Grist` = '$newgrist' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1 ;");
+						$mysqli->query("UPDATE `Players` SET `house_build_grist` = '$newtotal', `Build_Grist` = '$newgrist' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1 ;");
 						echo "Build successful!</br>";
 						$clientrow['house_build_grist'] = $newtotal;
 						$clientrow['Build_Grist'] = $newgrist;
@@ -122,8 +122,8 @@ if (empty($_SESSION['username'])) {
  			}
  			
  			if (!empty($_POST['deployitem'])) {
- 				$deployresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['deployitem'] . "'");
-				while ($drow = mysql_fetch_array($deployresult)) {
+ 				$deployresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['deployitem'] . "'");
+				while ($drow = $deployresult->fetch_array()) {
 					$deploytag = specialArray($drow['effects'], "DEPLOYABLE"); 
 					if ($deploytag[0] == "DEPLOYABLE") {
 						$existtag = specialArray($clientrow['storeditems'], $_POST['deployitem']); //this also works for storage items, fancy that
@@ -155,7 +155,7 @@ if (empty($_SESSION['username'])) {
 								$maxspace = $clientrow['house_build_grist'] + 1000;
 								if ($space + itemSize($drow['size']) <= $maxspace) { //let's finally deploy this thing
 									storeItem($drow['name'], 1, $clientrow);
-									mysql_query("UPDATE `Players` SET `$coststring` = $newgrist WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
+									$mysqli->query("UPDATE `Players` SET `$coststring` = $newgrist WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 									echo $drow['name'] . " successfully deployed!</br>";
 								} else echo "Deploy failed: you can't find enough room in the client's house to put down the item! You'll have to make some room first.</br>";
 							} else echo "Deploy failed: client lacks the required $coststring.</br>";
@@ -174,8 +174,8 @@ if (empty($_SESSION['username'])) {
 					while ($i < $totalitems) {
 						$args = explode(":", $boom[$i - 1]);
 						if (!empty($_POST['r-' . $args[0]])) {
-							$iresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1;");
-							$irow = mysql_fetch_array($iresult);
+							$iresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1;");
+							$irow = $iresult->fetch_array();
 							if ($irow['captchalogue_code'] == $args[0]) {
 								if ($_POST['q-' . $args[0]] < 1 || empty($_POST['q-' . $args[0]])) $_POST['q-' . $args[0]] = 1; //set to 1 if blank or less than 0
 								if (intval($args[1]) >= $_POST['q-' . $args[0]]) {
@@ -213,7 +213,7 @@ if (empty($_SESSION['username'])) {
 									} else { //Item costed something, use the refund query to restore grist.
 	  								$refundquery = substr($refundquery, 0, -2); //Dispose of last comma and space.
 	  								$refundquery = $refundquery . " WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1 ;";
-	  								mysql_query($refundquery); //Un-pay.
+	  								$mysqli->query($refundquery); //Un-pay.
 									}
 									$args[1]-=$_POST['q-' . $args[0]];
 									echo '<br />';
@@ -228,14 +228,14 @@ if (empty($_SESSION['username'])) {
 						$i++;
 					}
 					if ($updatestore != $clientrow['storeditems']) {
-						mysql_query("UPDATE `Players` SET `storeditems` = '$updatestore' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
+						$mysqli->query("UPDATE `Players` SET `storeditems` = '$updatestore' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 					}
  				} else echo "Your client has nothing to recycle!<br />";
  				compuRefresh($clientrow);
  			}
  			
- 			$clientresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
-			$clientrow = mysql_fetch_array($clientresult);
+ 			$clientresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
+			$clientrow = $clientresult->fetch_array();
 			//refresh clientrow so that things like grist and storage are up-to-date. yeah it's inefficient but I'm lazy so
 	
 			echo "SBURB Server Menu</br>";
@@ -247,8 +247,8 @@ if (empty($_SESSION['username'])) {
 			echo "House gates accessible on your client's Land: ";
   		$gates = 0;
   		$i = 1;
-  		$gateresult = mysql_query("SELECT * FROM Gates");
-  		$gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+  		$gateresult = $mysqli->query("SELECT * FROM Gates");
+  		$gaterow = $gateresult->fetch_array(); //Gates only has one row.
   		while ($i <= 7) {
     		$gatestr = "gate" . strval($i);
     		if ($gaterow[$gatestr] <= $clientrow['house_build_grist']) {
@@ -265,8 +265,8 @@ if (empty($_SESSION['username'])) {
 	
 			echo "&gt;Deploy</br>";
 			echo '<form method="post" action="sburbserver.php">Select a machine to deploy:</br><select name="deployitem">';
-			$deployresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`effects` LIKE '%DEPLOYABLE%' ORDER BY `Build_Grist_Cost` ASC");
-			while ($drow = mysql_fetch_array($deployresult)) {
+			$deployresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`effects` LIKE '%DEPLOYABLE%' ORDER BY `Build_Grist_Cost` ASC");
+			while ($drow = $deployresult->fetch_array()) {
 				$deploytag = specialArray($drow['effects'], "DEPLOYABLE"); //should always return an array because of the search query above
 				if ($deploytag[1] == "FREE") $coststring = "--";
 				elseif ($deploytag[1] == "TIER1") $coststring = strval($deploytag[2]) . " " . $tier1grist;
@@ -284,8 +284,8 @@ if (empty($_SESSION['username'])) {
 				$i = 1;
 				while ($i < $totalitems) {
 					$args = explode(":", $boom[$i - 1]);
-					$iresult = mysql_query("SELECT `captchalogue_code`,`name` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1;");
-					$irow = mysql_fetch_array($iresult);
+					$iresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1;");
+					$irow = $iresult->fetch_array();
 					if ($irow['captchalogue_code'] == $args[0]) {
 						echo '<input type="checkbox" name="r-' . $args[0] . '" value="yes">';
 						echo $irow['name'] . ' x ' . $args[1];

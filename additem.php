@@ -10,8 +10,8 @@ function addItem($item,$userrow,$incode = "00000000") { //Adds an item to a user
     if ($userrow[$invstr] == "") { //First empty inventory card
       $compuname = str_replace("'", "\\\\''", $item); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       $compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-      $compuresult = mysql_query("SELECT `captchalogue_code`,`name`, `size`, `effects` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-      $compurow = mysql_fetch_array($compuresult);
+      $compuresult = $mysqli->query("SELECT `captchalogue_code`,`name`, `size`, `effects` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+      $compurow = $compuresult->fetch_array();
       $item = str_replace("\\", "", $item); //Remove escape backslashes since inventory doesn't have 'em.
       if (itemSize($compurow['size']) <= itemSize($userrow['moduspower'])) {
       	if ($item == "Captchalogue Card") $item = "Captchalogue Card (CODE:$incode)";
@@ -19,13 +19,13 @@ function addItem($item,$userrow,$incode = "00000000") { //Adds an item to a user
       	if ($item == "Punch Card Shunt") {
       		if ($incode != "00000000") $item = "Punch Card Shunt (CODE:$incode)"; //shunts containing unpunched cards? the card will disappear when retrieved because lazy also who would do this and expect something to happen
       	}
-      	mysql_query("UPDATE `Players` SET `" . $invstr . "` = '" . mysql_real_escape_string($item) . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+      	$mysqli->query("UPDATE `Players` SET `" . $invstr . "` = '" . $mysqli->real_escape_string($item) . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
       	$userrow[$invstr] = $item;
-      	$athenresult = mysql_query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
-      	$athenrow = mysql_fetch_array($athenresult);
+      	$athenresult = $mysqli->query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
+      	$athenrow = $athenresult->fetch_array();
       	if (!strrpos($athenrow['atheneum'], $compurow['captchalogue_code']) && strpos($compurow['effects'], "OBSCURED|") === false) {
       		$newatheneum = $athenrow['atheneum'] . $compurow['captchalogue_code'] . "|";
-      		mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
+      		$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
       	}
       	compuRefresh($userrow);
       	return $invstr;
@@ -35,17 +35,17 @@ function addItem($item,$userrow,$incode = "00000000") { //Adds an item to a user
       		$jnvstr = "inv" . strval($j);
       		$compuname = str_replace("'", "\\\\''", $userrow[$jnvstr]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       		$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-      		$compuresult = mysql_query("SELECT `name`, `effects` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-      		while ($gostrow = mysql_fetch_array($compuresult)) {
+      		$compuresult = $mysqli->query("SELECT `name`, `effects` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+      		while ($gostrow = $compuresult->fetch_array()) {
       			$ghosters = specialArray($gostrow['effects'], "GHOSTER");
       			if ($ghosters[0] == "GHOSTER") {
       				echo "<br />This item is too big for you to captchalogue! Instead, you use your " . $gostrow['name'] . " to create a ghost image of it.<br />";
-      				mysql_query("UPDATE `Players` SET `" . $invstr . "` = '" . mysql_real_escape_string($item . " (ghost image)") . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
-      				$athenresult = mysql_query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
-      				$athenrow = mysql_fetch_array($athenresult);
+      				$mysqli->query("UPDATE `Players` SET `" . $invstr . "` = '" . $mysqli->real_escape_string($item . " (ghost image)") . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+      				$athenresult = $mysqli->query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
+      				$athenrow = $athenresult->fetch_array();
       				if (!strrpos($athenrow['atheneum'], $compurow['captchalogue_code']) && strpos($compurow['effects'], "OBSCURED|") === false) {
       					$newatheneum = $athenrow['atheneum'] . $compurow['captchalogue_code'] . "|";
-      					mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
+      					$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
       				}
       				return "inv-1"; //we didn't actually obtain the item, so return failure
       			}
@@ -65,8 +65,8 @@ function addAbstratus($absstring,$userrow) {
 	echo "WARNING: addAbstratus function is now defunct. Please use addSpecibus (includes/fieldparser.php) instead. If you're not a developer and you see this message, please submit a bug report immediately!<br />";
 	$strifeslots = 16;
 	//require_once("includes/SQLconnect.php");
-	/*$result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "'");
-  while($row = mysql_fetch_array($result)) {
+	/*$result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "'");
+  while($row = $result->fetch_array()) {
     if ($row['username'] == $username) {
       $userrow = $row;
     }
@@ -97,42 +97,42 @@ function addAbstratus($absstring,$userrow) {
     $invstr = "abstratus" . strval($i);
     //echo $invstr;
     if ($userrow[$invstr] == "") { //First empty strife slot
-    	mysql_query("UPDATE `Players` SET `abstrati` = '" . strval($userrow['abstrati'] + 1) . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
-      mysql_query("UPDATE `Players` SET `" . $invstr . "` = '" . $newabstratus . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+    	$mysqli->query("UPDATE `Players` SET `abstrati` = '" . strval($userrow['abstrati'] + 1) . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `" . $invstr . "` = '" . $newabstratus . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
       $userrow[$invstr] = $newabstratus;
       return $invstr;
     }
     $i++;
   }
-  //mysql_close($con);
+  //$mysqli->close();
   return "abstratus-1";
 }
 
 function autoUnequip($userrow,$exception,$invslot) {
 	if ($exception != "headgear" && $userrow['headgear'] == $invslot) {
-		mysql_query("UPDATE `Players` SET `headgear` = '' WHERE `Players`.`username` = '$userrow[username]'");
-		if ($userrow['facegear'] == "2HAND") mysql_query("UPDATE `Players` SET `facegear` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		$mysqli->query("UPDATE `Players` SET `headgear` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		if ($userrow['facegear'] == "2HAND") $mysqli->query("UPDATE `Players` SET `facegear` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		$lookfor = "headgear";
 	}
 	if ($exception != "facegear" && $userrow['facegear'] == $invslot) {
-		mysql_query("UPDATE `Players` SET `facegear` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		$mysqli->query("UPDATE `Players` SET `facegear` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		$lookfor = "facegear";
 	}
 	if ($exception != "bodygear" && $userrow['bodygear'] == $invslot) {
-		mysql_query("UPDATE `Players` SET `bodygear` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		$mysqli->query("UPDATE `Players` SET `bodygear` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		$lookfor = "bodygear";
 	}
 	if ($exception != "accessory" && $userrow['accessory'] == $invslot) {
-		mysql_query("UPDATE `Players` SET `accessory` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		$mysqli->query("UPDATE `Players` SET `accessory` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		$lookfor = "accessory";
 	}
 	if ($exception != "equipped" && $userrow['equipped'] == $invslot) {
-		mysql_query("UPDATE `Players` SET `equipped` = '' WHERE `Players`.`username` = '$userrow[username]'");
-		if ($userrow['offhand'] == "2HAND") mysql_query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		$mysqli->query("UPDATE `Players` SET `equipped` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		if ($userrow['offhand'] == "2HAND") $mysqli->query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		$lookfor = "equipped";
 	}
 	if ($exception != "offhand" && $userrow['offhand'] == $invslot) {
-		mysql_query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$userrow[username]'");
+		$mysqli->query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		$lookfor = "offhand";
 	}
 	if (strpos($userrow['permstatus'], "." . $lookfor) !== false && !empty($lookfor)) { //this wearable is granting a perm effect
@@ -152,7 +152,7 @@ function autoUnequip($userrow,$exception,$invslot) {
 		$newstatus = preg_replace("/\\|{2,}/","|",$newstatus); //eliminate all blanks
 		if ($newstatus == "|") $newstatus = "";
 		if ($newstatus != $userrow['permstatus']) {
-			mysql_query("UPDATE `Players` SET `permstatus` = '$newstatus' WHERE `Players`.`username` = '" . $userrow['username'] . "'");
+			$mysqli->query("UPDATE `Players` SET `permstatus` = '$newstatus' WHERE `Players`.`username` = '" . $userrow['username'] . "'");
 		}
 	}
 }
@@ -199,8 +199,8 @@ function storageSpace($storestring) {
 	$space = 0;
 	while ($i <= $totalitems) {
 		$args = explode(":", $boom[$i]);
-		$itemresult = mysql_query("SELECT `captchalogue_code`,`size` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$args[0]' LIMIT 1");
-		$irow = mysql_fetch_array($itemresult);
+		$itemresult = $mysqli->query("SELECT `captchalogue_code`,`size` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$args[0]' LIMIT 1");
+		$irow = $itemresult->fetch_array();
 		if ($irow['captchalogue_code'] == $args[0]) { //Item found.
 			$space += itemSize($irow['size']) * $args[1];
 		} else echo "ERROR: Items with code $args[0] stored, but no matching item was found. Please inform a dev immediately.</br>";
@@ -224,7 +224,7 @@ function compuRefresh($userrow) {
 	  	$pureitemname = str_replace("'", "", $pureitemname);
       $itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       $itemname = str_replace("\\\\\\''", "\\\\''", $itemname); //Fix extra backslash irregularities if any occur.
-      //$captchalogue = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      //$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 	  	if (empty($captchaloguequantities[$pureitemname])) {
 				$captchalogue = $captchalogue . "`Captchalogue`.`name` = '" . $itemname . "' OR ";
 				$firstinvslot[$pureitemname] = $invslot;
@@ -236,8 +236,8 @@ function compuRefresh($userrow) {
   }
   $captchalogue = substr($captchalogue, 0, -4);
   //echo $captchalogue . "<br />";
-  $captchalogueresult = mysql_query($captchalogue);
-	while ($compurow = mysql_fetch_array($captchalogueresult)) {
+  $captchalogueresult = $mysqli->query($captchalogue);
+	while ($compurow = $captchalogueresult->fetch_array()) {
 		$pureitemname = str_replace("\\", "", $compurow['name']);
 	  $pureitemname = str_replace("'", "", $pureitemname);
 		$invstr = $firstinvslot[$pureitemname];
@@ -255,7 +255,7 @@ function compuRefresh($userrow) {
     }
 	}
 	//echo "final compulevel: $complevel<br />";
-	if ($complevel != $userrow['hascomputer']) mysql_query("UPDATE `Players` SET `hascomputer` = $complevel WHERE `Players`.`username` = '$userrow[username]'");
+	if ($complevel != $userrow['hascomputer']) $mysqli->query("UPDATE `Players` SET `hascomputer` = $complevel WHERE `Players`.`username` = '$userrow[username]'");
 }
 
 function specialArray($itemeffects, $search) { //finds a tag in the "effects" field and returns the array associated with it, useful for looking up single effects
@@ -287,15 +287,15 @@ function grantEffects($userrow, $itemeffects, $slot) { //finds a tag in the "eff
 		else
 		$newstatus = implode("|", $granted) . "|";
 		$newstatus = preg_replace("/\\|{2,}/","|",$newstatus); //eliminate all blanks
-		mysql_query("UPDATE `Players` SET `permstatus` = '$newstatus' WHERE `Players`.`username` = '" . $userrow['username'] . "'");
+		$mysqli->query("UPDATE `Players` SET `permstatus` = '$newstatus' WHERE `Players`.`username` = '" . $userrow['username'] . "'");
 	}
 }
 
 function storeItem($item, $tostorage, $userrow, $stackcode = "00000000") { //making this a function because it's too useful.
   $compuname = str_replace("'", "\\\\''", $item); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
   $compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-  $compuresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-  $itemrow = mysql_fetch_array($compuresult);
+  $compuresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
+  $itemrow = $compuresult->fetch_array();
 	$space = storageSpace($userrow['storeditems']);
 	$boom = explode("|", $userrow['storeditems']);
 	$totalitems = count($boom);
@@ -350,7 +350,7 @@ function storeItem($item, $tostorage, $userrow, $stackcode = "00000000") { //mak
 		}
 	}
 	if ($updatestring != $userrow['storeditems']) {
-		mysql_query("UPDATE `Players` SET `storeditems` = '$updatestring' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1");
+		$mysqli->query("UPDATE `Players` SET `storeditems` = '$updatestring' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1");
 		$userrow['storeditems'] = $updatestring;
 		compuRefresh($userrow);
 	}

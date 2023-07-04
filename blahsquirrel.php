@@ -13,26 +13,26 @@ if ($userrow['session_name'] != "Developers") {
 		}
 		echo $query . "<br />";
 		if (strpos($_POST['query'], "SELECT") !== false) {
-			$result = mysql_query($query);
-			if (!$result) echo "We got an error... " . mysql_error();
+			$result = $mysqli->query($query);
+			if (!$result) echo "We got an error... " . $mysqli->error();
 			else {
-				echo strval(mysql_num_rows($result)) . " row(s) returned.<br />";
-				while ($row = mysql_fetch_array($result)) {
+				echo strval($mysqli->num_rows($result)) . " row(s) returned.<br />";
+				while ($row = $result->fetch_array()) {
 					print_r($row);
 					echo "<br />";
 				}
 			}
 		} elseif (strpos($_POST['query'], "INSERT") !== false) {
-			$result = mysql_query($query);
-			if (!$result) echo "We got an error... " . mysql_error();
+			$result = $mysqli->query($query);
+			if (!$result) echo "We got an error... " . $mysqli->error();
 			else {
-				echo strval(mysql_affected_rows()) . " row(s) inserted.<br />";
+				echo strval($mysqli->affected_rows()) . " row(s) inserted.<br />";
 			}
 		} elseif (strpos($_POST['query'], "UPDATE") !== false) {
-			$result = mysql_query($query);
-			if (!$result) echo "We got an error... " . mysql_error();
+			$result = $mysqli->query($query);
+			if (!$result) echo "We got an error... " . $mysqli->error();
 			else {
-				echo strval(mysql_affected_rows()) . " row(s) affected.<br />";
+				echo strval($mysqli->affected_rows()) . " row(s) affected.<br />";
 			}
 		} else echo "I don't think it's safe to do that kind of thing from here.<br />";
 		echo "<br />";

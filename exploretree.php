@@ -2,8 +2,8 @@
 require_once("header.php");
 
 function buildTree($tablename) {
-	$exresult = mysql_query("SELECT * FROM `$tablename` WHERE 1;");
-	while ($exrow = mysql_fetch_array($exresult)) {
+	$exresult = $mysqli->query("SELECT * FROM `$tablename` WHERE 1;");
+	while ($exrow = $exresult->fetch_array()) {
 		echo $exrow['name'] . "<br />";
 		if (!empty($exrow['transform'])) {
 			echo "Transform: " . $exrow['transform'] . " (always)<br />";

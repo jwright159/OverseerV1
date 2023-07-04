@@ -307,12 +307,12 @@
 					$quantity = floor(rand(3,6) / 3); //Mostly 1, sometimes 2
 					if ($quantity == 1) $message = $message . "The Lich Queen summons a minion to her side!</br>";
 					if ($quantity != 1) $message = $message . "The Lich Queen summons minions to her side!</br>";
-					$dungeonresult = mysql_query("SELECT `dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
-					$dungeonrow = mysql_fetch_array($dungeonresult);
-					$landresult = mysql_query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;");
-					$landrow = mysql_fetch_array($landresult);
-					$summongristresult = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$landrow[grist_type]' LIMIT 1;");
-					$summongristrow = mysql_fetch_array($summongristresult);
+					$dungeonresult = $mysqli->query("SELECT `dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
+					$dungeonrow = $dungeonresult->fetch_array();
+					$landresult = $mysqli->query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;");
+					$landrow = $landresult->fetch_array();
+					$summongristresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$landrow[grist_type]' LIMIT 1;");
+					$summongristrow = $summongristresult->fetch_array();
 					while ($quantity > 0) {
 						$material = rand(1,9); //NOTE - Only affects health of summon. Does not affect power.
 						$griststring = "grist" . strval($material);
@@ -370,12 +370,12 @@
 					if ($robotype == 2) $roboname = "Autoturret";
 					if ($robotype == 3) $roboname = "Metamorpher";
 					$message = $message . "Progenitor dashes around the room, gathering up spare parts and assembling another $roboname before your eyes!</br>";
-					$dungeonresult = mysql_query("SELECT `dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
-					$dungeonrow = mysql_fetch_array($dungeonresult);
-					$landresult = mysql_query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;");
-					$landrow = mysql_fetch_array($landresult);
-					$summongristresult = mysql_query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$landrow[grist_type]' LIMIT 1;");
-					$summongristrow = mysql_fetch_array($summongristresult);
+					$dungeonresult = $mysqli->query("SELECT `dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
+					$dungeonrow = $dungeonresult->fetch_array();
+					$landresult = $mysqli->query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;");
+					$landrow = $landresult->fetch_array();
+					$summongristresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$landrow[grist_type]' LIMIT 1;");
+					$summongristrow = $summongristresult->fetch_array();
 					$material = rand(1,9); //NOTE - Only affects health of summon. Does not affect power.
 					$griststring = "grist" . strval($material);
 					$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
@@ -434,14 +434,14 @@
 					$userrow[$healthstr] = $bughealth;
 					$userrow['Aspect_Vial'] = $buggedaspect;
 				} elseif ($roll >= 60) {
-					$randomresult = mysql_query("SELECT `basename` FROM `Enemy_Types`");
+					$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types`");
 					$countr = 0;
-					while ($randrow = mysql_fetch_array($randomresult)) {
+					while ($randrow = $randomresult->fetch_array()) {
 						$countr++;
 					}
 					$whodat = rand(1,$countr);
-					$randomresult = mysql_query("SELECT `basename` FROM `Enemy_Types` LIMIT $whodat,1");
-					$randrow = mysql_fetch_array($randomresult);
+					$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` LIMIT $whodat,1");
+					$randrow = $randomresult->fetch_array();
 					$randenemy = $randrow['basename'];
 					if (!empty($randenemy)) { //this happens sometimes, no idea why, but might as well treat that as a failure to activate
 					$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
@@ -470,14 +470,14 @@
 						$thisone++;
 					}
 				}
-				$absresult = mysql_query("SELECT `power` FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%'");
+				$absresult = $mysqli->query("SELECT `power` FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%'");
 				$allblades = 0;
-				while ($arow = mysql_fetch_array($absresult)) {
+				while ($arow = $absresult->fetch_array()) {
 					$allblades++;
 				}
 				$choice = rand(1,$allblades);
-				$absresult = mysql_query("SELECT `name`,`power` FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%' LIMIT $choice, 1");
-				$arow = mysql_fetch_array($absresult);
+				$absresult = $mysqli->query("SELECT `name`,`power` FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%' LIMIT $choice, 1");
+				$arow = $absresult->fetch_array();
 				$arow['name'] = str_replace("\\", "", $arow['name']);
 				$message = $message . $arow['name'] . " flies out of the Blade Cloud and stabs you!<br />";
 				if ($userrow['invulnerability'] == 0) { //I COULD have it hit through invuln, but I'm not THAT mean

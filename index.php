@@ -9,12 +9,12 @@ include("tumblr.php");
   $sql = "SELECT *  FROM `Players`
 WHERE `session_name` LIKE '$userrow[session_name]'
 AND `enemydata` != '';";
-  $sessionmates = mysql_query($sql);
+  $sessionmates = $mysqli->query($sql);
 
   echo '<a href="grist.php"><img src="/Images/title/gristly.png" width="200" /></a>';
   echo '<a href="porkhollow.php"><img src="/Images/title/booney.png" width="200" /></a><br/>';
   
-    while ($row = mysql_fetch_array($sessionmates)) {
+    while ($row = $sessionmates->fetch_array()) {
     
 		if ($row['username'] != $username) {
 		  echo "$row[username] is strifing right now!</br>";
@@ -22,11 +22,11 @@ AND `enemydata` != '';";
 		  echo "You are strifing right now!</br>";
 		}
       }
-    $sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
-  $sessionrow = mysql_fetch_array($sessionresult);
+    $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
+  $sessionrow = $sessionresult->fetch_array();
   if ($sessionrow['admin'] == $username && $userrow['admin'] == 0) {
     $userrow['admin'] = 1;
-    mysql_query("UPDATE `Players` SET `admin` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
+    $mysqli->query("UPDATE `Players` SET `admin` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
     echo "You were set as the session's head admin, but you were not marked as an admin yourself. We have just attempted to fix this, but if you have gotten this message more than once, Blahdev/Babby Overseer would appreciate it if you reported it to him.</br>";
     }
   

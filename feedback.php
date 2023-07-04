@@ -18,11 +18,11 @@ function getBonus($b) {
 }
 
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -79,8 +79,8 @@ if (empty($_SESSION['username'])) {
 } else {
   echo '<!DOCTYPE html><html><head><style>urgent{color: #0000CC;}</style></head><body>';
   $sessionname = $userrow['session_name'];
-	$sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
-	$sessionrow = mysql_fetch_array($sessionresult);
+	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
+	$sessionrow = $sessionresult->fetch_array();
 	$challenge = $sessionrow['challenge'];
 	if (empty($challenge)) $challenge = 0;
   
@@ -92,8 +92,8 @@ if (empty($_SESSION['username'])) {
   	$ref = 0;
   	$editid = intval($_POST['editing']);
   	if ($editid > 0) {
-  		$yourfbresult = mysql_query("SELECT * FROM Feedback WHERE `Feedback`.`ID` = $editid LIMIT 1;");
-    	$fbrow = mysql_fetch_array($yourfbresult);
+  		$yourfbresult = $mysqli->query("SELECT * FROM Feedback WHERE `Feedback`.`ID` = $editid LIMIT 1;");
+    	$fbrow = $yourfbresult->fetch_array();
   	} else $editid = 0;
   	$aok = True;
   	if (empty($_POST['ignoresearch'])) {
@@ -101,13 +101,13 @@ if (empty($_SESSION['username'])) {
   		if (!empty($_POST['item1'])) {
 	  		$i1name = str_replace("\\", "", $_POST['item1']);
   			$i1name = str_replace("'", "\\\\''", $i1name);
-  			$item1result = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` COLLATE latin1_swedish_ci = '$i1name'");
-  			$i1row = mysql_fetch_array($item1result);
+  			$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` COLLATE latin1_swedish_ci = '$i1name'");
+  			$i1row = $mysqli->fetch_array($item1result);
   			$i1name = str_replace("\\\\''", "\\'", $i1name);
   			if ($i1row['name'] != $i1name) {
   				if (strlen($i1name) == 8) {
-	  				$item1result = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$i1name'");
-  					$i1row = mysql_fetch_array($item1result);
+	  				$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$i1name'");
+  					$i1row = $mysqli->fetch_array($item1result);
   					if ($i1row['captchalogue_code'] != $i1name) {
   						echo "Submission error: could not find the first item in database. Make sure you have the correct name/code.</br>";
   						$aok = false;
@@ -124,13 +124,13 @@ if (empty($_SESSION['username'])) {
   		if (!empty($_POST['item2'])) {
 	  		$i2name = str_replace("\\", "", $_POST['item2']);
   			$i2name = str_replace("'", "\\\\''", $i2name);
-  			$item1result = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` COLLATE latin1_swedish_ci = '$i2name'");
-  			$i2row = mysql_fetch_array($item1result);
+  			$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` COLLATE latin1_swedish_ci = '$i2name'");
+  			$i2row = $mysqli->fetch_array($item1result);
   			$i2name = str_replace("\\\\''", "\\'", $i2name);
   			if ($i2row['name'] != $i2name) {
   				if (strlen($i2name) == 8) {
-  					$item1result = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$i2name'");
-  					$i2row = mysql_fetch_array($item1result);
+  					$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$i2name'");
+  					$i2row = $mysqli->fetch_array($item1result);
   					if ($i2row['captchalogue_code'] != $i2name) {
   						echo "Submission error: could not find the second item in database. Make sure you have the correct name/code.</br>";
   						$aok = false;
@@ -213,12 +213,12 @@ if (empty($_SESSION['username'])) {
 			}
 			$items = $_POST['item1'] . $op . $_POST['item2'];
   	}
-    if (empty($_POST['newitem']) && $editid != 0) $newitem = mysql_real_escape_string($fbrow['name']);
-    else $newitem = mysql_real_escape_string($_POST['newitem']);
-    if (empty($_POST['newdesc']) && $editid != 0) $newdesc = mysql_real_escape_string($fbrow['description']);
-    else $newdesc = mysql_real_escape_string($_POST['newdesc']);
-    if (empty($items) && $editid != 0) $items = mysql_real_escape_string($fbrow['recipe']);
-    else $items = mysql_real_escape_string($items);
+    if (empty($_POST['newitem']) && $editid != 0) $newitem = $mysqli->real_escape_string($fbrow['name']);
+    else $newitem = $mysqli->real_escape_string($_POST['newitem']);
+    if (empty($_POST['newdesc']) && $editid != 0) $newdesc = $mysqli->real_escape_string($fbrow['description']);
+    else $newdesc = $mysqli->real_escape_string($_POST['newdesc']);
+    if (empty($items) && $editid != 0) $items = $mysqli->real_escape_string($fbrow['recipe']);
+    else $items = $mysqli->real_escape_string($items);
     if (empty($newcode)) {
     	if ($editid != 0) $newcode = $fbrow['code'];
     	else $newcode = $_POST['code'];
@@ -232,8 +232,8 @@ if (empty($_SESSION['username'])) {
     	}
     } else $newpower = 0;
     if (empty($reccpower)) $reccpower = 0;
-    if (empty($_POST['other']) && $editid != 0) $newother = mysql_real_escape_string($fbrow['comments']);
-    else $newother = mysql_real_escape_string($_POST['other']);
+    if (empty($_POST['other']) && $editid != 0) $newother = $mysqli->real_escape_string($fbrow['comments']);
+    else $newother = $mysqli->real_escape_string($_POST['other']);
     if ($newpower > 9999) {
       echo "Submission error: new item's power level cannot exceed 9999. Use additional comments to convey combat bonuses or uncertainty</br>";
       $aok = False;
@@ -246,8 +246,8 @@ if (empty($_SESSION['username'])) {
       echo "Submission error: please give this item a name</br>";
       $aok = False;
     } else {
-      $existresult = mysql_query("SELECT `name` FROM `Captchalogue` WHERE `name` = '" . mysql_real_escape_string($newitem) . "'");
-      $existrow = mysql_fetch_array($existresult);
+      $existresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE `name` = '" . $mysqli->real_escape_string($newitem) . "'");
+      $existrow = $existresult->fetch_array();
       if ($existrow['name'] == $newitem) {
       	echo "Submission error: an item with that name ($newitem) already exists; if you're sure your submission is different enough from the existing item to warrant both of them being in the game, you must change the name<br />";
       	$aok = false;
@@ -258,8 +258,8 @@ if (empty($_SESSION['username'])) {
       $aok = False;
       }
     if (strlen($newcode) == 8 && $aok) {
-      $existresult = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $newcode . "' LIMIT 1;");
-      $existrow = mysql_fetch_array($existresult);
+      $existresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $newcode . "' LIMIT 1;");
+      $existrow = $existresult->fetch_array();
       if ($existrow['captchalogue_code'] == $newcode) {
         echo 'Submission error: the submission\'s code refers to <a href="inventory.php?holocode=' . $newcode . '">an item that already exists</a>. Make sure you\'ve given the correct code.</br>';
 	$aok = False;
@@ -316,23 +316,23 @@ if (empty($_SESSION['username'])) {
     if ($aok) {
     	$editid = intval($_POST['editing']);
     	if ($editid == 0) {
-    		$systemresult = mysql_query("SELECT * FROM System");
-    		$systemrow = mysql_fetch_array($systemresult);
+    		$systemresult = $mysqli->query("SELECT * FROM System");
+    		$systemrow = $systemresult->fetch_array();
     		$newid = $systemrow['totalsubmissions'];
     		$currenttime = time();
-      	mysql_query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `name`, `code`, `recipe`, `power`, `recpower`, `description`, `comments`, `urgent`, `lastupdated`, `bonuses`, `grists`, `abstratus`, `size`, `consumable`, `catalogue`, `lootonly`, `refrance`) VALUES ($newid, '$username', 'item', '$newitem', '$newcode', '$items', " . strval($newpower) . ", " . strval($reccpower) . ", '$newdesc', '$newother', $challenge, $currenttime, '$bonuses', '$grists', '$abstratus', '$size', $consume, $base, $loot, $ref)");
+      	$mysqli->query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `name`, `code`, `recipe`, `power`, `recpower`, `description`, `comments`, `urgent`, `lastupdated`, `bonuses`, `grists`, `abstratus`, `size`, `consumable`, `catalogue`, `lootonly`, `refrance`) VALUES ($newid, '$username', 'item', '$newitem', '$newcode', '$items', " . strval($newpower) . ", " . strval($reccpower) . ", '$newdesc', '$newother', $challenge, $currenttime, '$bonuses', '$grists', '$abstratus', '$size', $consume, $base, $loot, $ref)");
       	//echo "INSERT INTO `Feedback` (`ID`, `user`, `type`, `name`, `code`, `recipe`, `power`, `recpower`, `description`, `comments`, `urgent`, `lastupdated`, `bonuses`, `grists`, `abstratus`, `size`, `consumable`, `catalogue`, `lootonly`, `refrance`) VALUES ($newid, '$username', 'item', '$newitem', '$newcode', '$items', $newpower, $reccpower, '$newdesc', '$newother', $challenge, $currenttime, '$bonuses', '$grists', '$abstratus', '$size', $consume, $base, $loot, $ref)";
-      	mysql_query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
+      	$mysqli->query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
       	echo 'Item submitted! (ID: ' . strval($newid) . ') <a href="submissions.php?view=' . strval($newid) . '">You can view your suggestion here.</a></br>';
     	} else {
-    		$yourfbresult = mysql_query("SELECT * FROM Feedback WHERE `Feedback`.`ID` = $editid LIMIT 1;");
-    		$fbrow = mysql_fetch_array($yourfbresult);
+    		$yourfbresult = $mysqli->query("SELECT * FROM Feedback WHERE `Feedback`.`ID` = $editid LIMIT 1;");
+    		$fbrow = $yourfbresult->fetch_array();
     		if ($fbrow['ID'] == $editid) {
     			if (($fbrow['user'] == $username || $userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods") && $fbrow['type'] == "item") {
     					$realbody = "Submission was edited by $username |";
-    				$realbody = mysql_real_escape_string($fbrow['usercomments'] . $realbody);
+    				$realbody = $mysqli->real_escape_string($fbrow['usercomments'] . $realbody);
     				$currenttime = time();
-    				mysql_query("UPDATE `Feedback` SET `name` = '$newitem', `code` = '$newcode', `recipe` = '$items', `power` = '$newpower', `recpower` = '$reccpower', `description` = '$newdesc', `comments` = '$newother', `usercomments` = '$realbody', `defunct` = 0, `clarify` = 0, `greenlight` = 0, `lastupdated` = $currenttime, `bonuses` = '$bonuses', `grists` = '$grists', `abstratus` = '$abstratus', `size` = '$size', `consumable` = $consume, `catalogue` = $base, `lootonly` = $loot, `refrance` = $ref WHERE `Feedback`.`ID` = $editid LIMIT 1;");
+    				$mysqli->query("UPDATE `Feedback` SET `name` = '$newitem', `code` = '$newcode', `recipe` = '$items', `power` = '$newpower', `recpower` = '$reccpower', `description` = '$newdesc', `comments` = '$newother', `usercomments` = '$realbody', `defunct` = 0, `clarify` = 0, `greenlight` = 0, `lastupdated` = $currenttime, `bonuses` = '$bonuses', `grists` = '$grists', `abstratus` = '$abstratus', `size` = '$size', `consumable` = $consume, `catalogue` = $base, `lootonly` = $loot, `refrance` = $ref WHERE `Feedback`.`ID` = $editid LIMIT 1;");
       			echo 'Item updated! (ID: ' . strval($editid) . ') <a href="submissions.php?view=' . strval($editid) . '">You can view your suggestion here.</a></br>';
     			} else echo "Submission error: Either that's not your submission, or you tried to edit a non-item.</br>";
     		} else echo "Submission error: the submission you tried to edit no longer exists.</br>";
@@ -340,12 +340,12 @@ if (empty($_SESSION['username'])) {
     }
   }
   if (!empty($_POST['newart'])) { //User is submitting art.
-    $systemresult = mysql_query("SELECT * FROM System");
-    $systemrow = mysql_fetch_array($systemresult);
+    $systemresult = $mysqli->query("SELECT * FROM System");
+    $systemrow = $systemresult->fetch_array();
     $newid = $systemrow['totalsubmissions'];
-    $newitem = mysql_real_escape_string(str_replace(';', ':', $_POST['artitem']));
-    $newdesc = mysql_real_escape_string(str_replace(';', ':', $_POST['newart']));
-    $newother = mysql_real_escape_string("Reward requested: " . $_POST['reward']);
+    $newitem = $mysqli->real_escape_string(str_replace(';', ':', $_POST['artitem']));
+    $newdesc = $mysqli->real_escape_string(str_replace(';', ':', $_POST['newart']));
+    $newother = $mysqli->real_escape_string("Reward requested: " . $_POST['reward']);
     $aok = True;
     if ($newitem == "") {
       echo "Submission error: please give the name/code of the item you are submitting art for</br>";
@@ -356,16 +356,16 @@ if (empty($_SESSION['username'])) {
       $aok = False;
       }
     if ($aok) {
-      mysql_query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `name`, `description`, `comments`) VALUES ('" . $newid . "', '" . $username . "', 'art', '" . $newitem . "', '" . $newdesc . "', '" . $newother . "')");
-      mysql_query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
+      $mysqli->query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `name`, `description`, `comments`) VALUES ('" . $newid . "', '" . $username . "', 'art', '" . $newitem . "', '" . $newdesc . "', '" . $newother . "')");
+      $mysqli->query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
       echo "Art submitted! (ID: " . strval($newid) . ") </br>";
     }
   }
   if (!empty($_POST['bugdesc'])) { //User is submitting a bug report.
-    $systemresult = mysql_query("SELECT * FROM System");
-    $systemrow = mysql_fetch_array($systemresult);
+    $systemresult = $mysqli->query("SELECT * FROM System");
+    $systemrow = $systemresult->fetch_array();
     $newid = $systemrow['totalsubmissions'];
-    $newother = mysql_real_escape_string($_POST['bugdesc']);
+    $newother = $mysqli->real_escape_string($_POST['bugdesc']);
     $aok = True;
     if ($newother == "") {
       echo "Submission error: you left the bug report blank!</br>";
@@ -373,16 +373,16 @@ if (empty($_SESSION['username'])) {
       }
     if ($aok) {
     $currenttime = time();
-      mysql_query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `comments`, `lastupdated`) VALUES ('" . $newid . "', '" . $username . "', 'bug', '" . $newother . "', '" . strval($currenttime) . "')");
-      mysql_query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
+      $mysqli->query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `comments`, `lastupdated`) VALUES ('" . $newid . "', '" . $username . "', 'bug', '" . $newother . "', '" . strval($currenttime) . "')");
+      $mysqli->query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
       echo "Bug report submitted! (ID: " . strval($newid) . ") </br>";
     }
   }
   if (!empty($_POST['gamefeedback'])) { //User is submitting a suggestion.
-    $systemresult = mysql_query("SELECT * FROM System");
-    $systemrow = mysql_fetch_array($systemresult);
+    $systemresult = $mysqli->query("SELECT * FROM System");
+    $systemrow = $systemresult->fetch_array();
     $newid = $systemrow['totalsubmissions'];
-    $newother = mysql_real_escape_string($_POST['gamefeedback']);
+    $newother = $mysqli->real_escape_string($_POST['gamefeedback']);
     $aok = True;
     if ($newother == "") {
       echo "Submission error: you left the feedback blank!</br>";
@@ -390,18 +390,18 @@ if (empty($_SESSION['username'])) {
       }
     if ($aok) {
     $currenttime = time();
-      mysql_query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `comments`, `lastupdated`) VALUES ('" . $newid . "', '" . $username . "', 'misc', '" . $newother . "', '" . strval($currenttime) . "')");
-      mysql_query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
+      $mysqli->query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `comments`, `lastupdated`) VALUES ('" . $newid . "', '" . $username . "', 'misc', '" . $newother . "', '" . strval($currenttime) . "')");
+      $mysqli->query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
       echo "Feedback accepted! (ID: " . strval($newid) . ") </br>";
     }
   }
   if (!empty($_POST['qprompt'])) {
-  	$systemresult = mysql_query("SELECT * FROM System");
-    $systemrow = mysql_fetch_array($systemresult);
+  	$systemresult = $mysqli->query("SELECT * FROM System");
+    $systemrow = $systemresult->fetch_array();
     $newid = $systemrow['totalsubmissions'];
-    $newprompt = mysql_real_escape_string($_POST['qprompt']);
-    $newreqs = mysql_real_escape_string($_POST['qreqs']);
-    $newreward = mysql_real_escape_string($_POST['qreward']);
+    $newprompt = $mysqli->real_escape_string($_POST['qprompt']);
+    $newreqs = $mysqli->real_escape_string($_POST['qreqs']);
+    $newreward = $mysqli->real_escape_string($_POST['qreward']);
     $aok = true;
     if ($newprompt == "") {
     	echo "Submission error: The quest needs a prompt!</br>";
@@ -412,8 +412,8 @@ if (empty($_SESSION['username'])) {
     	$aok = false;
     }
     if ($aok) {
-      mysql_query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `recipe`, `description`, `comments`) VALUES ('" . $newid . "', '" . $username . "', 'ques', '" . $newreward . "', '" . $newprompt . "', '" . $newreqs . "')");
-      mysql_query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
+      $mysqli->query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `recipe`, `description`, `comments`) VALUES ('" . $newid . "', '" . $username . "', 'ques', '" . $newreward . "', '" . $newprompt . "', '" . $newreqs . "')");
+      $mysqli->query("UPDATE `System` SET `totalsubmissions` = " . strval($newid + 1) . " WHERE 1");
       echo "Quest (suggestion) accepted! (ID: " . strval($newid) . ") </br>";
     }
   }
@@ -429,8 +429,8 @@ if (empty($_SESSION['username'])) {
   echo "- Likewise, once the item has been added, if the submitted recipe doesn't work, <b>try the opposite operation with the same components</b> before saying it doesn't work.</br>";
   echo '- <a href="http://the-overseer.wikia.com/wiki/Alchemy">This alchemy guide</a> may be a helpful read if you\'re uncertain about something.</br>';
   if ($challenge == 1) echo "<urgent>As a Challenge Mode player, your item submissions will be prioritized.</urgent></br>";
-  /*$aotwresult = mysql_query("SELECT * FROM `System` WHERE 1 ;");
-  while ($sysrow = mysql_fetch_array($aotwresult)) $aotwstring = $sysrow['abstratusoftheweek'];
+  /*$aotwresult = $mysqli->query("SELECT * FROM `System` WHERE 1 ;");
+  while ($sysrow = $aotwresult->fetch_array()) $aotwstring = $sysrow['abstratusoftheweek'];
   if (empty($aotwstring)) $aotwstring = "None yet. Go vote for one!";
   echo "This week's Abstratus of the Week is: $aotwstring </br>";
   echo 'Submit an item from the AotW to earn a small reward! <a href="http://overseerforums.forumotion.com/t186-abstratus-of-the-week-poll-week-1">You can vote for the next AotW and read up on further details here.</a></br>';
@@ -440,8 +440,8 @@ if (empty($_SESSION['username'])) {
   	echo '<input name="editing" type="text">';
   } else {
   	echo '<select name="editing"><option value="0">None, this is a new submission</option>';
-  	$userfbresult = mysql_query("SELECT * FROM Feedback WHERE `Feedback`.`user` = '$username' AND `Feedback`.`type` = 'item' ;");
-  	while ($fbrow = mysql_fetch_array($userfbresult)) {
+  	$userfbresult = $mysqli->query("SELECT * FROM Feedback WHERE `Feedback`.`user` = '$username' AND `Feedback`.`type` = 'item' ;");
+  	while ($fbrow = $userfbresult->fetch_array()) {
   		echo '<option value="' . strval($fbrow['ID']) . '">' . $fbrow['name'] . " (ID " . strval($fbrow['ID']) . ")</option>";
   	}
   	echo '</select>';
@@ -498,8 +498,8 @@ if (empty($_SESSION['username'])) {
   	echo '<input name="editing" type="text">';
   } else {
   	echo '<select name="editing"><option value="0">None, this is a new submission</option>';
-  	$userfbresult = mysql_query("SELECT * FROM Feedback WHERE `Feedback`.`user` = '$username' AND `Feedback`.`type` = 'item' ;");
-  	while ($fbrow = mysql_fetch_array($userfbresult)) {
+  	$userfbresult = $mysqli->query("SELECT * FROM Feedback WHERE `Feedback`.`user` = '$username' AND `Feedback`.`type` = 'item' ;");
+  	while ($fbrow = $userfbresult->fetch_array()) {
   		echo '<option value="' . strval($fbrow['ID']) . '">' . $fbrow['name'] . " (ID " . strval($fbrow['ID']) . ")</option>";
   	}
   	echo '</select>';

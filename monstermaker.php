@@ -19,8 +19,8 @@ function generateEnemy($userrow,$gristtype,$grist,$enemytype,$canusespecibus,$to
       $maxhealthstr = "enemy" . strval($i) . "maxhealth";
       $descstr = "enemy" . strval($i) . "desc";
       $categorystr = "enemy" . strval($i) . "category";
-      $enemyresult = mysql_query("SELECT * FROM Enemy_Types");
-      while ($row = mysql_fetch_array($enemyresult)) {
+      $enemyresult = $mysqli->query("SELECT * FROM Enemy_Types");
+      while ($row = $enemyresult->fetch_array()) {
 	if ($row['basename'] == $enemytype) {
 	  $enemyrow = $row;
 	}
@@ -28,8 +28,8 @@ function generateEnemy($userrow,$gristtype,$grist,$enemytype,$canusespecibus,$to
       $power = $enemyrow['basepower']; //Set initial power.
       $health = $enemyrow['basehealth']; //Set initial health.
       if ($grist != "None") { //Enemy was assigned a grist type.
-	$gristresult = mysql_query("SELECT * FROM Grist_Types");
-	while ($row = mysql_fetch_array($gristresult)) {
+	$gristresult = $mysqli->query("SELECT * FROM Grist_Types");
+	while ($row = $gristresult->fetch_array()) {
 	  if ($row['name'] == $gristtype) {
 	    $gristrow = $row;
 	  }
@@ -44,9 +44,9 @@ function generateEnemy($userrow,$gristtype,$grist,$enemytype,$canusespecibus,$to
 	$health = ($health * $rarity) + ($rarity * $rarity);
       }
       $sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-      $allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+      $allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
       $chumroll = 0;
-      while ($row = mysql_fetch_array($allyresult)) {
+      while ($row = $allyresult->fetch_array()) {
 	if ($row['session_name'] == $userrow['session_name']) { //User in session found
 	  $chumroll++;
 	}
@@ -61,8 +61,8 @@ function generateEnemy($userrow,$gristtype,$grist,$enemytype,$canusespecibus,$to
       while ($prototypings > 0) {
 	$random = rand(1,$chumroll); //Pick a random player's prototypings.
 	$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-	$allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-	while ($random > 0 && $allyrow = mysql_fetch_array($allyresult)) {
+	$allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+	while ($random > 0 && $allyrow = $allyresult->fetch_array()) {
 	  if ($allyrow['session_name'] == $userrow['session_name']) $random--;
 	}
 	$preentry = $allyrow['pre_entry_prototypes'];
@@ -93,8 +93,8 @@ function generateEnemy($userrow,$gristtype,$grist,$enemytype,$canusespecibus,$to
 	$nullified = True;
 	if (!$tospooky) {
 		$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-		$allyresult = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-		while ($allyrow = mysql_fetch_array($allyresult)) {
+		$allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+		while ($allyrow = $allyresult->fetch_array()) {
 	  	if ($allyrow['session_name'] == $userrow['session_name'] && $allyrow['pre_entry_prototypes'] == 0) {
 	    	$nullified = False;
 	  	}
@@ -119,37 +119,37 @@ function generateEnemy($userrow,$gristtype,$grist,$enemytype,$canusespecibus,$to
       	//echo "DEBUG: roll: $xtracardchance - $luckmod<br />";
       	if ($xtracardchance <= 1 + $luckmod) { //1% chance of this happening, up to 5% at max luck
       	//echo "DEBUG: strife card rolled!<br />";
-      		$weaponresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` < " . strval($power) . " AND `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%';");
+      		$weaponresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` < " . strval($power) . " AND `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%';");
       		$weaponcount = 0;
-      		while ($row = mysql_fetch_array($weaponresult)) {
+      		while ($row = $weaponresult->fetch_array()) {
       			$weaponcount++;
       		}
       		$randweapon = rand(1,$weaponcount);
-      		$weaponresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` < " . strval($power) . " AND `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%' LIMIT " . strval($randweapon) . ",1;");
-      		$weaponrow = mysql_fetch_array($weaponresult);
+      		$weaponresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` < " . strval($power) . " AND `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%' LIMIT " . strval($randweapon) . ",1;");
+      		$weaponrow = $weaponresult->fetch_array();
       		$wname = str_replace("\\", "", $weaponrow['name']);
       		$description = $description . " It also appears to be wielding " . $wname . "!";
       		$power+=$weaponrow['power'];
       	}
       }
       if ($enemyname == "Blade Cloud") { //special case: this boss adds up the power from every existing bladekind weapon
-        $absresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%' ORDER BY `power` ASC");
+        $absresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%' ORDER BY `power` ASC");
         $alltotalpower = 0;
-        while ($arow = mysql_fetch_array($absresult)) {
+        while ($arow = $absresult->fetch_array()) {
           $alltotalpower += $arow['power'];
         }
         $power = floor($alltotalpower / 3);
         $health = $alltotalpower;
       }
       if ($enemyname == "Animated Blade") { //special case: pick a random bladekind weapon from the database and bulid the stats around it
-      	$weaponresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%'");
+      	$weaponresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%'");
       	$weaponcount = 0;
-      	while ($row = mysql_fetch_array($weaponresult)) {
+      	while ($row = $weaponresult->fetch_array()) {
       		$weaponcount++;
       	}
       	$randweapon = rand(1,$weaponcount);
-      	$weaponresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%' LIMIT " . strval($randweapon) . ",1;");
-      	$weaponrow = mysql_fetch_array($weaponresult);
+      	$weaponresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%' LIMIT " . strval($randweapon) . ",1;");
+      	$weaponrow = $weaponresult->fetch_array();
       	$wname = str_replace("\\", "", $weaponrow['name']);
       	$description = $description . " This one appears to be " . $wname . ".";
       	$power = $weaponrow['power'];

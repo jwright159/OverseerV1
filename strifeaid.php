@@ -13,8 +13,8 @@ if (empty($_SESSION['username'])) {
   require_once("includes/SQLconnect.php");
   if (!empty($_POST['aid'])) {
     $aid = $_POST['aid'];
-    $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$aid'");
-    while ($row = mysql_fetch_array($result)) { //Fetch the aid target's database row. We're going to need it several times.
+    $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$aid'");
+    while ($row = $result->fetch_array()) { //Fetch the aid target's database row. We're going to need it several times.
       if ($row['username'] == $aid) {
 	$aidrow = $row;
       }
@@ -45,8 +45,8 @@ if (empty($_SESSION['username'])) {
         $onbattlefield = false; //the following is to check if the player the user wants to aid is on the battlefield
         $aidrow = parseEnemydata($aidrow);
       	if (!empty($aidrow['enemy1name'])) {
-      		$enemyresult = mysql_query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '$aidrow[enemy1name]' LIMIT 1;");
-      		while ($enemyrow = mysql_fetch_array($enemyresult)) {
+      		$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '$aidrow[enemy1name]' LIMIT 1;");
+      		while ($enemyrow = $enemyresult->fetch_array()) {
       			if ($enemyrow['appearson'] == "Battlefield") $onbattlefield = true;
       		}
       	} //removed all the others because the first enemy will always be in slot 1
@@ -55,8 +55,8 @@ if (empty($_SESSION['username'])) {
       		else $aok = false;
       	}
 	if ($aok) {
-      mysql_query("UPDATE `Players` SET `aiding` = '$aid' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-      mysql_query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `aiding` = '$aid' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       echo '<a href="strife.php">You have begun aiding your ally.</a></br>';
       } else {
       if ($onbattlefield) echo "Your ally is fighting on the battlefield right now. You have other business to attend to before you can go there!";
@@ -68,11 +68,11 @@ if (empty($_SESSION['username'])) {
   } elseif (!empty($_POST['autoassist'])) {
     $aid = $_POST['autoassist'];
     if ($aid == "noautoassist") {
-      mysql_query("UPDATE `Players` SET `autoassist` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `autoassist` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       echo "You will no longer automatically assist anyone.";
     } else {
-      $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$aid'");
-      while ($row = mysql_fetch_array($result)) { //Fetch the aid target's database row. We're going to need it several times.
+      $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$aid'");
+      while ($row = $result->fetch_array()) { //Fetch the aid target's database row. We're going to need it several times.
 	if ($row['username'] == $aid) {
 	  $aidrow = $row;
 	}
@@ -98,7 +98,7 @@ if (empty($_SESSION['username'])) {
         	}
         }
 	if ($aok) {
-	mysql_query("UPDATE `Players` SET `autoassist` = '$aid' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `autoassist` = '$aid' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	echo '<a href="strife.php">You will now automatically aid ' . $aid . ' if you have a spare encounter and are able to when they begin strifing.</a></br>';
 	} else {
 	echo "You won't be able to reach that ally with your current gate setup.</br>";

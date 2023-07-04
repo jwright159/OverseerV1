@@ -6,14 +6,14 @@ if (empty($_SESSION['username'])) {
   //Okay DC. Whatever you want
   //Actually it's empty because the original code had the if statement around this way. Reversing it would have been more trouble.
 } else {
-  $con = mysql_connect("localhost","theovers_DC","pi31415926535");
+  $con = $mysqli->connect("localhost","theovers_DC","pi31415926535");
   if (!$con) {
-    die('Could not connect: ' . mysql_error());
+    die('Could not connect: ' . $mysqli->error());
   }
-  mysql_select_db("theovers_HS", $con);
+  $mysqli->select_db("theovers_HS", $con);
   $username=$_SESSION['username'];
-  $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "'");
-  while ($row = mysql_fetch_array($result)) { //Fetch the user's database row. We're going to need it several times.
+  $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "'");
+  while ($row = $result->fetch_array()) { //Fetch the user's database row. We're going to need it several times.
     if ($row['username'] == $username) { //Paranoia: Double-check.
       $userrow = $row;
     }
@@ -35,11 +35,11 @@ if (empty($_SESSION['username'])) {
   }
   if ($encounters > $userrow['encounters'] && $userrow['down'] == 1) { //Player is down and attempting to gain an encounter. Negate one gain and recover the player.
     $encounters -= 1;
-    mysql_query("UPDATE `Players` SET `down` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Player recovers.
+    $mysqli->query("UPDATE `Players` SET `down` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Player recovers.
     $up = True;
   }
-  mysql_query("UPDATE `Players` SET `encounters` = $encounters WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-  mysql_query("UPDATE `Players` SET `lasttick` = $lasttick WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+  $mysqli->query("UPDATE `Players` SET `encounters` = $encounters WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+  $mysqli->query("UPDATE `Players` SET `lasttick` = $lasttick WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 }
 ?>
 <!DOCTYPE html>

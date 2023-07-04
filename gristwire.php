@@ -7,23 +7,23 @@ if (empty($_SESSION['username'])) {
   
   require_once("includes/SQLconnect.php");
   
-  $result = mysql_query("SELECT * FROM Players where username = '$row[username]'");
-  $result2 = mysql_query("SELECT * FROM Players where ");
+  $result = $mysqli->query("SELECT * FROM Players where username = '$row[username]'");
+  $result2 = $mysqli->query("SELECT * FROM Players where ");
   $targetfound = False;
   $poor = False;
   $username = $_SESSION['username'];  
 
-  while ($row = mysql_fetch_array($result)) {
+  while ($row = $result->fetch_array()) {
     if ($row[username] == $username) {
       $type = $_POST[grist_type];
       if (intval($_POST[amount]) <= $row[$type]) {
-	while ($row2 = mysql_fetch_array($result2)) {
+	while ($row2 = $mysqli->fetch_array($result2)) {
 	  if ($row2[username] == $_POST[target]) {
 	    $targetfound = True;
 	    $modifier = intval($_POST[amount]);
-	    mysql_query("UPDATE `Players` SET `Build_Grist` = $row[$type]-$modifier WHERE `Players`.`username` = '$row[username]' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `Build_Grist` = $row[$type]-$modifier WHERE `Players`.`username` = '$row[username]' LIMIT 1 ;");
 	    $quantity = $row[$type]-$modifier;
-	    mysql_query("UPDATE `Players` SET `Build_Grist` = $row2[$type]+$modifier WHERE `Players`.`username` = '$_POST[target]' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `Build_Grist` = $row2[$type]+$modifier WHERE `Players`.`username` = '$_POST[target]' LIMIT 1 ;");
 	  }
 	}
       } else {
@@ -37,7 +37,7 @@ if (empty($_SESSION['username'])) {
   } else if ($poor == False) {
     echo "Transaction failed: Target does not exist.";
   }
-  mysql_close($con);
+  $mysqli->close();
 }
 echo '</br><a href="/">Home</a>';
 ?> 

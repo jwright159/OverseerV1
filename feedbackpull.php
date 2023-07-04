@@ -10,36 +10,36 @@ if (empty($_SESSION['username'])) {
     if (!empty($_POST['ftype'])) {
     	$amount = $_POST['amount'];
     	if ($_POST['ftype'] == "item") {
-    		$feedbackresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
-    		while ($feedrow = mysql_fetch_array($feedbackresult)) {
+    		$feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
+    		while ($feedrow = $feedbackresult->fetch_array()) {
 	    $feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
 	  echo $feedback . "</br>";
 	  $feedbackfound = True;
       }
       if ($feedbackfound == False) echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
-      if (!empty($_POST['delete'])) mysql_query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
+      if (!empty($_POST['delete'])) $mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
     	} elseif ($_POST['ftype'] == "bitem") {
-    		$feedbackresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 AND `Feedback`.`urgent` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
-    		while ($feedrow = mysql_fetch_array($feedbackresult)) {
+    		$feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 AND `Feedback`.`urgent` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
+    		while ($feedrow = $feedbackresult->fetch_array()) {
 	    $feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
 	  echo $feedback . "</br>";
 	  $feedbackfound = True;
       }
       if ($feedbackfound == False) echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
-      if (!empty($_POST['delete'])) mysql_query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 AND `Feedback`.`urgent` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
+      if (!empty($_POST['delete'])) $mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 AND `Feedback`.`urgent` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
     	} elseif ($_POST['ftype'] == "ritem") {
-    		$feedbackresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`defunct` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
-    		while ($feedrow = mysql_fetch_array($feedbackresult)) {
+    		$feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`defunct` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
+    		while ($feedrow = $feedbackresult->fetch_array()) {
 	    $feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
 	  echo $feedback . "</br>";
 	  $feedbackfound = True;
       }
       if ($feedbackfound == False) echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
-      if (!empty($_POST['delete'])) mysql_query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`defunct` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
+      if (!empty($_POST['delete'])) $mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`defunct` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
     	} else {
     	$feedbackfound = False;
-      $feedbackresult = mysql_query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = '" . $_POST['ftype'] . "'  LIMIT $amount");
-      while ($feedbackrow = mysql_fetch_array($feedbackresult)) {
+      $feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = '" . $_POST['ftype'] . "'  LIMIT $amount");
+      while ($feedbackrow = $feedbackresult->fetch_array()) {
 		if ($_POST['ftype'] == "art") {
 	    $feedback = $feedbackrow['user'] . " - Art submission. " . $feedbackrow['name'] . " Link to art: " . $feedbackrow['description'] . " " . $feedbackrow['comments'];
 		} elseif ($_POST['ftype'] == "ques") {
@@ -53,7 +53,7 @@ if (empty($_SESSION['username'])) {
 	  $feedbackfound = True;
       }
       if ($feedbackfound == False) echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
-      if (!empty($_POST['delete'])) mysql_query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = '" . $_POST['ftype'] . "'  LIMIT $amount");
+      if (!empty($_POST['delete'])) $mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = '" . $_POST['ftype'] . "'  LIMIT $amount");
     	}
     }
     $usercount = 0;
@@ -64,8 +64,8 @@ if (empty($_SESSION['username'])) {
     $graylight = 0;
     $unmarked = 0;
     $inactive = 0;
-    $counterresult = mysql_query("SELECT `ID`,`type`,`greenlight`,`urgent`,`clarify`,`defunct`,`suspended`,`lastupdated` FROM `Feedback` ;");
-    while ($tempfeed = mysql_fetch_array($counterresult)) {
+    $counterresult = $mysqli->query("SELECT `ID`,`type`,`greenlight`,`urgent`,`clarify`,`defunct`,`suspended`,`lastupdated` FROM `Feedback` ;");
+    while ($tempfeed = $counterresult->fetch_array()) {
       $usercount++;
 			$count[$tempfeed['type']]++;
 			if ($tempfeed['type'] == "item") {

@@ -54,21 +54,21 @@ function writeEnemydata($userrow) {
 		}
 		$i++;
 	}
-	$endatastr = mysql_real_escape_string($endatastr); //yeeeeah
+	$endatastr = $mysqli->real_escape_string($endatastr); //yeeeeah
 	//echo "final countdown: " . "UPDATE `Players` SET `enemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;";
-	mysql_query("UPDATE `Players` SET `enemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+	$mysqli->query("UPDATE `Players` SET `enemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 }
 
 function refreshEnemydata($userrow) { //a necessary function for functions like generateEnemy, so that they don't continually overwrite the same slot
-	$dataresult = mysql_query("SELECT `enemydata` FROM `Players` WHERE `Players`.`username` = '" . $userrow['username'] . "'");
-	$row = mysql_fetch_array($dataresult);
+	$dataresult = $mysqli->query("SELECT `enemydata` FROM `Players` WHERE `Players`.`username` = '" . $userrow['username'] . "'");
+	$row = $dataresult->fetch_array();
 	$userrow['enemydata'] = $row['enemydata'];
 	$userrow = parseEnemydata($userrow);
 	return $userrow;
 }
 
 function endStrife($userrow) { //a quick function to reset all strife values and ensure they don't return via megaquery
-	mysql_query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
+	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
  `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0, 
 `cantabscond` = 0, `motifcounter` = 0, `strifestatus` = '', `sessionbossengaged` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;"); //Power boosts wear off.
   $userrow['powerboost'] = 0;
@@ -109,7 +109,7 @@ function addSpecibus($userrow, $newabs) { //this function assumes you've already
 		$abs .= "|";
 	}
 	$abs .= $newabs;
-	mysql_query("UPDATE `Players` SET `abstratus1` = '$abs' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+	$mysqli->query("UPDATE `Players` SET `abstratus1` = '$abs' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 	$userrow['abstratus1'] = $abs;
 	return $userrow;
 }
@@ -172,7 +172,7 @@ function writeLastfought($userrow) {
 		$i++;
 	}
 	//echo "final countdown: $endatastr<br />";
-	mysql_query("UPDATE `Players` SET `oldenemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+	$mysqli->query("UPDATE `Players` SET `oldenemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 }
 
 function hydraSplitChance($abs) {

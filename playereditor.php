@@ -10,41 +10,41 @@ if (empty($_SESSION['username'])) {
   if (!empty($_POST['username'])) {
     echo "Operating on user: $_POST[username]</br>";
     if (!empty($_POST['class']) && !empty($_POST['aspect'])) {
-      $newclass = mysql_real_escape_string($_POST['class']);
+      $newclass = $mysqli->real_escape_string($_POST['class']);
       $newclass = str_replace("<", "&lt;", $newclass);
-      $newaspect = mysql_real_escape_string($_POST['aspect']);
+      $newaspect = $mysqli->real_escape_string($_POST['aspect']);
       $newaspect = str_replace("<", "&lt;", $newaspect);
-      $titleresult = mysql_query("SELECT * FROM `Titles` WHERE `Titles`.`Class` = 'Adjective'");
-      $titlerow = mysql_fetch_array($titleresult);
+      $titleresult = $mysqli->query("SELECT * FROM `Titles` WHERE `Titles`.`Class` = 'Adjective'");
+      $titlerow = $titleresult->fetch_array();
       $_SESSION['adjective'] = $titlerow[$row[$newaspect]];
-      mysql_query("UPDATE `Players` SET `Class` = '$newclass' WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
-      mysql_query("UPDATE `Players` SET `Aspect` = '$newaspect' WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `Class` = '$newclass' WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `Aspect` = '$newaspect' WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
       echo "Classpect changed.</br>";
     }
     if (!empty($_POST['newrung'])) {
-      mysql_query("UPDATE `Players` SET `Echeladder` = $_POST[newrung] WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `Echeladder` = $_POST[newrung] WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
       if (intval($_POST['newrung']) >= 5) {
-	mysql_query("UPDATE `Players` SET `Gel_Viscosity` = " . strval(45 + (intval($_POST['newrung'] - 4) * 15)) . " WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Gel_Viscosity` = " . strval(45 + (intval($_POST['newrung'] - 4) * 15)) . " WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
       } elseif (intval($_POST['newrung']) > 1) {
-	mysql_query("UPDATE `Players` SET `Gel_Viscosity` = " . strval(5 + (intval($_POST['newrung'] - 1) * 10)) . " WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Gel_Viscosity` = " . strval(5 + (intval($_POST['newrung'] - 1) * 10)) . " WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
       } else {
-	mysql_query("UPDATE `Players` SET `Gel_Viscosity` = 10 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `Gel_Viscosity` = 10 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
       }
       echo "Echeladder rung changed.</br>";
     }
-    mysql_query("UPDATE `Players` SET `down` = 0 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
-    mysql_query("UPDATE `Players` SET `dreamdown` = 0 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `down` = 0 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `dreamdown` = 0 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
   }
 
   //Begin input forms here.
   echo '<form action="playereditor.php" method="post">User to modify: <input id="username" name="username" type="text" /></br>';
   echo '<form action="playereditor.php" method="post">Select class:<select name="class"> '; //Select a class
   echo '<option value=""></option>';
-  $classes = mysql_query("SELECT * FROM Titles");
+  $classes = $mysqli->query("SELECT * FROM Titles");
   $reachclass = True;
-  while ($row = mysql_fetch_array($classes)) {
-    $classresult = mysql_query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
-    $classrow = mysql_fetch_array($classresult);
+  while ($row = $classes->fetch_array()) {
+    $classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
+    $classrow = $classresult->fetch_array();
     if ($classrow['activefactor'] > 100) {
       $activepassivestr = "(Active, $classrow[activefactor]%)";
     } else {
@@ -56,9 +56,9 @@ if (empty($_SESSION['username'])) {
   echo '</select></br>';
   echo 'Select aspect:<select name="aspect"> '; //Select an aspect
   echo '<option value=""></option>';
-  $aspects = mysql_query("SELECT * FROM Titles");
+  $aspects = $mysqli->query("SELECT * FROM Titles");
   $reachaspect = False;
-  while ($col = mysql_fetch_field($aspects)) {
+  while ($col = $mysqli->fetch_field($aspects)) {
     $aspect = $col->name;
     if ($aspect == "Breath") $reachaspect = True;
     if ($aspect == "General") $reachaspect = False;

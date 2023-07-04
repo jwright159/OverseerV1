@@ -39,8 +39,8 @@ if (!empty($_SESSION['username'])) {
 } else {
 if (!empty($_POST['accountname'])) {
 	if (!empty($_POST['accountemail'])) {
-		$recoverresult = mysql_query("SELECT `username`,`email` FROM `Players` WHERE `Players`.`username` = '" . $_POST['accountname'] . "' LIMIT 1;");
-		$recrow = mysql_fetch_array($recoverresult);
+		$recoverresult = $mysqli->query("SELECT `username`,`email` FROM `Players` WHERE `Players`.`username` = '" . $_POST['accountname'] . "' LIMIT 1;");
+		$recrow = $recoverresult->fetch_array();
 		//echo $recrow['username'] . "/" . $_POST['accountname'];
 		if ($recrow['username'] == $_POST['accountname']) {
 			if ($recrow['email'] == $_POST['accountemail']) {
@@ -55,7 +55,7 @@ if (!empty($_POST['accountname'])) {
 				$sentsuccess = mail($to,$subject,$message,$headers);
 				if ($sentsuccess) {
 					echo "An email was sent with instructions on how to change your password. You should hopefully receive it sometime within the next 15 minutes. Be sure to check your spam folder if it doesn't appear in your inbox.</br>";
-					mysql_query("UPDATE `Players` SET `recovery_confirm` = '$newcode' WHERE `Players`.`username` = '" . $_POST['accountname'] . "' LIMIT 1;");
+					$mysqli->query("UPDATE `Players` SET `recovery_confirm` = '$newcode' WHERE `Players`.`username` = '" . $_POST['accountname'] . "' LIMIT 1;");
 				}
 				else echo 'Something went wrong while sending the email. Feel free to try again, but please contact <a href="http://babbyoverseer.tumblr.com">BabbyOverseer</a> if the problem persists.</br>';
 			} else echo "The email that you gave doesn't match the email in the database for that account. Please make sure you typed it correctly.</br>";
@@ -71,16 +71,16 @@ if (empty($_GET['user'])) {
 	echo 'If your account doesn\'t have an email address assigned, or you have any other questions, please contact <a href="http://babbyoverseer.tumblr.com">BabbyOverseer</a>.';
 } else {
 	if (!empty($_GET['code'])) {
-		$recoverresult = mysql_query("SELECT `username`,`email`,`recovery_confirm` FROM `Players` WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;");
-		$recrow = mysql_fetch_array($recoverresult);
+		$recoverresult = $mysqli->query("SELECT `username`,`email`,`recovery_confirm` FROM `Players` WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;");
+		$recrow = $recoverresult->fetch_array();
 		if ($recrow['username'] == $_GET['user']) {
 			if ($recrow['recovery_confirm'] == $_GET['code'] && !empty($recrow['recovery_confirm'])) {
 				if (!empty($_POST['newpass'])) {
 					if ($_POST['newpass'] == $_POST['cnewpass'] && !empty($_POST['newpass'])) {
-						$newpass = crypt(mysql_real_escape_string($_POST['newpass']));
-						mysql_query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;");
+						$newpass = crypt($mysqli->real_escape_string($_POST['newpass']));
+						$mysqli->query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;");
 						echo "Password changed successfully!</br>";
-						mysql_query("UPDATE Players SET `recovery_confirm` = '' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;"); //blank the recovery ID so that it can't be used again
+						$mysqli->query("UPDATE Players SET `recovery_confirm` = '' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;"); //blank the recovery ID so that it can't be used again
 					} else echo "Error changing password: Confirmation does not match new password, or the new password was left blank.</br>";
 				} else {
 					echo '<form method="post" action="forgotpassword.php?user=' . $_GET['user'] . '&code=' . $_GET['code'] . '">Recovery confirmation code successfully validated. Input your new password below.</br>

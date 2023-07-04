@@ -5,17 +5,17 @@ session_start();
 if (empty($_SESSION['username'])) {
   echo "Log in to view and manipulate your strife portfolio and options.</br>";
 } else {
-  $con = mysql_connect("localhost","theovers_DC","pi31415926535");
+  $con = $mysqli->connect("localhost","theovers_DC","pi31415926535");
   if (!$con)
     {
       echo "Connection failed.\n";
-      die('Could not connect: ' . mysql_error());
+      die('Could not connect: ' . $mysqli->error());
     }
   
-  mysql_select_db("theovers_HS", $con);
+  $mysqli->select_db("theovers_HS", $con);
   $username = $_SESSION['username'];
-  $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "'");
-  while ($row = mysql_fetch_array($result)) { //Fetch the user's database row. We're going to need it several times.
+  $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "'");
+  while ($row = $result->fetch_array()) { //Fetch the user's database row. We're going to need it several times.
     if ($row['username'] == $username) { //Paranoia: Make sure something stupid didn't just happen.
       $userrow = $row;
     }
@@ -25,28 +25,28 @@ if (empty($_SESSION['username'])) {
   
   if (!empty($_POST['equipmain'])) { //User is equipping an item to their main hand.
     $equipname = str_replace("'", "\\\\''", $userrow[$_POST['equipmain']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
-    while ($itemrow = mysql_fetch_array($itemresult)) {
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
+    while ($itemrow = $itemresult->fetch_array()) {
       $itemname = $itemrow['name'];
       $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
       if ($itemname == $userrow[$_POST['equipmain']]) {
 	$equippedmain = $_POST['equipmain']; //For use later.
 	echo "You equip your $itemname as your main weapon.</br>"; //NOTE - Unauthorized equipping prevented by menu options not being there.
-	mysql_query("UPDATE `Players` SET `equipped` = '" . $_POST['equipmain'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `equipped` = '" . $_POST['equipmain'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	if ($itemrow['size'] == "large") { //Item is two-handed. Note that weapons bigger than "large" are classified as "notaweapon"
-	  mysql_query("UPDATE `Players` SET `offhand` = '2HAND' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Current weapon is two-handed.
+	  $mysqli->query("UPDATE `Players` SET `offhand` = '2HAND' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Current weapon is two-handed.
 	  $equippedoff = "2HAND";
 	}
 	if ($userrow['offhand'] == $equippedmain) { //Offhand weapon transferred to main hand.
-	  mysql_query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Move offhand weapon.
+	  $mysqli->query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Move offhand weapon.
 	}
       }
     }
   }
   if (!empty($_POST['equipoff'])) { //User is equipping an item to their offhand.
     $offname = str_replace("'", "\\\\''", $userrow[$_POST['equipoff']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
-    while ($itemrow = mysql_fetch_array($itemresult)) {
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $offname . "'");
+    while ($itemrow = $itemresult->fetch_array()) {
       $itemname = $itemrow['name'];
       $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
       if ($itemname == $userrow[$_POST['equipoff']]) {
@@ -55,7 +55,7 @@ if (empty($_SESSION['username'])) {
 	if ($userrow['offhand'] == "2HAND") {
 	  $userrow['equipped'] = ""; //Remove two-handed weapon if we equip to the offhand.
 	}
-	mysql_query("UPDATE `Players` SET `offhand` = '" . $_POST['equipoff'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `offhand` = '" . $_POST['equipoff'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
       }
     }
   }
@@ -64,10 +64,10 @@ if (empty($_SESSION['username'])) {
   //NOTE - Equipping of unauthorized items is impossible due to them not appearing as options. Begin echeladder naming code here.
   
   if (!empty($_POST['echename'])) {
-    $newrung = mysql_real_escape_string($_POST['echename']);
+    $newrung = $mysqli->real_escape_string($_POST['echename']);
     $rungstr = "rung" . strval($userrow['Echeladder']);
-    //mysql_query("UPDATE `Players` SET `Echeladder_Rung` = '" . $newrung . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Used to be for updating Echeladder rung. Now outdated.
-    mysql_query("UPDATE `Echeladders` SET `" . $rungstr . "` = '" . $newrung . "' WHERE `Echeladders`.`username` = '$username' LIMIT 1 ;");
+    //$mysqli->query("UPDATE `Players` SET `Echeladder_Rung` = '" . $newrung . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Used to be for updating Echeladder rung. Now outdated.
+    $mysqli->query("UPDATE `Echeladders` SET `" . $rungstr . "` = '" . $newrung . "' WHERE `Echeladders`.`username` = '$username' LIMIT 1 ;");
   }
   
   //--End echeladder naming code here. That was short! Begin resting code here.--
@@ -76,8 +76,8 @@ if (empty($_SESSION['username'])) {
     if ($userrow['encounters'] > 0) { //Player has encounters.
       $newhp = $userrow['Health_Vial'] + ceil($userrow['Gel_Viscosity'] / 4);
       if ($newhp > $userrow['Gel_Viscosity']) $newhp = $userrow['Gel_Viscosity'];
-      mysql_query("UPDATE `Players` SET `Health_Vial` = $newhp WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-      mysql_query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `Health_Vial` = $newhp WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
       echo "You head back to your dwelling and take a nice, long rest.</br>";
       $rested = True;
     } else {
@@ -92,7 +92,7 @@ if (empty($_SESSION['username'])) {
     while($i <= $userrow['abstrati']) {
       $abstrastr = ("abstratus" . strval($i));
       if ($userrow[$abstrastr] == "") { //Unassigned abstrati reached, assign the selected abstratus here.
-	mysql_query("UPDATE `Players` SET `" . $abstrastr . "` = '" . $_POST['new_abstratus'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `" . $abstrastr . "` = '" . $_POST['new_abstratus'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	$newabstratus = $_POST['new_abstratus'];
 	$assignsuccess = True;
 	echo "A kind abstratus has been instantiated to $newabstratus</br>";
@@ -128,9 +128,9 @@ if (empty($_SESSION['username'])) {
   }
   echo "Abstrati unassigned: $free";
   echo '<form action="portfolio.php" method="post"><select name="new_abstratus">';
-  $itemresult = mysql_query("SELECT * FROM Captchalogue ORDER BY abstratus");
+  $itemresult = $mysqli->query("SELECT * FROM Captchalogue ORDER BY abstratus");
   $currentabstratus = "";
-  while ($itemrow = mysql_fetch_array($itemresult)) {
+  while ($itemrow = $itemresult->fetch_array()) {
     $mainabstratus = "";
     $alreadydone = False;
     $foundcomma = False;
@@ -161,8 +161,8 @@ if (empty($_SESSION['username'])) {
   echo '</select> <input type="submit" value="Assign it!" /> </form>';
   echo '<form action="portfolio.php" method="post"><select name="equipmain">';
   $reachinv = false;
-  $invresult = mysql_query("SELECT * FROM Players");
-  while ($col = mysql_fetch_field($invresult)) {
+  $invresult = $mysqli->query("SELECT * FROM Players");
+  while ($col = $mysqli->fetch_field($invresult)) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -172,8 +172,8 @@ if (empty($_SESSION['username'])) {
     }
     if ($reachinv == True && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
       $itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $captchalogue = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($captchalogue)) {
+      $captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $captchalogue->fetch_array()) {
 	$itemname = $row['name'];
 	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	if ($itemname == $userrow[$invslot] && $row['abstratus'] != "notaweapon") { //Item found in captchalogue database, and it is a weapon.
@@ -215,8 +215,8 @@ if (empty($_SESSION['username'])) {
   echo '</select> <input type="submit" value="Equip to main hand" /> </form>';
   echo '<form action="portfolio.php" method="post"><select name="equipoff">';
   $reachinv = false;
-  $invresult = mysql_query("SELECT * FROM Players");
-  while ($col = mysql_fetch_field($invresult)) {
+  $invresult = $mysqli->query("SELECT * FROM Players");
+  while ($col = $mysqli->fetch_field($invresult)) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -226,8 +226,8 @@ if (empty($_SESSION['username'])) {
     }
     if ($reachinv == True && $userrow[$invslot] != "" && $invslot != $userrow['equipped'] && $invslot != $equippedmain) { //This is a non-empty inventory slot that isn't equipped to the main hand
       $itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $captchalogue = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($captchalogue)) {
+      $captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $captchalogue->fetch_array()) {
 	$itemname = $row['name'];
 	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	if ($itemname == $userrow[$invslot] && $row['abstratus'] != "notaweapon" && $row['size'] != "large") { //Item found in captchalogue database, and it is a weapon
@@ -265,8 +265,8 @@ if (empty($_SESSION['username'])) {
     }
   }
   echo '</select> <input type="submit" value="Equip to offhand" /> </form>';
-  $echeresult = mysql_query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $username . "'");
-  $echerow = mysql_fetch_array($echeresult);
+  $echeresult = $mysqli->query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $username . "'");
+  $echerow = $echeresult->fetch_array();
   echo "Current Echeladder height: $userrow[Echeladder]";
   if (!empty($newrung)) {
     echo "</br>Current Echeladder rung: $newrung </br>";
@@ -285,8 +285,8 @@ if (empty($_SESSION['username'])) {
   $spritepower = $userrow['sprite_strength'];
   if ($equippedmain != "") {
     $itemname = str_replace("'", "\\\\''", $userrow[$equippedmain]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-    while ($row = mysql_fetch_array($itemresult)) {
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+    while ($row = $itemresult->fetch_array()) {
       $itemname = $row['name'];
       $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
       if ($itemname == $userrow[$equippedmain]) {
@@ -296,8 +296,8 @@ if (empty($_SESSION['username'])) {
   } else {
     if ($userrow['equipped'] != "") {
       $itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $itemresult->fetch_array()) {
 	$itemname = $row['name'];
 	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	if ($itemname == $userrow[$userrow['equipped']]) {
@@ -310,8 +310,8 @@ if (empty($_SESSION['username'])) {
   }
   if ($equippedoff != "") {
     $itemname = str_replace("'", "\\\\''", $userrow[$equippedoff]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-    while ($row = mysql_fetch_array($itemresult)) {
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+    while ($row = $itemresult->fetch_array()) {
       $itemname = $row['name'];
       $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
       if ($itemname == $userrow[$equippedoff]) {
@@ -321,8 +321,8 @@ if (empty($_SESSION['username'])) {
   } else {
     if ($userrow['offhand'] != "" && $userrow['offhand'] != $equippedmain && $equippedoff != "2HAND") {
     $itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($itemresult)) {
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $itemresult->fetch_array()) {
       $itemname = $row['name'];
       $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
       if ($itemname == $userrow[$userrow['offhand']]) {
@@ -357,10 +357,10 @@ if (empty($_SESSION['username'])) {
     echo strval($userrow['encounters']);
   }
   echo '<form action="portfolio.php" method="post"><input type="hidden" name="rest" value="rest" /><input type="submit" value="Rest and recuperate" /></form></br>';
-  $invresult = mysql_query("SELECT * FROM Players");
+  $invresult = $mysqli->query("SELECT * FROM Players");
   echo $username;
   echo "'s captchalogued weapons:</br></br>";
-  while ($col = mysql_fetch_field($invresult)) {
+  while ($col = $mysqli->fetch_field($invresult)) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -370,8 +370,8 @@ if (empty($_SESSION['username'])) {
     }
     if ($reachinv == True && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
     $itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-    $captchalogue = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($row = mysql_fetch_array($captchalogue)) {
+    $captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($row = $captchalogue->fetch_array()) {
 	$itemname = $row['name'];
 	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	if ($itemname == $userrow[$invslot] && $row['abstratus'] != "notaweapon") { //Item found in captchalogue database, and it is a weapon. Print out details.

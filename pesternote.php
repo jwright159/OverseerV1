@@ -5,8 +5,8 @@ if (empty($_SESSION['username'])) {
 } else {
 	if (!empty($_POST['username'])) {
 		$pesterclash = False;
-		$pesterresult = mysql_query("SELECT * FROM Players WHERE `Players`.`pesternoteUsername` = '" . $_POST['username'] . "'");
-		while ($row = mysql_fetch_array($pesterresult)) {
+		$pesterresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`pesternoteUsername` = '" . $_POST['username'] . "'");
+		while ($row = $pesterresult->fetch_array()) {
 			if ($_POST['username'] == $row['username']) { //Name clash: Player name is already taken.
 				echo "That Pesternote account is linked to another Overseer account. Sorry!</br>";
 				$pesterclash = True;
@@ -16,7 +16,7 @@ if (empty($_SESSION['username'])) {
 			if ($_POST['password'] != $_POST['confirmpw']) {
 				echo "Those passwords do not match! Give it another go, you probably just mistyped one slightly.</br>";
 			} else { //Success! Add details to database.
-				mysql_query("UPDATE `Players` SET `pesternoteUsername` = '" . $_POST['username'] . "', `pesternotePassword` = '" . $_POST['password'] . "' WHERE `Players`.`username` = '$username' LIMIT 1;");
+				$mysqli->query("UPDATE `Players` SET `pesternoteUsername` = '" . $_POST['username'] . "', `pesternotePassword` = '" . $_POST['password'] . "' WHERE `Players`.`username` = '$username' LIMIT 1;");
 				if (!empty($_POST['confirmation'])) { //Post a confirmation check
 					$confirmation = sendPost($_POST['username'], $_POST['password'], "I've just linked this account to my account $username on The Overseer Project");
 					if ($confirmation) {
@@ -34,7 +34,7 @@ if (empty($_SESSION['username'])) {
 		} else {
 			$userrow['postbosses'] = 0;
 		}
-		mysql_query("UPDATE `Players` SET `postbosses` = $userrow[postbosses] WHERE `Players`.`username` = '$username' LIMIT 1;");
+		$mysqli->query("UPDATE `Players` SET `postbosses` = $userrow[postbosses] WHERE `Players`.`username` = '$username' LIMIT 1;");
 		echo "Settings updated!</br>";
 	}
 	echo "<a href='http://www.pesternote.com'>Pesternote</a> settings. Control how your Project account interacts with your Pesternote account here.</br>";

@@ -22,12 +22,12 @@ if (!empty($_POST[$storstr])) {
 		$stackcode[$s] = substr($itemnom, -9, 8);
 		$oitemnom = substr($itemnom, 0, -16);
 	} else $oitemnom = $itemnom;
-	$itemresult = mysql_query("SELECT `captchalogue_code`,`name`,`size`,`abstratus`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`name` = '" . $oitemnom . "' LIMIT 1");
-	$storerow = mysql_fetch_array($itemresult);
+	$itemresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`size`,`abstratus`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`name` = '" . $oitemnom . "' LIMIT 1");
+	$storerow = $itemresult->fetch_array();
 	if (strpos($itemnom, " (ghost image)") !== false) {
 		$itemnom = str_replace(" (ghost image)", "", $itemnom);
   	echo "You go to store your " . $itemnom . ", but as it's a ghost image, it simply disappears upon being removed from your inventory.<br />";
-  	mysql_query("UPDATE `Players` SET `" . $_POST['storeitem'] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1;");
+  	$mysqli->query("UPDATE `Players` SET `" . $_POST['storeitem'] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1;");
   	$storecode[$s] = "nope";
  	} else {
 		$itemnom = str_replace("\\", "", $itemnom);
@@ -48,8 +48,8 @@ if (!empty($_POST[$storstr])) {
 		$storagetag = specialArray($storerow['effects'], "STORAGE");
 		if ($storagetag[0] == "STORAGE") $storecomp[$s] .= $storagetag[1];
 		if ($oitemnom == "Punch Card Shunt" && $jumper && $alchemiter) { //this is a shunt, so apply shunt effect, but only if player has both alchemiter and jumper
-			$itemresult = mysql_query("SELECT `captchalogue_code`,`name`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$stackcode' LIMIT 1");
-			$shuntrow = mysql_fetch_array($itemresult);
+			$itemresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$stackcode' LIMIT 1");
+			$shuntrow = $itemresult->fetch_array();
 			$shunttag = specialArray($shuntrow['effects'], "SHUNT");
 			if ($shunttag[0] != "SHUNT") {
 				$shunttag = specialArray($shuntrow['effects'], "STORAGE"); //if no shunt effect exists, check for a storage effect and apply it
@@ -69,8 +69,8 @@ $itemstored = false;
 $itemget = false;
 while ($i <= $totalitems) {
 	$args = explode(":", $boom[$i]);
-	$itemresult = mysql_query("SELECT `captchalogue_code`,`name`,`size`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1");
-	$irow = mysql_fetch_array($itemresult);
+	$itemresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`size`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1");
+	$irow = $itemresult->fetch_array();
 	if ($irow['captchalogue_code'] == $args[0]) { //Item found.
 		$getstr = $args[0];
 		if (strpos($args[2], "CODE=") !== false) {
@@ -140,7 +140,7 @@ if ($storecode != "nope") {
 					$storecode[$s] = "nope";
 					$itemstored = true;
 					autoUnequip($userrow, "none", $rslot);
-					mysql_query("UPDATE `Players` SET `$rslot` = '' WHERE `Players`.`username` = '$username' LIMIT 1");
+					$mysqli->query("UPDATE `Players` SET `$rslot` = '' WHERE `Players`.`username` = '$username' LIMIT 1");
 					$userrow[$rslot] = "";
 					echo $storename[$s] . " stored.<br />";
 				} else {
@@ -172,7 +172,7 @@ if ($storecode != "nope") {
 							$itemstored = true;
 							$storedone = true;
 							autoUnequip($userrow, "none", $rslot);
-							mysql_query("UPDATE `Players` SET `$rslot` = '' WHERE `Players`.`username` = '$username' LIMIT 1");
+							$mysqli->query("UPDATE `Players` SET `$rslot` = '' WHERE `Players`.`username` = '$username' LIMIT 1");
 							$userrow[$rslot] = "";
 							echo $storename[$t] . " stored.<br />";
 						} else {
@@ -206,7 +206,7 @@ if ($itemget || $itemstored) { //there was a change to the storage string, so le
 		$newstring .= $itemcode[$i] . ":" . $itemno[$i] . ":" . $itemcomp[$i] . "|";
 		$i++;
 	}
-	mysql_query("UPDATE `Players` SET `storeditems` = '$newstring' WHERE `Players`.`username` = '$username' LIMIT 1");
+	$mysqli->query("UPDATE `Players` SET `storeditems` = '$newstring' WHERE `Players`.`username` = '$username' LIMIT 1");
 	$userrow['storeditems'] = $newstring;
 	compuRefresh($userrow);
 }

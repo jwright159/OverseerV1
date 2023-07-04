@@ -17,8 +17,8 @@ if (empty($_SESSION['username'])) {
   } else {
   	$userrow = parseLastfought($userrow);
     if ($_POST['land'] != "Prospit" && $_POST['land'] != "Derse" && $_POST['land'] != "Battlefield") { //To make sure no-one tries to make an account called these things to fuck everything up.
-      $result = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['land'] . "';");
-      if ($row = mysql_fetch_array($result)) {
+      $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['land'] . "';");
+      if ($row = $result->fetch_array()) {
 	if ($row['username'] == $_POST['land']) {
 	  if ($username == $_POST['land']) { //if the player chose their own land, always admit (and don't bother checking the chain)
 	    $aok = True;
@@ -43,7 +43,7 @@ if (empty($_SESSION['username'])) {
     if(empty($landrow)) { //A land row was not found. This is probably because the player selected a special location.
       switch ($_POST['land']) {
       case "Prospit":
-	mysql_query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	echo 'Select enemies to "fight":';
 	echo '<form action="strifebegin.php" method="post">';
 	echo '<input type="hidden" name="gristtype" value="None">';
@@ -54,8 +54,8 @@ if (empty($_SESSION['username'])) {
 	  $enemystr = "enemy" . strval($enemies);
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
-	  $result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = mysql_fetch_array($result2)) {
+	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	  while ($row = $mysqli->fetch_array($result2)) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Prospit") {
 	      if ($userrow['olddreamenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' ("Power": ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -74,8 +74,8 @@ if (empty($_SESSION['username'])) {
 	  $enemystr = "enemyall";
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
-	  $result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = mysql_fetch_array($result2)) {
+	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	  while ($row = $mysqli->fetch_array($result2)) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Prospit") {
 	      echo '<option value="' . $enemytype . '">' . $enemytype . ' ("Power": ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -86,7 +86,7 @@ if (empty($_SESSION['username'])) {
 	echo '<input type="submit" value="&quot;Fight&quot; it!" /> </form>';
 	break;
       case "Derse":
-	mysql_query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	echo "Select enemies to fight:";
 	echo '<form action="strifebegin.php" method="post">';
 	echo '<input type="hidden" name="gristtype" value="None">';
@@ -97,8 +97,8 @@ if (empty($_SESSION['username'])) {
 	  $enemystr = "enemy" . strval($enemies);
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
-	  $result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = mysql_fetch_array($result2)) {
+	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	  while ($row = $mysqli->fetch_array($result2)) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Derse") {
 	    	if ($userrow['olddreamenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -117,8 +117,8 @@ if (empty($_SESSION['username'])) {
 	  $enemystr = "enemyall";
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
-	  $result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = mysql_fetch_array($result2)) {
+	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	  while ($row = $mysqli->fetch_array($result2)) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Derse") {
 	      echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -129,7 +129,7 @@ if (empty($_SESSION['username'])) {
 	echo '<input type="submit" value="Fight it!" /> </form></br>';
 	break;
       case "Battlefield":
-	mysql_query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	echo "Select enemies to fight:";
 	echo '<form action="strifebegin.php" method="post">';
 	echo '<input type="hidden" name="gristtype" value="None">'; //Gristless enemies.
@@ -140,8 +140,8 @@ if (empty($_SESSION['username'])) {
 	  $enemystr = "enemy" . strval($enemies);
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
-	  $result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = mysql_fetch_array($result2)) {
+	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	  while ($row = $mysqli->fetch_array($result2)) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Battlefield") {
 	      if ($userrow['oldenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -160,8 +160,8 @@ if (empty($_SESSION['username'])) {
 	  $enemystr = "enemyall";
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
-	  $result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = mysql_fetch_array($result2)) {
+	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	  while ($row = $mysqli->fetch_array($result2)) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Battlefield") {
 	      echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -180,7 +180,7 @@ if (empty($_SESSION['username'])) {
 	break;
       }
     } else { //We have the player details we need.
-      mysql_query("UPDATE `Players` SET `correctgristtype` = '" . $landrow['grist_type'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `correctgristtype` = '" . $landrow['grist_type'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
       echo "Select enemies to fight:";
       echo '<form action="strifebegin.php" method="post">';
       echo '<input type="hidden" name="gristtype" value="' . $landrow['grist_type'] .'">';
@@ -191,8 +191,8 @@ if (empty($_SESSION['username'])) {
 	echo $stringwhoseuseisobviousandsingular . '<select name="' . $griststr . '">';
 	echo '<option value=""></option>';
 	$i = 1;
-	$gristresult = mysql_query("SELECT * FROM Grist_Types");
-	while ($row = mysql_fetch_array($gristresult)) {
+	$gristresult = $mysqli->query("SELECT * FROM Grist_Types");
+	while ($row = $gristresult->fetch_array()) {
 	  if ($row['name'] == $landrow['grist_type']) {
 	    $gristrow = $row;
 	  }
@@ -207,8 +207,8 @@ if (empty($_SESSION['username'])) {
 	$enemystr = "enemy" . strval($enemies);
 	echo '<select name="' . $enemystr . '">';
 	echo '<option value=""></option>';
-	$result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	while ($row = mysql_fetch_array($result2)) {
+	$result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	while ($row = $mysqli->fetch_array($result2)) {
 	  $enemytype = $row['basename'];
 	  if ($row['appearson'] == "Lands") {
 	  	if ($userrow['oldenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' (Base power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -235,8 +235,8 @@ if (empty($_SESSION['username'])) {
 	$enemystr = "enemyall";
 	echo '<select name="' . $enemystr . '">';
 	echo '<option value=""></option>';
-	$result2 = mysql_query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	while ($row = mysql_fetch_array($result2)) {
+	$result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
+	while ($row = $mysqli->fetch_array($result2)) {
 	  $enemytype = $row['basename'];
 	  if ($row['appearson'] == "Lands") {
 	    echo '<option value="' . $enemytype . '">' . $enemytype . ' (Base power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.

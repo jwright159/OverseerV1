@@ -8,8 +8,8 @@ $SQLuserName = $_ENV['SQL_USERNAME'];
 $SQLpassword = $_ENV['SQL_PASSWORD'];
 $SQLdatabase = $_ENV['SQL_DATABASE'];
 
-$con = mysqli_connect($SQLhostName, $SQLuserName, $SQLpassword, $SQLdatabase);
+$mysqli = new \mysqli($SQLhostName, $SQLuserName, $SQLpassword, $SQLdatabase);
 
-if (!$con) {
-   die('Could not connect: ' . mysql_error());
+if (!$mysqli) {
+   die('Could not connect: ' . $mysqli->error());
 }

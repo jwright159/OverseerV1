@@ -4,11 +4,11 @@ if (empty($_SESSION['username'])) {
   echo "Log in to view your Echeladder.</br>";
 } else {
   
-  $echeresult = mysql_query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $username . "'");
-  $echerow = mysql_fetch_array($echeresult);
+  $echeresult = $mysqli->query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $username . "'");
+  $echerow = $echeresult->fetch_array();
   //Begin rung naming code here.
 if (!empty($_POST['echename'])) {
-    $newrung = mysql_real_escape_string($_POST['echename']);
+    $newrung = $mysqli->real_escape_string($_POST['echename']);
     if (!empty($_POST['echenum'])) {
     	$echenum = intval($_POST['echenum']);
     	if ($echenum >= 1 && $echenum <= 612) {
@@ -18,8 +18,8 @@ if (!empty($_POST['echename'])) {
     	}
     }
     else $rungstr = $_POST['echestr'];
-    //mysql_query("UPDATE `Players` SET `Echeladder_Rung` = '" . $newrung . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Used to be for updating Echeladder rung. Now outdated.
-    mysql_query("UPDATE `Echeladders` SET `" . $rungstr . "` = '" . $newrung . "' WHERE `Echeladders`.`username` = '$username' LIMIT 1 ;");
+    //$mysqli->query("UPDATE `Players` SET `Echeladder_Rung` = '" . $newrung . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Used to be for updating Echeladder rung. Now outdated.
+    $mysqli->query("UPDATE `Echeladders` SET `" . $rungstr . "` = '" . $newrung . "' WHERE `Echeladders`.`username` = '$username' LIMIT 1 ;");
     $echerow[$rungstr] = $newrung; //Update array.;
   }
   //End rung naming code here.

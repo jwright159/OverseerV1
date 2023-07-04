@@ -6,8 +6,8 @@ require_once("header.php");
 <input id = "button" onclick = 'echeladder.scroll(0, 550)' type = button />
 <div class = echewrapper id = echeladder onload = 'echeladder.scroll(0, 150)' >
 <?php
-  $echeresult = mysql_query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $username . "'");
-  $echerow = mysql_fetch_array($echeresult);
+  $echeresult = $mysqli->query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $username . "'");
+  $echerow = $echeresult->fetch_array();
   $i = 612;
   while ($i > 0) {
 	echo "<div class = 'echerung' >";

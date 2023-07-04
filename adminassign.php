@@ -5,16 +5,16 @@ if ($userrow['session_name'] != "Developers") {
 	echo "denied.";
 } else {
 	if (!empty($_POST['admn'])) {
-		$sresult = mysql_query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $_POST['sesn'] . "' LIMIT 1;");
-		$srow = mysql_fetch_array($sresult);
+		$sresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $_POST['sesn'] . "' LIMIT 1;");
+		$srow = $sresult->fetch_array();
 		if ($srow['name'] == $_POST['sesn']) {
-			$presult = mysql_query("SELECT * FROM `Players` WHERE `Players`.`username` = '" . $_POST['admn'] . "' LIMIT 1;");
-			$prow = mysql_fetch_array($presult);
+			$presult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '" . $_POST['admn'] . "' LIMIT 1;");
+			$prow = $presult->fetch_array();
 			if ($prow['username'] == $_POST['admn']) {
 				if ($prow['session_name'] == $srow['name']) {
-					mysql_query("UPDATE `Players` SET `admin` = 1 WHERE `Players`.`username` = '" . $prow['username'] . "' LIMIT 1;");
+					$mysqli->query("UPDATE `Players` SET `admin` = 1 WHERE `Players`.`username` = '" . $prow['username'] . "' LIMIT 1;");
 					if (!empty($_POST['head'])) {
-						mysql_query("UPDATE `Sessions` SET `admin` = '" . $prow['username'] . "' WHERE `Sessions`.`name` = '" . $srow['name'] . "' LIMIT 1;");
+						$mysqli->query("UPDATE `Sessions` SET `admin` = '" . $prow['username'] . "' WHERE `Sessions`.`name` = '" . $srow['name'] . "' LIMIT 1;");
 					}
 					echo "Done! " . $prow['username'] . " is now admin of session " . $srow['name'] . "<br />";
 				} else echo "ERROR: That player is not in that session<br />";

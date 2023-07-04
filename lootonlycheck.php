@@ -2,11 +2,11 @@
 require_once("header.php");
 
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -41,9 +41,9 @@ if (empty($_SESSION['username'])) {
 	  $gateitems[1] = 0;
 	  $gateitems[3] = 0;
 	  $gateitems[5] = 0;
-$result = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`lootonly` = 1");
+$result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`lootonly` = 1");
 echo "running through lootonlies</br>";
-while ($row = mysql_fetch_array($result)) {
+while ($row = $result->fetch_array()) {
 	$maxgaint = $maxgain;
 	echo $row['name'] . " acknowledged";
   $i = 0;

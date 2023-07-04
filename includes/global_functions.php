@@ -1,8 +1,8 @@
 <?php
 function logDebugMessage($debugmsg) { //putting this in the header so that it can quickly be added to any page
 	$time = time();
-	$debugmsg = mysql_real_escape_string("($time)" . $debugmsg);
-	mysql_query("UPDATE `System` SET `debuglog` = CONCAT(`debuglog`,'<br />$debugmsg') WHERE 1");
+	$debugmsg = $mysqli->real_escape_string("($time)" . $debugmsg);
+	$mysqli->query("UPDATE `System` SET `debuglog` = CONCAT(`debuglog`,'<br />$debugmsg') WHERE 1");
 }
 
 function logModMessage($debugmsg, $id) { //putting this in the header so that it can quickly be added to any page
@@ -12,15 +12,15 @@ function logModMessage($debugmsg, $id) { //putting this in the header so that it
 	} else {
 		$debugmsg = "(ID: N/A @ $time) " . $debugmsg;
 	}
-	$debugmsg = mysql_real_escape_string($debugmsg);
-	mysql_query("UPDATE `System` SET `modlog` = CONCAT(`modlog`,'<br />$debugmsg') WHERE 1");
+	$debugmsg = $mysqli->real_escape_string($debugmsg);
+	$mysqli->query("UPDATE `System` SET `modlog` = CONCAT(`modlog`,'<br />$debugmsg') WHERE 1");
 }
 
 function chargeEncounters($userrow, $encounters, $effectticks) {
 	if ($userrow['encounters'] >= $encounters) {
 		$newenc = $userrow['encounters'] -= $encounters;
 		$encspent = $userrow['encountersspent'] += $encounters;
-		mysql_query("UPDATE `Players` SET `encounters` = $newenc, `encountersspent` = $encspent WHERE `Players`.`username` = '" . $userrow['username'] . "'");
+		$mysqli->query("UPDATE `Players` SET `encounters` = $newenc, `encountersspent` = $encspent WHERE `Players`.`username` = '" . $userrow['username'] . "'");
 		if ($effectticks > 0) {
 			$statusarray = explode("|", $userrow['permstatus']);
 			$i = 0;
@@ -45,7 +45,7 @@ function chargeEncounters($userrow, $encounters, $effectticks) {
 			$newstatus = preg_replace("/\\|{2,}/","|",$newstatus); //eliminate all blanks
 			if ($newstatus == "|") $newstatus = "";
 			if ($newstatus != $userrow['permstatus']) {
-				mysql_query("UPDATE `Players` SET `permstatus` = '$newstatus' WHERE `Players`.`username` = '" . $userrow['username'] . "'");
+				$mysqli->query("UPDATE `Players` SET `permstatus` = '$newstatus' WHERE `Players`.`username` = '" . $userrow['username'] . "'");
 			}
 		}
 		return true;
@@ -66,18 +66,18 @@ function climbEcheladder($userrow, $rungups) {
 		$rungcounter--;
 	}
 	if ($rungs > 0) {
-		mysql_query("UPDATE `Players` SET `Echeladder` = $userrow[Echeladder]+$rungs, `Boondollars` = $userrow[Boondollars]+$boondollars, `Gel_Viscosity` = $userrow[Gel_Viscosity]+$hpup, `Health_Vial` = $userrow[Health_Vial]+$hpup, `Dream_Health_Vial` = $userrow[Dream_Health_Vial]+$hpup, `Aspect_Vial` = $userrow[Aspect_Vial]+$hpup WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `Echeladder` = $userrow[Echeladder]+$rungs, `Boondollars` = $userrow[Boondollars]+$boondollars, `Gel_Viscosity` = $userrow[Gel_Viscosity]+$hpup, `Health_Vial` = $userrow[Health_Vial]+$hpup, `Dream_Health_Vial` = $userrow[Dream_Health_Vial]+$hpup, `Aspect_Vial` = $userrow[Aspect_Vial]+$hpup WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
 		$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
-		$echeresult = mysql_query("SELECT `$echestr` FROM Echeladders WHERE `Echeladders`.`username` = '" . $userrow['username'] . "'");
-		$echerow = mysql_fetch_array($echeresult);
+		$echeresult = $mysqli->query("SELECT `$echestr` FROM Echeladders WHERE `Echeladders`.`username` = '" . $userrow['username'] . "'");
+		$echerow = $echeresult->fetch_array();
 		$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
 		if ($echerow[$echestr] != "") {
 			if ($rungs > 1) echo "</br>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
 			else echo "</br>You ascend to rung: $echerow[$echestr]!";
 		}
-		$levelerabilities = mysql_query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
+		$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
 	AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
-		while ($levelerability = mysql_fetch_array($levelerabilities)) {
+		while ($levelerability = $levelerabilities->fetch_array()) {
 	  	echo "</br>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 		}
 		if ($userrow['Echeladder'] + $rungs == 612) echo "</br>You have at long last reached the top of your Echeladder!";
@@ -90,10 +90,10 @@ function climbEcheladder($userrow, $rungups) {
 
 function loadAbilities($userrow) {
 	//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
-  $abilityresult = mysql_query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
+  $abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
 	AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
   $abilities = array(0 => "Null ability. No, not void.");
-  while ($temp = mysql_fetch_array($abilityresult)) {
+  while ($temp = $abilityresult->fetch_array()) {
 		$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
 		//as pulling the correct element out of the abilities array via the ID. Note that an ability with an empty usage message will be unusable since the empty function will spit empty at you.
   }
@@ -106,8 +106,8 @@ function loadAbilities($userrow) {
     	$statusarg = explode(":", $thisstatus[$st]);
     	if ($statusarg[0] == "HASABILITY") { //This is an ability the player possesses.
 				$abilityid = intval($statusarg[1]);
-    		$abilityresult = mysql_query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`ID` = $abilityid LIMIT 1;");
-				($temp = mysql_fetch_array($abilityresult));
+    		$abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`ID` = $abilityid LIMIT 1;");
+				($temp = $abilityresult->fetch_array());
 				$abilities[$temp['ID']] = $temp['Usagestr'];
     	}
     	$st++;
@@ -168,15 +168,15 @@ function terminateStrife($userrow, $result) {
 		$newfighter = "";
 		$aides = 0;      
 		$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-		$sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+		$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
 		$backup = $sessionmates; //Save this query for later.
-		while ($row = mysql_fetch_array($sessionmates)) {
+		while ($row = $sessionmates->fetch_array()) {
 			if ($row['aiding'] == $username) { //Aiding character.
 				$aides += 1;
 			}
 		}
 		$sessionmates = $backup;
-		while ($row = mysql_fetch_array($sessionmates)) {
+		while ($row = $sessionmates->fetch_array()) {
 			if ($row['aiding'] == $username) { //Aiding character.
 				if ($newfighter == "" && rand(1,$aides) == 1) { //Character has been selected to be the next target.
 					$newfighter = $row['username'];
@@ -185,10 +185,10 @@ function terminateStrife($userrow, $result) {
 			}
 		}
 		$sessionmates = $backup;
-		while ($row = mysql_fetch_array($sessionmates)) {
+		while ($row = $sessionmates->fetch_array()) {
 			if ($row['aiding'] == $username) { //Aiding character.
 				if ($row['username'] == $newfighter) { //Character needs to be given this encounter.
-					mysql_query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;");
+					$mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;");
 					$p = 1;
 					while ($p <= $max_enemies) {
 						$aidenemystr = "enemy" . strval($p) . "name";
@@ -209,56 +209,56 @@ function terminateStrife($userrow, $result) {
 						$p++;
 					}
 				} else {
-					mysql_query("UPDATE `Players` SET `aiding` = '" . $newfighter . "' WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;"); //Player assists new combatant.
+					$mysqli->query("UPDATE `Players` SET `aiding` = '" . $newfighter . "' WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;"); //Player assists new combatant.
 				}
 			}
 		}
 		if ($result == 2) { //player absconded/was ejected
 			if (!empty($userrow['strifesuccessexplore']) && !empty($userrow['strifefailureexplore'])) { //User exploring!
-				mysql_query("UPDATE `Players` SET `exploration` = '" . $userrow['strifeabscondexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+				$mysqli->query("UPDATE `Players` SET `exploration` = '" . $userrow['strifeabscondexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
 				echo ' <a href="explore.php">Continue exploring</a></br>';
 			}
 			if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
-				mysql_query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+				$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 				echo "You flee back the way you came.</br>";
 				echo "<a href='dungeons.php'>==&gt;</a></br>";
 			}
 			if ($userrow['dungeonstrife'] == 4) { //User fighting dungeon guardian
-	    	mysql_query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+	    	$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 	    	echo "You flee from the guardian. Perhaps you should prepare a bit more before trying to enter the dungeon...</br>";
 	    	echo "<a href='dungeons.php#display'>==&gt;</a></br>";
 			}
 			if ($userrow['dungeonstrife'] == 6) { //User strifing for a quest
-		    mysql_query("UPDATE `Players` SET `dungeonstrife` = 5 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+		    $mysqli->query("UPDATE `Players` SET `dungeonstrife` = 5 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 		    echo "You abscond, but the quest is still on for you to try again when you are better prepared...</br>";
 	  	  echo "<a href='consortquests.php'>==&gt;</a></br>";
 			}
 		} elseif ($result == 1) { //player was defeated
 			if ($userrow['dreamingstatus'] == "Awake") $downstr = "down";
 			else $downstr = "dreamdown";
-			mysql_query("UPDATE `Players` SET `" . $downstr . "` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+			$mysqli->query("UPDATE `Players` SET `" . $downstr . "` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 	  	$userrow[$downstr] = 1; //Makes messages appear.
 			if (!empty($userrow['strifesuccessexplore']) && !empty($userrow['strifefailureexplore'])) { //User exploring!
-	    	mysql_query("UPDATE `Players` SET `exploration` = '" . $userrow['strifefailureexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+	    	$mysqli->query("UPDATE `Players` SET `exploration` = '" . $userrow['strifefailureexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
 	    	echo ' <a href="explore.php">Continue exploring</a></br>';
 	  	}
 			if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
-		    mysql_query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+		    $mysqli->query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 		    $userrow['dungeonstrife'] = 1;
 	    	echo "You flee back the way you came.</br>";
 	  	  echo "<a href='dungeons.php#display'>==&gt;</a></br>";
 		  }
 		  if ($userrow['dungeonstrife'] == 4) { //User fighting dungeon guardian
-	    	mysql_query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+	    	$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 	  	  $userrow['dungeonstrife'] = 3;
 		    echo "You flee from the guardian. Perhaps you should prepare a bit more before trying to enter the dungeon...</br>";
 		    echo "<a href='dungeons.php#display'>==&gt;</a></br>";
 	  	}
 	  	if ($userrow['dungeonstrife'] == 6) { //User strifing for a quest
-	    	mysql_query("UPDATE `Players` SET `dungeonstrife` = 5 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
+	    	$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 5 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 	    	$userrow['dungeonstrife'] = 5;
-	    	$qresult = mysql_query("SELECT `context` FROM `Consort_Dialogue` WHERE `ID` = $userrow[currentquest]");
-	    	$qrow = mysql_fetch_array($qresult);
+	    	$qresult = $mysqli->query("SELECT `context` FROM `Consort_Dialogue` WHERE `ID` = $userrow[currentquest]");
+	    	$qrow = $qresult->fetch_array();
 	    	if (strpos($qrow['context'], "questrescue") !== false)
 	    	echo "This quest's challenge has gotten the better of you! It looks as though you will not have a second chance, unfortunately...<br />";
 	    	else
@@ -268,7 +268,7 @@ function terminateStrife($userrow, $result) {
 		}
 	} elseif ($result == 0) { //player is victorious!
 		if (!empty($userrow['strifesuccessexplore']) && !empty($userrow['strifefailureexplore'])) { //User exploring!
-			mysql_query("UPDATE `Players` SET `exploration` = '" . $userrow['strifesuccessexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
+			$mysqli->query("UPDATE `Players` SET `exploration` = '" . $userrow['strifesuccessexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
 			echo ' <a href="explore.php">Continue exploring</a></br>';
     }
 		if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
@@ -278,11 +278,11 @@ function terminateStrife($userrow, $result) {
 			echo "</br>You have successfully defeated the dungeon guardian! The entrance lies before you...</br>";
 			echo "<a href='dungeons.php#display'>==&gt;</a></br>";
     } elseif ($userrow['dungeonstrife'] == 6) { //User strifing for a quest
-      $qresult = mysql_query("SELECT `context` FROM `Consort_Dialogue` WHERE `ID` = $userrow[currentquest]");
-	    $qrow = mysql_fetch_array($qresult);
+      $qresult = $mysqli->query("SELECT `context` FROM `Consort_Dialogue` WHERE `ID` = $userrow[currentquest]");
+	    $qrow = $qresult->fetch_array();
 	    if (strpos($qrow['context'], "questrescue") !== false) { //whoops, you weren't supposed to kill them all!
 	    	echo "<br />...however, defeating all the enemies has caused you to fail the quest!<br />";
-	    	mysql_query("UPDATE `Players` SET `dungeonstrife` = 5 WHERE `Players`.`username` = '" . $userrow['username'] . "'");
+	    	$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 5 WHERE `Players`.`username` = '" . $userrow['username'] . "'");
 	    	$userrow['dungeonstrife'] = 5;
 	    } else echo "</br>You have successfully cleared the quest! You should talk to the quest giver and claim your reward.</br>";
 			echo "<a href='consortquests.php'>==&gt;</a></br>";
@@ -293,9 +293,9 @@ function terminateStrife($userrow, $result) {
 		$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
 		if ($userrow['enemydata'] == "") $exstr = " AND `Players`.`aiding` = '" . $userrow['username'] . "'";
 		else $exstr = " AND (`Players`.`username` = '" . $userrow['aiding'] . "' OR `Players`.`aiding` = '" . $userrow['aiding'] . "')";
-		$sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'" . $exstr);
-		while ($row = mysql_fetch_array($sessionmates)) {
-			mysql_query("UPDATE `Players` SET `enemydata` = '', `aiding` = '' WHERE `username` = '" . $row['username'] . "'");
+		$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'" . $exstr);
+		while ($row = $sessionmates->fetch_array()) {
+			$mysqli->query("UPDATE `Players` SET `enemydata` = '', `aiding` = '' WHERE `username` = '" . $row['username'] . "'");
 		}
 	}
 	$i = 1;
@@ -304,7 +304,7 @@ function terminateStrife($userrow, $result) {
 		$userrow['enemy' . strval($i) . 'name'] = "";
 		$i++;
 	}
-	mysql_query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
+	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
 	`tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0, 
 	`cantabscond` = 0, `motifcounter` = 0, `combatconsume` = 0, `strifestatus` = '', `enemydata` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;"); //Power boosts wear off.
 	$userrow['powerboost'] = 0;

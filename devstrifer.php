@@ -15,7 +15,7 @@ if (empty($_SESSION['username'])) {
       echo "There was an error generating the enemy.<br />";
     } else {
       echo "Enemy generated successfully.<br />";
-      mysql_query("UPDATE `Players` SET `down` = 0, `Health_Vial` = $userrow[Gel_Viscosity] WHERE `Players`.`username` = '$username'");
+      $mysqli->query("UPDATE `Players` SET `down` = 0, `Health_Vial` = $userrow[Gel_Viscosity] WHERE `Players`.`username` = '$username'");
     }
     echo "<br />";
   }

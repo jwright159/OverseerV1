@@ -9,11 +9,11 @@ require_once("includes/grist_icon_parser.php");
 $max_items = 50;
 
 function initGrists() {
-	$result2 = mysql_query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -41,8 +41,8 @@ if (empty($_SESSION['username'])) {
   $maxstorage = $userrow['house_build_grist'] + 1000;
   $gristed = false; //will be set to true when grist types are initialized
   $sessionname = $userrow['session_name'];
-	$sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
-	$sessionrow = mysql_fetch_array($sessionresult);
+	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
+	$sessionrow = $sessionresult->fetch_array();
 	$challenge = $sessionrow['challenge'];
 	$canon = $sessionrow['canon'];
 	if (strpos($userrow['storeditems'], "USELESS.") !== false) $useless = true;
@@ -64,8 +64,8 @@ if (empty($_SESSION['username'])) {
   	if (strpos($itemname, " (CODE:" !== false)) {
   		$itemname = substr($itemname, 0, -16);
   	}
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($itemrow = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($itemrow = $itemresult->fetch_array()) {
 	$itemname = $itemrow['name'];
 	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	if ($itemname == $userrow[$invslot] || $ghostmode) {
@@ -83,8 +83,8 @@ if (empty($_SESSION['username'])) {
   	if (strpos($itemname, " (CODE:" !== false)) {
   		$itemname = substr($itemname, 0, -16);
   	}
-      $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-      while ($itemrow = mysql_fetch_array($itemresult)) {
+      $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      while ($itemrow = $itemresult->fetch_array()) {
 	$itemname = $itemrow['name'];
 	$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 	if ($itemname == $userrow[$invslot] || $ghostmode) {
@@ -102,12 +102,12 @@ if (empty($_SESSION['username'])) {
 		if ($challenge == 1) {
 			$skip1 = false;
 			$skip2 = false;
-			$itemresult1 = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code1'] . "' ;");
-			while ($itemrow1 = mysql_fetch_array($itemresult1)) {
+			$itemresult1 = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code1'] . "' ;");
+			while ($itemrow1 = $mysqli->fetch_array($itemresult1)) {
 				if (!(strrpos($sessionrow['atheneum'], $itemrow1['captchalogue_code']) === false)) $skip1 = true;
 			}
-			$itemresult2 = mysql_query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code2'] . "' ;");
-			while ($itemrow2 = mysql_fetch_array($itemresult2)) {
+			$itemresult2 = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code2'] . "' ;");
+			while ($itemrow2 = $mysqli->fetch_array($itemresult2)) {
 				if (!(strrpos($sessionrow['atheneum'], $itemrow2['captchalogue_code']) === false)) $skip2 = true;
 			}
 			if ($skip1 && $skip2) $letthrough = true;
@@ -121,7 +121,7 @@ if (empty($_SESSION['username'])) {
       if ($letthrough == true) {
       echo "You expend four Build Grist creating two captchalogue cards which the designix punches holes into corresponding to the codes.</br>";
       echo "After a brief delay, the designix finishes and sends you the code <itemcode>$code</itemcode></br>";
-      mysql_query("UPDATE `Players` SET `Build_Grist` = " . strval($userrow['Build_Grist']-4) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `Build_Grist` = " . strval($userrow['Build_Grist']-4) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
       if ($challenge == 1) $_GET['holocode'] = $code; //go straight into the holopad operation if challenge mode
 			$combined = true; //so that you can't cheat to preview any code
       } else echo "You can't combine codes that aren't in your atheneum in Challenge Mode. If the code(s) you tried to combine is/are in your inventory, then it is bugged somehow. Use the populate atheneum page to fix it.</br>";
@@ -150,14 +150,14 @@ if (empty($_SESSION['username'])) {
   }
     
   if (!empty($_GET['holocode'])) { //User is using the holopad.
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_GET['holocode'] . "'");
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_GET['holocode'] . "'");
     $itemfound = False;
-    while ($itemrow = mysql_fetch_array($itemresult)) {
+    while ($itemrow = $itemresult->fetch_array()) {
       if ($itemrow['captchalogue_code'] == $_GET['holocode']) {
       if (!strrpos($sessionrow['atheneum'], $_GET['holocode'])) {
       	if ($challenge == 0 || $combined) {
       	$newatheneum = $sessionrow['atheneum'] . $_GET['holocode'] . "|";
-      	mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '$sessionname' LIMIT 1 ;");
+      	$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '$sessionname' LIMIT 1 ;");
       	} else {
       		echo "The code you are previewing has not yet been discovered by your session. You can view it, but you have to either combine the items to make it or physically acquire the item another way to add it to your atheneum.</br>";
       	}
@@ -237,7 +237,7 @@ if (empty($_SESSION['username'])) {
     if ($challenge == 1 && $combined) { //go ahead and add to the atheneum anyway so that the player can suggest the item if they want
       if (!strrpos($sessionrow['atheneum'], $_GET['holocode'])) {
       	$newatheneum = $sessionrow['atheneum'] . $_GET['holocode'] . "|";
-      	mysql_query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '$sessionname' LIMIT 1 ;");
+      	$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '$sessionname' LIMIT 1 ;");
       }
     }
   }
@@ -288,13 +288,13 @@ if (empty($_SESSION['username'])) {
     	$tostorage = $numberalched;
     	$numberalched = 0;
     }
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['alchcode'] . "'");
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['alchcode'] . "'");
     $itemfound = False;
     $canafford = True;
     $nothing = True;
     $reachgrist = False;
     $terminateloop = False;
-    $itemrow = mysql_fetch_array($itemresult);
+    $itemrow = $itemresult->fetch_array();
       if ($itemrow['captchalogue_code'] == $_POST['alchcode']) {
       	if (itemSize($itemrow['size']) > itemSize($userrow['moduspower'])) { //item is too big for the player's fetch modus
       		$tostorage += $numberalched; //send all to storage instead of trying to captchalogue them, because it bugs out otherwise
@@ -387,7 +387,7 @@ if (empty($_SESSION['username'])) {
 	    $costquery = substr($costquery, 0, -2); //Dispose of last comma and space.
 	    $costquery = $costquery . " WHERE `Players`.`username` = '$username' LIMIT 1 ;";
 	    //echo "Costquery is " . $costquery;
-	    mysql_query($costquery); //Pay.
+	    $mysqli->query($costquery); //Pay.
 	    if ($numberalched == 1) {
 	    	if (substr($itemname, 0, 2) == "A " || substr($itemname, 0, 3) == "An " || substr($itemname, 0, 4) == "The ")
 	      echo "You successfully create $itemname!</br>";
@@ -473,10 +473,10 @@ if (empty($_SESSION['username'])) {
   		$userrow[$_POST[$invstring]] = $itemname;
   		//echo $itemname;
   	}
-    $itemresult = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+    $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
     $nothing = True;
     $success = False; //this is needed in case the item is a ghost item
-    while ($itemrow = mysql_fetch_array($itemresult)) {
+    while ($itemrow = $itemresult->fetch_array()) {
       $itemname = $itemrow['name'];
       $itemname = str_replace("\\", "", $itemname); //Remove escape characters.
       if ($itemname == $userrow[$_POST[$invstring]] || $isghost) {
@@ -485,7 +485,7 @@ if (empty($_SESSION['username'])) {
 	$deploytag = specialArray($itemrow['effects'], "DEPLOYABLE");
 	if ($deploytag[0] != "DEPLOYABLE") {
 	echo "You recycle your $itemname into ";
-	mysql_query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	autoUnequip($userrow,"none",$_POST[$invstring]);
 	if (!$gristed) {
 		$gristname = initGrists();
@@ -529,17 +529,17 @@ if (empty($_SESSION['username'])) {
 	} else { //Item costed something, use the refund query to restore grist.
 	  $refundquery = substr($refundquery, 0, -2); //Dispose of last comma and space.
 	  $refundquery = $refundquery . " WHERE `Players`.`username` = '$username' LIMIT 1 ;";
-	  mysql_query($refundquery); //Un-pay.
+	  $mysqli->query($refundquery); //Un-pay.
 	}
 	} else {
-		mysql_query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+		$mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 		echo "The item was recycled, but the recycler produced no grist! It seems that the recycler can't handle SBURB machinery properly...</br>";
 	}
       }
     }
     if ($success == False) {
     	if ($userrow[$_POST[$invstring]] != "") {
-	      mysql_query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	      $mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
       	echo "It seems that the item you tried to recycle (" . $userrow[$_POST[$invstring]] . ") no longer exists, or never existed to begin with. You get no grist, but the item has been removed from your inventory, freeing the slot. If you alchemized that item legitimately, please submit a bug report and we'll return your grist ASAP!";
       	logDebugMessage($username . " - tried to recycle " . $userrow[$_POST[$invstring]] . ", was told it didn't exist");
       	$userrow[$_POST[$invstring]] = "";
@@ -659,7 +659,7 @@ if (empty($_SESSION['username'])) {
     	$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 	  }
 	  $itemname = str_replace(" (ghost image)", "", $itemname);
-      //$captchalogue = mysql_query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
+      //$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 	  if (empty($captchaloguequantities[$pureitemname])) {
 		$captchalogue = $captchalogue . "`Captchalogue`.`name` = '" . $itemname . "' OR ";
 		$captchaloguequantities[$pureitemname] = 1;
@@ -674,11 +674,11 @@ if (empty($_SESSION['username'])) {
   if ($invspace > 0) {
   echo "Inventory space used: $invspace / $max_items cards</br>Fetch modus strength: " . $userrow['moduspower'] . "</br>(The maximum size of item you can captchalogue. You may be able to increase this with certain consumables.)</br></br>";
   $captchalogue = substr($captchalogue, 0, -4);
-  $captchalogueresult = mysql_query($captchalogue);  
+  $captchalogueresult = $mysqli->query($captchalogue);  
   
   echo "<table class='inventory'>";
   $count = 1;
-  while ($row = mysql_fetch_array($captchalogueresult)) {
+  while ($row = $captchalogueresult->fetch_array()) {
   //table code
   if ($count == 4) {
   $count = 1;

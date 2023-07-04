@@ -5,8 +5,8 @@ if (empty($_SESSION['username'])) {
 } else {
   require_once("includes/SQLconnect.php");
   if ($userrow['encounters'] > 0) {
-    mysql_query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-    mysql_query("UPDATE `Players` SET `encountersspent` = $userrow[encountersspent]+1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+    $mysqli->query("UPDATE `Players` SET `encountersspent` = $userrow[encountersspent]+1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
     echo "You sit around wasting time.";
   } else {
     echo "You haven't got any time to sit around wasting!";

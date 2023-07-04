@@ -6,8 +6,8 @@ if (empty($_SESSION['username'])) {
   echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } else {
   $sessionname = $userrow['session_name'];
-	$sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
-	$sessionrow = mysql_fetch_array($sessionresult);
+	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
+	$sessionrow = $sessionresult->fetch_array();
 	$challenge = $sessionrow['challenge'];
   //Begin resetting code here.
   if (!empty($_POST['reset'])) {
@@ -26,12 +26,12 @@ if (empty($_SESSION['username'])) {
 	while ($i >= 1) { //Magic number: Number of abstrati. This is the only place it will be referenced.
 	  $abstrastr = "abstratus" . strval($i);
 	  if ($userrow[$abstrastr] != "") {
-	  mysql_query("UPDATE `Players` SET `" . $abstrastr . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	  $mysqli->query("UPDATE `Players` SET `" . $abstrastr . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	  $i = 0;
 	  }
 	  $i--;
 	}
-	mysql_query("UPDATE `Players` SET `equipped` = '', `offhand` = '', `Boondollars` = $userrow[Boondollars]-10000 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	$mysqli->query("UPDATE `Players` SET `equipped` = '', `offhand` = '', `Boondollars` = $userrow[Boondollars]-10000 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	echo "Specibus successfully reset!</br>NOTE: Because of your portfolio change, your strife specibus has ejected all of your weapons, unequipping them. Be sure to gear up properly before going into strife!</br>";
       }
       break;
@@ -39,8 +39,8 @@ if (empty($_SESSION['username'])) {
       if ($userrow['Echeladder'] > 10) {
         echo "You have achieved too much with your current title to change it. Your fate is sealed!</br>";
       } else {
-        mysql_query("UPDATE `Players` SET `Class` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-        mysql_query("UPDATE `Players` SET `Aspect` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+        $mysqli->query("UPDATE `Players` SET `Class` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+        $mysqli->query("UPDATE `Players` SET `Aspect` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	echo "Classpect reset. Now be more careful next time! :P</br>";
       }
       break;
@@ -50,9 +50,9 @@ if (empty($_SESSION['username'])) {
       } elseif ($userrow['house_build_grist'] > 100) {
         echo "You have already built your house too high on your land. Terraforming now would destroy it!</br>";
       } else {
-        $gristresult = mysql_query("SELECT * FROM Grist_Types");
+        $gristresult = $mysqli->query("SELECT * FROM Grist_Types");
         echo '<form action="resets.php" method="post">Choose a new grist category: <select name="newgrist">';
-	while ($gristrow = mysql_fetch_array($gristresult)) {
+	while ($gristrow = $gristresult->fetch_array()) {
   	echo '<option value="' . $gristrow['name'] . '">' . $gristrow['name'] . ' - ';
   	$i = 1;
   	while ($i <= 9) { //Nine types of grist. Magic numbers >_>
@@ -69,8 +69,8 @@ if (empty($_SESSION['username'])) {
     case "landswap":
       $landone = $userrow['land1'];
       $landtwo = $userrow['land2'];
-      mysql_query("UPDATE `Players` SET `land1` = '$landtwo' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-      mysql_query("UPDATE `Players` SET `land2` = '$landone' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `land1` = '$landtwo' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `land2` = '$landone' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
       echo "Done! Your land shall now be referred to as the Land of " . $landtwo . " and " . $landone . ".</br>";
       break;
     default:
@@ -84,7 +84,7 @@ if (empty($_SESSION['username'])) {
       } elseif ($userrow['House_Build_Grist'] > 100) {
         echo "You have already built your house too high on your land. Terraforming now would destroy it!</br>";
       } else {
-        mysql_query("UPDATE `Players` SET `grist_type` = '" . $_POST['newgrist'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+        $mysqli->query("UPDATE `Players` SET `grist_type` = '" . $_POST['newgrist'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	echo "Your land has been terraformed and its grist types have changed.</br>";
       }
   }

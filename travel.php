@@ -9,17 +9,17 @@ if (empty($_SESSION['username'])) {
   echo "Log in to view and change your location.</br>";
   echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } else {
-  $con = mysql_connect("localhost","theovers_DC","pi31415926535");
+  $con = $mysqli->connect("localhost","theovers_DC","pi31415926535");
   if (!$con)
     {
       echo "Connection failed.\n";
-      die('Could not connect: ' . mysql_error());
+      die('Could not connect: ' . $mysqli->error());
     }
   
-  mysql_select_db("theovers_HS", $con);
+  $mysqli->select_db("theovers_HS", $con);
   $username=$_SESSION['username'];
-  $result = mysql_query("SELECT * FROM Players");
-  while ($row = mysql_fetch_array($result)) { //Fetch the user's database row. We're going to need it several times.
+  $result = $mysqli->query("SELECT * FROM Players");
+  while ($row = $result->fetch_array()) { //Fetch the user's database row. We're going to need it several times.
     if ($row[username] == $username) {
       $userrow = $row;
     }
@@ -27,8 +27,8 @@ if (empty($_SESSION['username'])) {
 
   //Location changing code will go here, making a list of places that can be visited. Lair is visitable with seven gates; Battlefield is visitable once Lair is cleared.
   
-  $result = mysql_query("SELECT * FROM Players");
-  while ($row = mysql_fetch_array($result)) {
+  $result = $mysqli->query("SELECT * FROM Players");
+  while ($row = $result->fetch_array()) {
     if ($row[username] == $userrow[location]) {
       $locationrow = $row;
     }

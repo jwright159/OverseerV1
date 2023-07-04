@@ -9,7 +9,7 @@ require_once("includes/SQLconnect.php");
     echo "Hey! This tool is for the developers only. Nice try, pal.";
   } else {
 		echo "Now adding new fields</br>";
-		mysql_query("ALTER TABLE  `Consort_Dialogue` ADD  `gate` SMALLINT NOT NULL DEFAULT  '1' COMMENT  'Minimum house gate required for this quest to appear' AFTER  `context`");
+		$mysqli->query("ALTER TABLE  `Consort_Dialogue` ADD  `gate` SMALLINT NOT NULL DEFAULT  '1' COMMENT  'Minimum house gate required for this quest to appear' AFTER  `context`");
 		}
 }
 ?>

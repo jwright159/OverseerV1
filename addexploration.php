@@ -30,14 +30,14 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		}
 		if (!$blocked) {
 			$areastr = "Explore_" . $_POST['exarea'];
-			$fieldresult = mysql_query("SELECT * FROM `$areastr` LIMIT 1;");
-		while ($field = mysql_fetch_field($fieldresult)) {
+			$fieldresult = $mysqli->query("SELECT * FROM `$areastr` LIMIT 1;");
+		while ($field = $mysqli->fetch_field($fieldresult)) {
 			$fname = $field->name;
 				if ($fname == 'name') {
 					$founditem = false;
 					$editevent = $_POST['name'];
-					$editresult = mysql_query("SELECT * FROM `$areastr` WHERE `$areastr`.`name` = '$editevent' LIMIT 1;");
-					while($row = mysql_fetch_array($editresult)) {
+					$editresult = $mysqli->query("SELECT * FROM `$areastr` WHERE `$areastr`.`name` = '$editevent' LIMIT 1;");
+					while($row = $editresult->fetch_array()) {
 						$founditem = true;
 						$erow = $row;
 					}
@@ -48,9 +48,9 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 					}
 				} else {
 					if (!$founditem) {
-						$updatequery .= ", '" . mysql_real_escape_string($_POST[$fname]) . "'";
+						$updatequery .= ", '" . $mysqli->real_escape_string($_POST[$fname]) . "'";
 					} else {
-						$updatequery .= "`" . $fname . "` = '" . mysql_real_escape_string($_POST[$fname]) . "', ";
+						$updatequery .= "`" . $fname . "` = '" . $mysqli->real_escape_string($_POST[$fname]) . "', ";
 					}
 				}
 			}
@@ -63,12 +63,12 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 				$updatequery .= " WHERE `$areastr`.`name` = '$editevent';";
 			}
 			echo $updatequery . "</br>";
-			mysql_query($updatequery);
+			$mysqli->query($updatequery);
 			//now test to see if it worked
 			if (!$founditem) {
 				$victory = false;
-				$testresult = mysql_query("SELECT `name` FROM `$areastr` WHERE `$areastr`.`name` = '$editevent'");
-				$testrow = mysql_fetch_array($testresult);
+				$testresult = $mysqli->query("SELECT `name` FROM `$areastr` WHERE `$areastr`.`name` = '$editevent'");
+				$testrow = $testresult->fetch_array();
 				if ($testrow['name'] == $editevent) {
 					$victory = true;
 					echo "Event added.<br />";
@@ -83,8 +83,8 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	}
 	
 	if ($populate) {
-		$editresult = mysql_query("SELECT * FROM `$areastr` WHERE `$areastr`.`name` = '$editevent' LIMIT 1;");
-		while($row = mysql_fetch_array($editresult)) {
+		$editresult = $mysqli->query("SELECT * FROM `$areastr` WHERE `$areastr`.`name` = '$editevent' LIMIT 1;");
+		while($row = $editresult->fetch_array()) {
 			$founditem = true;
 			echo $row['name'] . " loaded</br>";
 			$erow = $row;
@@ -96,8 +96,8 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	} else {
 		echo '<input type="hidden" name="exarea" value="' . $_GET['area'] . '" />';
 	}
-	$fieldresult = mysql_query("SELECT * FROM `Explore_Prospit` LIMIT 1;");
-	while ($field = mysql_fetch_field($fieldresult)) {
+	$fieldresult = $mysqli->query("SELECT * FROM `Explore_Prospit` LIMIT 1;");
+	while ($field = $mysqli->fetch_field($fieldresult)) {
 		echo '<tr><td align="right">';
 		$fname = $field->name;
 		if ($fname == "description") {

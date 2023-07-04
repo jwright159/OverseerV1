@@ -14,24 +14,24 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	}
 	
 	if (!empty($_POST['publishlog'])) {
-		$sysresult = mysql_query("SELECT `addlog` FROM `System` WHERE 1");
-		$sysrow = mysql_fetch_array($sysresult);
+		$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
+		$sysrow = $sysresult->fetch_array();
 		if ($sysrow['addlog'] != "") {
 			if (!empty($_POST['publishtitle']))
-			$titletext = mysql_real_escape_string($_POST['publishtitle']);
+			$titletext = $mysqli->real_escape_string($_POST['publishtitle']);
 			else {
 				$titletext = "Auto-posted addlog number ";
 				$titletext .= strval(rand(1000000,9999999));
 			}
-			$datetext = mysql_real_escape_string(date("Y-m-d H:i:s"));
-			$nametext = mysql_real_escape_string($username);
+			$datetext = $mysqli->real_escape_string(date("Y-m-d H:i:s"));
+			$nametext = $mysqli->real_escape_string($username);
 			if (!empty($_POST['publishbody'])) 
 			$leadintext = $_POST['publishbody'];
 			else $leadintext = "This is an automatically generated addlog of items that were created using the on-site Item Editor. The person posting this is too lazy to actually include a message, so enjoy these items:";
-			$bodytext = mysql_real_escape_string($leadintext . "</br>" . $sysrow['addlog']);
-			mysql_query("INSERT INTO `News` (`date`, `title`, `postedby`, `news`) VALUES ('$datetext', '$titletext', '$nametext', '$bodytext')");
+			$bodytext = $mysqli->real_escape_string($leadintext . "</br>" . $sysrow['addlog']);
+			$mysqli->query("INSERT INTO `News` (`date`, `title`, `postedby`, `news`) VALUES ('$datetext', '$titletext', '$nametext', '$bodytext')");
 			echo $bodytext; //in case it fails to post
-			mysql_query("UPDATE `System` SET `addlog` = '' WHERE 1");
+			$mysqli->query("UPDATE `System` SET `addlog` = '' WHERE 1");
 			echo "</br>News has been posted, and the addlog has been cleared.</br>";
 		} else "ERROR: Addlog is empty. Someone might have beaten you to it!</br>";
 	}
@@ -59,8 +59,8 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			$blocked = true;
 		} else {
 			$editcode = $_POST['captchalogue_code'];
-		$editresult = mysql_query("SELECT `captchalogue_code`,`name`,`consumable` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
-		$irow = mysql_fetch_array($editresult);
+		$editresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`consumable` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
+		$irow = $editresult->fetch_array();
 		if ($irow['captchalogue_code'] != $editcode) {
 			echo "No item with that code was found!<br />";
 			$blocked = true;
@@ -72,14 +72,14 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		if (!$blocked) {
 			$editname = str_replace("'", "", $irow['name']);
 			$editname = str_replace("\\", "", $editname); //consumables don't have apostrophes or backslashes
-			$fieldresult = mysql_query("SELECT * FROM `Consumables` LIMIT 1;");
-		while ($field = mysql_fetch_field($fieldresult)) {
+			$fieldresult = $mysqli->query("SELECT * FROM `Consumables` LIMIT 1;");
+		while ($field = $mysqli->fetch_field($fieldresult)) {
 			$fname = $field->name;
 				if ($fname == 'name') {
 					$founditem = false;
 					$editcode = $_POST['captchalogue_code'];
-					$editresult = mysql_query("SELECT * FROM `Consumables` WHERE `Consumables`.`name` = '$editname' LIMIT 1;");
-					while($row = mysql_fetch_array($editresult)) {
+					$editresult = $mysqli->query("SELECT * FROM `Consumables` WHERE `Consumables`.`name` = '$editname' LIMIT 1;");
+					while($row = $editresult->fetch_array()) {
 						$founditem = true;
 						$erow = $row;
 					}
@@ -90,9 +90,9 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 					}
 				} else {
 					if (!$founditem) {
-						$updatequery .= ", '" . mysql_real_escape_string($_POST[$fname]) . "'";
+						$updatequery .= ", '" . $mysqli->real_escape_string($_POST[$fname]) . "'";
 					} else {
-						$updatequery .= "`" . $fname . "` = '" . mysql_real_escape_string($_POST[$fname]) . "', ";
+						$updatequery .= "`" . $fname . "` = '" . $mysqli->real_escape_string($_POST[$fname]) . "', ";
 					}
 				}
 			}
@@ -103,34 +103,34 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 				$updatequery .= " WHERE `Consumables`.`name` = '$editname';";
 			}
 			echo $updatequery . "</br>";
-			mysql_query($updatequery);
+			$mysqli->query($updatequery);
 			//now test to see if it worked
 			if (!$founditem) {
 				$victory = false;
-				$testresult = mysql_query("SELECT `name` FROM `Consumables` WHERE `Consumables`.`name` = '$editname'");
-				$testrow = mysql_fetch_array($testresult);
+				$testresult = $mysqli->query("SELECT `name` FROM `Consumables` WHERE `Consumables`.`name` = '$editname'");
+				$testrow = $testresult->fetch_array();
 				if ($testrow['name'] == $editname) {
 					$victory = true;
-					$sysresult = mysql_query("SELECT `addlog` FROM `System` WHERE 1");
-					$sysrow = mysql_fetch_array($sysresult);
+					$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
+					$sysrow = $sysresult->fetch_array();
 					$sysrow['addlog'] .= "</br>" . $username . " - Added consumable effect for " . $editname;
 					if (!empty($_POST['devcomments'])) $sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
-					mysql_query("UPDATE `System` SET `addlog` = '" . mysql_real_escape_string($sysrow['addlog']) . "' WHERE 1");
+					$mysqli->query("UPDATE `System` SET `addlog` = '" . $mysqli->real_escape_string($sysrow['addlog']) . "' WHERE 1");
 					echo "Addlog updated.</br>";
 				} else {
 					echo "Oops, something is wrong! The query didn't go through, and the consumable row wasn't created. If all else fails, send that query to Blah!</br>";
 				}
 			} else {
 				$victory = true;
-				$sysresult = mysql_query("SELECT `addlog` FROM `System` WHERE 1");
-					$sysrow = mysql_fetch_array($sysresult);
+				$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
+					$sysrow = $sysresult->fetch_array();
 					$sysrow['addlog'] .= "</br>" . $username . " - Edited consumable effect for " . $editname;
 					if (!empty($_POST['devcomments'])) $sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
-					mysql_query("UPDATE `System` SET `addlog` = '" . mysql_real_escape_string($sysrow['addlog']) . "' WHERE 1");
+					$mysqli->query("UPDATE `System` SET `addlog` = '" . $mysqli->real_escape_string($sysrow['addlog']) . "' WHERE 1");
 					echo "Addlog updated.</br>";
 			}
 			if ($victory && $makeconsumable) {
-				mysql_query("UPDATE `Captchalogue` SET `consumable` = 1 WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
+				$mysqli->query("UPDATE `Captchalogue` SET `consumable` = 1 WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
 				echo "Note: This item wasn't originally marked as consumable. It has been updated automatically.<br />";
 			}
 		}
@@ -138,13 +138,13 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	
 	$founditem = false;
 	if ($populate) {
-		$editresult = mysql_query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
-		while($row = mysql_fetch_array($editresult)) {
+		$editresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
+		while($row = $editresult->fetch_array()) {
 			echo $row['name'] . " recognized<br />";
 			$editname = str_replace("'", "", $row['name']);
 			$editname = str_replace("\\", "", $editname); //consumables don't have apostrophes or backslashes
-			$editresult = mysql_query("SELECT * FROM `Consumables` WHERE `Consumables`.`name` = '$editname' LIMIT 1;");
-			$row = mysql_fetch_array($editresult);
+			$editresult = $mysqli->query("SELECT * FROM `Consumables` WHERE `Consumables`.`name` = '$editname' LIMIT 1;");
+			$row = $editresult->fetch_array();
 			if ($row['name'] == $editname) {
 				$founditem = true;
 				echo "Consumable row loaded<br />";
@@ -159,8 +159,8 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	if ($populate) echo '<input type="hidden" name="populate" value="yes">';
 	else echo '<input type="hidden" name="populate" value="no">';
 	echo '<tr><td align="right">Code of item:</td><td> <input type="text" name="captchalogue_code" value="' . $editcode . '" /></td></tr>';
-	$fieldresult = mysql_query("SELECT * FROM `Consumables` LIMIT 1;");
-	while ($field = mysql_fetch_field($fieldresult)) {
+	$fieldresult = $mysqli->query("SELECT * FROM `Consumables` LIMIT 1;");
+	while ($field = $mysqli->fetch_field($fieldresult)) {
 		echo '<tr><td align="right">';
 		$fname = $field->name;
 		if ($fname == "message_battle" || $fname == "message_outside" || $fname == "message_aid") {
@@ -180,8 +180,8 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	echo '</tbody></table>';
 	echo 'Dev comments about the item: Same as the item editor; if you want to say anything about your edit/addition, speak now or forever hold your peace.</br><textarea name="devcomments" rows="6" cols="40" form="itemeditor"></textarea></br>';
 	echo '<input type="submit" value="Edit/Create"></form></br>';
-	$sysresult = mysql_query("SELECT `addlog` FROM `System` WHERE 1");
-	$sysrow = mysql_fetch_array($sysresult);
+	$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
+	$sysrow = $sysresult->fetch_array();
 	if (empty($sysrow['addlog'])) $sysrow['addlog'] = " Empty!";
 	echo "Current addlog:" . $sysrow['addlog'];
 	echo "</br>When you're done with your batch of items, please use the following form to publish the current addlog into a news post.</br>(Note: All fields are optional and will be filled with placeholders if left blank.)</br>";

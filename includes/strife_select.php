@@ -30,16 +30,16 @@
 	    echo '<div class = landselect_wrapper><form action="strifeselect.php" method="post">
 		<input type="submit" class = landselectbutton value="Fight on this Land" /> 
 		Select a Land to fight on:<br/><select name="land"> '; //Only select the Land for combat at this stage.
-        $gateresult = mysql_query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
-        $gaterow = mysql_fetch_array($gateresult); //Gates only has one row.
+        $gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
+        $gaterow = $gateresult->fetch_array(); //Gates only has one row.
         $currentrow = $userrow;
         $done = False;
         while (!$done) {
 	      $locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 	      echo '<option value="' . $currentrow['username'] . '">' . $locationstr . '</option>';
 	      if (!empty($currentrow['server_player']) && $currentrow['server_player'] != $username) {
-	      $currentresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
-	      $currentrow = mysql_fetch_array($currentresult);
+	      $currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
+	      $currentrow = $currentresult->fetch_array();
 	      if ($currentrow['house_build_grist'] < $gaterow["gate2"]) $done = True; //This house is unreachable. Chain is broken here.
 	      } else { //Player has no server, gates go nowhere. This is not canonical behaviour, but canonical behaviour is impossible since it relies on prediction. Alternatively, loop is complete.
 	      //Note that if gate 1 has not been reached, then gate 2 wasn't either and the Land was never accessed in the first place!
@@ -70,7 +70,7 @@
 		  echo '<input type="hidden" name="' . $enemystr . '" value="' . $oldenemy . '">';
 		  $i++;
 		}
-		mysql_query("UPDATE `Players` SET `correctgristtype` = '$userrow[lastgristtype]' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Should be safe.
+		$mysqli->query("UPDATE `Players` SET `correctgristtype` = '$userrow[lastgristtype]' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Should be safe.
 		  echo '</form> </div>';
 		} else { //Sleeping strifes
 		  echo '<form action="strifeselect.php" method="post"><input type="hidden" name="land" value="' . $userrow['dreamingstatus'] . '">';
@@ -95,9 +95,9 @@
 		echo '<input type="submit" value="Fight these enemies again!" /> </form>';
 		}
 		$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-		$sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+		$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
 		$aidneeded = False;
-		while ($row = mysql_fetch_array($sessionmates)) {
+		while ($row = $sessionmates->fetch_array()) {
 		  if ($row['session_name'] == $userrow['session_name'] && $row['username'] != $userrow['username'] && $row['dreamingstatus'] == $userrow['dreamingstatus']) { //No aiding yourself!
 	      //Note that we can only try to aid allies with the same current dreaming status.
 			if (!empty($row['enemy1name']) || !empty($row['enemy2name']) || !empty($row['enemy3name']) || !empty($row['enemy4name']) || !empty($row['enemy5name'])) { //Ally is strifing
@@ -117,20 +117,20 @@
     }
     //Begin auto-assist form.
     $sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
-    $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
+    $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
     echo '<form action="strifeaid.php" method="post">Select an ally to auto-assist. You will be automatically made to assist this ally whenever they begin strifing and it is possible for you to aid them.</br>';
     if (!empty($userrow['autoassist'])) echo "You are currently auto-assisting: $userrow[autoassist]</br>";
     echo 'Select a player to auto-assist: <select name="autoassist"> ';
     echo '<option value="noautoassist">Nobody!</option>';
-    while ($row = mysql_fetch_array($sessionmates)) {
+    while ($row = $sessionmates->fetch_array()) {
       if ($row['session_name'] == $userrow['session_name'] && $row['username'] != $userrow['username']) { //No aiding yourself!
 	echo '<option value="' . $row['username'] . '">' . $row['username'] . '</option>'; //Add ally to list of aidable allies.
       }
     }
     echo '</select></br><input type="submit" value="Auto-assist this ally" /> </form></br>';
     //End auto-assist form.
-    $sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
-    $sessionrow = mysql_fetch_array($sessionresult);
+    $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
+    $sessionrow = $sessionresult->fetch_array();
     if ($sessionrow['sessionbossname'] == "") { //No current fight.
 	echo '<a href="combatbasics.php" style = "margin-right:30px;">The basics of strife</a>';
       echo '<a href="sessionbossvote.php">Vote on whole session boss strifes.</a>';

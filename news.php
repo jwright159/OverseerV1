@@ -1,8 +1,8 @@
 <?php
 require_once("header.php");
 
-$newsresult = mysql_query("SELECT * FROM News ORDER BY `ID` DESC LIMIT 1"); //the first row we pull here should be the latest news
-  while ($row = mysql_fetch_array($newsresult)) {
+$newsresult = $mysqli->query("SELECT * FROM News ORDER BY `ID` DESC LIMIT 1"); //the first row we pull here should be the latest news
+  while ($row = $newsresult->fetch_array()) {
     if ($row['ID'] > 0) {
       $newestrow = $row; //Fetch latest result.
     }
@@ -14,8 +14,8 @@ if(!empty($_GET['startpoint'])) {
 } else $_GET['startpoint'] = 0;
 
 if (!empty($_GET['view'])) {
-	$viewresult = mysql_query("SELECT * FROM News WHERE `News`.`ID` = " . strval($_GET['view']));
-	$vrow = mysql_fetch_array($viewresult);
+	$viewresult = $mysqli->query("SELECT * FROM News WHERE `News`.`ID` = " . strval($_GET['view']));
+	$vrow = $viewresult->fetch_array();
 	if ($vrow['ID'] == $_GET['view']) {
 		if (!empty($_POST['body']) && !empty($_SESSION['username'])) {
 	  	$realbody = $_POST['body']; //start cleaning up body, remove HTML and do the liney thing
@@ -27,9 +27,9 @@ if (!empty($_GET['view'])) {
 	  	if ($userrow['session_name'] == "Itemods") $exstring = " (Moderator): ";
 	  	//echo $_POST['body'] . "</br>";
 	  	$newcomments = $vrow['comments'] . $username . $exstring . $realbody . "|";
-		  $newncomments = mysql_real_escape_string($newcomments);
+		  $newncomments = $mysqli->real_escape_string($newcomments);
 	  	//echo $newcomments . "</br>";
-	  	mysql_query("UPDATE `News` SET `comments` = '" . $newncomments . "' WHERE `News`.`ID` = '" . strval($_GET['view']) . "' ;");
+	  	$mysqli->query("UPDATE `News` SET `comments` = '" . $newncomments . "' WHERE `News`.`ID` = '" . strval($_GET['view']) . "' ;");
 	  	$vrow['comments'] = $newcomments;
 	  	echo "Your comment has been posted.</br>";
 	  }
@@ -61,8 +61,8 @@ if (!empty($_GET['view'])) {
 
 echo 'NOTE - News is displayed in order from newest to oldest.</br>Click on "Read more" to view a news post in its entirety and/or post a comment on it.</br><hr></br>';
 
-$newsresult = mysql_query("SELECT * FROM News ORDER BY `ID` DESC");
-while ($row = mysql_fetch_array($newsresult)) {
+$newsresult = $mysqli->query("SELECT * FROM News ORDER BY `ID` DESC");
+while ($row = $newsresult->fetch_array()) {
   if (empty($endpoint)) $endpoint = $newestrow['ID'] - 9; //
   if (empty($startpoint)) $startpoint = $newestrow['ID']; //Start from the latest news by default
   if (($startpoint >= $row['ID']) && ($endpoint <= $row['ID'])) {

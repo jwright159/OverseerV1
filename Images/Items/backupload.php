@@ -3,14 +3,14 @@ if (empty($_SESSION['username'])) {
   echo "Log in to upload art.</br>";
   echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } else {
-  $con = mysql_connect("localhost","theovers_DC","pi31415926535");
+  $con = $mysqli->connect("localhost","theovers_DC","pi31415926535");
   if (!$con)
     {
       echo "Connection failed.\n";
-      die('Could not connect: ' . mysql_error());
+      die('Could not connect: ' . $mysqli->error());
     }
   
-  mysql_select_db("theovers_HS", $con);
+  $mysqli->select_db("theovers_HS", $con);
   if ($userrow['session_name'] != "Developers") {
     echo "And just what do you think YOU'RE doing?";
   } else {

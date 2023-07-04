@@ -40,27 +40,27 @@ if (empty($_SESSION['username'])) {
     } elseif (empty($_POST['target'])) {
       echo "You did not specify a recipient player.<br />";
     } else {
-      $wireresult = mysql_query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
+      $wireresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
       $targetfound = False;
       $poor = False;
       $type = $_POST['grist_type'];
       if (intval($_POST['amount']) <= $userrow[$type]) {
-	while ($wirerow = mysql_fetch_array($wireresult)) {
+	while ($wirerow = $wireresult->fetch_array()) {
 	  if ($wirerow['username'] == $_POST['target']) {
 	    $targetfound = True;
 	    $wirename = $wirerow['username'];
 	    $modifier = intval($_POST['amount']);
-	    mysql_query("UPDATE `Players` SET `$type` = $userrow[$type]-$modifier WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `$type` = $userrow[$type]-$modifier WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	    $quantity = $userrow[$type]-$modifier;
-	    mysql_query("UPDATE `Players` SET `$type` = $wirerow[$type]+$modifier WHERE `Players`.`username` = '$wirerow[username]' LIMIT 1 ;");
+	    $mysqli->query("UPDATE `Players` SET `$type` = $wirerow[$type]+$modifier WHERE `Players`.`username` = '$wirerow[username]' LIMIT 1 ;");
 	    $timestr = produceIST(initTime($con));
 	    $event = $timestr . ": Sent $wirerow[username] $modifier $type";
 	    //logEvent($event,$username);
 	    $event = $timestr . ": Received $modifier $type from $userrow[username]";
 	    //logEvent($event,$_POST['target']);
 	    $giftstring = strval($modifier) . " " . $type;
-	    $sendresult = mysql_query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $_POST['target'] . "' LIMIT 1;");
-	    $sendrow = mysql_fetch_array($sendresult);
+	    $sendresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $_POST['target'] . "' LIMIT 1;");
+	    $sendrow = $sendresult->fetch_array();
 	    $check = 1;
 	    $max_inbox = 50;	
 	    $foundempty = False;
@@ -76,8 +76,8 @@ if (empty($_SESSION['username'])) {
 		}
               $sendstring = "Gristwire|" . $username . " has wired you " . $giftstring . "!|" . $bodystring;
 	      $sendstring = str_replace("'", "''", $sendstring); //god dang these apostrophes
-	      mysql_query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
-	      mysql_query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
+	      $mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
+	      $mysqli->query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
 	      } else echo "Attempted to send a message, but the user's inbox was full.</br>";
 	    }
 	  }
@@ -99,15 +99,15 @@ if (empty($_SESSION['username'])) {
   //--End wiring code here.--
   
   echo '<form action="grist.php" method="post" id="wire">Target username (sessionmates): <select name="intarget"><option value=""></option>';
-  $yoursessionresult = mysql_query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
-  while ($ysessionrow = mysql_fetch_array($yoursessionresult)) {
+  $yoursessionresult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
+  while ($ysessionrow = $yoursessionresult->fetch_array()) {
   	if ($ysessionrow['username'] != $username) echo '<option value="' . $ysessionrow['username'] . '">' . $ysessionrow['username'] . '</option>';
   }
   echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br /> Type of grist: <select name="grist_type"> ';
-  $result2 = mysql_query("SELECT * FROM `Players` LIMIT 1;");
+  $result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;");
   $reachgrist = False;
   $terminateloop = False;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;
@@ -124,11 +124,11 @@ if (empty($_SESSION['username'])) {
   echo '</select></br>Amount to transfer: <input id="amount" name="amount" type="text" /><br />Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /> </form>';
   }
 
-  $result2 = mysql_query("SELECT * FROM Players LIMIT 1 ;");
+  $result2 = $mysqli->query("SELECT * FROM Players LIMIT 1 ;");
   echo "<div class='grister'>";
   $rowcount = 1;
   $terminateloop = False;
-  while (($col = mysql_fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;
@@ -158,7 +158,7 @@ if (empty($_SESSION['username'])) {
     }
   }
   echo "</div>";
-  mysql_close($con);
+  $mysqli->close();
 }
 require_once("footer.php");
 ?> 

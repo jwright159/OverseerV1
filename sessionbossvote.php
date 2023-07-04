@@ -8,21 +8,21 @@ if (empty($_SESSION['username'])) {
   if (!empty($_POST['kingvote'])) {
     if ($_POST['kingvote'] == "yes") {
       $userrow['kingvote'] = 1;
-      mysql_query("UPDATE `Players` SET `kingvote` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `kingvote` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
     } else {
       $userrow['kingvote'] = 0;
-      mysql_query("UPDATE `Players` SET `kingvote` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+      $mysqli->query("UPDATE `Players` SET `kingvote` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
     }
   }
   //End form processing here
-  $sessionresult = mysql_query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
-  $sessionrow = mysql_fetch_array($sessionresult);
+  $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
+  $sessionrow = $sessionresult->fetch_array();
   if ($sessionrow['sessionbossname'] == "") { //No boss being fought
-    $sessionmates = mysql_query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
+    $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
     $kingvotes = 0;
     $chumroll = 0;
     $powerperplayer = 400000; //Amount of power worth of Dersite army dudes each player must defeat in order to fight BK
-    while ($buddyrow = mysql_fetch_array($sessionmates)) {
+    while ($buddyrow = $sessionmates->fetch_array()) {
       if ($buddyrow['kingvote'] == 1) $kingvotes++;
       $chumroll++;
     }
