@@ -123,7 +123,7 @@ Version Alpha 2.0!:</br>
 	- To compensate for Aspect resistance, aspect pattern damage and power reduction have been buffed a fair bit.</br>
 	- Inventory page now displays a single entry with a "quantity" field instead of displaying the same item over and
 	over.</br>
-	- Added <a href="http://www.pesternote.com">Pesternote</a> connectivity. Pesternote is a Homestuck-themed social
+	- Added <a href="https://www.pesternote.com">Pesternote</a> connectivity. Pesternote is a Homestuck-themed social
 	network, and this update allows you to link an account with them to the Project</br>
 	- Added an option to automatically post boss kills to a linked Pesternote account</br>
 	- Multiple efficiency fixes (inventory as described below, strife, and a few others)</br></overseer>

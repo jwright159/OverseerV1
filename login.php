@@ -101,7 +101,7 @@ if (!empty($_POST['mako']) && $_POST['mako'] == "kawaii") {
 	}
 	$mysqli->close();
 } else {
-	echo '<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+	echo '<script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 <script>
 $(document).ready(function () {
     window.location = "loginer.php";

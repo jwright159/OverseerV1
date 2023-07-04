@@ -29,7 +29,7 @@ require 'includes/headerin.php';
 		echo "<style>favcolour{color: $userrow[colour];}</style>"; ?>
 	<meta name="viewport" content="width=device-width">
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+	<script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 
 	<?php if (mdetect()) { ?>
 		<script>
@@ -137,7 +137,7 @@ require 'includes/headerin.php';
 				m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
 		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-		ga('create', 'UA-43055694-1', 'theoverseerproject.com');
+		ga('create', 'UA-43055694-1', 'overseerreboot.xyz');
 		ga('send', 'pageview');
 
 	</script>
@@ -423,7 +423,7 @@ require 'includes/headerin.php';
 						<ul>
 							<li><a href="credits.php"><span class="rhyme aabout babout">&gt;Credits</span></a></li>
 							<li><a href="changelog.php"><span class="rhyme aabout babout">&gt;Change Log</span></a></li>
-							<li><a href="http://theoverseerproject.tumblr.com/"><span
+							<li><a href="https://theoverseerproject.tumblr.com/"><span
 										class="rhyme aabout babout">&gt;News</span></a></li>
 							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a>
 							</li>
@@ -432,10 +432,10 @@ require 'includes/headerin.php';
 						</ul>
 					</li>
 
-					<li><a href="http://overseerforums.forumotion.com/"><span
+					<li><a href="https://overseerforums.forumotion.com/"><span
 								class="rhyme slam aforums">&gt;FORUMS</span></a></li>
 
-					<li><a href="http://the-overseer.wikia.com/wiki/Main_Page"><span
+					<li><a href="https://the-overseer.wikia.com/wiki/Main_Page"><span
 								class="rhyme slam awiki">&gt;WIKI</span></a></li>
 
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>
@@ -525,7 +525,7 @@ require 'includes/headerin.php';
 						<ul>
 							<li><a href="credits.php"><span class="rhyme aabout babout">&gt;Credits</span></a></li>
 							<li><a href="changelog.php"><span class="rhyme aabout babout">&gt;Change Log</span></a></li>
-							<li><a href="http://theoverseerproject.tumblr.com/"><span
+							<li><a href="https://theoverseerproject.tumblr.com/"><span
 										class="rhyme aabout babout">&gt;News</span></a></li>
 							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a>
 							</li>
@@ -538,10 +538,10 @@ require 'includes/headerin.php';
 						</ul>
 					</li>
 
-					<li><a href="http://overseerforums.forumotion.com/"><span
+					<li><a href="https://overseerforums.forumotion.com/"><span
 								class="rhyme slam aforums">&gt;FORUMS</span></a></li>
 
-					<li><a href="http://the-overseer.wikia.com/wiki/Main_Page"><span
+					<li><a href="https://the-overseer.wikia.com/wiki/Main_Page"><span
 								class="rhyme slam awiki">&gt;WIKI</span></a></li>
 
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>

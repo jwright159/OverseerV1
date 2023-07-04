@@ -41,7 +41,7 @@ if (!empty($session)) { //Session to examine
 			$adv = true;
 		$sessionurl = str_replace("#", "%23", $session);
 		$sessionurl = str_replace(" ", "%20", $sessionurl);
-		echo '<a href="http://www.theoverseerproject.com/sessioninfo.php?session=' . $sessionurl . '">Permanent link to this page.</a></br>';
+		echo '<a href="https://www.overseerreboot.xyz/sessioninfo.php?session=' . $sessionurl . '">Permanent link to this page.</a></br>';
 		echo "This session's head admin: " . $sessionrow['admin'] . "<br />";
 		if (!empty($sessionrow['exchangeland']))
 			echo "Player whose land hosts the Stock Exchange: " . $sessionrow['exchangeland'] . "<br />";

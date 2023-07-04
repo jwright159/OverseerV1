@@ -46,7 +46,7 @@ if (!empty($_SESSION['username'])) {
 			if ($recrow['username'] == $_POST['accountname']) {
 				if ($recrow['email'] == $_POST['accountemail']) {
 					$newcode = genRecoveryCode();
-					$url = "http://www.theoverseerproject.com/forgotpassword.php?user=" . $recrow['username'] . "&code=" . $newcode;
+					$url = "https://www.overseerreboot.xyz/forgotpassword.php?user=" . $recrow['username'] . "&code=" . $newcode;
 					$message = $_POST['accountname'] . ",\r\n\r\nYou have received this email because a request was made to change your account's password. If you initiated this action, please click on or copy the following URL to continue the process:\r\n\r\n $url \r\n\r\nYou will then be prompted to input a new password.\r\n\r\nIf you did not initiate this request, disregard this message. Your account password cannot be changed without visiting that link, and it will expire the next time you log into your account.\r\n\r\nRegards,\r\nThe Overseer Team";
 					$message = wordwrap($message, 70, "\r\n");
 					$to = $_POST['accountemail'];
@@ -58,7 +58,7 @@ if (!empty($_SESSION['username'])) {
 						echo "An email was sent with instructions on how to change your password. You should hopefully receive it sometime within the next 15 minutes. Be sure to check your spam folder if it doesn't appear in your inbox.</br>";
 						$mysqli->query("UPDATE `Players` SET `recovery_confirm` = '$newcode' WHERE `Players`.`username` = '" . $_POST['accountname'] . "' LIMIT 1;");
 					} else
-						echo 'Something went wrong while sending the email. Feel free to try again, but please contact <a href="http://babbyoverseer.tumblr.com">BabbyOverseer</a> if the problem persists.</br>';
+						echo 'Something went wrong while sending the email. Feel free to try again, but please contact <a href="https://babbyoverseer.tumblr.com">BabbyOverseer</a> if the problem persists.</br>';
 				} else
 					echo "The email that you gave doesn't match the email in the database for that account. Please make sure you typed it correctly.</br>";
 			} else
@@ -72,7 +72,7 @@ if (!empty($_SESSION['username'])) {
 		echo '<form method="post" action="forgotpassword.php">Account username: <input type="text" name="accountname"></br>
 	Email address: <input type="text" name="accountemail"></br>
 	<input type="submit" value="Send recovery email"></form>';
-		echo 'If your account doesn\'t have an email address assigned, or you have any other questions, please contact <a href="http://babbyoverseer.tumblr.com">BabbyOverseer</a>.';
+		echo 'If your account doesn\'t have an email address assigned, or you have any other questions, please contact <a href="https://babbyoverseer.tumblr.com">BabbyOverseer</a>.';
 	} else {
 		if (!empty($_GET['code'])) {
 			$recoverresult = $mysqli->query("SELECT `username`,`email`,`recovery_confirm` FROM `Players` WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;");

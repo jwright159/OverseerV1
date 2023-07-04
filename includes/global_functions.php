@@ -8,7 +8,7 @@ function logDebugMessage($debugmsg) { //putting this in the header so that it ca
 function logModMessage($debugmsg, $id) { //putting this in the header so that it can quickly be added to any page
 	$time = time();
 	if ($id != 0) {
-		$debugmsg = "<a href='http://www.theoverseerproject.com/submissions.php?view=$id'>(ID: $id @ $time)</a> " . $debugmsg;
+		$debugmsg = "<a href='https://www.overseerreboot.xyz/submissions.php?view=$id'>(ID: $id @ $time)</a> " . $debugmsg;
 	} else {
 		$debugmsg = "(ID: N/A @ $time) " . $debugmsg;
 	}

@@ -4,7 +4,7 @@ require_once "header.php";
 <p>Alchemy is the process of combining any two items to make something new, unique, and usually more powerful. Any two
 	items can be combined, as long as their codes interact.</p><br />
 <p>If you have any questions about alchemy that aren't answered by this page, the <a
-		href="http://the-overseer.wikia.com/wiki/Alchemy">Alchemy page on the Wiki</a> attempts to cover anything else.
+		href="https://the-overseer.wikia.com/wiki/Alchemy">Alchemy page on the Wiki</a> attempts to cover anything else.
 </p><br />
 <p><strong>Non-canon Alchemy</strong></p><br />
 <p>If you are in a non-canon session, alchemy is relatively simple. At the top of the inventory page, you'll find two

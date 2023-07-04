@@ -37,7 +37,7 @@ if (empty($_SESSION['username'])) {
 		$mysqli->query("UPDATE `Players` SET `postbosses` = $userrow[postbosses] WHERE `Players`.`username` = '$username' LIMIT 1;");
 		echo "Settings updated!</br>";
 	}
-	echo "<a href='http://www.pesternote.com'>Pesternote</a> settings. Control how your Project account interacts with your Pesternote account here.</br>";
+	echo "<a href='https://www.pesternote.com'>Pesternote</a> settings. Control how your Project account interacts with your Pesternote account here.</br>";
 	echo "Note that you can de-link by entering an empty username and password and submitting the linking form.</br></br>";
 	echo "Set your Pesternote account using this form:</br>";
 	echo '<form action="pesternote.php" method="post"> Pesternote username: <input id="username" name="username" type="text" /><br />

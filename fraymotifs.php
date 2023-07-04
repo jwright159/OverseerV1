@@ -538,13 +538,13 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 3);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/heir-conditioning' target='_blank'>windy rhythm</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/heir-conditioning' target='_blank'>windy rhythm</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "<a href='http://homestuck.bandcamp.com/track/heir-transparent' target='_blank'>The melody of an ancient Heir</a> begins playing.";
+										$usagestr = "<a href='https://homestuck.bandcamp.com/track/heir-transparent' target='_blank'>The melody of an ancient Heir</a> begins playing.";
 										break;
 									case 3:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/rex-duodecim-angelus' target='_blank'>towering, thunderous song</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/rex-duodecim-angelus' target='_blank'>towering, thunderous song</a> begins playing.";
 										break;
 									default:
 										break;
@@ -557,7 +557,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 							break;
 						case "Heart":
 							if ($userrow['motifcounter'] == 0) {
-								$usagestr = "A <a href='http://homestuck.bandcamp.com/track/valhalla' target='_blank'>soul-stirring melody</a> begins playing.";
+								$usagestr = "A <a href='https://homestuck.bandcamp.com/track/valhalla' target='_blank'>soul-stirring melody</a> begins playing.";
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!</br>";
@@ -569,10 +569,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 2);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/sburban-jungle-2' target='_blank'>melody of new beginnings</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/sburban-jungle-2' target='_blank'>melody of new beginnings</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/song-of-life' target='_blank'>lifey song</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/song-of-life' target='_blank'>lifey song</a> begins playing.";
 										break;
 									default:
 										break;
@@ -588,10 +588,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 2);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "An <a href='http://homestuck.bandcamp.com/track/skaian-skirmish' target='_blank'>uprising, uplifting song</a> begins playing.";
+										$usagestr = "An <a href='https://homestuck.bandcamp.com/track/skaian-skirmish' target='_blank'>uprising, uplifting song</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/savior-of-the-dreaming-dead' target='_blank'>melody of triumph against all odds</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/savior-of-the-dreaming-dead' target='_blank'>melody of triumph against all odds</a> begins playing.";
 										break;
 									default:
 										break;
@@ -604,7 +604,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 							break;
 						case "Light":
 							if ($userrow['motifcounter'] == 0) {
-								$usagestr = "<a href='http://homestuck.bandcamp.com/track/aggrievance' target='_blank'>The song of an ancient Seer</a> begins playing.";
+								$usagestr = "<a href='https://homestuck.bandcamp.com/track/aggrievance' target='_blank'>The song of an ancient Seer</a> begins playing.";
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!</br>";
@@ -616,10 +616,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 2);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "An <a href='http://homestuck.bandcamp.com/track/versus' target='_blank'>intense, yet focused theme</a> begins playing.";
+										$usagestr = "An <a href='https://homestuck.bandcamp.com/track/versus' target='_blank'>intense, yet focused theme</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "An <a href='http://homestuck.bandcamp.com/track/bl1nd-just1c3-1nv3st1g4t1on' target='_blank'>investigative song</a> begins playing.";
+										$usagestr = "An <a href='https://homestuck.bandcamp.com/track/bl1nd-just1c3-1nv3st1g4t1on' target='_blank'>investigative song</a> begins playing.";
 										break;
 									default:
 										break;
@@ -632,7 +632,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 							break;
 						case "Blood":
 							if ($userrow['motifcounter'] == 0) {
-								$usagestr = "<a href='http://homestuck.bandcamp.com/track/showdown' target='_blank'>The tune of an ancient Knight</a> begins playing.";
+								$usagestr = "<a href='https://homestuck.bandcamp.com/track/showdown' target='_blank'>The tune of an ancient Knight</a> begins playing.";
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!</br>";
@@ -644,13 +644,13 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 3);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "<a href='http://homestuck.bandcamp.com/track/dance-of-thorns' target='_blank'>The best Homestuck song ever</a> begins playing.";
+										$usagestr = "<a href='https://homestuck.bandcamp.com/track/dance-of-thorns' target='_blank'>The best Homestuck song ever</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "An <a href='http://homestuck.bandcamp.com/track/an-unbreakable-union' target='_blank'>ominous-sounding song</a> begins playing.";
+										$usagestr = "An <a href='https://homestuck.bandcamp.com/track/an-unbreakable-union' target='_blank'>ominous-sounding song</a> begins playing.";
 										break;
 									case 3:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/blackest-heart' target='_blank'>soul-blackening dirge</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/blackest-heart' target='_blank'>soul-blackening dirge</a> begins playing.";
 										break;
 									default:
 										break;
@@ -666,10 +666,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 2);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/knifes-edge' target='_blank'>speedy, rousing tune</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/knifes-edge' target='_blank'>speedy, rousing tune</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/chaotic-strength' target='_blank'>fast, furious song</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/chaotic-strength' target='_blank'>fast, furious song</a> begins playing.";
 										break;
 									default:
 										break;
@@ -685,10 +685,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 2);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/pumpkin-cravings' target='_blank'>bizarre tune</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/pumpkin-cravings' target='_blank'>bizarre tune</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/black-rose-green-sun' target='_blank'>song of strength and emptiness</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/black-rose-green-sun' target='_blank'>song of strength and emptiness</a> begins playing.";
 										break;
 									default:
 										break;
@@ -704,10 +704,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 2);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "A <a href='http://homestuck.bandcamp.com/track/atomic-bonsai' target='_blank'>lively, powerful rhythm</a> begins playing.";
+										$usagestr = "A <a href='https://homestuck.bandcamp.com/track/atomic-bonsai' target='_blank'>lively, powerful rhythm</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "<a href='http://homestuck.bandcamp.com/track/sunslammer' target='_blank'>The song of an ancient Witch</a> begins playing.";
+										$usagestr = "<a href='https://homestuck.bandcamp.com/track/sunslammer' target='_blank'>The song of an ancient Witch</a> begins playing.";
 										break;
 									default:
 										break;
@@ -723,13 +723,13 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$randomthing = rand(1, 3);
 								switch ($randomthing) {
 									case 1:
-										$usagestr = "An <a href='http://homestuck.bandcamp.com/track/time-on-my-side' target='_blank'>incredibly funky jam</a> begins playing.";
+										$usagestr = "An <a href='https://homestuck.bandcamp.com/track/time-on-my-side' target='_blank'>incredibly funky jam</a> begins playing.";
 										break;
 									case 2:
-										$usagestr = "A <a http://homestuck.bandcamp.com/track/swing-of-the-clock' target='_blank'>curious ticking piece</a> begins playing.";
+										$usagestr = "A <a https://homestuck.bandcamp.com/track/swing-of-the-clock' target='_blank'>curious ticking piece</a> begins playing.";
 										break;
 									case 3:
-										$usagestr = "<a http://homestuck.bandcamp.com/track/beatdown-round-2-2' target='_blank'>The song of an ancient Knight</a> begins playing.";
+										$usagestr = "<a https://homestuck.bandcamp.com/track/beatdown-round-2-2' target='_blank'>The song of an ancient Knight</a> begins playing.";
 										break;
 									default:
 										break;

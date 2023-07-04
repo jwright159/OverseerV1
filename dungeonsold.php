@@ -853,7 +853,7 @@ if (empty($_SESSION['username'])) {
 						$i++;
 					}
 					if (!empty($encounterargs['BOSS'])) { //BOSS BATTLE
-						echo '<a href="http://homestuck.bandcamp.com/track/cascade" target="_blank">Music befitting an epic struggle</a> begins playing.</br>';
+						echo '<a href="https://homestuck.bandcamp.com/track/cascade" target="_blank">Music befitting an epic struggle</a> begins playing.</br>';
 						$mysqli->query("UPDATE `Players` SET `noassist` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `cantabscond` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `buffstrip` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");

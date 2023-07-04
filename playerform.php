@@ -3,7 +3,7 @@ require_once "header.php";
 $gristresult = $mysqli->query("SELECT * FROM Grist_Types");
 echo '<a href="index.php">Home</a>';
 echo '<p><span style="font-size: medium;">Enter Session</span></p>
-<p>If you are having trouble getting started, check out <a href="http://the-overseer.wikia.com/wiki/Beginner%27s_Guide_to_the_Overseer_Project">this guide!</a></p>
+<p>If you are having trouble getting started, check out <a href="https://the-overseer.wikia.com/wiki/Beginner%27s_Guide_to_the_Overseer_Project">this guide!</a></p>
 <p>Register new player here:</p>
 <form action="addplayer.php" method="post"> Username: <input id="username" name="username" type="text" /><br />
 Password: <input id="password" name="password" type="password" /><br />

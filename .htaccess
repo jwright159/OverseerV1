@@ -11,6 +11,6 @@ allow from all
 order deny,allow
 deny from all
 </Limit>
-AuthName theoverseerproject.com
+AuthName overseerreboot.xyz
 AuthUserFile /home/theovers/public_html/_vti_pvt/service.pwd
 AuthGroupFile /home/theovers/public_html/_vti_pvt/service.grp

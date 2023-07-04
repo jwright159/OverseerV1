@@ -479,14 +479,14 @@ if (empty($_SESSION['username'])) {
 			echo '- A "base" item (one available in the catalogue) does not need to include a captcha code or recipe unless you want one anyway.</br>';
 			echo "- If the code is a combination, please make sure that you have tried both operations (&& and ||) first. Sometimes, you'll find an already existing item close to what you intended to submit.</br>";
 			echo "- Likewise, once the item has been added, if the submitted recipe doesn't work, <b>try the opposite operation with the same components</b> before saying it doesn't work.</br>";
-			echo '- <a href="http://the-overseer.wikia.com/wiki/Alchemy">This alchemy guide</a> may be a helpful read if you\'re uncertain about something.</br>';
+			echo '- <a href="https://the-overseer.wikia.com/wiki/Alchemy">This alchemy guide</a> may be a helpful read if you\'re uncertain about something.</br>';
 			if ($challenge == 1)
 				echo "<urgent>As a Challenge Mode player, your item submissions will be prioritized.</urgent></br>";
 			/*$aotwresult = $mysqli->query("SELECT * FROM `System` WHERE 1 ;");
 					 while ($sysrow = $aotwresult->fetch_array()) $aotwstring = $sysrow['abstratusoftheweek'];
 					 if (empty($aotwstring)) $aotwstring = "None yet. Go vote for one!";
 					 echo "This week's Abstratus of the Week is: $aotwstring </br>";
-					 echo 'Submit an item from the AotW to earn a small reward! <a href="http://overseerforums.forumotion.com/t186-abstratus-of-the-week-poll-week-1">You can vote for the next AotW and read up on further details here.</a></br>';
+					 echo 'Submit an item from the AotW to earn a small reward! <a href="https://overseerforums.forumotion.com/t186-abstratus-of-the-week-poll-week-1">You can vote for the next AotW and read up on further details here.</a></br>';
 					 echo "(The reward is usually boondollars, but if you want to request something specific, please put it in the comments section)";*/
 			echo '<form action="feedback.php?type=item" method="post" id="newitem"><input type="hidden" name="itemsubmission" value="yes">Submission to edit (if any): ';
 			if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods") {
@@ -511,7 +511,7 @@ if (empty($_SESSION['username'])) {
 			echo 'Operation to use: <select name="operate"><option value="nochange">Select one / No change</option><option value="base">None, this is a base item</option><option value="loot">None, this is dungeon loot</option><option value="and">&&</option><option value="or">||</option></select><br />';
 			echo 'New item\'s name: <input id="newitem" name="newitem" type="text" /><br />';
 			echo 'New item\'s description:</br><textarea name="newdesc" rows="6" cols="40" form="newitem"></textarea><br />';
-			echo 'Comments on the new item. This field is for suggestions like command bonuses, abstratus the item should have, grist to be used, etc. The more details supplied, the better:</br><a href="http://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a><br /><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br />';
+			echo 'Comments on the new item. This field is for suggestions like command bonuses, abstratus the item should have, grist to be used, etc. The more details supplied, the better:</br><a href="https://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a><br /><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br />';
 			echo 'Keep in mind that submitting grist types is a good way to get your items greenlit faster. Don\'t worry about exact costs, as those can be easily supplied by the devs.</br>';
 			echo 'Suggested level of power (if weapon) or defense (if wearable): <input id="power" name="power" type="text" /><br />';
 			echo '<input type="submit" name="button" value="Suggest it!" /></form></br>';
@@ -530,13 +530,13 @@ if (empty($_SESSION['username'])) {
 		} elseif ($_GET['type'] == "bug") {
 			echo 'Bug report form. Please enter as much detail about the bug encountered as possible. Wait a few minutes and attempt to reproduce before filing a bug report:</br>';
 			echo 'Sometimes I create and fix bugs within the span of a couple minutes while experimenting!</br>';
-			//echo 'NOTE: Most bug reports are answered on <a href="http://babbyoverseer.tumblr.com">the item dev blog</a>, so keep an eye on it!</br>';
+			//echo 'NOTE: Most bug reports are answered on <a href="https://babbyoverseer.tumblr.com">the item dev blog</a>, so keep an eye on it!</br>';
 			echo '<form action="feedback.php?type=bug" method="post" id="bugreport">Bug encountered, in as much detail as possible, with how to reproduce it if possible: </br><textarea name="bugdesc" rows="6" cols="40" form="bugreport"></textarea><br />';
 			echo '<input type="submit" name="button" value="Report it!" /></form></br>';
 		} elseif ($_GET['type'] == "misc") {
 			echo 'Game feedback form. Keep it constructive, please: Criticism is fine, but scathing personal attacks will simply be ignored, so do not bother.</br>';
 			echo 'Improvement suggestions to go along with negative feedback are always appreciated.</br>';
-			//echo 'NOTE: Like bugs, most game feedback is answered on <a href="http://babbyoverseer.tumblr.com">the item dev blog</a>, so keep an eye on it!</br>';
+			//echo 'NOTE: Like bugs, most game feedback is answered on <a href="https://babbyoverseer.tumblr.com">the item dev blog</a>, so keep an eye on it!</br>';
 			echo '<form action="feedback.php?type=misc" method="post" id="feedback">What you want to say about the game: </br><textarea name="gamefeedback" rows="6" cols="40" form="feedback"></textarea><br />';
 			echo '<input type="submit" name="button" value="Evaluate it!" /></form></br>';
 		} elseif ($_GET['type'] == "itemadv") {
@@ -546,7 +546,7 @@ if (empty($_SESSION['username'])) {
 			echo '- A "base" item (one available in the catalogue) does not need to include a captcha code or recipe unless you want one anyway.</br>';
 			echo "- If the code is a combination, please make sure that you have tried both operations (&& and ||) first. Sometimes, you'll find an already existing item close to what you intended to submit.</br>";
 			echo "- Likewise, once the item has been added, if the submitted recipe doesn't work, <b>try the opposite operation with the same components</b> before saying it doesn't work.</br>";
-			echo '- <a href="http://the-overseer.wikia.com/wiki/Alchemy">This alchemy guide</a> may be a helpful read if you\'re uncertain about something.</br>';
+			echo '- <a href="https://the-overseer.wikia.com/wiki/Alchemy">This alchemy guide</a> may be a helpful read if you\'re uncertain about something.</br>';
 			if ($challenge == 1)
 				echo "<urgent>As a Challenge Mode player, your item submissions will be prioritized.</urgent></br>";
 			echo '<form action="feedback.php?type=itemadv" method="post" id="newitem"><input type="hidden" name="itemsubmission" value="yes"><input type="hidden" name="advanced" value="yes">Submission to edit (if any): ';
@@ -595,7 +595,7 @@ if (empty($_SESSION['username'])) {
 				echo $gristname[$i] . ': <input type="text" name="' . $gristname[$i] . '" /><br />';
 				$i++;
 			}
-			echo 'Comments on the new item. Things such as consumable or extra item effects go here.<br /><a href="http://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a></br><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br />';
+			echo 'Comments on the new item. Things such as consumable or extra item effects go here.<br /><a href="https://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a></br><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br />';
 			echo '<input type="submit" name="button" value="Suggest it!" /></form></br>';
 		} elseif ($_GET['type'] == "quest") {
 			echo 'Consort quest suggestion form. Current quest types include single-item fetch quests, strife quests, rescue quests (reduce all enemies to 0 power), and dungeon quests. Quests can also trigger another quest on completion for quest chains.</br>';

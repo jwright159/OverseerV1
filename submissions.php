@@ -86,7 +86,7 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Feedback` SET `$dostring` = 1 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
 								echo 'Submission moderated.</br>';
 								if ($dostring == "halp")
-									echo '<iframe width="1" height="1" frameborder=false src="http://www.youtube.com/embed/0ApstMKNEMI?autoplay=1"></iframe>';
+									echo '<iframe width="1" height="1" frameborder=false src="https://www.youtube.com/embed/0ApstMKNEMI?autoplay=1"></iframe>';
 							}
 						} else
 							echo "You must give some kind of reasoning via comment if you want to set a flag.</br>";

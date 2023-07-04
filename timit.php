@@ -1,4 +1,4 @@
-<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 <script>
 	var countdown = setInterval(function () {
 		var minutes = parseInt($("span.c1").html());

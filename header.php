@@ -32,7 +32,7 @@ require 'includes/global_functions.php';
 		echo "<style>favcolour{color: $userrow[colour];}</style>"; ?>
 	<meta name="viewport" content="width=device-width">
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+	<script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<?php if (mdetect()) { ?>
 		<script>
 			$(document).ready(function () {

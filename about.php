@@ -2,7 +2,7 @@
 require_once "header.php";
 ?>
 <p>You likely have several questions about all this. I will do my best to answer you here.</p>
-<p>(If you have a question that isn't answered here, try <a href="http://the-overseer.wikia.com/wiki/FAQ"
+<p>(If you have a question that isn't answered here, try <a href="https://the-overseer.wikia.com/wiki/FAQ"
 		target="_blank">the Overseer Wiki FAQ</a>)</p>
 <p><strong>Q: Who are you?</strong></p>
 <p>A:You may refer to me as The Overseer.</p>

@@ -10,7 +10,7 @@ session_start();
 <meta name="viewport" content="width=device-width">
 <script src="encode.js" type="text/javascript"></script>
 
-<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 </head>
 <body link="#2cff4b" aLink="#2cff4b" vLink="#2cff4b">
 
