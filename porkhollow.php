@@ -39,7 +39,7 @@ if (empty($_SESSION['username'])) {
 	  $targetfound = False;
 	  $poor = False;
 	  if (intval($_POST['amount']) <= $userrow['Boondollars']) {
-		while ($wirerow2 = $mysqli->fetch_array($wireresult2)) {
+		while ($wirerow2 = $wireresult2->fetch_array()) {
 		  if ($wirerow2['username'] == $_POST['target']) {
 		    $targetfound = True;
 		    $modifier = intval($_POST['amount']);

@@ -13,7 +13,7 @@ if (empty($_SESSION['username'])) {
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $result2->fetch_field()) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;

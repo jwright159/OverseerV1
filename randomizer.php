@@ -7,7 +7,7 @@ function initGrists() {
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $result2->fetch_field()) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -45,7 +45,7 @@ if (empty($_SESSION['username'])) {
 $showdetails = False;
 $dontshowitems = False;
 $urladdon = "?";
-if($_GET['detail'] != "no") {
+if(empty($_GET['detail']) || $_GET['detail'] != "no") {
 	$showdetails = True;
 	$urladdon .= "detail=yes";
 }
@@ -116,12 +116,12 @@ if($_GET['detail'] != "no") {
 echo 'Welcome to the Randomizer! You will receive the names of two random items every page load.</br>';
 echo "You can use these for inspiration to make a new, unique item; or if you're feeling lucky, recipes for existing items.</br></br>";
 $totalitems = 0;
-if ($_GET['atheneum'] == "yes") {
+if (!empty($_GET['atheneum']) && $_GET['atheneum'] == "yes") {
   	if ($urladdon != "?") $urladdon .= "&";
   	$urladdon .= "atheneum=yes";
   }
-if ($_GET['invonly'] != "yes") {
-  if ($_GET['baseonly'] == "yes") {
+if (empty($_GET['invonly']) || $_GET['invonly'] != "yes") {
+  if (!empty($_GET['baseonly']) && $_GET['baseonly'] == "yes") {
   	if ($urladdon != "?") $urladdon .= "&";
   	$urladdon .= "baseonly=yes";
     $itemsresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM `Captchalogue` WHERE `Captchalogue`.`catalogue` = 1");
@@ -130,7 +130,7 @@ if ($_GET['invonly'] != "yes") {
     }
   $realtotalitems = 0;
   while ($row = $itemsresult->fetch_array()) {
-  	if ($_GET['atheneum'] == "yes") {
+  	if (!empty($_GET['atheneum']) && $_GET['atheneum'] == "yes") {
   		$realtotalitems++;
   		if (!(strrpos($sessionrow['atheneum'], $row['captchalogue_code']) === false)) {
   			$totalitems++;
@@ -162,15 +162,15 @@ if ($_GET['invonly'] != "yes") {
     $attempts++;
     if (empty($_GET['userabstratus'])) {
       $item1 = rand(1,$totalitems);
-      if ($_GET['atheneum'] != "yes") $item1--;
+      if (empty($_GET['atheneum']) || $_GET['atheneum'] != "yes") $item1--;
     	else $item1 = $athenitem[$item1] - 1;
     } else {
       $item1 = rand(1,$totalaotw);
-      if ($_GET['atheneum'] != "yes") $item1--;
+      if (empty($_GET['atheneum']) || $_GET['atheneum'] != "yes") $item1--;
     	else $item1 = $athenitemb[$item1] - 1;
     }
     $item2 = rand(1,$totalitems);
-    if ($_GET['atheneum'] != "yes") {
+    if (empty($_GET['atheneum']) || $_GET['atheneum'] != "yes") {
     	$item2--;
     	while ($item1 == $item2) $item2 = rand(1,$totalitems) - 1;
     } else {
@@ -178,7 +178,7 @@ if ($_GET['invonly'] != "yes") {
     	while ($item1 == $item2) $item2 = $athenitem[rand(1,$totalitems)] - 1;
     }
     while ($item1 == $item2) $item2 = $athenitem[rand(1,$totalitems)] - 1;
-    if ($_GET['baseonly'] == "yes") { //only base items
+    if (!empty($_GET['baseonly']) && $_GET['baseonly'] == "yes") { //only base items
       if (!empty($_GET['userabstratus'])) { //first item must be abstratus of the week
         $itemresult1 = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`catalogue` = 1 AND `Captchalogue`.`abstratus` LIKE '%" . $aotwstring . "%' LIMIT " . $item1 . " , 1 ;");
 	} else {
@@ -198,8 +198,8 @@ if ($_GET['invonly'] != "yes") {
       	$itemresult1 = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_GET['usercode'] . "'");
       	}
       }
-    $irow1 = $mysqli->fetch_array($itemresult1);
-    $irow2 = $mysqli->fetch_array($itemresult2);
+    $irow1 = $itemresult1->fetch_array();
+    $irow2 = $itemresult2->fetch_array();
     //if ($username == "Blahdev") echo "Tried " . $irow1['name'] . " and " . $irow2['name'] . "</br>";
     $codeand = andcombine($irow1['captchalogue_code'], $irow2['captchalogue_code']); //combine the codes so we can check if the combination exists already
     $codeor = orcombine($irow1['captchalogue_code'], $irow2['captchalogue_code']);
@@ -245,10 +245,10 @@ if ($_GET['invonly'] != "yes") {
       $makecombo = False;
       $truename1 = str_replace("'", "\\\\''", $userrow['inv' . $item1]);
       $itemresult1 = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $truename1 . "' LIMIT 1 ;");
-      $irow1 = $mysqli->fetch_array($itemresult1);
+      $irow1 = $itemresult1->fetch_array();
       $truename2 = str_replace("'", "\\\\''", $userrow['inv' . $item2]);
       $itemresult2 = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $truename2 . "' LIMIT 1 ;");
-      $irow2 = $mysqli->fetch_array($itemresult2);
+      $irow2 = $itemresult2->fetch_array();
       $codeand = andcombine($irow1['captchalogue_code'], $irow2['captchalogue_code']); //combine the codes so we can check if the combination exists already
       $codeor = orcombine($irow1['captchalogue_code'], $irow2['captchalogue_code']);
       $itemresult = $mysqli->query("SELECT `captchalogue_code` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $codeand . "'");

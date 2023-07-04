@@ -386,7 +386,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
   echo "'s captchalogued weapons:</br></br>";
   $reachinv = False;
   $terminateloop = False;
-  while (($col = $mysqli->fetch_field($invresult)) && $terminateloop == False) {
+  while (($col = $invresult->fetch_field()) && $terminateloop == False) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;

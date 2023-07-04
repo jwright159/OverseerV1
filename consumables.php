@@ -834,7 +834,7 @@ if (empty($_SESSION['username'])) {
   echo '<form action="consumables.php" method="post"><select name="consume">';
   $reachinv = false;
   $invresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-  while ($col = $mysqli->fetch_field($invresult)) {
+  while ($col = $invresult->fetch_field()) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;

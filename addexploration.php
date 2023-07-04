@@ -31,7 +31,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		if (!$blocked) {
 			$areastr = "Explore_" . $_POST['exarea'];
 			$fieldresult = $mysqli->query("SELECT * FROM `$areastr` LIMIT 1;");
-		while ($field = $mysqli->fetch_field($fieldresult)) {
+		while ($field = $fieldresult->fetch_field()) {
 			$fname = $field->name;
 				if ($fname == 'name') {
 					$founditem = false;
@@ -97,7 +97,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		echo '<input type="hidden" name="exarea" value="' . $_GET['area'] . '" />';
 	}
 	$fieldresult = $mysqli->query("SELECT * FROM `Explore_Prospit` LIMIT 1;");
-	while ($field = $mysqli->fetch_field($fieldresult)) {
+	while ($field = $fieldresult->fetch_field()) {
 		echo '<tr><td align="right">';
 		$fname = $field->name;
 		if ($fname == "description") {

@@ -8,7 +8,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	$row = $yourresult->fetch_array();
 	$youresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '" . $_GET['user'] . "' ;");
 	$accexists = false;
-	while ($col = $mysqli->fetch_field($youresult)) {
+	while ($col = $youresult->fetch_field()) {
 		$accexists = true;
 		$feld = $col->name;
 		echo "$feld = " . $row[$feld] . " </br>";
@@ -18,7 +18,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	$row = $yourresult->fetch_array();
 	$youresult = $mysqli->query("SELECT * FROM `Consort_Dialogue` LIMIT 1 ;");
 	//$accexists = false;
-	while ($col = $mysqli->fetch_field($youresult)) {
+	while ($col = $youresult->fetch_field()) {
 		$accexists = true;
 		$feld = $col->name;
 		echo "$feld = " . $row[$feld] . " </br>";

@@ -17,7 +17,7 @@ if (empty($_SESSION['username'])) {
     if ($row[username] == $username) {
       $type = $_POST[grist_type];
       if (intval($_POST[amount]) <= $row[$type]) {
-	while ($row2 = $mysqli->fetch_array($result2)) {
+	while ($row2 = $result2->fetch_array()) {
 	  if ($row2[username] == $_POST[target]) {
 	    $targetfound = True;
 	    $modifier = intval($_POST[amount]);

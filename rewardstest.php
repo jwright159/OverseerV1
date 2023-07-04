@@ -33,7 +33,7 @@ if (empty($_SESSION['username'])) {
 	  echo 'Encounters: ' . $targetrow['encounters'] . '</br>';
 	  $reachgrist = False;
     	  $result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-    	  while ($col = $mysqli->fetch_field($result2)) {
+    	  while ($col = $result2->fetch_field()) {
       	    $gristtype = $col->name;
       	    if ($gristtype == "Build_Grist") { //Reached the start of the grists.
               $reachgrist = True;
@@ -91,7 +91,7 @@ if (empty($_SESSION['username'])) {
 	    if ($field == "allgrists") {
 	      $reachgrist = False;
 	      $result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	      while ($col = $mysqli->fetch_field($result2)) {
+	      while ($col = $result2->fetch_field()) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 		  $reachgrist = True;
@@ -157,7 +157,7 @@ if (empty($_SESSION['username'])) {
     echo '<option value="abstrati">Strife abstrati</option>';
     $reachgrist = False;
     $result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-    while ($col = $mysqli->fetch_field($result2)) {
+    while ($col = $result2->fetch_field()) {
       $gristtype = $col->name;
       if ($gristtype == "Build_Grist") { //Reached the start of the grists.
         $reachgrist = True;

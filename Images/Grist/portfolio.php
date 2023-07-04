@@ -162,7 +162,7 @@ if (empty($_SESSION['username'])) {
   echo '<form action="portfolio.php" method="post"><select name="equipmain">';
   $reachinv = false;
   $invresult = $mysqli->query("SELECT * FROM Players");
-  while ($col = $mysqli->fetch_field($invresult)) {
+  while ($col = $invresult->fetch_field()) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -216,7 +216,7 @@ if (empty($_SESSION['username'])) {
   echo '<form action="portfolio.php" method="post"><select name="equipoff">';
   $reachinv = false;
   $invresult = $mysqli->query("SELECT * FROM Players");
-  while ($col = $mysqli->fetch_field($invresult)) {
+  while ($col = $invresult->fetch_field()) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -360,7 +360,7 @@ if (empty($_SESSION['username'])) {
   $invresult = $mysqli->query("SELECT * FROM Players");
   echo $username;
   echo "'s captchalogued weapons:</br></br>";
-  while ($col = $mysqli->fetch_field($invresult)) {
+  while ($col = $invresult->fetch_field()) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;

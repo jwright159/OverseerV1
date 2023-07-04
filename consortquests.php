@@ -111,7 +111,7 @@ if (empty($_SESSION['username'])) {
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $result2->fetch_field()) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;
@@ -331,9 +331,9 @@ else {
 			if (!empty($qrow['req_grist'])) {
 				$enemygrists = explode("|", $qrow['req_grist']);
 				$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-				$prow = $mysqli->fetch_array($result1);
+				$prow = $result1->fetch_array();
 				$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-				$lrow = $mysqli->fetch_array($result2);
+				$lrow = $result2->fetch_array();
 			}
 			$enemynames = explode("|", $qrow['req_keyword']);
 			$i = 0;
@@ -420,9 +420,9 @@ else {
 					if (!empty($qrow['req_grist'])) {
 						$enemygrists = explode("|", $qrow['req_grist']);
 						$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-						$prow = $mysqli->fetch_array($result1);
+						$prow = $result1->fetch_array();
 						$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-						$lrow = $mysqli->fetch_array($result2);
+						$lrow = $result2->fetch_array();
 					}
 					$enemynames = explode("|", $qrow['req_keyword']);
 					$i = 0;
@@ -453,9 +453,9 @@ else {
 					if (!empty($qrow['req_grist'])) {
 						$enemygrists = explode("|", $qrow['req_grist']);
 						$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-						$prow = $mysqli->fetch_array($result1);
+						$prow = $result1->fetch_array();
 						$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-						$lrow = $mysqli->fetch_array($result2);
+						$lrow = $result2->fetch_array();
 					}
 					$enemynames = explode("|", $qrow['req_keyword']);
 					$i = 0;

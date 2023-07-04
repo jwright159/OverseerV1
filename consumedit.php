@@ -73,7 +73,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			$editname = str_replace("'", "", $irow['name']);
 			$editname = str_replace("\\", "", $editname); //consumables don't have apostrophes or backslashes
 			$fieldresult = $mysqli->query("SELECT * FROM `Consumables` LIMIT 1;");
-		while ($field = $mysqli->fetch_field($fieldresult)) {
+		while ($field = $fieldresult->fetch_field()) {
 			$fname = $field->name;
 				if ($fname == 'name') {
 					$founditem = false;
@@ -160,7 +160,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	else echo '<input type="hidden" name="populate" value="no">';
 	echo '<tr><td align="right">Code of item:</td><td> <input type="text" name="captchalogue_code" value="' . $editcode . '" /></td></tr>';
 	$fieldresult = $mysqli->query("SELECT * FROM `Consumables` LIMIT 1;");
-	while ($field = $mysqli->fetch_field($fieldresult)) {
+	while ($field = $fieldresult->fetch_field()) {
 		echo '<tr><td align="right">';
 		$fname = $field->name;
 		if ($fname == "message_battle" || $fname == "message_outside" || $fname == "message_aid") {

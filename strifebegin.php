@@ -61,7 +61,7 @@ if (empty($_SESSION['username'])) {
 	  $userrow = refreshEnemydata($userrow);
 	  if (empty($_POST['noprevious'])) {
 	    $result2 = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $_POST[$enemystr] . "'");
-	    $row = $mysqli->fetch_array($result2); //Only enemies on Lands use the overly complicated grist dropping system.
+	    $row = $result2->fetch_array(); //Only enemies on Lands use the overly complicated grist dropping system.
 	    if ($_POST[$griststr] != "None" || $userrow['dreamingstatus'] == "Awake") {
 	    	$userrow[$oldgriststr] = $_POST[$griststr];
 	    }

@@ -122,7 +122,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	if ($row['Aspect'] == $userrow['Aspect']) $motifrow = $row;
       }
       $motifresult = $mysqli->query("SELECT * FROM Fraymotifs");
-      while ($col = $mysqli->fetch_field($motifresult)) {
+      while ($col = $motifresult->fetch_field()) {
 	$motifaspect = $col->name;
 	if ($motifaspect == $motif) {
 	  if (empty($motifrow[$motifaspect])) {
@@ -1201,7 +1201,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	if ($row['Aspect'] == $userrow['Aspect']) $motifrow = $row;
       }
       $motifresult = $mysqli->query("SELECT * FROM Fraymotifs");
-      while ($col = $mysqli->fetch_field($motifresult)) {
+      while ($col = $motifresult->fetch_field()) {
 	$motifaspect = $col->name;
 	if (empty($motifrow[$motifaspect])) {
 	  $motifname = "Unnamed Fraymotif - ";
@@ -1238,7 +1238,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	if ($row['Aspect'] == $userrow['Aspect']) $motifrow = $row;
       }
       $motifresult = $mysqli->query("SELECT * FROM Fraymotifs");
-      while ($col = $mysqli->fetch_field($motifresult)) {
+      while ($col = $motifresult->fetch_field()) {
 	$motifaspect = $col->name;
 	if (empty($motifrow[$motifaspect])) {
 	  $motifname = "Unnamed Fraymotif - ";
@@ -1273,7 +1273,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	if ($row['Aspect'] == $userrow['Aspect']) $motifrow = $row;
       }
       $motifresult = $mysqli->query("SELECT * FROM Fraymotifs");
-      while ($col = $mysqli->fetch_field($motifresult)) {
+      while ($col = $motifresult->fetch_field()) {
 	$motifaspect = $col->name;
 	if (empty($motifrow[$motifaspect])) {
 	  $motifname = "Unnamed Fraymotif - ";

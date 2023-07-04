@@ -67,7 +67,7 @@ function generateLoot($roomarray,$row,$col,$distance,$gate,$lootonly,$boonbucks)
       $reachgrist = False;
       $terminateloop = False;
       $colresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '00000000'"); //Just need the fields anyway.
-      while (($col = $mysqli->fetch_field($colresult)) && $terminateloop == False) {
+      while (($col = $colresult->fetch_field()) && $terminateloop == False) {
 	$gristcost = $col->name;
 	$gristtype = substr($gristcost, 0, -5);
 	if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.

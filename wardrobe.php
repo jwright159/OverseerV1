@@ -333,7 +333,7 @@ else{
 	$reachinv=false;
 	$terminateloop=False;
 	$invresult=$mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while(($col=$mysqli->fetch_field($invresult)) && $terminateloop==False){
+	while(($col=$invresult->fetch_field()) && $terminateloop==False){
 		$invslot=$col->name;
 		if($invslot=="inv1"){
 			//Reached the start of the inventory.
@@ -427,7 +427,7 @@ else{
 	$reachinv=false;
 	$terminateloop=False;
 	$invresult=$mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while(($col=$mysqli->fetch_field($invresult)) && $terminateloop==False){
+	while(($col=$invresult->fetch_field()) && $terminateloop==False){
 		$invslot=$col->name;
 		if($invslot=="inv1"){
 			//Reached the start of the inventory.
@@ -515,7 +515,7 @@ else{
 	$reachinv=false;
 	$terminateloop=False;
 	$invresult=$mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while(($col=$mysqli->fetch_field($invresult)) && $terminateloop==False){
+	while(($col=$invresult->fetch_field()) && $terminateloop==False){
 		$invslot=$col->name;
 		if($invslot=="inv1"){
 			//Reached the start of the inventory.
@@ -603,7 +603,7 @@ else{
 	$reachinv=false;
 	$terminateloop=False;
 	$invresult=$mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while(($col=$mysqli->fetch_field($invresult)) && $terminateloop==False){
+	while(($col=$invresult->fetch_field()) && $terminateloop==False){
 		$invslot=$col->name;
 		if($invslot=="inv1"){
 			//Reached the start of the inventory.
@@ -859,7 +859,7 @@ echo $username;
 echo "'s captchalogued wearables:</br></br>";
 $reachinv=False;
 $terminateloop=False;
-while(($col=$mysqli->fetch_field($invresult)) && $terminateloop==False){
+while(($col=$invresult->fetch_field()) && $terminateloop==False){
 	$invslot=$col->name;
 	if($invslot=="inv1"){
 		//Reached the start of the inventory.

@@ -107,7 +107,7 @@ if (empty($_SESSION['username'])) {
   $result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;");
   $reachgrist = False;
   $terminateloop = False;
-  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $result2->fetch_field()) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;
@@ -128,7 +128,7 @@ if (empty($_SESSION['username'])) {
   echo "<div class='grister'>";
   $rowcount = 1;
   $terminateloop = False;
-  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $result2->fetch_field()) && $terminateloop == False) {
     $gristtype = $col->name;
     if ($gristtype == "Build_Grist") { //Reached the start of the grists.
       $reachgrist = True;

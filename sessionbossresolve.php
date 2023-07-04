@@ -1215,7 +1215,7 @@ $bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[11]</br>";
 	  }
 	  if ($buddyrow['Aspect_Vial'] >= $buddyrow['Gel_Viscosity']) $buddyrow['Aspect_Vial'] = $buddyrow['Gel_Viscosity'];
 	  $megaquery = "UPDATE `Players` SET `strifestatus` = '" . $mysqli->real_escape_string($individualstatus) . "'";
-	  while ($column = $mysqli->fetch_field($colresult)) {
+	  while ($column = $colresult->fetch_field()) {
 		if (($buddyrow[$column->name] != $oldrow[$column->name]) && !strpos($column->name,"inv") && !strpos($column->name,"abstratus") && $column->name != "strifestatus") {
 			//This entry has been changed, and is not an item or abstratus. (Addition of items and abstrati is handled via separate functions,
 			//and we don't want to interfere with those)

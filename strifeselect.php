@@ -55,7 +55,7 @@ if (empty($_SESSION['username'])) {
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
 	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = $mysqli->fetch_array($result2)) {
+	  while ($row = $result2->fetch_array()) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Prospit") {
 	      if ($userrow['olddreamenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' ("Power": ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -75,7 +75,7 @@ if (empty($_SESSION['username'])) {
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
 	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = $mysqli->fetch_array($result2)) {
+	  while ($row = $result2->fetch_array()) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Prospit") {
 	      echo '<option value="' . $enemytype . '">' . $enemytype . ' ("Power": ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -98,7 +98,7 @@ if (empty($_SESSION['username'])) {
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
 	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = $mysqli->fetch_array($result2)) {
+	  while ($row = $result2->fetch_array()) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Derse") {
 	    	if ($userrow['olddreamenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -118,7 +118,7 @@ if (empty($_SESSION['username'])) {
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
 	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = $mysqli->fetch_array($result2)) {
+	  while ($row = $result2->fetch_array()) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Derse") {
 	      echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -141,7 +141,7 @@ if (empty($_SESSION['username'])) {
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
 	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = $mysqli->fetch_array($result2)) {
+	  while ($row = $result2->fetch_array()) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Battlefield") {
 	      if ($userrow['oldenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -161,7 +161,7 @@ if (empty($_SESSION['username'])) {
 	  echo '<select name="' . $enemystr . '">';
 	  echo '<option value=""></option>';
 	  $result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	  while ($row = $mysqli->fetch_array($result2)) {
+	  while ($row = $result2->fetch_array()) {
 	    $enemytype = $row['basename'];
 	    if ($row['appearson'] == "Battlefield") {
 	      echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -208,7 +208,7 @@ if (empty($_SESSION['username'])) {
 	echo '<select name="' . $enemystr . '">';
 	echo '<option value=""></option>';
 	$result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	while ($row = $mysqli->fetch_array($result2)) {
+	while ($row = $result2->fetch_array()) {
 	  $enemytype = $row['basename'];
 	  if ($row['appearson'] == "Lands") {
 	  	if ($userrow['oldenemy' . strval($enemies)] == $enemytype) echo '<option value="' . $enemytype . '" selected>' . $enemytype . ' (Base power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
@@ -236,7 +236,7 @@ if (empty($_SESSION['username'])) {
 	echo '<select name="' . $enemystr . '">';
 	echo '<option value=""></option>';
 	$result2 = $mysqli->query("SELECT * FROM Enemy_Types ORDER BY `basepower`");
-	while ($row = $mysqli->fetch_array($result2)) {
+	while ($row = $result2->fetch_array()) {
 	  $enemytype = $row['basename'];
 	  if ($row['appearson'] == "Lands") {
 	    echo '<option value="' . $enemytype . '">' . $enemytype . ' (Base power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.

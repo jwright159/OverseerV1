@@ -72,7 +72,7 @@ $fly = canFly($userrow);
     	$titlegood = 0;
     	$aspects = $mysqli->query("SELECT * FROM Titles LIMIT 1;");
     	$reachaspect = False;
-    	while ($col = $mysqli->fetch_field($aspects)) {
+    	while ($col = $aspects->fetch_field()) {
 	      $aspect = $col->name;
   	    if ($aspect == "Breath") $reachaspect = True;
     	  if ($aspect == "General") $reachaspect = False;
@@ -221,7 +221,7 @@ $fly = canFly($userrow);
     echo 'Select aspect:<select name="aspect"> '; //Select an aspect
     $aspects = $mysqli->query("SELECT * FROM Titles LIMIT 1;");
     $reachaspect = False;
-    while ($col = $mysqli->fetch_field($aspects)) {
+    while ($col = $aspects->fetch_field()) {
       $aspect = $col->name;
       if ($aspect == "Breath") $reachaspect = True;
       if ($aspect == "General") $reachaspect = False;
@@ -242,7 +242,7 @@ $fly = canFly($userrow);
   }
   $exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
   $explorow = $exploresult->fetch_array();
-  if ($explorow['canleave'] == 1 || $userrow['dreamingstatus'] == "Awake") {
+  if ((!empty($explorow['canleave']) && $explorow['canleave'] == 1) || $userrow['dreamingstatus'] == "Awake") {
     echo '<form action="dreamtransition.php" method="post"><input type="hidden" name="sleep" value="sleep" /><input type="submit" value="Sleep?" /></form></br>';
     echo '<form action="wasteoftime.php" method="post"><input type="hidden" name="timewaster" value="timewaster" /><input type="submit" value="Sit around wasting time" /></form></br>';
   } else {

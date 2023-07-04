@@ -22,7 +22,7 @@ function initGrists() {
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $result2->fetch_field()) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -102,12 +102,12 @@ if (empty($_SESSION['username'])) {
 	  		$i1name = str_replace("\\", "", $_POST['item1']);
   			$i1name = str_replace("'", "\\\\''", $i1name);
   			$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` COLLATE latin1_swedish_ci = '$i1name'");
-  			$i1row = $mysqli->fetch_array($item1result);
+  			$i1row = $item1result->fetch_array();
   			$i1name = str_replace("\\\\''", "\\'", $i1name);
   			if ($i1row['name'] != $i1name) {
   				if (strlen($i1name) == 8) {
 	  				$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$i1name'");
-  					$i1row = $mysqli->fetch_array($item1result);
+  					$i1row = $item1result->fetch_array();
   					if ($i1row['captchalogue_code'] != $i1name) {
   						echo "Submission error: could not find the first item in database. Make sure you have the correct name/code.</br>";
   						$aok = false;
@@ -125,12 +125,12 @@ if (empty($_SESSION['username'])) {
 	  		$i2name = str_replace("\\", "", $_POST['item2']);
   			$i2name = str_replace("'", "\\\\''", $i2name);
   			$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` COLLATE latin1_swedish_ci = '$i2name'");
-  			$i2row = $mysqli->fetch_array($item1result);
+  			$i2row = $item1result->fetch_array();
   			$i2name = str_replace("\\\\''", "\\'", $i2name);
   			if ($i2row['name'] != $i2name) {
   				if (strlen($i2name) == 8) {
   					$item1result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '$i2name'");
-  					$i2row = $mysqli->fetch_array($item1result);
+  					$i2row = $item1result->fetch_array();
   					if ($i2row['captchalogue_code'] != $i2name) {
   						echo "Submission error: could not find the second item in database. Make sure you have the correct name/code.</br>";
   						$aok = false;
@@ -420,6 +420,7 @@ if (empty($_SESSION['username'])) {
   //echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
   echo "Feedback Submission</br>Please try not to flood with too many requests. It does take some time to process each one.</br></br>";
   
+  if (!empty($_GET['type'])) {
   if ($_GET['type'] == "item") {
   echo "Object application form. Please fill out as many fields as accurately and completely as you can to facilitate speedy approval of your item.</br>";
   echo "Things to remember:</br>";
@@ -553,6 +554,7 @@ if (empty($_SESSION['username'])) {
   echo 'Item requirements, enemies to fight, enemies to rescue, or description of dungeon:</br><textarea name="qreqs" rows="6" cols="40" form="conquest"></textarea></br>';
   echo 'Reward (can be any description of item, specific or otherwise; for example, "any base item" or "a bladekind weapon with a power of 100 or less". For dungeon quests, list what types of loot should be found in the dungeon and any specific loot the boss should drop. If this quest should trigger another quest on completion, say so here. Leave the field blank if you want the reward to be the default of boondollars.):</br><textarea name="qreward" rows="6" cols="40" form="conquest"></textarea></br>';
   echo '<input type="submit" value="Suggest it!"></form></br>';
+  }
   }
   echo '<form action="feedback.php" method="get">Select the kind of feedback you want to submit: <select name="type">';
   echo '<option value="item">Item suggestion (basic)</option><option value="itemadv">Item suggestion (advanced)</option><option value="art">Art submission</option><option value="quest">Consort quest</option><option value="bug">Bug report</option><option value="misc">Misc. game feedback</option></select>';

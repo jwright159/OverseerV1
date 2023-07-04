@@ -245,9 +245,9 @@ if (empty($_SESSION['username'])) {
     $classy = "Class";
     $classresulta = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[$classy]';");
     $classrowa = $classresulta->fetch_array();
-    $unarmedpowera = floor($userrow['Echeladder'] * (pow(($classrowa['godtierfactor'] / 100),$userrow['Godtier'])));
-    $equippedmain = $_POST['equipmain'];
-    if ($equippedmain != "") {
+    $unarmedpowera = floor($userrow['Echeladder'] * (pow(((empty($classrowa['godtierfactor']) ? 0 : $classrowa['godtierfactor']) / 100),$userrow['Godtier'])));
+    if (!empty($_POST['equipmain'])) {
+      $equippedmain = $_POST['equipmain'];
       $itemname = str_replace("'", "\\\\''", $userrow[$equippedmain]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
       while ($row = $itemresult->fetch_array()) {
@@ -272,7 +272,8 @@ if (empty($_SESSION['username'])) {
         $mainpowera = 0;
       }
     }
-    if ($equippedoff != "") {
+    if (!empty($_POST['equipmain'])) {
+      $equippedoff = $_POST['equipmain'];
       $itemname = str_replace("'", "\\\\''", $userrow[$equippedoff]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
       $itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
       while ($row = $itemresult->fetch_array()) {

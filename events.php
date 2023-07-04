@@ -13,8 +13,8 @@ if (empty($_SESSION['username'])) {
       echo "It is currently " . produceIST(initTime($con)) . "</br>";
       echo "Events for " . $username . ":</br>";
       $result2 = $mysqli->query("SELECT * FROM Logs");
-      $col = $mysqli->fetch_field($result2); //Skip the username.
-      while ($col = $mysqli->fetch_field($result2)) {
+      $col = $result2->fetch_field(); //Skip the username.
+      while ($col = $result2->fetch_field()) {
 	$log = $col->name;
 	echo $row[$log];
 	echo "</br>";

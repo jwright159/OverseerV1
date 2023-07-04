@@ -16,7 +16,7 @@ if (empty($_SESSION['username'])) {
       $clonequery = "INSERT INTO `Sessions` (";
       $clonevalues = "VALUES (";
       $dbpass = "debug" . strval(rand(1,999999));
-      while ($field = $mysqli->fetch_field($fieldresult)) {
+      while ($field = $fieldresult->fetch_field()) {
         $fname = $field->name;
         $clonefield = $mysqli->real_escape_string(strval($clonerow[$fname]));
         if ($fname == "name") {
@@ -37,7 +37,7 @@ if (empty($_SESSION['username'])) {
       $fieldresult = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //get the fields
       $i = 1;
       $clonequery = "INSERT INTO `Players` (";
-      while ($field = $mysqli->fetch_field($fieldresult)) {
+      while ($field = $fieldresult->fetch_field()) {
         $pfname[$i] = $field->name;
         $clonequery .= "`" . $pfname[$i] . "`, ";
         $i++;

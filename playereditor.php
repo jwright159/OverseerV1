@@ -58,7 +58,7 @@ if (empty($_SESSION['username'])) {
   echo '<option value=""></option>';
   $aspects = $mysqli->query("SELECT * FROM Titles");
   $reachaspect = False;
-  while ($col = $mysqli->fetch_field($aspects)) {
+  while ($col = $aspects->fetch_field()) {
     $aspect = $col->name;
     if ($aspect == "Breath") $reachaspect = True;
     if ($aspect == "General") $reachaspect = False;

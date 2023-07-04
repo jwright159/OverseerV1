@@ -69,7 +69,7 @@ function randomAspect($session) { //Generates an aspect same as above
     }
   $min = 999;
   $count = 0;
-    while ($col = $mysqli->fetch_field($classresult)) {
+    while ($col = $classresult->fetch_field()) {
       $aspect = $col->name;
       if ($aspect == "Breath") $reachaspect = True;
       if ($aspect == "General") $reachaspect = False;
@@ -161,11 +161,11 @@ function randomLandname($gristtype, $aspect, $barren) {
 	$landresult2 = $mysqli->query("SELECT * FROM Landjectives WHERE `Landjectives`.`aspect` = '$aspect' OR `Landjectives`.`aspect` = 'Any' ;");
 	$count1 = 0;
 	$count2 = 0;
-	while ($landrow = $mysqli->fetch_array($landresult1)) {
+	while ($landrow = $landresult1->fetch_array()) {
 		$count1++;
 		$landname1[$count1] = $landrow['name'];
 	}
-	while ($landrow = $mysqli->fetch_array($landresult2)) {
+	while ($landrow = $landresult2->fetch_array()) {
 		$count2++;
 		$landname2[$count2] = $landrow['name'];
 	}
@@ -173,8 +173,8 @@ function randomLandname($gristtype, $aspect, $barren) {
 	$landom2 = rand(1,$count2);
 	$landresult1 = $mysqli->query("SELECT * FROM Landjectives WHERE `Landjectives`.`name` = '" . $landname1[$landom1] . "';");
 	$landresult2 = $mysqli->query("SELECT * FROM Landjectives WHERE `Landjectives`.`name` = '" . $landname2[$landom2] . "';");
-	$landrow1 = $mysqli->fetch_array($landresult1);
-	$landrow2 = $mysqli->fetch_array($landresult2);
+	$landrow1 = $landresult1->fetch_array();
+	$landrow2 = $landresult2->fetch_array();
 	if ($landrow2['priority'] > $landrow1['priority']) {
 		$finalname[1] = $landrow2['name'];
 		$finalname[2] = $landrow1['name'];

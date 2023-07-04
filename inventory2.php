@@ -24,11 +24,11 @@ if (empty($_SESSION['username'])) {
 			$skip1 = false;
 			$skip2 = false;
 			$itemresult1 = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code1'] . "' ;");
-			while ($itemrow1 = $mysqli->fetch_array($itemresult1)) {
+			while ($itemrow1 = $itemresult1->fetch_array()) {
 				if (!(strrpos($sessionrow['atheneum'], $itemrow1['captchalogue_code']) === false)) $skip1 = true;
 			}
 			$itemresult2 = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code2'] . "' ;");
-			while ($itemrow2 = $mysqli->fetch_array($itemresult2)) {
+			while ($itemrow2 = $itemresult2->fetch_array()) {
 				if (!(strrpos($sessionrow['atheneum'], $itemrow2['captchalogue_code']) === false)) $skip2 = true;
 			}
 			if ($skip1 && $skip2) $letthrough = true;
@@ -78,7 +78,7 @@ if (empty($_SESSION['username'])) {
 	$reachgrist = False;
 	$terminateloop = False; //time-saver
 	$colresult = $mysqli->query("SELECT * FROM Captchalogue LIMIT 1;");
-	while (($col = $mysqli->fetch_field($colresult)) && $terminateloop == False) {
+	while (($col = $colresult->fetch_field()) && $terminateloop == False) {
 	  $gristcost = $col->name;
 	  $gristtype = substr($gristcost, 0, -5);
 	  if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -174,7 +174,7 @@ if (empty($_SESSION['username'])) {
 	$itemfound = True;
 	echo "The item costs ";
 	$colresult = $mysqli->query("SELECT * FROM Captchalogue");
-	while (($col = $mysqli->fetch_field($colresult)) && $terminateloop == False) {
+	while (($col = $colresult->fetch_field()) && $terminateloop == False) {
 	  $gristcost = $col->name;
 	  $gristtype = substr($gristcost, 0, -5);
 	  if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -230,7 +230,7 @@ if (empty($_SESSION['username'])) {
 	    $terminateloop = False;
 	    $colresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object' LIMIT 1;");
 	    $costquery = "UPDATE `Players` SET ";
-	    while (($col = $mysqli->fetch_field($colresult)) && $terminateloop == False) {
+	    while (($col = $colresult->fetch_field()) && $terminateloop == False) {
 	      $gristcost = $col->name;
 	      $gristtype = substr($gristcost, 0, -5); //Remove "_cost"
 	      if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -346,7 +346,7 @@ if (empty($_SESSION['username'])) {
 	$reachgrist = False;
 	$terminateloop = False;
 	$refundquery = "UPDATE `Players` SET ";
-	while (($col = $mysqli->fetch_field($colresult)) && $terminateloop == False) {
+	while (($col = $colresult->fetch_field()) && $terminateloop == False) {
 	  $gristcost = $col->name;
 	  $gristtype = substr($gristcost, 0, -5);
 	  if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -404,7 +404,7 @@ if (empty($_SESSION['username'])) {
   $reachinv = false;
   $terminateloop = False;
   $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-  while (($col = $mysqli->fetch_field($invresult)) && $terminateloop == False) {
+  while (($col = $invresult->fetch_field()) && $terminateloop == False) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -436,7 +436,7 @@ if (empty($_SESSION['username'])) {
   $reachinv = false;
   $terminateloop = False;
   $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-  while (($col = $mysqli->fetch_field($invresult)) && $terminateloop == False) {
+  while (($col = $invresult->fetch_field()) && $terminateloop == False) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -482,7 +482,7 @@ if (empty($_SESSION['username'])) {
   $reachinv = false;
   $terminateloop = False;
   $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-  while (($col = $mysqli->fetch_field($invresult)) && $terminateloop == False) {
+  while (($col = $invresult->fetch_field()) && $terminateloop == False) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;
@@ -509,7 +509,7 @@ if (empty($_SESSION['username'])) {
   $reachinv = false;
   $terminateloop = False;
   $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-  while (($col = $mysqli->fetch_field($invresult)) && $terminateloop == False) {
+  while (($col = $invresult->fetch_field()) && $terminateloop == False) {
     $invslot = $col->name;
     if ($invslot == "inv1") { //Reached the start of the inventory.
       $reachinv = True;

@@ -13,7 +13,7 @@ function initGrists() {
   $reachgrist = False;
   $terminateloop = False;
   $totalgrists = 0;
-  while (($col = $mysqli->fetch_field($result2)) && $terminateloop == False) {
+  while (($col = $result2->fetch_field()) && $terminateloop == False) {
     $gristcost = $col->name;
     $gristtype = substr($gristcost, 0, -5);
     if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -103,11 +103,11 @@ if (empty($_SESSION['username'])) {
 			$skip1 = false;
 			$skip2 = false;
 			$itemresult1 = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code1'] . "' ;");
-			while ($itemrow1 = $mysqli->fetch_array($itemresult1)) {
+			while ($itemrow1 = $itemresult1->fetch_array()) {
 				if (!(strrpos($sessionrow['atheneum'], $itemrow1['captchalogue_code']) === false)) $skip1 = true;
 			}
 			$itemresult2 = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['code2'] . "' ;");
-			while ($itemrow2 = $mysqli->fetch_array($itemresult2)) {
+			while ($itemrow2 = $itemresult2->fetch_array()) {
 				if (!(strrpos($sessionrow['atheneum'], $itemrow2['captchalogue_code']) === false)) $skip2 = true;
 			}
 			if ($skip1 && $skip2) $letthrough = true;
