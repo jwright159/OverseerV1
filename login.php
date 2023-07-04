@@ -6,7 +6,7 @@ $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" 
 $loggedin = False;
 
 while ($userrow = $result->fetch_array()) {
-  if ($userrow['username'] == $mysqli->real_escape_string($_POST['username']) && $userrow['password'] == crypt($mysqli->real_escape_string($_POST['password']), $userrow['password'])) {
+  if ($userrow['username'] == $mysqli->real_escape_string($_POST['username']) && password_verify($mysqli->real_escape_string($_POST['password']), $userrow['password'])) {
     session_start(); //Begin initializing the session here. This involves initializing anything we don't want to call from the database all the time.
     $username = $mysqli->real_escape_string($_POST['username']);
     $_SESSION['username'] = $username;
@@ -97,10 +97,6 @@ while ($userrow = $result->fetch_array()) {
   }
 }
 if ($loggedin == False) {
-  if ($mysqli->real_escape_string($_POST['username']) == "The Overseer") {
-    echo "DEBUG (password): $_POST[password]</br>";
-    echo "DEBUG (encrypted password): " . crypt($mysqli->real_escape_string($_POST['password']), $row['password']) . "</br>";
-  }
   echo"false";
 }
 $mysqli->close();

@@ -77,7 +77,7 @@ if (empty($_GET['user'])) {
 			if ($recrow['recovery_confirm'] == $_GET['code'] && !empty($recrow['recovery_confirm'])) {
 				if (!empty($_POST['newpass'])) {
 					if ($_POST['newpass'] == $_POST['cnewpass'] && !empty($_POST['newpass'])) {
-						$newpass = crypt($mysqli->real_escape_string($_POST['newpass']));
+						$newpass = password_hash($mysqli->real_escape_string($_POST['newpass']), PASSWORD_BCRYPT);
 						$mysqli->query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;");
 						echo "Password changed successfully!</br>";
 						$mysqli->query("UPDATE Players SET `recovery_confirm` = '' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;"); //blank the recovery ID so that it can't be used again

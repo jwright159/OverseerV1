@@ -69,7 +69,7 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
     }
     if ($sessionlogin == True) {
       $name = $mysqli->real_escape_string($_POST['username']);
-      $pw = crypt($mysqli->real_escape_string($_POST['password']));
+      $pw = password_hash($mysqli->real_escape_string($_POST['password']), PASSWORD_BCRYPT);
       $session = $mysqli->real_escape_string($_POST['session']);
       echo "Now entering session $session </br>"; //echo this so that randoms know what they're getting into
       if ($_POST['email'] == $_POST['cemail']) $email = $mysqli->real_escape_string($_POST['email']);

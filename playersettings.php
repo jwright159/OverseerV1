@@ -2,10 +2,9 @@
 require_once("header.php");
 
 if (!empty($_POST['newpass'])) {
-	$pass = crypt($mysqli->real_escape_string($_POST['oldpass']), $userrow['password']);
-	if ($pass == $userrow['password']) {
+	if (password_verify($mysqli->real_escape_string($_POST['oldpass']), $userrow['password'])) {
 		if ($_POST['newpass'] == $_POST['cnewpass'] && !empty($_POST['newpass'])) {
-			$newpass = crypt($mysqli->real_escape_string($_POST['newpass']));
+			$newpass = password_hash($mysqli->real_escape_string($_POST['newpass']), PASSWORD_BCRYPT);
 			$mysqli->query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '$username' LIMIT 1;");
 			echo "Password changed successfully!</br>";
 		} else echo "Error changing password: Confirmation does not match new password, or the new password was left blank.</br>";
@@ -13,8 +12,7 @@ if (!empty($_POST['newpass'])) {
 }
 
 if (!empty($_POST['deleteconfirm'])) {
-	$pass = crypt($mysqli->real_escape_string($_POST['deleteconfirm']), $userrow['password']);
-	if ($pass == $userrow['password']) { //clear all record of the player existing
+	if (password_verify($mysqli->real_escape_string($_POST['oldpass']), $userrow['password'])) { //clear all record of the player existing
 		$mysqli->query("UPDATE `Players` SET `server_player` = '' WHERE `Players`.`server_player` = '$username'");
 		$mysqli->query("UPDATE `Players` SET `client_player` = '' WHERE `Players`.`client_player` = '$username'");
 		$mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`aiding` = '$username'");

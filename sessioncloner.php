@@ -54,7 +54,7 @@ if (empty($_SESSION['username'])) {
           if ($fname == "username" || $fname == "session_name" || $fname == "client_player" || $fname == "server_player" || $fname == "aiding" || $fname == "questland") { //catch any field that can have a username/session name and add "_DEBUG" to it
             if (!empty($clonefield)) $clonefield .= "_DEBUG";
           } elseif ($fname == "password") {
-            $clonefield = crypt($dbpass);
+            $clonefield = password_hash($dbpass, PASSWORD_BCRYPT);
           }
           $clonevalues .= "'$clonefield', ";
           $i++;
