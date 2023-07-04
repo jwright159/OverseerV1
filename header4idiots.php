@@ -133,22 +133,6 @@ if (mdetect()) {
 </head>
 <body link="#2cff4b" aLink="#2cff4b" vLink="#2cff4b">
 
-<span class="ban">
-<span class="adleft">
-<center><img src="Images/title/ads.png" style="padding:0px; margin:0px; max-width: 120px;"></center>
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-6147873397190735";
-/* Overseer Horizontal */
-google_ad_slot = "3189632801";
-google_ad_width = 120;
-google_ad_height = 600;
-//-->
-</script>
-<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-</span>
-</span>
-
 <div id="mained">
 <div id="banner">
 <a href="/"><div id="bannerd"></div><img id="banning" src="/Images/title/banner.png"></a>

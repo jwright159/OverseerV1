@@ -21,18 +21,6 @@ nobr {
   display: inline;
 }
 
-.adleft {
-  display: inline-block;
-  position: absolute;
-  top: 164px;
-  background-color: #eeeeee;
-  width: 160px;
-  height: 700px;
-  overflow: hidden;
-  padding: 2px;
-  left: 15px;
-}
-
 #banner a:link {
   color: white;
 }
