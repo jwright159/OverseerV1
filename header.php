@@ -414,8 +414,6 @@ require 'includes/global_functions.php';
 						<ul>
 							<li><a href="credits.php"><span class="rhyme aabout babout">&gt;Credits</span></a></li>
 							<li><a href="changelog.php"><span class="rhyme aabout babout">&gt;Change Log</span></a></li>
-							<li><a href="http://theoverseerproject.tumblr.com/"><span
-										class="rhyme aabout babout">&gt;News</span></a></li>
 							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a>
 							</li>
 							<li><a href="randomizer.php"><span class="rhyme aabout babout">&gt;Random
@@ -423,13 +421,10 @@ require 'includes/global_functions.php';
 						</ul>
 					</li>
 
-					<li><a href="http://overseerforums.forumotion.com/"><span
-								class="rhyme slam aforums">&gt;FORUMS</span></a></li>
-
-					<li><a href="http://the-overseer.wikia.com/wiki/Main_Page"><span
+					<li><a href="https://the-overseer.wikia.com/wiki/Main_Page"><span
 								class="rhyme slam awiki">&gt;WIKI</span></a></li>
 
-					<li><a href="http://www.alterniafm.com"><span class="rhyme slam alogin">&gt;RADIO</span></a></li>
+					<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;DONATE</span></a></li>
 
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>
 				</ul>
@@ -528,8 +523,6 @@ require 'includes/global_functions.php';
 						<ul>
 							<li><a href="credits.php"><span class="rhyme aabout babout">&gt;Credits</span></a></li>
 							<li><a href="changelog.php"><span class="rhyme aabout babout">&gt;Change Log</span></a></li>
-							<li><a href="http://theoverseerproject.tumblr.com/"><span
-										class="rhyme aabout babout">&gt;News</span></a></li>
 							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a>
 							</li>
 							<li><a href="captchalist.php"><span class="rhyme aabout babout">&gt;Item List</span></a></li>
@@ -542,13 +535,10 @@ require 'includes/global_functions.php';
 						</ul>
 					</li>
 
-					<li><a href="http://overseerforums.forumotion.com/"><span
-								class="rhyme slam aforums">&gt;FORUMS</span></a></li>
-
-					<li><a href="http://the-overseer.wikia.com/wiki/Main_Page"><span
+					<li><a href="https://the-overseer.wikia.com/wiki/Main_Page"><span
 								class="rhyme slam awiki">&gt;WIKI</span></a></li>
 
-					<li><a href="http://www.alterniafm.com"><span class="rhyme slam alogin">&gt;RADIO</span></a></li>
+					<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;DONATE</span></a></li>
 
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>
 
