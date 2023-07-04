@@ -416,8 +416,8 @@ require 'includes/global_functions.php';
 							<li><a href="changelog.php"><span class="rhyme aabout babout">&gt;Change Log</span></a></li>
 							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a></li>
 							<li><a href="randomizer.php"><span class="rhyme aabout babout">&gt;Random Combinations</span></a></li>
-							<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;Donate</span></a></li>
-							<li><a href="https://github.com/jwright159/OverseerV1"><span class="rhyme slam aforums">&gt;GitHub</span></a></li>
+							<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme aabout babout">&gt;Donate</span></a></li>
+							<li><a href="https://github.com/jwright159/OverseerV1"><span class="rhyme aabout babout">&gt;GitHub</span></a></li>
 						</ul>
 					</li>
 
@@ -526,8 +526,8 @@ require 'includes/global_functions.php';
 							<li><a href="randomizer.php"><span class="rhyme aabout babout">&gt;Random Combinations</span></a></li>
 							<li><a href="feedback.php"><span class="rhyme aabout babout">&gt;Feedback/<wbr>Submit</span></a></li>
 							<li><a href="submissions.php"><span class="rhyme aabout babout">&gt;Submissions</span></a></li>
-							<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;Donate</span></a></li>
-							<li><a href="https://github.com/jwright159/OverseerV1"><span class="rhyme slam aforums">&gt;GitHub</span></a></li>
+							<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme aabout babout">&gt;Donate</span></a></li>
+							<li><a href="https://github.com/jwright159/OverseerV1"><span class="rhyme aabout babout">&gt;GitHub</span></a></li>
 						</ul>
 					</li>
 
