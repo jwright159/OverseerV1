@@ -24,15 +24,16 @@ Client player: <input id="client" name="client" type="text" /> (this can be left
 Land of <input id="land1" name="land1" type="text" / >and <input id="land2" name="land2" type="text" /><br />
 Grist category: <select name="grist_type">';
 while ($gristrow = $gristresult->fetch_array()) {
-  echo '<option value="' . $gristrow['name'] . '">' . $gristrow['name'] . ' - ';
-  $i = 1;
-  while ($i <= 9) { //Nine types of grist. Magic numbers >_>
-    $griststr = "grist" . strval($i);
-    echo $gristrow[$griststr];
-    if ($i != 9) echo ", ";
-    $i++;
-  }
-  echo '</option>';
+	echo '<option value="' . $gristrow['name'] . '">' . $gristrow['name'] . ' - ';
+	$i = 1;
+	while ($i <= 9) { //Nine types of grist. Magic numbers >_>
+		$griststr = "grist" . strval($i);
+		echo $gristrow[$griststr];
+		if ($i != 9)
+			echo ", ";
+		$i++;
+	}
+	echo '</option>';
 }
 echo '</select></br>';
 echo 'Dreaming status: <select name="dreamer"><option value="Unawakened">Unawakened</option><option value="Prospit">Prospit</option><option value="Derse">Derse</option></select></br>';

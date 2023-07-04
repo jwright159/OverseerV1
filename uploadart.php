@@ -1,33 +1,33 @@
- <?php
- require_once "header.php";
- 
+<?php
+require_once "header.php";
+
 if (empty($_SESSION['username'])) {
-  echo "Log in to upload art.</br>";
-  echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to upload art.</br>";
+	echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
 } else {
-  require_once "includes/SQLconnect.php";
-  if ($userrow['session_name'] != "Developers") {
-    echo "And just what do you think YOU'RE doing?";
-  } else {
-    if (!empty($_POST['artcode'])) {
-      if ($_FILES["file"]["error"] > 0) {
-	echo "ERROR! Return Code: " . $_FILES["file"]["error"] . "<br>";
-      } else {
-	echo "Upload: " . $_FILES["file"]["name"] . "<br>";
-	echo "Type: " . $_FILES["file"]["type"] . "<br>";
-	echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
-	echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
-	if (file_exists("/www/overseer/Images/Items/" . $_FILES["file"]["name"])) {
-	  echo $_FILES["file"]["name"] . " already exists. ";
+	require_once "includes/SQLconnect.php";
+	if ($userrow['session_name'] != "Developers") {
+		echo "And just what do you think YOU'RE doing?";
 	} else {
-	  move_uploaded_file($_FILES["file"]["tmp_name"], "/www/overseer/Images/Items/" . $_FILES["file"]["name"]);
-	  echo "Art file stored in: " . "/www/overseer/Images/Items/" . $_FILES["file"]["name"];
-	  $mysqli->query("UPDATE `Captchalogue` SET `art` = '" . $_FILES['file']['name'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
-	  $mysqli->query("UPDATE `Captchalogue` SET `credit` = '" . $_POST['credit'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
-	}
-      }
-    }
-    echo '<html>
+		if (!empty($_POST['artcode'])) {
+			if ($_FILES["file"]["error"] > 0) {
+				echo "ERROR! Return Code: " . $_FILES["file"]["error"] . "<br>";
+			} else {
+				echo "Upload: " . $_FILES["file"]["name"] . "<br>";
+				echo "Type: " . $_FILES["file"]["type"] . "<br>";
+				echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+				echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
+				if (file_exists("/www/overseer/Images/Items/" . $_FILES["file"]["name"])) {
+					echo $_FILES["file"]["name"] . " already exists. ";
+				} else {
+					move_uploaded_file($_FILES["file"]["tmp_name"], "/www/overseer/Images/Items/" . $_FILES["file"]["name"]);
+					echo "Art file stored in: " . "/www/overseer/Images/Items/" . $_FILES["file"]["name"];
+					$mysqli->query("UPDATE `Captchalogue` SET `art` = '" . $_FILES['file']['name'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
+					$mysqli->query("UPDATE `Captchalogue` SET `credit` = '" . $_POST['credit'] . "' WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['artcode'] . "' LIMIT 1 ;");
+				}
+			}
+		}
+		echo '<html>
          <body>
 
          <form action="uploadart.php" method="post" enctype="multipart/form-data">
@@ -40,7 +40,7 @@ if (empty($_SESSION['username'])) {
 
          </body>
          </html> ';
-  }
+	}
 }
 require_once "footer.php";
-?> 
+?>

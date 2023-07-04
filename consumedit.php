@@ -12,30 +12,32 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		$editcode = "00000000";
 		$populate = false;
 	}
-	
+
 	if (!empty($_POST['publishlog'])) {
 		$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
 		$sysrow = $sysresult->fetch_array();
 		if ($sysrow['addlog'] != "") {
 			if (!empty($_POST['publishtitle']))
-			$titletext = $mysqli->real_escape_string($_POST['publishtitle']);
+				$titletext = $mysqli->real_escape_string($_POST['publishtitle']);
 			else {
 				$titletext = "Auto-posted addlog number ";
-				$titletext .= strval(rand(1000000,9999999));
+				$titletext .= strval(rand(1000000, 9999999));
 			}
 			$datetext = $mysqli->real_escape_string(date("Y-m-d H:i:s"));
 			$nametext = $mysqli->real_escape_string($username);
-			if (!empty($_POST['publishbody'])) 
-			$leadintext = $_POST['publishbody'];
-			else $leadintext = "This is an automatically generated addlog of items that were created using the on-site Item Editor. The person posting this is too lazy to actually include a message, so enjoy these items:";
+			if (!empty($_POST['publishbody']))
+				$leadintext = $_POST['publishbody'];
+			else
+				$leadintext = "This is an automatically generated addlog of items that were created using the on-site Item Editor. The person posting this is too lazy to actually include a message, so enjoy these items:";
 			$bodytext = $mysqli->real_escape_string($leadintext . "</br>" . $sysrow['addlog']);
 			$mysqli->query("INSERT INTO `News` (`date`, `title`, `postedby`, `news`) VALUES ('$datetext', '$titletext', '$nametext', '$bodytext')");
 			echo $bodytext; //in case it fails to post
 			$mysqli->query("UPDATE `System` SET `addlog` = '' WHERE 1");
 			echo "</br>News has been posted, and the addlog has been cleared.</br>";
-		} else "ERROR: Addlog is empty. Someone might have beaten you to it!</br>";
+		} else
+			"ERROR: Addlog is empty. Someone might have beaten you to it!</br>";
 	}
-	
+
 	if (!empty($_POST['captchalogue_code'])) {
 		$blocked = false;
 		if ((!empty($_POST['offense_exact_temp']) || !empty($_POST['offense_scale_temp']) || !empty($_POST['defense_exact_temp']) || !empty($_POST['defense_scale_temp'])) && empty($_POST['temp_timer'])) {
@@ -59,27 +61,27 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			$blocked = true;
 		} else {
 			$editcode = $_POST['captchalogue_code'];
-		$editresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`consumable` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
-		$irow = $editresult->fetch_array();
-		if ($irow['captchalogue_code'] != $editcode) {
-			echo "No item with that code was found!<br />";
-			$blocked = true;
-		}
-		if ($irow['consumable'] == 0) {
-			$makeconsumable = true;
-		}
+			$editresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`consumable` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
+			$irow = $editresult->fetch_array();
+			if ($irow['captchalogue_code'] != $editcode) {
+				echo "No item with that code was found!<br />";
+				$blocked = true;
+			}
+			if ($irow['consumable'] == 0) {
+				$makeconsumable = true;
+			}
 		}
 		if (!$blocked) {
 			$editname = str_replace("'", "", $irow['name']);
 			$editname = str_replace("\\", "", $editname); //consumables don't have apostrophes or backslashes
 			$fieldresult = $mysqli->query("SELECT * FROM `Consumables` LIMIT 1;");
-		while ($field = $fieldresult->fetch_field()) {
-			$fname = $field->name;
+			while ($field = $fieldresult->fetch_field()) {
+				$fname = $field->name;
 				if ($fname == 'name') {
 					$founditem = false;
 					$editcode = $_POST['captchalogue_code'];
 					$editresult = $mysqli->query("SELECT * FROM `Consumables` WHERE `Consumables`.`name` = '$editname' LIMIT 1;");
-					while($row = $editresult->fetch_array()) {
+					while ($row = $editresult->fetch_array()) {
 						$founditem = true;
 						$erow = $row;
 					}
@@ -114,7 +116,8 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 					$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
 					$sysrow = $sysresult->fetch_array();
 					$sysrow['addlog'] .= "</br>" . $username . " - Added consumable effect for " . $editname;
-					if (!empty($_POST['devcomments'])) $sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
+					if (!empty($_POST['devcomments']))
+						$sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
 					$mysqli->query("UPDATE `System` SET `addlog` = '" . $mysqli->real_escape_string($sysrow['addlog']) . "' WHERE 1");
 					echo "Addlog updated.</br>";
 				} else {
@@ -123,11 +126,12 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			} else {
 				$victory = true;
 				$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
-					$sysrow = $sysresult->fetch_array();
-					$sysrow['addlog'] .= "</br>" . $username . " - Edited consumable effect for " . $editname;
-					if (!empty($_POST['devcomments'])) $sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
-					$mysqli->query("UPDATE `System` SET `addlog` = '" . $mysqli->real_escape_string($sysrow['addlog']) . "' WHERE 1");
-					echo "Addlog updated.</br>";
+				$sysrow = $sysresult->fetch_array();
+				$sysrow['addlog'] .= "</br>" . $username . " - Edited consumable effect for " . $editname;
+				if (!empty($_POST['devcomments']))
+					$sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
+				$mysqli->query("UPDATE `System` SET `addlog` = '" . $mysqli->real_escape_string($sysrow['addlog']) . "' WHERE 1");
+				echo "Addlog updated.</br>";
 			}
 			if ($victory && $makeconsumable) {
 				$mysqli->query("UPDATE `Captchalogue` SET `consumable` = 1 WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
@@ -135,11 +139,11 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			}
 		}
 	}
-	
+
 	$founditem = false;
 	if ($populate) {
 		$editresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
-		while($row = $editresult->fetch_array()) {
+		while ($row = $editresult->fetch_array()) {
 			echo $row['name'] . " recognized<br />";
 			$editname = str_replace("'", "", $row['name']);
 			$editname = str_replace("\\", "", $editname); //consumables don't have apostrophes or backslashes
@@ -156,8 +160,10 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		}
 	}
 	echo '<form action="consumedit.php" method="post" id="itemeditor"><table cellpadding="0" cellspacing="0"><tbody><tr><td align="right">Consumable Editor:</td><td> Merry Christmas Edition</td></tr>';
-	if ($populate) echo '<input type="hidden" name="populate" value="yes">';
-	else echo '<input type="hidden" name="populate" value="no">';
+	if ($populate)
+		echo '<input type="hidden" name="populate" value="yes">';
+	else
+		echo '<input type="hidden" name="populate" value="no">';
 	echo '<tr><td align="right">Code of item:</td><td> <input type="text" name="captchalogue_code" value="' . $editcode . '" /></td></tr>';
 	$fieldresult = $mysqli->query("SELECT * FROM `Consumables` LIMIT 1;");
 	while ($field = $fieldresult->fetch_field()) {
@@ -165,15 +171,21 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		$fname = $field->name;
 		if ($fname == "message_battle" || $fname == "message_outside" || $fname == "message_aid") {
 			echo $fname . ':</td><td><textarea name="' . $fname . '" rows="6" cols="40" form="itemeditor">';
-			if ($founditem) echo $erow[$fname];
-			elseif (!empty($_POST[$fname])) echo $_POST[$fname];
+			if ($founditem)
+				echo $erow[$fname];
+			elseif (!empty($_POST[$fname]))
+				echo $_POST[$fname];
 			echo '</textarea></br>';
 		} elseif ($fname != "name") {
 			echo $fname . ':</td><td> <input type="text" name="' . $fname . '"';
-			if ($founditem) echo ' value="' . $erow[$fname] . '"';
-			elseif (!empty($_POST[$fname])) echo ' value="' . $_POST[$fname] . '"';
-			elseif ($fname == "number_targets") echo ' value="5"';
-			elseif ($fname == "allypercentage") echo ' value="100"';
+			if ($founditem)
+				echo ' value="' . $erow[$fname] . '"';
+			elseif (!empty($_POST[$fname]))
+				echo ' value="' . $_POST[$fname] . '"';
+			elseif ($fname == "number_targets")
+				echo ' value="5"';
+			elseif ($fname == "allypercentage")
+				echo ' value="100"';
 			echo '></td></tr>';
 		}
 	}
@@ -182,7 +194,8 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	echo '<input type="submit" value="Edit/Create"></form></br>';
 	$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
 	$sysrow = $sysresult->fetch_array();
-	if (empty($sysrow['addlog'])) $sysrow['addlog'] = " Empty!";
+	if (empty($sysrow['addlog']))
+		$sysrow['addlog'] = " Empty!";
 	echo "Current addlog:" . $sysrow['addlog'];
 	echo "</br>When you're done with your batch of items, please use the following form to publish the current addlog into a news post.</br>(Note: All fields are optional and will be filled with placeholders if left blank.)</br>";
 	echo '<form action="itemedit.php" method="post" id="publishaddlog"><input type="hidden" name="publishlog" value="yes">Title: <input type="text" name="publishtitle"></br>Body: <textarea name="publishbody" rows="6" cols="40" form="publishaddlog"></textarea></br><input type="submit" value="Publish addlog"></form>';

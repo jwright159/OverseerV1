@@ -7,14 +7,15 @@ if ($userrow['session_name'] != "Developers") {
 	if (!empty($_POST['query'])) {
 		$query = $_POST['query'];
 		if ($_POST['teststring'] == "test\\'s") { //auto-escape detected, fix before executing query
-		$query = str_replace("\\'", "'", $query);
-		$query = str_replace("\\\"", "\"", $query);
-		$query = str_replace("\\\\", "\\", $query);
+			$query = str_replace("\\'", "'", $query);
+			$query = str_replace("\\\"", "\"", $query);
+			$query = str_replace("\\\\", "\\", $query);
 		}
 		echo $query . "<br />";
 		if (strpos($_POST['query'], "SELECT") !== false) {
 			$result = $mysqli->query($query);
-			if (!$result) echo "We got an error... " . $mysqli->error();
+			if (!$result)
+				echo "We got an error... " . $mysqli->error();
 			else {
 				echo strval($mysqli->num_rows($result)) . " row(s) returned.<br />";
 				while ($row = $result->fetch_array()) {
@@ -24,20 +25,23 @@ if ($userrow['session_name'] != "Developers") {
 			}
 		} elseif (strpos($_POST['query'], "INSERT") !== false) {
 			$result = $mysqli->query($query);
-			if (!$result) echo "We got an error... " . $mysqli->error();
+			if (!$result)
+				echo "We got an error... " . $mysqli->error();
 			else {
 				echo strval($mysqli->affected_rows()) . " row(s) inserted.<br />";
 			}
 		} elseif (strpos($_POST['query'], "UPDATE") !== false) {
 			$result = $mysqli->query($query);
-			if (!$result) echo "We got an error... " . $mysqli->error();
+			if (!$result)
+				echo "We got an error... " . $mysqli->error();
 			else {
 				echo strval($mysqli->affected_rows()) . " row(s) affected.<br />";
 			}
-		} else echo "I don't think it's safe to do that kind of thing from here.<br />";
+		} else
+			echo "I don't think it's safe to do that kind of thing from here.<br />";
 		echo "<br />";
 	}
-	
+
 	echo "New from Blahsadfeguie Inc., it's I Can't Believe it's Not PHPmyadmin! 99% of squirrels can't tell the difference!<br /><br />";
 	echo '<form action="blahsquirrel.php" method="post" id="blahsql">Query to execute:<br /><textarea name="query" rows="6" cols="40" form="blahsql"></textarea><br />';
 	echo '<input type="hidden" name="teststring" value="test\'s" />';

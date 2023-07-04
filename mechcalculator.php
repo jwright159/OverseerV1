@@ -2,36 +2,38 @@
 //Begin hit code here.
 
 if (!empty($_POST['functionweapon'])) {
-  $hit = 0;
-  $attack = floor(($_POST['pilotattack'] + $_POST['weaponaccuracy']) * $_POST['functionweapon'] * ($_POST['functionweaponmount'] + (1 - ($_POST['functionweaponmount']/2))));
-  if ($_POST['attackused'] == "part") $attack = floor($attack * 0.85);
-  if ($_POST['attackused'] == "component") $attack = floor($attack * 0.7);
-  if ($_POST['defenseused'] == "dodge") { //Dodge defense
-    $defend = floor(($_POST['pilotdodge'] + $_POST['mechdodge']) * $_POST['functiondodge']);
-  } elseif ($_POST['defenseused'] == "parry") { //Parry defense
-    $defend = floor(($_POST['pilotparry'] + $_POST['mechparry']) * ($_POST['functionparry'] + (1 - ($_POST['functionparry']/2))));
-  } else { //Soak defense
-    $defend = $_POST['pilotsoak'];
-  }
-  if ($attack < $defend && $_POST['defenseused'] != "soak") { //Attack dodged or parried.
-    if ($attack > floor($defend * 0.9) && $_POST['attackused'] = "part") {
-      echo "Attacker strikes a random part of the defender's mech.";
-    } elseif ($attack > floor($defend * 0.9) && $_POST['attackused'] = "component") {
-      echo "Attacker strikes a random component on the targeted component's part.";
-    } elseif ($attack > floor($defend * 0.8) && $_POST['attackused'] = "component") {
-      echo "Attacker strikes a random part of the defender's mech.";
-    } else {
-      if ($_POST['defenseused'] == "dodge") { //Attack completely dodgd.
-	echo "Defender dodges attacker.";
-      } else {
-	echo "Attacker strikes parrying part chosen by defender.";
-      }
-    }
-  } elseif ($_POST['defenseused'] == "soak") { //Print mitigation.
-    echo "Attacker strikes chosen target, damage is reduced by $defend%";
-  } else { //Attack hits.
-    echo "Attacker hits their intended target.";
-  }
+	$hit = 0;
+	$attack = floor(($_POST['pilotattack'] + $_POST['weaponaccuracy']) * $_POST['functionweapon'] * ($_POST['functionweaponmount'] + (1 - ($_POST['functionweaponmount'] / 2))));
+	if ($_POST['attackused'] == "part")
+		$attack = floor($attack * 0.85);
+	if ($_POST['attackused'] == "component")
+		$attack = floor($attack * 0.7);
+	if ($_POST['defenseused'] == "dodge") { //Dodge defense
+		$defend = floor(($_POST['pilotdodge'] + $_POST['mechdodge']) * $_POST['functiondodge']);
+	} elseif ($_POST['defenseused'] == "parry") { //Parry defense
+		$defend = floor(($_POST['pilotparry'] + $_POST['mechparry']) * ($_POST['functionparry'] + (1 - ($_POST['functionparry'] / 2))));
+	} else { //Soak defense
+		$defend = $_POST['pilotsoak'];
+	}
+	if ($attack < $defend && $_POST['defenseused'] != "soak") { //Attack dodged or parried.
+		if ($attack > floor($defend * 0.9) && $_POST['attackused'] = "part") {
+			echo "Attacker strikes a random part of the defender's mech.";
+		} elseif ($attack > floor($defend * 0.9) && $_POST['attackused'] = "component") {
+			echo "Attacker strikes a random component on the targeted component's part.";
+		} elseif ($attack > floor($defend * 0.8) && $_POST['attackused'] = "component") {
+			echo "Attacker strikes a random part of the defender's mech.";
+		} else {
+			if ($_POST['defenseused'] == "dodge") { //Attack completely dodgd.
+				echo "Defender dodges attacker.";
+			} else {
+				echo "Attacker strikes parrying part chosen by defender.";
+			}
+		}
+	} elseif ($_POST['defenseused'] == "soak") { //Print mitigation.
+		echo "Attacker strikes chosen target, damage is reduced by $defend%";
+	} else { //Attack hits.
+		echo "Attacker hits their intended target.";
+	}
 }
 //End hit code here. Begin damage code here.
 if (!empty($_POST['weaponpower'])) {

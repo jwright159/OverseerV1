@@ -1,5 +1,6 @@
 <?php
-function sendPost($username,$password, $message) {
+function sendPost($username, $password, $message)
+{
 	$url = 'http://pesternote.com/1/statuses/update.xml';
 	$curl_handle = curl_init();
 	curl_setopt($curl_handle, CURLOPT_URL, "$url");

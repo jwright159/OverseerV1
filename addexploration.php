@@ -17,7 +17,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		$areastr = "Explore_Derse";
 		$populate = false;
 	}
-	
+
 	if (!empty($_POST['name'])) {
 		$blocked = false;
 		if ($_POST['boonreward'] != 0 && empty($_POST['transform'])) {
@@ -31,13 +31,13 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		if (!$blocked) {
 			$areastr = "Explore_" . $_POST['exarea'];
 			$fieldresult = $mysqli->query("SELECT * FROM `$areastr` LIMIT 1;");
-		while ($field = $fieldresult->fetch_field()) {
-			$fname = $field->name;
+			while ($field = $fieldresult->fetch_field()) {
+				$fname = $field->name;
 				if ($fname == 'name') {
 					$founditem = false;
 					$editevent = $_POST['name'];
 					$editresult = $mysqli->query("SELECT * FROM `$areastr` WHERE `$areastr`.`name` = '$editevent' LIMIT 1;");
-					while($row = $editresult->fetch_array()) {
+					while ($row = $editresult->fetch_array()) {
 						$founditem = true;
 						$erow = $row;
 					}
@@ -81,10 +81,10 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			}
 		}
 	}
-	
+
 	if ($populate) {
 		$editresult = $mysqli->query("SELECT * FROM `$areastr` WHERE `$areastr`.`name` = '$editevent' LIMIT 1;");
-		while($row = $editresult->fetch_array()) {
+		while ($row = $editresult->fetch_array()) {
 			$founditem = true;
 			echo $row['name'] . " loaded</br>";
 			$erow = $row;
@@ -102,18 +102,22 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		$fname = $field->name;
 		if ($fname == "description") {
 			echo $fname . ':</td><td><textarea name="description" rows="6" cols="40" form="itemeditor">';
-			if ($founditem) echo $erow[$fname];
-			elseif (!empty($_POST[$fname])) echo $_POST[$fname];
+			if ($founditem)
+				echo $erow[$fname];
+			elseif (!empty($_POST[$fname]))
+				echo $_POST[$fname];
 			echo '</textarea></td></tr>';
 		} else {
 			echo $fname . ':</td><td> <input type="text" name="' . $fname . '"';
-			if ($founditem) echo ' value="' . $erow[$fname] . '"';
-			elseif (!empty($_POST[$fname])) echo $_POST[$fname];
+			if ($founditem)
+				echo ' value="' . $erow[$fname] . '"';
+			elseif (!empty($_POST[$fname]))
+				echo $_POST[$fname];
 			echo '></td></tr>';
 		}
 	}
 	echo '</table><input type="submit" value="Edit/Create"></form></br>';
-	
+
 }
 
 require_once "footer.php";

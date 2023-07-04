@@ -1,7 +1,8 @@
 <?php
 require_once "header.php";
 
-function buildTree($tablename) {
+function buildTree($tablename)
+{
 	$exresult = $mysqli->query("SELECT * FROM `$tablename` WHERE 1;");
 	while ($exrow = $exresult->fetch_array()) {
 		echo $exrow['name'] . "<br />";
@@ -30,7 +31,8 @@ function buildTree($tablename) {
 			while ($i <= 5) {
 				$enstr = "enemy" . strval($i);
 				if (!empty($exrow[$enstr])) {
-					if ($i > 1) echo ", ";
+					if ($i > 1)
+						echo ", ";
 					echo $exrow[$enstr];
 				}
 				$i++;

@@ -5,9 +5,9 @@ require_once "includes/pricesandvaules.php";
 require_once "includes/effectprinter.php";
 
 if (empty($_SESSION['username'])) {
-  echo "Log in to interact with your allies.</br>";
+	echo "Log in to interact with your allies.</br>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
-  echo "You can't communicate with your allies while asleep!";
+	echo "You can't communicate with your allies while asleep!";
 } elseif ($userrow['enemydata'] != "" || $userrow['aiding'] != "" || $userrow['indungeon'] != 0) {
 	echo "You're too busy to communicate with your allies.";
 } else {
@@ -19,11 +19,11 @@ if (empty($_SESSION['username'])) {
 		} elseif ($_POST['boons'] <= 0) {
 			echo "You won't be hiring anybody unless you offer at least some Boondollars!<br />";
 		} elseif ($_POST['boons'] > $userrow['Boondollars']) {
-		    echo "You don't have that many Boondollars!<br />";
+			echo "You don't have that many Boondollars!<br />";
 		} else {
 			$aok = false;
 			$gateresult = $mysqli->query("SELECT * FROM Gates");
-  		$gaterow = $gateresult->fetch_array(); //Gates only has one row.
+			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 			if ($_POST['land'] == $username) {
 				$yogate = highestGate($gaterow, $userrow['house_build_grist']);
 				if ($yogate >= 1 || canFly($userrow)) {
@@ -40,10 +40,12 @@ if (empty($_SESSION['username'])) {
 			} else {
 				$i = 0;
 				while ($i < $totalchain) {
-					if ($chain[$i] == $_POST['land']) $aok = true; //chainarray should ensure that the player can reach this land
+					if ($chain[$i] == $_POST['land'])
+						$aok = true; //chainarray should ensure that the player can reach this land
 					$i++;
 				}
-				if (!$aok) echo "You can't reach that land.<br />";
+				if (!$aok)
+					echo "You can't reach that land.<br />";
 			}
 			if ($aok) { //preliminary checks pass, let's look for someone to hire
 				$landresult = $mysqli->query("SELECT * FROM Players WHERE username = '" . $_POST['land'] . "'");
@@ -59,7 +61,8 @@ if (empty($_SESSION['username'])) {
 					$types++;
 					$minboon[$types] = $row['minboons'];
 					$allyname[$types] = $row['basename'];
-					if ($minboon[$types] < $lowest && $row['maxboons'] > $offer) $lowest = $minboon[$types];
+					if ($minboon[$types] < $lowest && $row['maxboons'] > $offer)
+						$lowest = $minboon[$types];
 				}
 				$hireval = rand($lowest, $offer);
 				$i = $types;
@@ -74,7 +77,8 @@ if (empty($_SESSION['username'])) {
 					$newally = joinParty($userrow, $hired, $offer, $landrow['consort_name']);
 					if (!empty($landrow['consort_name'])) {
 						$mercname = str_replace("Consort", $landrow['consort_name'], $hired);
-					} else $mercname = $hired;
+					} else
+						$mercname = $hired;
 					echo "A $mercname steps forward, eager to serve you for your offered payment. Your party grows in number.<br />";
 					$userrow['allies'] .= $newally . "|";
 					$userrow['Boondollars'] -= $offer;
@@ -90,108 +94,117 @@ if (empty($_SESSION['username'])) {
 	$partyechostr = "";
 	$partymems = 0;
 	if (!empty($_POST['partyaction'])) {
-   	$operatingon = intval(str_replace("ally", "", $_POST['partymember']));
-   	$action = $_POST['partyaction'];
-   	if ($action == "rename" || $action == "redesc") {
-   		if (!empty($_POST['partytext'])) {
-   			$acttext = $_POST['partytext'];
-   			$acttext = str_replace(":", "&#58;", $acttext); // this should display as a : without breaking the string formatting.
-   			$acttext = str_replace("|", "&#124;", $acttext); //why didn't I think of this before?
-   			$acttext = str_replace("<", "&lt;", $acttext);
-   			$acttext = str_replace(">", "&gt;", $acttext);
-   			$acttext = str_replace("\\", "", $acttext); //apostrophes will get escaped later
-   			$acttext = str_replace("^", "&#94;", $acttext); //also have to change all of these because allies rely on regexp and these will break it
-   			$acttext = str_replace("$", "&#36;", $acttext);
-   			$acttext = str_replace("(", "&#40;", $acttext);
-   			$acttext = str_replace(")", "&#41;", $acttext);
-   			$acttext = str_replace("[", "&#91;", $acttext);
-   			$acttext = str_replace("{", "&#123;", $acttext);
-   			$acttext = str_replace(".", "&#46;", $acttext); //yes even this, better safe than sorry
-   			$acttext = str_replace("*", "&#42;", $acttext); //this is disasterisk
-   			$acttext = str_replace("+", "&#43;", $acttext);
-   			$acttext = str_replace("?", "&#63;", $acttext);
-   		} else echo "Name/description can't be blank.<br />";
-   	}
-	} else $operatingon = 0;
+		$operatingon = intval(str_replace("ally", "", $_POST['partymember']));
+		$action = $_POST['partyaction'];
+		if ($action == "rename" || $action == "redesc") {
+			if (!empty($_POST['partytext'])) {
+				$acttext = $_POST['partytext'];
+				$acttext = str_replace(":", "&#58;", $acttext); // this should display as a : without breaking the string formatting.
+				$acttext = str_replace("|", "&#124;", $acttext); //why didn't I think of this before?
+				$acttext = str_replace("<", "&lt;", $acttext);
+				$acttext = str_replace(">", "&gt;", $acttext);
+				$acttext = str_replace("\\", "", $acttext); //apostrophes will get escaped later
+				$acttext = str_replace("^", "&#94;", $acttext); //also have to change all of these because allies rely on regexp and these will break it
+				$acttext = str_replace("$", "&#36;", $acttext);
+				$acttext = str_replace("(", "&#40;", $acttext);
+				$acttext = str_replace(")", "&#41;", $acttext);
+				$acttext = str_replace("[", "&#91;", $acttext);
+				$acttext = str_replace("{", "&#123;", $acttext);
+				$acttext = str_replace(".", "&#46;", $acttext); //yes even this, better safe than sorry
+				$acttext = str_replace("*", "&#42;", $acttext); //this is disasterisk
+				$acttext = str_replace("+", "&#43;", $acttext);
+				$acttext = str_replace("?", "&#63;", $acttext);
+			} else
+				echo "Name/description can't be blank.<br />";
+		}
+	} else
+		$operatingon = 0;
 	$plevel = 5; //can be increased from roletechs later
 	$pulchritude = $userrow['Echeladder'] * $plevel;
 	$occupied = 0;
 	$speffect = "";
 	$speffects = 0;
 	if (!empty($userrow['allies'])) { //here, we'll explode the ally string to see if we have any NPC allies
-	//format: <task>:<basename>:<loyalty>:<nickname>:<desc>:<power>| with the last 3 args being optional
-   	$thisstatus = explode("|", $userrow['allies']);
-   	$st = 0;
-   	$npcaidmsg = "";
-   	while (!empty($thisstatus[$st])) {
-   		$justpickedup = false;
-   		$statusarg = explode(":", $thisstatus[$st]);
-   		$npcresult = $mysqli->query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
-   		$npcrow = $npcresult->fetch_array();
-   		if (!empty($statusarg[5])) $npcpower = intval($statusarg[5]);
-   		else $npcpower = $npcrow['basepower'];
-   		if (!empty($statusarg[3])) $npcname = $statusarg[3];
-   		else $npcname = $npcrow['basename'];
-   		$partymems++;
-   		$removeme = false;
-   		if ($partymems == $operatingon) {
-   			switch ($action) {
-   				case "rename":
-   					if (!empty($acttext)) {
-   						echo $npcname . " has been renamed to $acttext.<br />";
-   						$statusarg[3] = $acttext;
-   						$npcname = $acttext;
-   					}
-   					break;
-   				case "redesc":
-   					if (!empty($acttext)) {
-   						echo $npcname . "'s description has been updated.<br />";
-   						$statusarg[4] = $acttext;
-   					}
-   					break;
-   				case "dropoff":
-   					$statusarg[0] = "IDLE";
-   					echo "$npcname leaves your party and stands by at your house, awaiting further instructions.<br />";
-   					break;
-   				case "pickup":
-   					$statusarg[0] = "PARTY";
-   					echo "$npcname joins your active party, ready to strife by your side!<br />";
-   					$newallypower = $npcpower;
-   					$justpickedup = true;
-   					break;
-   				case "dismiss":
-   					$removeme = true;
-   					echo "$npcname is released into the wild. Goodbye, $npcname!<br />";
-   					break;
-   			}
-   		}
-   		if (!$removeme) {
-   			if ($npcname != $npcrow['basename']) $partyechostr .= $npcname . " - ";
-   			$partyechostr .= $npcrow['basename'] . ". Power: $npcpower. Loyalty: " . strval($statusarg[2]) . "<br />";
-   			if (!empty($statusarg[4])) $partyechostr .= $statusarg[4];
-   			else $partyechostr .= $npcrow['description'];
-   			$partyechostr .= "<br />";
-   			$lolreturn = npcEffects($npcrow['spawnstatus'], $npcpower, $speffects);
-   			$worth = $lolreturn[1];
-   			$partyechostr .= $lolreturn[0];
-   			$speffect .= $lolreturn[2];
-   			$speffects = $lolreturn[3];
-   			$partyechostr .= "Pulchritude required to control: $worth<br />Status: ";
-  	 		if ($statusarg[0] == "PARTY") {
-  	 			$occupied += $worth;
-  	 			if ($justpickedup)
-  	 			$partyechostr .= "!!!PENDING!!!"; //otherwise, the status won't reflect properly this pageload
-  	 			else
-	   			$partyechostr .= "In party.";
-   			} else {
-   				$partyechostr .= "Idle.";
-   			}
-   			$partyechostr .= "<br /><br />";
-   			$partyformstr .= "<option value='ally" . strval($partymems) . "'>$npcname</option>";
-   			$newallybit = implode(":", $statusarg);
-   			$newallystr .= $newallybit . "|";
-   		}
-   		$st++;
+		//format: <task>:<basename>:<loyalty>:<nickname>:<desc>:<power>| with the last 3 args being optional
+		$thisstatus = explode("|", $userrow['allies']);
+		$st = 0;
+		$npcaidmsg = "";
+		while (!empty($thisstatus[$st])) {
+			$justpickedup = false;
+			$statusarg = explode(":", $thisstatus[$st]);
+			$npcresult = $mysqli->query("SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` = '$statusarg[1]'");
+			$npcrow = $npcresult->fetch_array();
+			if (!empty($statusarg[5]))
+				$npcpower = intval($statusarg[5]);
+			else
+				$npcpower = $npcrow['basepower'];
+			if (!empty($statusarg[3]))
+				$npcname = $statusarg[3];
+			else
+				$npcname = $npcrow['basename'];
+			$partymems++;
+			$removeme = false;
+			if ($partymems == $operatingon) {
+				switch ($action) {
+					case "rename":
+						if (!empty($acttext)) {
+							echo $npcname . " has been renamed to $acttext.<br />";
+							$statusarg[3] = $acttext;
+							$npcname = $acttext;
+						}
+						break;
+					case "redesc":
+						if (!empty($acttext)) {
+							echo $npcname . "'s description has been updated.<br />";
+							$statusarg[4] = $acttext;
+						}
+						break;
+					case "dropoff":
+						$statusarg[0] = "IDLE";
+						echo "$npcname leaves your party and stands by at your house, awaiting further instructions.<br />";
+						break;
+					case "pickup":
+						$statusarg[0] = "PARTY";
+						echo "$npcname joins your active party, ready to strife by your side!<br />";
+						$newallypower = $npcpower;
+						$justpickedup = true;
+						break;
+					case "dismiss":
+						$removeme = true;
+						echo "$npcname is released into the wild. Goodbye, $npcname!<br />";
+						break;
+				}
+			}
+			if (!$removeme) {
+				if ($npcname != $npcrow['basename'])
+					$partyechostr .= $npcname . " - ";
+				$partyechostr .= $npcrow['basename'] . ". Power: $npcpower. Loyalty: " . strval($statusarg[2]) . "<br />";
+				if (!empty($statusarg[4]))
+					$partyechostr .= $statusarg[4];
+				else
+					$partyechostr .= $npcrow['description'];
+				$partyechostr .= "<br />";
+				$lolreturn = npcEffects($npcrow['spawnstatus'], $npcpower, $speffects);
+				$worth = $lolreturn[1];
+				$partyechostr .= $lolreturn[0];
+				$speffect .= $lolreturn[2];
+				$speffects = $lolreturn[3];
+				$partyechostr .= "Pulchritude required to control: $worth<br />Status: ";
+				if ($statusarg[0] == "PARTY") {
+					$occupied += $worth;
+					if ($justpickedup)
+						$partyechostr .= "!!!PENDING!!!"; //otherwise, the status won't reflect properly this pageload
+					else
+						$partyechostr .= "In party.";
+				} else {
+					$partyechostr .= "Idle.";
+				}
+				$partyechostr .= "<br /><br />";
+				$partyformstr .= "<option value='ally" . strval($partymems) . "'>$npcname</option>";
+				$newallybit = implode(":", $statusarg);
+				$newallystr .= $newallybit . "|";
+			}
+			$st++;
 		}
 		if ($newallystr != $userrow['allies']) {
 			if ($occupied > $pulchritude) { //this should only happen because of an ally you just tried to add to the party
@@ -209,7 +222,8 @@ if (empty($_SESSION['username'])) {
 	echo "Followers<br /><br />";
 	echo "Party's total power / available Pulchritude: $occupied / $pulchritude<br />(The combined power level of all followers in your active party cannot exceed your Pulchritude stat.)<br /><br />";
 	echo "The following allies are available for your cause:<br />";
-	if ($partymems == 0) echo "None. It's just you at the moment!<br /><br />";
+	if ($partymems == 0)
+		echo "None. It's just you at the moment!<br /><br />";
 	else {
 		$omgwhy = explode("!!!REPLACE!!!", $partyechostr);
 		$bluuuh = explode("|", $speffect);
@@ -234,16 +248,16 @@ if (empty($_SESSION['username'])) {
 	echo '<form action="mercenaries.php" method="post">Land to search: <select name="land"> ';
 	$locationstr = "Land of " . $userrow['land1'] . " and " . $userrow['land2'];
 	echo '<option value="' . $userrow['username'] . '">' . $locationstr . '</option>';
-  $landcount = 1; //0 should be the user's land which we already printed
-  while ($landcount < $totalchain) {
-   	$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
+	$landcount = 1; //0 should be the user's land which we already printed
+	while ($landcount < $totalchain) {
+		$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $chain[$landcount] . "';");
 		$currentrow = $currentresult->fetch_array();
 		$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 		echo '<option value="' . $currentrow['username'] . '">' . $locationstr . '</option>';
 		$landcount++;
-  }
+	}
 	if ($userrow['battlefield_access'] != 0) { //Player has handled their denizen or gone god tier. The battlefield is available as a zone.
-	  echo '<option value="Battlefield">The Battlefield</option>';
+		echo '<option value="Battlefield">The Battlefield</option>';
 	}
 	echo '</select><br />';
 	echo 'Boondollars to offer: <input type="text" name="boons" /><br /><input type="submit" value="Search (cost: 1 available quest)" /></form>';

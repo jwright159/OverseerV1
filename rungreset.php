@@ -18,14 +18,18 @@ if (empty($_SESSION['username'])) {
 			$newrung = $_POST['newrung'];
 			$fixhealth = ($newrung * 15) - 30;
 			$newhealth = ceil($fixhealth * $oldhpercent);
-			if ($newhealth < 1) $newhealth = 1;
+			if ($newhealth < 1)
+				$newhealth = 1;
 			$newdhealth = ceil($fixhealth * $olddpercent);
-			if ($newdhealth < 1) $newdhealth = 1;
+			if ($newdhealth < 1)
+				$newdhealth = 1;
 			$newaspect = ceil($fixhealth * $oldapercent);
-			if ($newaspect < 0) $newaspect = 0;
+			if ($newaspect < 0)
+				$newaspect = 0;
 			$mysqli->query("UPDATE `Players` SET `Echeladder` = $newrung, `Gel_Viscosity` = $fixhealth, `Health_Vial` = $newhealth, `Dream_Health_Vial` = $newdhealth, `Aspect_Vial` = $newaspect WHERE `Players`.`username` = '" . $username . "' LIMIT 1;");
 			echo "Your rung has been updated. Have a nice day!";
-		} else echo "You cannot make that your Echeladder rung.<br />";
+		} else
+			echo "You cannot make that your Echeladder rung.<br />";
 	} else {
 		echo "Echeladder Rung Resetter. Enter a rung between 6-611 to revert your Echeladder back to it.<br />";
 		echo '<form action="rungreset.php" method="post">New rung: <input type="text" name="newrung" /><br /><input type="submit" value="Reset" /></form>';

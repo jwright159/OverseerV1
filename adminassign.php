@@ -17,11 +17,14 @@ if ($userrow['session_name'] != "Developers") {
 						$mysqli->query("UPDATE `Sessions` SET `admin` = '" . $prow['username'] . "' WHERE `Sessions`.`name` = '" . $srow['name'] . "' LIMIT 1;");
 					}
 					echo "Done! " . $prow['username'] . " is now admin of session " . $srow['name'] . "<br />";
-				} else echo "ERROR: That player is not in that session<br />";
-			} else echo "ERROR: Player " . $_POST['admn'] . " not found<br />";
-		} else echo "ERROR: Session " . $_POST['sesn'] . " not found<br />";
+				} else
+					echo "ERROR: That player is not in that session<br />";
+			} else
+				echo "ERROR: Player " . $_POST['admn'] . " not found<br />";
+		} else
+			echo "ERROR: Session " . $_POST['sesn'] . " not found<br />";
 	}
-	
+
 	echo "Admin re-assigner v. Lazy Blahsadfeguie.<br />";
 	echo '<form action="adminassign.php" method="post">Session: <input type="text" name="sesn" /><br />';
 	echo 'New admin: <input type="text" name="admn" /><br />';

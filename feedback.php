@@ -483,11 +483,11 @@ if (empty($_SESSION['username'])) {
 			if ($challenge == 1)
 				echo "<urgent>As a Challenge Mode player, your item submissions will be prioritized.</urgent></br>";
 			/*$aotwresult = $mysqli->query("SELECT * FROM `System` WHERE 1 ;");
-			while ($sysrow = $aotwresult->fetch_array()) $aotwstring = $sysrow['abstratusoftheweek'];
-			if (empty($aotwstring)) $aotwstring = "None yet. Go vote for one!";
-			echo "This week's Abstratus of the Week is: $aotwstring </br>";
-			echo 'Submit an item from the AotW to earn a small reward! <a href="http://overseerforums.forumotion.com/t186-abstratus-of-the-week-poll-week-1">You can vote for the next AotW and read up on further details here.</a></br>';
-			echo "(The reward is usually boondollars, but if you want to request something specific, please put it in the comments section)";*/
+					 while ($sysrow = $aotwresult->fetch_array()) $aotwstring = $sysrow['abstratusoftheweek'];
+					 if (empty($aotwstring)) $aotwstring = "None yet. Go vote for one!";
+					 echo "This week's Abstratus of the Week is: $aotwstring </br>";
+					 echo 'Submit an item from the AotW to earn a small reward! <a href="http://overseerforums.forumotion.com/t186-abstratus-of-the-week-poll-week-1">You can vote for the next AotW and read up on further details here.</a></br>';
+					 echo "(The reward is usually boondollars, but if you want to request something specific, please put it in the comments section)";*/
 			echo '<form action="feedback.php?type=item" method="post" id="newitem"><input type="hidden" name="itemsubmission" value="yes">Submission to edit (if any): ';
 			if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods") {
 				echo '<input name="editing" type="text">';

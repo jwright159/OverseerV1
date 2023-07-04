@@ -3,30 +3,31 @@ require_once "header.php";
 require 'additem.php';
 require_once "includes/grist_icon_parser.php";
 
-function initGrists() {
+function initGrists()
+{
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
-  $reachgrist = False;
-  $terminateloop = False;
-  $totalgrists = 0;
-  while (($col = $result2->fetch_field()) && $terminateloop == False) {
-    $gristcost = $col->name;
-    $gristtype = substr($gristcost, 0, -5);
-    if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-      $reachgrist = True;
-    }
-    if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
-      $reachgrist = False;
-      $terminateloop = True;
-    }
-    if ($reachgrist == True) {
-      $gristname[$totalgrists] = $gristtype;
-      $totalgrists++;
-    }
-  }
-  return $gristname;
+	$reachgrist = False;
+	$terminateloop = False;
+	$totalgrists = 0;
+	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+		$gristcost = $col->name;
+		$gristtype = substr($gristcost, 0, -5);
+		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
+			$reachgrist = True;
+		}
+		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
+			$reachgrist = False;
+			$terminateloop = True;
+		}
+		if ($reachgrist == True) {
+			$gristname[$totalgrists] = $gristtype;
+			$totalgrists++;
+		}
+	}
+	return $gristname;
 }
 
-if (strpos($userrow['storeditems'], "DREAMBOT.") !== false && $userrow['dreamingstatus'] != "Awake") { 
+if (strpos($userrow['storeditems'], "DREAMBOT.") !== false && $userrow['dreamingstatus'] != "Awake") {
 	//items in storage with the DREAMBOT tag will grant access to the server program as one's dreamself
 	$dreambot == true;
 } else {
@@ -34,9 +35,9 @@ if (strpos($userrow['storeditems'], "DREAMBOT.") !== false && $userrow['dreaming
 }
 
 if (empty($_SESSION['username'])) {
-  echo "Log in to mess with the server program.</br>";
+	echo "Log in to mess with the server program.</br>";
 } elseif ($userrow['dreamingstatus'] != "Awake" && !$dreambot) {
-  echo "Your dream self can't access your computer!";
+	echo "Your dream self can't access your computer!";
 } else {
 	echo "<!DOCTYPE html><html><head><style>gristvalue{color: #FF0000; font-size: 60px;}</style><style>gristvalue2{color: #0FAFF1; font-size: 60px;}</style><style>itemcode{font-family:'Courier New'}</style></head><body>";
 	$compugood = true;
@@ -46,54 +47,57 @@ if (empty($_SESSION['username'])) {
 			$compugood = false;
 		}
 	} else {
-  if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
-  	if ($userrow['hascomputer'] < 3) {
-  		if ($compugood == true) echo "You don't have a hands-free computer equipped, so you can't use the SBURB server program during strife.</br>";
-  		$compugood = false;
-  	}
-  }
-  if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
-  	if ($compugood == true) echo "You don't have a portable computer in your inventory, so you can't use the SBURB server program while away from home.</br>";
-  	$compugood = false;
-  }
-  if ($userrow['hascomputer'] == 0) {
-  	if ($compugood == true) echo "You need a computer in storage or your inventory to use the SBURB server program.</br>";
-  	$compugood = false;
-  }
+		if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
+			if ($userrow['hascomputer'] < 3) {
+				if ($compugood == true)
+					echo "You don't have a hands-free computer equipped, so you can't use the SBURB server program during strife.</br>";
+				$compugood = false;
+			}
+		}
+		if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
+			if ($compugood == true)
+				echo "You don't have a portable computer in your inventory, so you can't use the SBURB server program while away from home.</br>";
+			$compugood = false;
+		}
+		if ($userrow['hascomputer'] == 0) {
+			if ($compugood == true)
+				echo "You need a computer in storage or your inventory to use the SBURB server program.</br>";
+			$compugood = false;
+		}
 	}
-  
-  if ($compugood) {
-  	
-  	if (!empty($_POST['client'])) {
-    	$playerfound = False;
-    	$registered = "";
-    	$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $mysqli->real_escape_string($_POST['client']) . "'");
-    	while ($row = $sessionmates->fetch_array()) {
-      	if ($row['session_name'] == $userrow['session_name']) {
+
+	if ($compugood) {
+
+		if (!empty($_POST['client'])) {
+			$playerfound = False;
+			$registered = "";
+			$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $mysqli->real_escape_string($_POST['client']) . "'");
+			while ($row = $sessionmates->fetch_array()) {
+				if ($row['session_name'] == $userrow['session_name']) {
 					if ($row['username'] == $mysqli->real_escape_string($_POST['client']) && ($row['server_player'] == "" || $row['server_player'] == $username)) {
-	  				$playerfound = True;
-	  				$client = $mysqli->real_escape_string($_POST['client']);
-	  				$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '$client' LIMIT 1 ;");
-	  				$mysqli->query("UPDATE `Players` SET `client_player` = '$client' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-	  				echo "Client registered.</br>";
-	  				$userrow['client_player'] = $client;
+						$playerfound = True;
+						$client = $mysqli->real_escape_string($_POST['client']);
+						$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '$client' LIMIT 1 ;");
+						$mysqli->query("UPDATE `Players` SET `client_player` = '$client' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+						echo "Client registered.</br>";
+						$userrow['client_player'] = $client;
 					} else {
-	  				if ($row['server_player'] != "" && $playerfound != True) {
-	    				$playerfound = True;
-	    				echo "Client already possesses a server player: " . $row['server_player'] . "</br>";
-	  				}
+						if ($row['server_player'] != "" && $playerfound != True) {
+							$playerfound = True;
+							echo "Client already possesses a server player: " . $row['server_player'] . "</br>";
+						}
 					}
-      	}
-    	}
-    	if ($playerfound == False) {
-      	echo "Target player was not found in your session.</br>";
-    	}
-  	}
-  
- 		if (empty($userrow['client_player'])) {
+				}
+			}
+			if ($playerfound == False) {
+				echo "Target player was not found in your session.</br>";
+			}
+		}
+
+		if (empty($userrow['client_player'])) {
 			echo "You haven't registered a player as your client yet.</br>";
-  		echo '<form action="sburbserver.php" method="post">Register client player: <input id="client" name="client" type="text" /><br />';
-  		echo '<input type="submit" value="Connect it!" /></form></br>';
+			echo '<form action="sburbserver.php" method="post">Register client player: <input id="client" name="client" type="text" /><br />';
+			echo '<input type="submit" value="Connect it!" /></form></br>';
 		} else {
 			$clientresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
 			$clientrow = $clientresult->fetch_array();
@@ -104,10 +108,10 @@ if (empty($_SESSION['username'])) {
 				echo "Something went amiss, and your client player doesn't have you set as their server! We've just attempted to fix this, but if you see this message multiple times, please submit a bug report.<br />";
 				$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 			}
-			
-		  if (!empty($_POST['build'])) {
-   			if (intval($_POST['build']) > 0) {
-     			if (intval($_POST['build'] <= $clientrow['Build_Grist'])) {
+
+			if (!empty($_POST['build'])) {
+				if (intval($_POST['build']) > 0) {
+					if (intval($_POST['build'] <= $clientrow['Build_Grist'])) {
 						$build = $_POST['build'];
 						$newtotal = $build + $clientrow['house_build_grist'];
 						$newgrist = $clientrow['Build_Grist'] - $build;
@@ -115,22 +119,26 @@ if (empty($_SESSION['username'])) {
 						echo "Build successful!</br>";
 						$clientrow['house_build_grist'] = $newtotal;
 						$clientrow['Build_Grist'] = $newgrist;
-     			} else {
+					} else {
 						echo "Build failed: Client lacks required Build Grist.</br>";
-     			}
-   			}
- 			}
- 			
- 			if (!empty($_POST['deployitem'])) {
- 				$deployresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['deployitem'] . "'");
+					}
+				}
+			}
+
+			if (!empty($_POST['deployitem'])) {
+				$deployresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['deployitem'] . "'");
 				while ($drow = $deployresult->fetch_array()) {
-					$deploytag = specialArray($drow['effects'], "DEPLOYABLE"); 
+					$deploytag = specialArray($drow['effects'], "DEPLOYABLE");
 					if ($deploytag[0] == "DEPLOYABLE") {
 						$existtag = specialArray($clientrow['storeditems'], $_POST['deployitem']); //this also works for storage items, fancy that
-						if ($existtag[0] == $_POST['deployitem']) $currentstack = $existtag[1];
-						else $currentstack = 0;
-						if ($deploytag[1] == "MAXSTORE") $fullstack = $deploytag[2];
-						else $fullstack = 1;
+						if ($existtag[0] == $_POST['deployitem'])
+							$currentstack = $existtag[1];
+						else
+							$currentstack = 0;
+						if ($deploytag[1] == "MAXSTORE")
+							$fullstack = $deploytag[2];
+						else
+							$fullstack = 1;
 						if ($currentstack < $fullstack || $drow['captchalogue_code'] == "11111111") { //the user doesn't have this in their storage yet
 							$canafford = false;
 							if ($deploytag[1] == "FREE") {
@@ -157,18 +165,22 @@ if (empty($_SESSION['username'])) {
 									storeItem($drow['name'], 1, $clientrow);
 									$mysqli->query("UPDATE `Players` SET `$coststring` = $newgrist WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 									echo $drow['name'] . " successfully deployed!</br>";
-								} else echo "Deploy failed: you can't find enough room in the client's house to put down the item! You'll have to make some room first.</br>";
-							} else echo "Deploy failed: client lacks the required $coststring.</br>";
-						} else echo "Deploy failed: Your client already has as many of those items as they'll need.</br>";
-					} else echo "Deploy failed: you can't deploy that item!</br>";
+								} else
+									echo "Deploy failed: you can't find enough room in the client's house to put down the item! You'll have to make some room first.</br>";
+							} else
+								echo "Deploy failed: client lacks the required $coststring.</br>";
+						} else
+							echo "Deploy failed: Your client already has as many of those items as they'll need.</br>";
+					} else
+						echo "Deploy failed: you can't deploy that item!</br>";
 				}
- 			}
- 			
- 			if (!empty($_POST['recycling'])) {
- 				$gristed = false;
- 				if (!empty($clientrow['storeditems'])) {
- 					$updatestore = "";
- 					$boom = explode("|", $clientrow['storeditems']);
+			}
+
+			if (!empty($_POST['recycling'])) {
+				$gristed = false;
+				if (!empty($clientrow['storeditems'])) {
+					$updatestore = "";
+					$boom = explode("|", $clientrow['storeditems']);
 					$totalitems = count($boom);
 					$i = 1;
 					while ($i < $totalitems) {
@@ -177,17 +189,19 @@ if (empty($_SESSION['username'])) {
 							$iresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1;");
 							$irow = $iresult->fetch_array();
 							if ($irow['captchalogue_code'] == $args[0]) {
-								if ($_POST['q-' . $args[0]] < 1 || empty($_POST['q-' . $args[0]])) $_POST['q-' . $args[0]] = 1; //set to 1 if blank or less than 0
+								if ($_POST['q-' . $args[0]] < 1 || empty($_POST['q-' . $args[0]]))
+									$_POST['q-' . $args[0]] = 1; //set to 1 if blank or less than 0
 								if (intval($args[1]) >= $_POST['q-' . $args[0]]) {
 									$nothing = true;
-									echo "You recycle your client's " . $irow['name'] .  " x " . strval($_POST['q-' . $args[0]]) . " into ";
+									echo "You recycle your client's " . $irow['name'] . " x " . strval($_POST['q-' . $args[0]]) . " into ";
 									if (!$gristed) {
 										$gristname = initGrists();
 										$totalgrists = count($gristname);
 										$gristed = true;
 									}
 									$deploytag = specialArray($irow['effects'], "DEPLOYABLE"); //should always return an array because of the search query above
-									if ($deploytag[1] == "FREE") $irow['Build_Grist_Cost'] = 0;
+									if ($deploytag[1] == "FREE")
+										$irow['Build_Grist_Cost'] = 0;
 									elseif ($deploytag[1] == "TIER1") {
 										$irow[$tier1grist . '_Cost'] = 0;
 										$irow['Build_Grist_Cost'] = 0;
@@ -196,28 +210,29 @@ if (empty($_SESSION['username'])) {
 									$refundquery = "UPDATE Players SET ";
 									while ($gristcount <= $totalgrists) {
 										$gristtype = $gristname[$gristcount];
-	  								$gristcost = $gristtype . "_Cost";
-	  								if ($irow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-	    								$nothing = False; //Item costs something.
-	    								$totalthiscost = $irow[$gristcost] * $_POST['q-' . $args[0]];
-	    								$refundquery = $refundquery . "`$gristtype` = " . strval($clientrow[$gristtype]) . "+" . strval($totalthiscost) . ", ";
-	    								$clientrow[$gristtype] += $irow[$gristcost];
-	    								echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
-	      							echo " <gristvalue2>" . strval($totalthiscost) . "</gristvalue2>";
-	  								}
-	  								$gristcount++;
+										$gristcost = $gristtype . "_Cost";
+										if ($irow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
+											$nothing = False; //Item costs something.
+											$totalthiscost = $irow[$gristcost] * $_POST['q-' . $args[0]];
+											$refundquery = $refundquery . "`$gristtype` = " . strval($clientrow[$gristtype]) . "+" . strval($totalthiscost) . ", ";
+											$clientrow[$gristtype] += $irow[$gristcost];
+											echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
+											echo " <gristvalue2>" . strval($totalthiscost) . "</gristvalue2>";
+										}
+										$gristcount++;
 									}
 									if ($nothing) { //Item costs nothing! SORD.....
-	  								echo '<img src="Images/Grist/Build_Grist.png" height="50" width="50" title="Build_Grist"></img>';
-	  								echo " <gristvalue2>0 </gristvalue2>";
+										echo '<img src="Images/Grist/Build_Grist.png" height="50" width="50" title="Build_Grist"></img>';
+										echo " <gristvalue2>0 </gristvalue2>";
 									} else { //Item costed something, use the refund query to restore grist.
-	  								$refundquery = substr($refundquery, 0, -2); //Dispose of last comma and space.
-	  								$refundquery = $refundquery . " WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1 ;";
-	  								$mysqli->query($refundquery); //Un-pay.
+										$refundquery = substr($refundquery, 0, -2); //Dispose of last comma and space.
+										$refundquery = $refundquery . " WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1 ;";
+										$mysqli->query($refundquery); //Un-pay.
 									}
-									$args[1]-=$_POST['q-' . $args[0]];
+									$args[1] -= $_POST['q-' . $args[0]];
 									echo '<br />';
-								} else "Error: Client does not have " . $args[1] . " of " . $irow['name'] . "<br />";
+								} else
+									"Error: Client does not have " . $args[1] . " of " . $irow['name'] . "<br />";
 							} else {
 								echo 'Error: unknown item<br />';
 							}
@@ -230,51 +245,55 @@ if (empty($_SESSION['username'])) {
 					if ($updatestore != $clientrow['storeditems']) {
 						$mysqli->query("UPDATE `Players` SET `storeditems` = '$updatestore' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 					}
- 				} else echo "Your client has nothing to recycle!<br />";
- 				compuRefresh($clientrow);
- 			}
- 			
- 			$clientresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
+				} else
+					echo "Your client has nothing to recycle!<br />";
+				compuRefresh($clientrow);
+			}
+
+			$clientresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
 			$clientrow = $clientresult->fetch_array();
 			//refresh clientrow so that things like grist and storage are up-to-date. yeah it's inefficient but I'm lazy so
-	
+
 			echo "SBURB Server Menu</br>";
 			echo "Client player: " . $clientrow['username'] . "</br>";
 			echo "Client's build grist: " . strval($clientrow['Build_Grist']) . "</br></br>";
-			
+
 			echo "&gt;Revise</br>";
 			echo "Client's house investment: " . strval($clientrow['house_build_grist']) . "</br>";
 			echo "House gates accessible on your client's Land: ";
-  		$gates = 0;
-  		$i = 1;
-  		$gateresult = $mysqli->query("SELECT * FROM Gates");
-  		$gaterow = $gateresult->fetch_array(); //Gates only has one row.
-  		while ($i <= 7) {
-    		$gatestr = "gate" . strval($i);
-    		if ($gaterow[$gatestr] <= $clientrow['house_build_grist']) {
-      		$gates++;
-    		} else {
-      		$i = 7; //We are done.
-    		}
-    		$i++;
-  		}
-  		echo strval($gates) . "</br>";
+			$gates = 0;
+			$i = 1;
+			$gateresult = $mysqli->query("SELECT * FROM Gates");
+			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
+			while ($i <= 7) {
+				$gatestr = "gate" . strval($i);
+				if ($gaterow[$gatestr] <= $clientrow['house_build_grist']) {
+					$gates++;
+				} else {
+					$i = 7; //We are done.
+				}
+				$i++;
+			}
+			echo strval($gates) . "</br>";
 			echo "Building up your client's house will increase their item storage space, as well as help them reach higher gates.</br>";
 			echo '<form action="sburbserver.php" method="post">Amount of build grist to spend on client\'s housing: <input id="build" name="build" type="text" /><br />';
-      echo '<input type="submit" value="Build it!" /></form></br>';
-	
+			echo '<input type="submit" value="Build it!" /></form></br>';
+
 			echo "&gt;Deploy</br>";
 			echo '<form method="post" action="sburbserver.php">Select a machine to deploy:</br><select name="deployitem">';
 			$deployresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`effects` LIKE '%DEPLOYABLE%' ORDER BY `Build_Grist_Cost` ASC");
 			while ($drow = $deployresult->fetch_array()) {
 				$deploytag = specialArray($drow['effects'], "DEPLOYABLE"); //should always return an array because of the search query above
-				if ($deploytag[1] == "FREE") $coststring = "--";
-				elseif ($deploytag[1] == "TIER1") $coststring = strval($deploytag[2]) . " " . $tier1grist;
-				else $coststring = strval($drow['Build_Grist_Cost']) . " Build Grist";
+				if ($deploytag[1] == "FREE")
+					$coststring = "--";
+				elseif ($deploytag[1] == "TIER1")
+					$coststring = strval($deploytag[2]) . " " . $tier1grist;
+				else
+					$coststring = strval($drow['Build_Grist_Cost']) . " Build Grist";
 				echo '<option value="' . $drow['captchalogue_code'] . '">' . $drow['name'] . ' (Cost: ' . $coststring . ')</option>';
 			}
 			echo '</select></br><input type="submit" value="Deploy it!"></form><br />';
-			
+
 			echo "&gt;Recycle<br />";
 			echo "Your client may be unable to recycle items directly from their storage, but you sure can!<br />";
 			if (!empty($clientrow['storeditems'])) {

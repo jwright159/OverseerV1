@@ -7,8 +7,10 @@ if (!empty($_POST['newpass'])) {
 			$newpass = password_hash($mysqli->real_escape_string($_POST['newpass']), PASSWORD_BCRYPT);
 			$mysqli->query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '$username' LIMIT 1;");
 			echo "Password changed successfully!</br>";
-		} else echo "Error changing password: Confirmation does not match new password, or the new password was left blank.</br>";
-	} else echo "Error changing password: Current password was incorrect.</br>";
+		} else
+			echo "Error changing password: Confirmation does not match new password, or the new password was left blank.</br>";
+	} else
+		echo "Error changing password: Current password was incorrect.</br>";
 }
 
 if (!empty($_POST['deleteconfirm'])) {
@@ -30,15 +32,17 @@ $(document).ready(function () {
 });
 </script>";
 		session_destroy();
-	} else echo "Error: Password incorrect. Your account still exists, so... yay? Unless you REALLY wanted your account gone, in which case not yay?</br>";
+	} else
+		echo "Error: Password incorrect. Your account still exists, so... yay? Unless you REALLY wanted your account gone, in which case not yay?</br>";
 }
 
 if (!empty($_POST['newemail'])) {
-		if ($_POST['newemail'] == $_POST['cnewemail'] && !empty($_POST['newemail'])) {
-			$newemail = $mysqli->real_escape_string($_POST['newemail']);
-			$mysqli->query("UPDATE Players SET `email` = '$newemail' WHERE `Players`.`username` = '$username' LIMIT 1;");
-			echo "Email address updated successfully!</br>";
-		} else echo "Error changing email: Confirmation does not match new email, or the new email field was left blank.</br>";
+	if ($_POST['newemail'] == $_POST['cnewemail'] && !empty($_POST['newemail'])) {
+		$newemail = $mysqli->real_escape_string($_POST['newemail']);
+		$mysqli->query("UPDATE Players SET `email` = '$newemail' WHERE `Players`.`username` = '$username' LIMIT 1;");
+		echo "Email address updated successfully!</br>";
+	} else
+		echo "Error changing email: Confirmation does not match new email, or the new email field was left blank.</br>";
 }
 
 $msgquerysuccess = false;
@@ -46,9 +50,11 @@ $msgresult = $mysqli->query("SELECT `username`,`feedbacknotice`,`newsnotice` FRO
 while ($msgrow = $msgresult->fetch_array()) {
 	$msgquerysuccess = true;
 }
-if (!$msgquerysuccess) echo "ERROR: Message query didn't go through! Either you don't have a messages row or Blahdev really screwed up somewhere. In either case, please notify a developer immediately.</br>";
+if (!$msgquerysuccess)
+	echo "ERROR: Message query didn't go through! Either you don't have a messages row or Blahdev really screwed up somewhere. In either case, please notify a developer immediately.</br>";
 
-if (empty($userrow['email'])) $userrow['email'] = "None set yet.";
+if (empty($userrow['email']))
+	$userrow['email'] = "None set yet.";
 
 echo 'Player Settings</br>
 You can change various things about your account here.</br>
@@ -68,10 +74,12 @@ Note: The Overseer Project uses these emails for the sole purpose of account rec
 
 <form method="post" action="playersettings.php">Messaging Settings:</br>';
 echo '<input type="checkbox"';
-if ($msgrow['feedbacknotice'] == 1) echo ' selected="selected"';
+if ($msgrow['feedbacknotice'] == 1)
+	echo ' selected="selected"';
 echo '> Notify me when a flag is set on one of my item submissions</br>';
 echo '<input type="checkbox"';
-if ($msgrow['newsnotice'] == 1) echo ' selected="selected"';
+if ($msgrow['newsnotice'] == 1)
+	echo ' selected="selected"';
 echo '> Notify me when there is an item/art update</br>';
 echo '<input type="submit" value="Update it!"></form></br>';
 

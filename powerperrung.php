@@ -1,6 +1,7 @@
 <?php
 require_once "header.php";
-function convertHybrid($workrow, $isbodygear) { //when wearable defense is calculated, it will go here if it's a hybrid (both a weapon and wearable) and cut the power down
+function convertHybrid($workrow, $isbodygear)
+{ //when wearable defense is calculated, it will go here if it's a hybrid (both a weapon and wearable) and cut the power down
 	$bonusrow['abstain'] = $workrow['abstain'];
 	$bonusrow['abjure'] = $workrow['abjure'];
 	$bonusrow['accuse'] = $workrow['accuse'];
@@ -9,39 +10,66 @@ function convertHybrid($workrow, $isbodygear) { //when wearable defense is calcu
 	$bonusrow['aggress'] = $workrow['aggress'];
 	$bonusrow['assail'] = $workrow['assail'];
 	$bonusrow['assault'] = $workrow['assault'];
-	if ($isbodygear) $divisor = 10;
-	else $divisor = 30;
+	if ($isbodygear)
+		$divisor = 10;
+	else
+		$divisor = 30;
 	$workrow['power'] = ceil($workrow['power'] / $divisor);
 	$bestbonus = max($bonusrow);
-	if ($bestbonus == 0) $bestname = "none";
-	elseif ($bonusrow['abstain'] == $bestbonus) $bestname = "abstain";
-	elseif ($bonusrow['abjure'] == $bestbonus) $bestname = "abjure";
-	elseif ($bonusrow['accuse'] == $bestbonus) $bestname = "accuse";
-	elseif ($bonusrow['abuse'] == $bestbonus) $bestname = "abuse";
-	elseif ($bonusrow['aggrieve'] == $bestbonus) $bestname = "aggrieve";
-	elseif ($bonusrow['aggress'] == $bestbonus) $bestname = "aggress";
-	elseif ($bonusrow['assail'] == $bestbonus) $bestname = "assail";
-	elseif ($bonusrow['assault'] == $bestbonus) $bestname = "assault";
-	if ($bestname == "abstain" || $workrow['abstain'] < 0) $workrow['abstain'] = ceil($workrow['abstain'] / $divisor);
-	else $workrow['abstain'] = 0;
-	if ($bestname == "abjure" || $workrow['abjure'] < 0) $workrow['abjure'] = ceil($workrow['abjure'] / $divisor);
-	else $workrow['abjure'] = 0;
-	if ($bestname == "accuse" || $workrow['accuse'] < 0) $workrow['accuse'] = ceil($workrow['accuse'] / $divisor);
-	else $workrow['accuse'] = 0;
-	if ($bestname == "abuse" || $workrow['abuse'] < 0) $workrow['abuse'] = ceil($workrow['abuse'] / $divisor);
-	else $workrow['abuse'] = 0;
-	if ($bestname == "aggrieve" || $workrow['aggrieve'] < 0) $workrow['aggrieve'] = ceil($workrow['aggrieve'] / $divisor);
-	else $workrow['aggrieve'] = 0;
-	if ($bestname == "aggress" || $workrow['aggress'] < 0) $workrow['aggress'] = ceil($workrow['aggress'] / $divisor);
-	else $workrow['aggress'] = 0;
-	if ($bestname == "assail" || $workrow['assail'] < 0) $workrow['assail'] = ceil($workrow['assail'] / $divisor);
-	else $workrow['assail'] = 0;
-	if ($bestname == "assault" || $workrow['assault'] < 0) $workrow['assault'] = ceil($workrow['assault'] / $divisor);
-	else $workrow['assault'] = 0;
+	if ($bestbonus == 0)
+		$bestname = "none";
+	elseif ($bonusrow['abstain'] == $bestbonus)
+		$bestname = "abstain";
+	elseif ($bonusrow['abjure'] == $bestbonus)
+		$bestname = "abjure";
+	elseif ($bonusrow['accuse'] == $bestbonus)
+		$bestname = "accuse";
+	elseif ($bonusrow['abuse'] == $bestbonus)
+		$bestname = "abuse";
+	elseif ($bonusrow['aggrieve'] == $bestbonus)
+		$bestname = "aggrieve";
+	elseif ($bonusrow['aggress'] == $bestbonus)
+		$bestname = "aggress";
+	elseif ($bonusrow['assail'] == $bestbonus)
+		$bestname = "assail";
+	elseif ($bonusrow['assault'] == $bestbonus)
+		$bestname = "assault";
+	if ($bestname == "abstain" || $workrow['abstain'] < 0)
+		$workrow['abstain'] = ceil($workrow['abstain'] / $divisor);
+	else
+		$workrow['abstain'] = 0;
+	if ($bestname == "abjure" || $workrow['abjure'] < 0)
+		$workrow['abjure'] = ceil($workrow['abjure'] / $divisor);
+	else
+		$workrow['abjure'] = 0;
+	if ($bestname == "accuse" || $workrow['accuse'] < 0)
+		$workrow['accuse'] = ceil($workrow['accuse'] / $divisor);
+	else
+		$workrow['accuse'] = 0;
+	if ($bestname == "abuse" || $workrow['abuse'] < 0)
+		$workrow['abuse'] = ceil($workrow['abuse'] / $divisor);
+	else
+		$workrow['abuse'] = 0;
+	if ($bestname == "aggrieve" || $workrow['aggrieve'] < 0)
+		$workrow['aggrieve'] = ceil($workrow['aggrieve'] / $divisor);
+	else
+		$workrow['aggrieve'] = 0;
+	if ($bestname == "aggress" || $workrow['aggress'] < 0)
+		$workrow['aggress'] = ceil($workrow['aggress'] / $divisor);
+	else
+		$workrow['aggress'] = 0;
+	if ($bestname == "assail" || $workrow['assail'] < 0)
+		$workrow['assail'] = ceil($workrow['assail'] / $divisor);
+	else
+		$workrow['assail'] = 0;
+	if ($bestname == "assault" || $workrow['assault'] < 0)
+		$workrow['assault'] = ceil($workrow['assault'] / $divisor);
+	else
+		$workrow['assault'] = 0;
 	return $workrow;
 }
 if (empty($_SESSION['username'])) {
-  echo "Log in to access this developer's tool.</br>";
+	echo "Log in to access this developer's tool.</br>";
 } else {
 	require_once "includes/SQLconnect.php";
 	if ($userrow['session_name'] != "Doodlefluffer") {
@@ -95,10 +123,11 @@ if (empty($_SESSION['username'])) {
 				$headname = str_replace("'", "\\\\''", $userrow[$userrow['headgear']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $headname . "'");
 				while ($row = $itemresult->fetch_array()) {
-				$itemname = $row['name'];
-				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
+					$itemname = $row['name'];
+					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['headgear']]) {
-						if ($row['hybrid'] == 1) $row = convertHybrid($row, false);
+						if ($row['hybrid'] == 1)
+							$row = convertHybrid($row, false);
 						$headdef = $row['power'];
 						$headrow = $row; //We save this to check weapon-specific bonuses to various commands.
 					}
@@ -113,7 +142,8 @@ if (empty($_SESSION['username'])) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['facegear']]) {
-						if ($row['hybrid'] == 1) $row = convertHybrid($row, false);
+						if ($row['hybrid'] == 1)
+							$row = convertHybrid($row, false);
 						$facedef = $row['power'];
 						$facerow = $row; //We save this to check weapon-specific bonuses to various commands.
 					}
@@ -128,7 +158,8 @@ if (empty($_SESSION['username'])) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['bodygear']]) {
-						if ($row['hybrid'] == 1) $row = convertHybrid($row, true);
+						if ($row['hybrid'] == 1)
+							$row = convertHybrid($row, true);
 						$bodydef = $row['power'];
 						$bodyrow = $row; //We save this to check weapon-specific bonuses to various commands.
 					}
@@ -143,7 +174,8 @@ if (empty($_SESSION['username'])) {
 					$itemname = $row['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$userrow['accessory']]) {
-						if ($row['hybrid'] == 1) $row = convertHybrid($row, false);
+						if ($row['hybrid'] == 1)
+							$row = convertHybrid($row, false);
 						$accdef = $row['power'];
 						$accrow = $row; //We save this to check weapon-specific bonuses to various commands.
 					}
