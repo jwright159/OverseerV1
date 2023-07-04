@@ -1,9 +1,11 @@
 <?php
 
-$SQLhostName = '';
-$SQLuserName = '';
-$SQLpassword = '';
-$SQLdatabase = '';
+require_once 'includes/dotenv_load.php';
+
+$SQLhostName = $_ENV['SQL_HOSTNAME'];
+$SQLuserName = $_ENV['SQL_USERNAME'];
+$SQLpassword = $_ENV['SQL_PASSWORD'];
+$SQLdatabase = $_ENV['SQL_DATABASE'];
 $SQLconnect = mysql_connect($SQLhostName, $SQLuserName, $SQLpassword);
 
 
