@@ -25,7 +25,6 @@ if (!empty($_POST['mako']) && $_POST['mako'] == "kawaii") {
 			while ($row = $gristresult->fetch_array()) {
 				$_SESSION[$row['name']] = $row;
 			}
-			$mysqli->query("UPDATE `Players` SET `active` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			if ($userrow['equipped'] != "") {
 				$equipname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $equipname . "'");
