@@ -426,6 +426,9 @@ require 'includes/global_functions.php';
 
 					<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;DONATE</span></a></li>
 
+					<li><a href="https://github.com/jwright159/OverseerV1"><span
+								class="rhyme slam aforums">&gt;GITHUB</span></a></li>
+
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>
 				</ul>
 
@@ -539,6 +542,9 @@ require 'includes/global_functions.php';
 								class="rhyme slam awiki">&gt;WIKI</span></a></li>
 
 					<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;DONATE</span></a></li>
+
+					<li><a href="https://github.com/jwright159/OverseerV1"><span
+								class="rhyme slam aforums">&gt;GITHUB</span></a></li>
 
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>
 
