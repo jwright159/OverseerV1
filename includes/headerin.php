@@ -16,7 +16,7 @@ if (empty($_SESSION['username'])) {
 
   $result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = 'default'");
   $userrow = $result->fetch_array();
-  if ($userrow['session_name'] != 'Developers' && $userrow['session_name'] != 'Itemods') {
+  if (!empty($userrow['session_name']) && $userrow['session_name'] != 'Developers' && $userrow['session_name'] != 'Itemods') {
   	//die('The dev area is only available to developers/moderators!');
   }
   //Should stop the "userrow undefined" spam.

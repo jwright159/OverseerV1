@@ -14,11 +14,13 @@ require('includes/global_functions.php');
 <link href="mobile.css?1" rel="stylesheet" media="screen and (max-width: 800px)"/>
 <?php
 $imagestr = "Images/title/corpia.png";
-if ($userrow['dreamingstatus'] == "Prospit") { //User on Prospit
-  echo '<link href="prospit.css?1" rel="stylesheet"/>';
-  $imagestr = "Images/title/corpiaprospit.png";
-} elseif ($userrow['dreamingstatus'] == "Derse") {
-  echo '<link href="derse.css?1" rel="stylesheet"/>';
+if (!empty($userrow['dreamingstatus'])) {
+  if ($userrow['dreamingstatus'] == "Prospit") { //User on Prospit
+    echo '<link href="prospit.css?1" rel="stylesheet"/>';
+    $imagestr = "Images/title/corpiaprospit.png";
+  } elseif ($userrow['dreamingstatus'] == "Derse") {
+    echo '<link href="derse.css?1" rel="stylesheet"/>';
+  }
 }
 if (mdetect()) {
   echo '<link href="coring.css?1" rel="stylesheet"/>
