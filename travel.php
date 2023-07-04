@@ -36,4 +36,4 @@ if (empty($_SESSION['username'])) {
   $locationstr = location($userrow,$locationrow);
   echo "Current location: $locationstr </br>";
   echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
-?>
+}
