@@ -414,20 +414,15 @@ require 'includes/global_functions.php';
 						<ul>
 							<li><a href="credits.php"><span class="rhyme aabout babout">&gt;Credits</span></a></li>
 							<li><a href="changelog.php"><span class="rhyme aabout babout">&gt;Change Log</span></a></li>
-							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a>
-							</li>
-							<li><a href="randomizer.php"><span class="rhyme aabout babout">&gt;Random
-										Combinations</span></a></li>
+							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a></li>
+							<li><a href="randomizer.php"><span class="rhyme aabout babout">&gt;Random Combinations</span></a></li>
+							<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;Donate</span></a></li>
+							<li><a href="https://github.com/jwright159/OverseerV1"><span class="rhyme slam aforums">&gt;GitHub</span></a></li>
 						</ul>
 					</li>
 
 					<li><a href="https://the-overseer.wikia.com/wiki/Main_Page"><span
 								class="rhyme slam awiki">&gt;WIKI</span></a></li>
-
-					<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;DONATE</span></a></li>
-
-					<li><a href="https://github.com/jwright159/OverseerV1"><span
-								class="rhyme slam aforums">&gt;GITHUB</span></a></li>
 
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>
 				</ul>
@@ -526,28 +521,20 @@ require 'includes/global_functions.php';
 						<ul>
 							<li><a href="credits.php"><span class="rhyme aabout babout">&gt;Credits</span></a></li>
 							<li><a href="changelog.php"><span class="rhyme aabout babout">&gt;Change Log</span></a></li>
-							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a>
-							</li>
+							<li><a href="news.php"><span class="rhyme aabout babout">&gt;Items/<wbr>Art Updates</span></a></li>
 							<li><a href="captchalist.php"><span class="rhyme aabout babout">&gt;Item List</span></a></li>
-							<li><a href="randomizer.php"><span class="rhyme aabout babout">&gt;Random
-										Combinations</span></a></li>
-							<li><a href="feedback.php"><span class="rhyme aabout babout">&gt;Feedback/<wbr>Submit</span></a>
-							</li>
+							<li><a href="randomizer.php"><span class="rhyme aabout babout">&gt;Random Combinations</span></a></li>
+							<li><a href="feedback.php"><span class="rhyme aabout babout">&gt;Feedback/<wbr>Submit</span></a></li>
 							<li><a href="submissions.php"><span class="rhyme aabout babout">&gt;Submissions</span></a></li>
-							<li><a href="donate.php"><span class="rhyme aabout babout">&gt;Donate</span></a></li>
+							<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;Donate</span></a></li>
+							<li><a href="https://github.com/jwright159/OverseerV1"><span class="rhyme slam aforums">&gt;GitHub</span></a></li>
 						</ul>
 					</li>
 
 					<li><a href="https://the-overseer.wikia.com/wiki/Main_Page"><span
 								class="rhyme slam awiki">&gt;WIKI</span></a></li>
 
-					<li><a href="https://patreon.com/OverseerReboot"><span class="rhyme slam alogin">&gt;DONATE</span></a></li>
-
-					<li><a href="https://github.com/jwright159/OverseerV1"><span
-								class="rhyme slam aforums">&gt;GITHUB</span></a></li>
-
 					<li><a href="about.php"><span class="rhyme slam afaq">&gt;FAQ</span></a></li>
-
 
 					<li><a href="logout.php"><span class="rhyme slam alogin">&gt;LOGOUT</span></a></li>
 				</ul>
