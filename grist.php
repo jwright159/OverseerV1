@@ -150,14 +150,14 @@ if (empty($_SESSION['username'])) {
 			echo "<div class='grist $gristtype'>";
 			if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
 				echo '<center><img src="Images/Grist/' . $gristtype . '.gif " height="50" width="50"></img></center>' . $gristtype . ' - ';
-				if ($gristtype == $type) { //This is the grist we wired from this time. Horrible fix gogogo!
+				if (!empty($type) && $gristtype == $type) { //This is the grist we wired from this time. Horrible fix gogogo!
 					echo number_format($quantity) . "</br>";
 				} else {
 					echo "$userrow[$gristtype]</br>";
 				}
 			} else {
 				echo '<center><img src="Images/Grist/' . $gristtype . '.png " height="50" width="50"></img></center>' . $gristtype . ' - ';
-				if ($gristtype == $type) { //This is the grist we wired from this time.
+				if (!empty($type) && $gristtype == $type) { //This is the grist we wired from this time.
 					echo number_format($quantity) . "</br>";
 				} else {
 					echo "$userrow[$gristtype]</br>";
