@@ -9,6 +9,7 @@ function highestGate($gaterow, $grist) {
 }
 
 function canFly($checkrow) {
+	global $mysqli;
 	if ($checkrow['Godtier'] > 0) return true; //player is godtier and can fly no matter what
 	$invcheck = 1;
 	$inv_slots = 50;
@@ -26,7 +27,7 @@ function canFly($checkrow) {
 }
 
 function chainArray($startrow) {
-  require_once "includes/SQLconnect.php";
+  global $mysqli, $userrow;
   $gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
   $gaterow = $gateresult->fetch_array(); //Gates only has one row.
   $gaterow['gate0'] = 0;
