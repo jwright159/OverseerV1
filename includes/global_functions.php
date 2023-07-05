@@ -1,11 +1,13 @@
 <?php
 function logDebugMessage($debugmsg) { //putting this in the header so that it can quickly be added to any page
+	global $mysqli;
 	$time = time();
 	$debugmsg = $mysqli->real_escape_string("($time)" . $debugmsg);
 	$mysqli->query("UPDATE `System` SET `debuglog` = CONCAT(`debuglog`,'<br />$debugmsg') WHERE 1");
 }
 
 function logModMessage($debugmsg, $id) { //putting this in the header so that it can quickly be added to any page
+	global $mysqli;
 	$time = time();
 	if ($id != 0) {
 		$debugmsg = "<a href='https://www.overseerreboot.xyz/submissions.php?view=$id'>(ID: $id @ $time)</a> " . $debugmsg;
@@ -17,6 +19,7 @@ function logModMessage($debugmsg, $id) { //putting this in the header so that it
 }
 
 function chargeEncounters($userrow, $encounters, $effectticks) {
+	global $mysqli;
 	if ($userrow['encounters'] >= $encounters) {
 		$newenc = $userrow['encounters'] -= $encounters;
 		$encspent = $userrow['encountersspent'] += $encounters;
@@ -53,6 +56,7 @@ function chargeEncounters($userrow, $encounters, $effectticks) {
 }
 
 function climbEcheladder($userrow, $rungups) {
+	global $mysqli;
 	$rungs = 612 - $userrow['Echeladder'];
 	if ($rungs > $rungups) $rungs = $rungups;
 	$hpup = 0; //Paranoia: Handle weird Echeladder values.
@@ -89,6 +93,7 @@ function climbEcheladder($userrow, $rungups) {
 }
 
 function loadAbilities($userrow) {
+	global $mysqli;
 	//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
   $abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
 	AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
@@ -162,6 +167,7 @@ function convertHybrid($workrow, $isbodygear) { //when wearable defense is calcu
 }
 
 function terminateStrife($userrow, $result) {
+	global $mysqli, $username, $max_enemies;
 	//result can have 3 values: 0 is victory, 1 is defeat, 2 is abscond. The latter two will attempt to summon another aide.
 	//there is a special value -1 which will eject EVERYONE from strife as if they absconded, and doesn't affect dungeon strife or exploration
 	if ($result > 0) {
@@ -260,9 +266,9 @@ function terminateStrife($userrow, $result) {
 	    	$qresult = $mysqli->query("SELECT `context` FROM `Consort_Dialogue` WHERE `ID` = $userrow[currentquest]");
 	    	$qrow = $qresult->fetch_array();
 	    	if (strpos($qrow['context'], "questrescue") !== false)
-	    	echo "This quest's challenge has gotten the better of you! It looks as though you will not have a second chance, unfortunately...<br />";
+	    		echo "This quest's challenge has gotten the better of you! It looks as though you will not have a second chance, unfortunately...<br />";
 	    	else
-	  	  echo "You have failed the quest! You should come back and try again after you're rested up and fully prepared.</br>";
+	  	  		echo "You have failed the quest! You should come back and try again after you're rested up and fully prepared.</br>";
 		    echo "<a href='consortquests.php'>==&gt;</a></br>";
 		  }
 		}
@@ -304,8 +310,8 @@ function terminateStrife($userrow, $result) {
 		$userrow['enemy' . strval($i) . 'name'] = "";
 		$i++;
 	}
-	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
-	`tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0, 
+	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0,
+	`tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0,
 	`cantabscond` = 0, `motifcounter` = 0, `combatconsume` = 0, `strifestatus` = '', `enemydata` = '' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;"); //Power boosts wear off.
 	$userrow['powerboost'] = 0;
   $userrow['offenseboost'] = 0;
@@ -328,29 +334,29 @@ function terminateStrife($userrow, $result) {
 function getRandeffect() {
 	$r = rand(1,22);
 	switch ($r) {
-		case 1: return "TIMESTOP"; break;
-		case 2: return "POISON"; break;
-		case 3: return "WATERYGEL"; break;
-		case 4: return "SHRUNK"; break;
-		case 5: return "LOCKDOWN"; break;
-		case 6: return "CHARMED"; break;
-		case 7: return "LIFESTEAL"; break;
-		case 8: return "SOULSTEAL"; break;
-		case 9: return "MISFORTUNE"; break;
-		case 10: return "BLEEDING"; break;
-		case 11: return "HOPELESS"; break;
-		case 12: return "DISORIENTED"; break;
-		case 13: return "DISTRACTED"; break;
-		case 14: return "ENRAGED"; break;
-		case 15: return "MELLOW"; break;
-		case 16: return "KNOCKDOWN"; break;
-		case 17: return "GLITCHED"; break;
-		case 18: return "GLITCHY"; break; //lol
-		case 19: return "BURNING"; break;
-		case 20: return "FREEZING"; break;
-		case 21: return "SMITE"; break;
-		case 22: return "RECOIL"; break;
-		default: return "GLITCHY"; break; //bugged = bugged
+		case 1: return "TIMESTOP";
+		case 2: return "POISON";
+		case 3: return "WATERYGEL";
+		case 4: return "SHRUNK";
+		case 5: return "LOCKDOWN";
+		case 6: return "CHARMED";
+		case 7: return "LIFESTEAL";
+		case 8: return "SOULSTEAL";
+		case 9: return "MISFORTUNE";
+		case 10: return "BLEEDING";
+		case 11: return "HOPELESS";
+		case 12: return "DISORIENTED";
+		case 13: return "DISTRACTED";
+		case 14: return "ENRAGED";
+		case 15: return "MELLOW";
+		case 16: return "KNOCKDOWN";
+		case 17: return "GLITCHED";
+		case 18: return "GLITCHY"; // lol
+		case 19: return "BURNING";
+		case 20: return "FREEZING";
+		case 21: return "SMITE";
+		case 22: return "RECOIL";
+		default: return "GLITCHY"; //bugged = bugged
 	}
 }
 
