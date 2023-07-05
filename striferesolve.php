@@ -1,14 +1,17 @@
 <?php
-require 'additem.php'; //required for enemies who drop loot
-require 'monstermaker.php'; //Required for enemies who summon more enemies
+require_once 'additem.php'; //required for enemies who drop loot
+require_once 'monstermaker.php'; //Required for enemies who summon more enemies
 require_once 'includes/glitches.php'; //For displaying glitchy nonsense
 require_once "header.php";
 require_once "includes/grist_icon_parser.php";
 require_once "includes/fieldparser.php";
 //NOTE - This file assumes you're coming from the strife.php file.
 
+/**
+ * Used for enemies that generate other enemies, so that it doesn't revert enemy data that has already been edited
+ */
 function refreshSingular($slot, $target, $userrow)
-{ //used for enemies that generate other enemies, so that it doesn't revert enemy data that has already been edited
+{
 	$dummyrow = refreshEnemydata($userrow);
 	$enstr = 'enemy' . strval($slot);
 	$tenstr = 'enemy' . strval($target);
@@ -19,11 +22,11 @@ function refreshSingular($slot, $target, $userrow)
 	$userrow[$tenstr . 'maxpower'] = $dummyrow[$enstr . 'maxpower'];
 	$userrow[$tenstr . 'desc'] = $dummyrow[$enstr . 'desc'];
 	$userrow[$tenstr . 'category'] = $dummyrow[$enstr . 'category'];
-	$stresult = $mysqli->query("SELECT `strifestatus` FROM `Players` WHERE `Players`.`username` = '" . $userrow['username'] . "'");
-	$strow = $stresult->fetch_array();
+	$strow = fetchOne("SELECT strifestatus FROM Players WHERE username = :username", ['username' => $userrow['username']]);
 	$userrow['strifestatus'] = $strow['strifestatus'];
 	return $userrow;
 }
+
 $userrow = parseEnemydata($userrow);
 $max_enemies = 50;
 if (empty($_SESSION['username'])) {
@@ -699,7 +702,7 @@ if (empty($_SESSION['username'])) {
 								$currenteffect = $effectarray[$effectnumber];
 								$currentarray = explode(':', $currenteffect); //Note that what each array entry means depends on the effect.
 								switch ($currentarray[0]) {
-									case 'PIERCING': //Format is PIERCING:<% of power>|. We check for piercing here so that piercing damage can trigger on-damage effects if originally 0 damage.
+									case 'PIERCING': //Format is PIERCING:<percent of power>|. We check for piercing here so that piercing damage can trigger on-damage effects if originally 0 damage.
 										$roll = rand((1 + floor($luck / 5)), 100);
 										$resistfactor = $enemyrow['resist_Breath']; //Enemy's breath resistance reduces success chance.
 										if ($mainoff == 1) {
@@ -1126,7 +1129,7 @@ if (empty($_SESSION['username'])) {
 			}
 			//End-of-turn effects happen here, including damage. Note that we update userrow so that the repeat function works.
 			$poisonstr = "PLAYER:POISON";
-			if (strpos($currentstatus, $poisonstr) !== False) { //Player is poisoned. (Format: POISON:<%chance>:<%severity>|
+			if (strpos($currentstatus, $poisonstr) !== False) { //Player is poisoned. (Format: POISON:<percent chance>:<percent severity>|
 				$statusarray = explode("|", $currentstatus);
 				$p = 0;
 				$severity = 0;
@@ -1285,7 +1288,7 @@ if (empty($_SESSION['username'])) {
 						$bleedingstr = ($statustr . "BLEEDING");
 						$disorientedstr = ($statustr . "DISORIENTED");
 						$burningstr = ($statustr . "BURNING|");
-						if (strpos($currentstatus, $poisonstr) !== False) { //This enemy is poisoned. (Format: POISON:<%chance>:<%severity>|
+						if (strpos($currentstatus, $poisonstr) !== False) { //This enemy is poisoned. (Format: POISON:<percent chance>:<percent severity>|
 							$statusarray = explode("|", $currentstatus);
 							$p = 0;
 							$severity = 0;

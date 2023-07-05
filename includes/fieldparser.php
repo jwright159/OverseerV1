@@ -31,7 +31,8 @@ function parseEnemydata($userrow) {
 	return $userrow;
 }
 
-function writeEnemydata($userrow) {
+function writeEnemydata(array $userrow)
+{
 	//echo "begin enemy data write<br />";
 	global $mysqli;
 	$endatastr = "";
