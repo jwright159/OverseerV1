@@ -59,11 +59,11 @@ if (empty($_SESSION['username'])) {
   $up = False;
   $time = time();
   if ($userrow['Aspect'] == "Time") {
-    $interval = 1080; //18 minutes
-    $questinterval = 1620; //27 minutes
-  } else { 
-    $interval = 1200; //This is where the interval between encounter ticks is set. (20 minutes)
-    $questinterval = 1800; //30 minutes
+    $interval = 9; //1080; //18 minutes
+    $questinterval = 14; //1620; //27 minutes
+  } else {
+    $interval = 10; //1200; //This is where the interval between encounter ticks is set. (20 minutes)
+    $questinterval = 15; //1800; //30 minutes
   }
   $lasttick = $userrow['lasttick'];
   $lastquesttick = $userrow['lastquesttick'];

@@ -114,8 +114,8 @@ require 'includes/global_functions.php';
 					window.minutes--;
 				}
 				if (window.minutes == -1) {
-					window.minutes = 19;
-					window.seconds = 59;
+					window.minutes = 0;
+					window.seconds = 10;
 					if (window.encounters < 100) {
 						window.encounters++;
 					}
