@@ -77,14 +77,14 @@ if (empty($_SESSION['username'])) {
 			$reachaspect = False;
 			while ($col = $aspects->fetch_field()) {
 				$aspect = $col->name;
+
 				if ($aspect == "Breath")
-					$reachaspect = True;
+					$reachaspect = true;
 				if ($aspect == "General")
-					$reachaspect = False;
-				if ($reachaspect == True) {
-					if ($_POST['aspect'] == $aspect)
-						$titlegood++;
-				}
+					$reachaspect = false;
+				
+				if ($reachaspect && $_POST['aspect'] == $aspect)
+					$titlegood++;
 			}
 			$classes = $mysqli->query("SELECT * FROM Titles");
 			$reachclass = True;
