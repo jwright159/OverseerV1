@@ -71,17 +71,18 @@ if (empty($_SESSION['username'])) {
 			$storecode[$s] = "nope";
 		$s++;
 	}
+
 	$boom = explode("|", $userrow['storeditems']);
-	$totalitems = count($boom);
+	$totalitems = empty($userrow['storeditems']) ? 0 : count($boom);
 	$i = 0;
 	$space = 0;
 	$itemstored = false;
 	$itemget = false;
-	while ($i <= $totalitems) {
+	while ($i < $totalitems) {
 		$args = explode(":", $boom[$i]);
 		$itemresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`size`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1");
 		$irow = $itemresult->fetch_array();
-		if ($irow['captchalogue_code'] == $args[0]) { //Item found.
+		if ($irow != null && $irow['captchalogue_code'] == $args[0]) { //Item found.
 			$getstr = $args[0];
 			if (strpos($args[2], "CODE=") !== false) {
 				$thiscode = substr($args[2], 5, 8);
@@ -137,7 +138,7 @@ if (empty($_SESSION['username'])) {
 	if ($storecode != "nope") {
 		$i = 0;
 		$nospace = false;
-		while ($i <= $totalitems) {
+		while ($i < $totalitems) {
 			if (strpos($itemcomp[$i], "CODE=") !== false) {
 				$thiscode = substr($itemcomp[$i], 5, 8);
 			} else
@@ -215,7 +216,7 @@ if (empty($_SESSION['username'])) {
 	if ($itemget || $itemstored) { //there was a change to the storage string, so let's rebuild it and update it
 		$i = 0; //yet again
 		$newstring = "";
-		while ($i <= $totalitems) {
+		while ($i < $totalitems) {
 			if (!empty($itemcode[$i]) && $itemno[$i] != 0)
 				$newstring .= $itemcode[$i] . ":" . $itemno[$i] . ":" . $itemcomp[$i] . "|";
 			$i++;
@@ -228,7 +229,7 @@ if (empty($_SESSION['username'])) {
 	echo "Items stored in your house:</br></br>";
 	echo '<form action="storage.php" method="post">To retrieve items, enter the quantity to retrieve in the box to the left of the desired item(s).<br />';
 	$i = 0;
-	while ($i <= $totalitems) {
+	while ($i < $totalitems) {
 		if (!empty($itemcode[$i]) && $itemno[$i] != 0) {
 			if (strpos($itemnamunique[$i], "(CODE:") !== false) {
 				echo '<input type="text" name="' . $itemcode[$i] . ':' . substr($itemnamunique[$i], -9, 8) . '" />' . $itemnamunique[$i] . " x " . strval($itemno[$i]) . "</br>";
@@ -244,7 +245,7 @@ if (empty($_SESSION['username'])) {
 	echo "You have the following items that provide an effect from storage:<br />";
 	$nothing = true;
 	$i = 0;
-	while ($i <= $totalitems) {
+	while ($i < $totalitems) {
 		$alleffects = explode(".", $itemcomp[$i]);
 		$j = 0;
 		while (!empty($alleffects[$j])) {
