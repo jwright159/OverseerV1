@@ -3,6 +3,7 @@ $invslots = 50; //Increase this if inventory size goes up.
 $strifeslots = 16;
 function addItem($item, $userrow, $incode = "00000000")
 { //Adds an item to a user's inventory. Returns true if successful, or false if the user's inventory is full.
+	global $mysqli;
 	$invslots = 50; //Placed here so function can use it.
 	$i = 1;
 	while ($i <= $invslots) {
@@ -67,6 +68,7 @@ function addItem($item, $userrow, $incode = "00000000")
 
 function addAbstratus($absstring, $userrow)
 {
+	global $mysqli;
 	echo "WARNING: addAbstratus function is now defunct. Please use addSpecibus (includes/fieldparser.php) instead. If you're not a developer and you see this message, please submit a bug report immediately!<br />";
 	$strifeslots = 16;
 	//require_once "includes/SQLconnect.php";
@@ -115,6 +117,7 @@ function addAbstratus($absstring, $userrow)
 
 function autoUnequip($userrow, $exception, $invslot)
 {
+	global $mysqli;
 	if ($exception != "headgear" && $userrow['headgear'] == $invslot) {
 		$mysqli->query("UPDATE `Players` SET `headgear` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		if ($userrow['facegear'] == "2HAND")
@@ -169,41 +172,22 @@ function autoUnequip($userrow, $exception, $invslot)
 function itemSize($size)
 {
 	switch ($size) {
-		case "intangible":
-			return 0;
-			break;
-		case "miniature":
-			return 1;
-			break;
-		case "tiny":
-			return 5;
-			break;
-		case "small":
-			return 10;
-			break;
-		case "average":
-			return 20;
-			break;
-		case "large":
-			return 40;
-			break;
-		case "huge":
-			return 100;
-			break;
-		case "immense":
-			return 250;
-			break;
-		case "ginormous":
-			return 1000;
-			break;
-		default: //in case some weird value is listed
-			return 20; //treat it as "average"
-			break;
+		case "intangible": return 0;
+		case "miniature": return 1;
+		case "tiny": return 5;
+		case "small": return 10;
+		case "average": return 20;
+		case "large": return 40;
+		case "huge": return 100;
+		case "immense": return 250;
+		case "ginormous": return 1000;
+		default: return 20; //in case some weird value is listed, treat it as "average"
 	}
 }
 
 function storageSpace($storestring)
 {
+	global $mysqli;
 	$boom = explode("|", $storestring);
 	$totalitems = count($boom);
 	$i = 0;
@@ -223,6 +207,7 @@ function storageSpace($storestring)
 
 function compuRefresh($userrow)
 {
+	global $mysqli;
 	//echo "running compuRefresh() for $userrow[username]<br />";
 	$complevel = 0;
 	if (strpos($userrow['storeditems'], "ISCOMPUTER") !== false)
@@ -297,6 +282,7 @@ function specialArray($itemeffects, $search)
 
 function grantEffects($userrow, $itemeffects, $slot)
 { //finds a tag in the "effects" field and returns the array associated with it, useful for looking up single effects
+	global $mysqli;
 	$grantarray = specialArray($itemeffects, "GRANT");
 	if ($grantarray[0] == "GRANT") {
 		$granted = explode(".", $grantarray[1]);
@@ -318,6 +304,7 @@ function grantEffects($userrow, $itemeffects, $slot)
 
 function storeItem($item, $tostorage, $userrow, $stackcode = "00000000")
 { //making this a function because it's too useful.
+	global $mysqli;
 	$compuname = str_replace("'", "\\\\''", $item); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 	$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
 	$compuresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
