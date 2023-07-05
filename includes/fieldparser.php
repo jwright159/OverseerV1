@@ -1,6 +1,7 @@
 <?php
 
-function parseEnemydata($userrow) {
+function parseEnemydata($userrow)
+{
 	$enemies = explode("|", $userrow['enemydata']);
 	//$allenemies = count($enemies);
 	//if ($allenemies > 50)
@@ -36,7 +37,8 @@ function writeEnemydata(array $userrow)
 	//echo "begin enemy data write<br />";
 	global $mysqli;
 	$endatastr = "";
-	if (empty($userrow['maxenemies'])) $userrow['maxenemies'] = 50;
+	if (empty($userrow['maxenemies']))
+		$userrow['maxenemies'] = 50;
 	for ($i = 0; $i < $userrow['maxenemies']; $i++) {
 		$enstr = 'enemy' . strval($i + 1);
 		//echo $enstr . ":";
@@ -59,7 +61,8 @@ function writeEnemydata(array $userrow)
 	$mysqli->query("UPDATE `Players` SET `enemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 }
 
-function refreshEnemydata($userrow) { //a necessary function for functions like generateEnemy, so that they don't continually overwrite the same slot
+function refreshEnemydata($userrow)
+{ //a necessary function for functions like generateEnemy, so that they don't continually overwrite the same slot
 	global $mysqli;
 	$dataresult = $mysqli->query("SELECT `enemydata` FROM `Players` WHERE `Players`.`username` = '" . $userrow['username'] . "'");
 	$row = $dataresult->fetch_array();
@@ -68,29 +71,31 @@ function refreshEnemydata($userrow) { //a necessary function for functions like 
 	return $userrow;
 }
 
-function endStrife($userrow) { //a quick function to reset all strife values and ensure they don't return via megaquery
+function endStrife($userrow)
+{ //a quick function to reset all strife values and ensure they don't return via megaquery
 	global $mysqli;
 	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
  `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0, 
 `cantabscond` = 0, `motifcounter` = 0, `strifestatus` = '', `sessionbossengaged` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;"); //Power boosts wear off.
-  $userrow['powerboost'] = 0;
-  $userrow['offenseboost'] = 0;
-  $userrow['defenseboost'] = 0;
-  $userrow['temppowerboost'] = 0;
-  $userrow['tempoffenseboost'] = 0;
-  $userrow['tempdefenseboost'] = 0;
-  $userrow['Brief_Luck'] = 0;
-  $userrow['invulnerability'] = 0;
-  $userrow['buffstrip'] = 0;
-  $userrow['noassist'] = 0;
-  $userrow['cantabscond'] = 0;
-  $userrow['motifcounter'] = 0;
-  $userrow['strifestatus'] = "";
-  $userrow['sessionbossengaged'] = 0; //Just in case.
-  return $userrow;
+	$userrow['powerboost'] = 0;
+	$userrow['offenseboost'] = 0;
+	$userrow['defenseboost'] = 0;
+	$userrow['temppowerboost'] = 0;
+	$userrow['tempoffenseboost'] = 0;
+	$userrow['tempdefenseboost'] = 0;
+	$userrow['Brief_Luck'] = 0;
+	$userrow['invulnerability'] = 0;
+	$userrow['buffstrip'] = 0;
+	$userrow['noassist'] = 0;
+	$userrow['cantabscond'] = 0;
+	$userrow['motifcounter'] = 0;
+	$userrow['strifestatus'] = "";
+	$userrow['sessionbossengaged'] = 0; //Just in case.
+	return $userrow;
 }
 
-function freeSpecibi($userabs, $userslots, $echothem) {
+function freeSpecibi($userabs, $userslots, $echothem)
+{
 	$abs = explode("|", $userabs);
 	$i = 0;
 	$hasabs = count($abs);
@@ -98,17 +103,19 @@ function freeSpecibi($userabs, $userslots, $echothem) {
 	while ($i < $hasabs) {
 		if (!empty($abs[$i])) {
 			$free--;
-			if ($echothem) echo $abs[$i] . "<br />";
+			if ($echothem)
+				echo $abs[$i] . "<br />";
 		}
 		$i++;
 	}
 	return $free;
 }
 
-function addSpecibus($userrow, $newabs) { //this function assumes you've already checked if the user has a free slot because reasons
+function addSpecibus($userrow, $newabs)
+{ //this function assumes you've already checked if the user has a free slot because reasons
 	global $mysqli;
 	$abs = $userrow['abstratus1'];
-	if (substr($abs,0,-1) != "|" && !empty($abs)) {
+	if (substr($abs, 0, -1) != "|" && !empty($abs)) {
 		$abs .= "|";
 	}
 	$abs .= $newabs;
@@ -117,7 +124,8 @@ function addSpecibus($userrow, $newabs) { //this function assumes you've already
 	return $userrow;
 }
 
-function matchesAbstratus($userabs, $abstr) {
+function matchesAbstratus($userabs, $abstr)
+{
 	$itemabs = explode(", ", $abstr);
 	$abs = explode("|", $userabs);
 	$totalitem = count($itemabs);
@@ -127,15 +135,18 @@ function matchesAbstratus($userabs, $abstr) {
 	while ($i < $totalitem) {
 		$j = 0;
 		while ($j < $totaluser) {
-			if ($itemabs[$i] == $abs[$j]) return true; //found a matching abstratus, we're done here
-			else $j++;
+			if ($itemabs[$i] == $abs[$j])
+				return true; //found a matching abstratus, we're done here
+			else
+				$j++;
 		}
 		$i++;
 	}
 	return false;
 }
 
-function parseLastfought($userrow) {
+function parseLastfought($userrow)
+{
 	$enemies = explode("|", $userrow['oldenemydata']);
 	$allenemies = count($enemies);
 	$actualenemies = $allenemies;
@@ -154,10 +165,12 @@ function parseLastfought($userrow) {
 	return $userrow;
 }
 
-function writeLastfought($userrow) {
+function writeLastfought($userrow)
+{
 	//echo "writing last fought!<br />";
 	global $mysqli;
-	if (empty($userrow['lastenemies'])) $userrow['lastenemies'] = 50;
+	if (empty($userrow['lastenemies']))
+		$userrow['lastenemies'] = 50;
 	$endatastr = "";
 	for ($i = 0; $i < $userrow['lastenemies']; $i++) {
 		$enstr = strval($i + 1);
@@ -175,46 +188,47 @@ function writeLastfought($userrow) {
 	$mysqli->query("UPDATE `Players` SET `oldenemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 }
 
-function hydraSplitChance($abs) {
-  switch ($abs) {
-    case "bladekind":
-    case "chainsawkind":
-      return 95;
-    case "axekind":
-    case "knifekind":
-    case "scythekind":
-      return 80;
-    case "polearmkind":
-    case "ninjakind":
-    case "razorkind":
-      return 60;
-    case "boomerangkind":
-    case "laserkind":
-    case "sicklekind":
-      return 50;
-    case "scissorkind":
-    case "shearkind":
-      return 40;
-    case "hammerkind":
-    case "clubkind":
-    case "flamethrowerkind":
-    case "pankind":
-    case "rockkind":
-    case "staffkind":
-    case "yoyokind":
-      return 10;
-    case "bunnykind":
-    case "cakekind":
-    case "fabrickind":
-    case "fancysantakind":
-    case "inflatablekind":
-      return 1;
-    case "metakind":
-    case "pillowkind":
-      return 0;
-    default:
-      return 25;
-  }
+function hydraSplitChance($abs)
+{
+	switch ($abs) {
+		case "bladekind":
+		case "chainsawkind":
+			return 95;
+		case "axekind":
+		case "knifekind":
+		case "scythekind":
+			return 80;
+		case "polearmkind":
+		case "ninjakind":
+		case "razorkind":
+			return 60;
+		case "boomerangkind":
+		case "laserkind":
+		case "sicklekind":
+			return 50;
+		case "scissorkind":
+		case "shearkind":
+			return 40;
+		case "hammerkind":
+		case "clubkind":
+		case "flamethrowerkind":
+		case "pankind":
+		case "rockkind":
+		case "staffkind":
+		case "yoyokind":
+			return 10;
+		case "bunnykind":
+		case "cakekind":
+		case "fabrickind":
+		case "fancysantakind":
+		case "inflatablekind":
+			return 1;
+		case "metakind":
+		case "pillowkind":
+			return 0;
+		default:
+			return 25;
+	}
 }
 
 ?>

@@ -1,43 +1,45 @@
 <?php
-      $aiding = $userrow['aiding'];
-      $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$aiding'");
-      while ($row = $sessionmates->fetch_array()) { //Look for whoever we're aiding.
+$aiding = $userrow['aiding'];
+$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$aiding'");
+while ($row = $sessionmates->fetch_array()) { //Look for whoever we're aiding.
 	if ($row['username'] == $aiding) {
-	  $aidrow = $row;
+		$aidrow = $row;
 	}
-      }
-      if ($aidrow['dreamingstatus'] == "Prospit") {
+}
+if ($aidrow['dreamingstatus'] == "Prospit") {
 	echo 'You are currently assisting ' . $aiding . ', who is engaged in "strife" against the following "opponents":</br>';
-      } else {
+} else {
 	echo "You are currently assisting $aiding, who is engaged in strife against the following opponents:</br>";
-      }
-      $i = 1;
-      while ($i <= $max_enemies) {
+}
+$i = 1;
+while ($i <= $max_enemies) {
 	$enemystr = "enemy" . strval($i) . "name";
 	$powerstr = "enemy" . strval($i) . "power";
 	$healthstr = "enemy" . strval($i) . "health";
 	$maxhealthstr = "enemy" . strval($i) . "maxhealth";
 	$descstr = "enemy" . strval($i) . "desc";
 	if ($aidrow[$enemystr] != "") { //Enemy located.
-	  echo $aidrow[$enemystr];
-	  echo ". Power: ";
-	  echo strval($aidrow[$powerstr]);
-	  echo ". Health Vial: ";
-	  $healthvial = floor(($aidrow[$healthstr] / $aidrow[$maxhealthstr]) * 100); //Computes % of max HP remaining.
-	  if ($healthvial == 0) $healthvial = 1;
-	  echo strval($healthvial);
-	  echo "%</br>";
-	  echo $aidrow[$descstr] . "</br></br>";
+		echo $aidrow[$enemystr];
+		echo ". Power: ";
+		echo strval($aidrow[$powerstr]);
+		echo ". Health Vial: ";
+		$healthvial = floor(($aidrow[$healthstr] / $aidrow[$maxhealthstr]) * 100); //Computes % of max HP remaining.
+		if ($healthvial == 0)
+			$healthvial = 1;
+		echo strval($healthvial);
+		echo "%</br>";
+		echo $aidrow[$descstr] . "</br></br>";
 	}
 	$i++;
-      }
-      if ($aidrow['dreamingstatus'] == "Prospit") {
+}
+if ($aidrow['dreamingstatus'] == "Prospit") {
 	echo 'Your power is being contributed to the "combat".';
-      } else {
+} else {
 	echo 'Your power is being contributed to the combat.';
-      }
-      echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form></br>';
-      echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a> <a href="portfolio.php">Check combat capabilities</a> <a href="consumables.php">Use a consumable item</a>';
-      if (!empty($_SESSION['adjective'])) echo " <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a>";
-	  
-	  ?>
+}
+echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form></br>';
+echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a> <a href="portfolio.php">Check combat capabilities</a> <a href="consumables.php">Use a consumable item</a>';
+if (!empty($_SESSION['adjective']))
+	echo " <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a>";
+
+?>

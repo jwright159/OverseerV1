@@ -1,6 +1,7 @@
 <?php
 
-function randomItem($griststring, $costcap, $gristname, $totalgrists, $specialstring) {
+function randomItem($griststring, $costcap, $gristname, $totalgrists, $specialstring)
+{
 	$totalpool = 0;
 	if (!empty($specialstring)) {
 		$specialstring = "(" . $specialstring . ")";
@@ -9,25 +10,30 @@ function randomItem($griststring, $costcap, $gristname, $totalgrists, $specialst
 		$specialstring = "`Captchalogue`.`$griststring` > 0";
 	}
 	$poolresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE $specialstring AND `Captchalogue`.`effects` NOT LIKE '%NOCONSORT|%'");
-	while ($poolresult->fetch_array()) $totalpool++;
+	while ($poolresult->fetch_array())
+		$totalpool++;
 	$foundone = false;
 	$attempts = 0;
 	$attemptscap = 100;
 	while (!$foundone && $attempts < $attemptscap) {
-		$pick = rand(1,$totalpool);
+		$pick = rand(1, $totalpool);
 		$pick--;
 		$pickresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE $specialstring AND `Captchalogue`.`effects` NOT LIKE '%NOCONSORT|%' LIMIT $pick,1");
 		$pickrow = $pickresult->fetch_array();
 		//echo $pickrow['name'] . " found</br>";
 		$thiscost = totalGristcost($pickrow, $gristname, $totalgrists);
-		if ($thiscost <= $costcap) $foundone = true;
+		if ($thiscost <= $costcap)
+			$foundone = true;
 		$attempts++;
 	}
-	if ($foundone) return $pickrow;
-	else return false;
+	if ($foundone)
+		return $pickrow;
+	else
+		return false;
 }
 
-function totalGristcost($countrow, $gristname, $totalgrists) {
+function totalGristcost($countrow, $gristname, $totalgrists)
+{
 	$i = 0;
 	$totalcost = 0;
 	while ($i < $totalgrists) {
@@ -38,23 +44,29 @@ function totalGristcost($countrow, $gristname, $totalgrists) {
 	return $totalcost;
 }
 
-function totalBooncost($countrow, $landrow, $gristname, $totalgrists, $sessionname) {
+function totalBooncost($countrow, $landrow, $gristname, $totalgrists, $sessionname)
+{
 	$i = 0;
 	$totalcost = 0;
 	while ($i < $totalgrists) {
 		if ($countrow[$gristname[$i] . "_Cost"] != 0) {
 			$gristvalue = 0;
-			if ($gristname[$i] == "Build_Grist") $gristvalue = 20;
-			elseif ($gristname[$i] == "Artifact_Grist") $gristvalue = 0;
+			if ($gristname[$i] == "Build_Grist")
+				$gristvalue = 20;
+			elseif ($gristname[$i] == "Artifact_Grist")
+				$gristvalue = 0;
 			else {
 				$j = 0;
 				$match = false;
 				while ($j < 9 && !$match) {
 					$j++;
-					if ($landrow['grist' . strval($j)] == $gristname[$i]) $match = true;
+					if ($landrow['grist' . strval($j)] == $gristname[$i])
+						$match = true;
 				}
-				if ($match) $gristvalue = 20 * ($j + 1);
-				else $gristvalue = avgGristtier($sessionname, $gristname[$i]); //grist can't be found on this land, so it's worth a ton to the consorts
+				if ($match)
+					$gristvalue = 20 * ($j + 1);
+				else
+					$gristvalue = avgGristtier($sessionname, $gristname[$i]); //grist can't be found on this land, so it's worth a ton to the consorts
 			}
 			//echo "gristvalue of " . $gristname[$i] . " is " . strval($gristvalue) . "</br>";
 			$totalcost = $totalcost + ($countrow[$gristname[$i] . '_Cost'] * $gristvalue);
@@ -64,27 +76,36 @@ function totalBooncost($countrow, $landrow, $gristname, $totalgrists, $sessionna
 	return $totalcost;
 }
 
-function getDialogue($dtype, $userrow, $land1, $land2, $gate = 1) {
+function getDialogue($dtype, $userrow, $land1, $land2, $gate = 1)
+{
 	$totalpool = 0;
-	if ($gate < 1) $gate = 1;
+	if ($gate < 1)
+		$gate = 1;
 	$poolresult = $mysqli->query("SELECT `ID` FROM `Consort_Dialogue` WHERE `Consort_Dialogue`.`context` = '$dtype' AND `gate` <= $gate");
-	while ($poolresult->fetch_array()) $totalpool++;
-	$pick = rand(1,$totalpool);
+	while ($poolresult->fetch_array())
+		$totalpool++;
+	$pick = rand(1, $totalpool);
 	$pick--;
 	$pickresult = $mysqli->query("SELECT * FROM `Consort_Dialogue` WHERE `Consort_Dialogue`.`context` = '$dtype' AND `gate` <= $gate LIMIT $pick,1");
 	$pickrow = $pickresult->fetch_array();
 	if (!empty($pickrow['dialogue']))
-	$pickrow = parseDialogue($pickrow, $userrow, $land1, $land2);
-	else $pickrow['dialogue'] = "I AM ERROR.";
+		$pickrow = parseDialogue($pickrow, $userrow, $land1, $land2);
+	else
+		$pickrow['dialogue'] = "I AM ERROR.";
 	return $pickrow;
 }
 
-function parseDialogue($pickrow, $userrow, $land1, $land2) {
+function parseDialogue($pickrow, $userrow, $land1, $land2)
+{
 	$pickrow['dialogue'] = str_replace("[user]", $userrow['username'], $pickrow['dialogue']);
-	if (empty($userrow['Class'])) $pickrow['dialogue'] = str_replace("[class]", "whoever", $pickrow['dialogue']);
-	else $pickrow['dialogue'] = str_replace("[class]", $userrow['Class'], $pickrow['dialogue']);
-	if (empty($userrow['Aspect'])) $pickrow['dialogue'] = str_replace("[aspect]", "whatever", $pickrow['dialogue']);
-	else $pickrow['dialogue'] = str_replace("[aspect]", $userrow['Aspect'], $pickrow['dialogue']);
+	if (empty($userrow['Class']))
+		$pickrow['dialogue'] = str_replace("[class]", "whoever", $pickrow['dialogue']);
+	else
+		$pickrow['dialogue'] = str_replace("[class]", $userrow['Class'], $pickrow['dialogue']);
+	if (empty($userrow['Aspect']))
+		$pickrow['dialogue'] = str_replace("[aspect]", "whatever", $pickrow['dialogue']);
+	else
+		$pickrow['dialogue'] = str_replace("[aspect]", $userrow['Aspect'], $pickrow['dialogue']);
 	$pickrow['dialogue'] = str_replace("[landfull]", "The Land of $land1 and $land2", $pickrow['dialogue']);
 	if (strrpos($pickrow['dialogue'], "[landshort]") !== false) {
 		$landshort = abbreviateLand($land1, $land2);
@@ -100,19 +121,22 @@ function parseDialogue($pickrow, $userrow, $land1, $land2) {
 			$ftag = substr($pickrow['dialogue'], $startloc, $endloc - $startloc + 1);
 			$tag = substr($pickrow['dialogue'], $startloc + 1, $endloc - $startloc - 1);
 			if ($ftag != $userrow[$tag]) //potential infinite loop!
-			$pickrow['dialogue'] = str_replace($ftag, $userrow[$tag], $pickrow['dialogue']);
+				$pickrow['dialogue'] = str_replace($ftag, $userrow[$tag], $pickrow['dialogue']);
 			else
-			$pickrow['dialogue'] = str_replace($ftag, $tag, $pickrow['dialogue']); //basically returns the tag without the brackets so the parser can continue
+				$pickrow['dialogue'] = str_replace($ftag, $tag, $pickrow['dialogue']); //basically returns the tag without the brackets so the parser can continue
 			$tagcount++;
-			if ($tagcount > 100) $wedone = true; //there probably won't ever be more than 100 tags in a dialogue, but this is just in case something hacky happens
-		} else $wedone = true;
+			if ($tagcount > 100)
+				$wedone = true; //there probably won't ever be more than 100 tags in a dialogue, but this is just in case something hacky happens
+		} else
+			$wedone = true;
 	}
 	if ($btagcount != $tagcount) //there were more replacements than tags, so something is wrong here
-	$pickrow['dialogue'] = "Dialogue parse error: Number of replacements did not equal number of tags. Make sure no editable player fields contain square brackets. If you're not sure where the problem is or can't change it, contact a developer ASAP.";
+		$pickrow['dialogue'] = "Dialogue parse error: Number of replacements did not equal number of tags. Make sure no editable player fields contain square brackets. If you're not sure where the problem is or can't change it, contact a developer ASAP.";
 	return $pickrow;
 }
 
-function abbreviateLand($land1, $land2) {
+function abbreviateLand($land1, $land2)
+{
 	$landshort = "LO";
 	$boom = explode(" ", $land1);
 	$bcount = 0;
@@ -130,7 +154,8 @@ function abbreviateLand($land1, $land2) {
 	return $landshort;
 }
 
-function avgGristtier($sessionname,$gristname) {
+function avgGristtier($sessionname, $gristname)
+{
 	$playersresult = $mysqli->query("SELECT `grist_type` FROM Players WHERE `Players`.`session_name` = '$sessionname'");
 	$totallands = 0;
 	$totaltier = 0;
@@ -148,48 +173,55 @@ function avgGristtier($sessionname,$gristname) {
 			$i++;
 		}
 	}
-	if ($totallands != 0) $thevalue = round((($totaltier / $totallands) + 1) * 25);
-	else $thevalue = 300;
+	if ($totallands != 0)
+		$thevalue = round((($totaltier / $totallands) + 1) * 25);
+	else
+		$thevalue = 300;
 	return $thevalue;
 }
 
-function econonyLevel($exp) {
-	$level = floor(pow($exp / 1000, 1/3));
+function econonyLevel($exp)
+{
+	$level = floor(pow($exp / 1000, 1 / 3));
 	return $level;
 }
 
-function joinParty($userrow, $hired, $offer, $consort) {
+function joinParty($userrow, $hired, $offer, $consort)
+{
 	$mercresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE basename = '$hired'");
 	$mercrow = $mercresult->fetch_array();
 	$baseloyalty = $mercrow['basehealth'] / $mercrow['basepower']; //don't round it just yet
 	$offerpercent = $offer / $mercrow['maxboons']; //higher offer = higher loyalty and vice versa
 	$loyalty = ceil($baseloyalty * $offerpercent);
-	if ($loyalty < 1) $loyalty = 1;
+	if ($loyalty < 1)
+		$loyalty = 1;
 	if (!empty($consort)) {
 		$mercname = str_replace("Consort", $consort, $mercrow['basename']);
 		$mercrow['description'] = str_replace("consort", $consort, $mercrow['description']);
-	} else $mercname = $mercrow['basename'];
-	$newally = "IDLE:" . $mercrow['basename'] . ":" . strval($loyalty) . ":" . $mercname . ":" . $mercrow['description'] . ":" . strval($mercrow['basepower']);				
+	} else
+		$mercname = $mercrow['basename'];
+	$newally = "IDLE:" . $mercrow['basename'] . ":" . strval($loyalty) . ":" . $mercname . ":" . $mercrow['description'] . ":" . strval($mercrow['basepower']);
 	$userrow['allies'] .= $mysqli->real_escape_string($newally . "|");
 	$mysqli->query("UPDATE Players SET `allies` = '" . $userrow['allies'] . "' WHERE username = '" . $userrow['username'] . "'");
 	return $newally;
 }
 
-function mercRefresh($userrow) { //essentially holds data on "default" consort types available on a land and when they become available
+function mercRefresh($userrow)
+{ //essentially holds data on "default" consort types available on a land and when they become available
 	$startallies = $userrow['landallies'];
 	if (strpos($userrow['landallies'], "Consort") === false) {
 		$userrow['landallies'] .= "Consort|";
 	}
 	if (strpos($userrow['landallies'], "Consort Guard") === false) {
 		if (econonyLevel($userrow['econony']) > 10)
-		$userrow['landallies'] .= "Consort Guard|";
+			$userrow['landallies'] .= "Consort Guard|";
 	}
 	if (strpos($userrow['landallies'], "Consort Knight") === false) {
 		if (econonyLevel($userrow['econony']) > 20)
-		$userrow['landallies'] .= "Consort Knight|";
+			$userrow['landallies'] .= "Consort Knight|";
 	}
 	if ($startallies != $userrow['landallies'])
-	$mysqli->query("UPDATE Players SET landallies = '" . $userrow['landallies'] . "' WHERE username = '" . $userrow['username'] . "'");
+		$mysqli->query("UPDATE Players SET landallies = '" . $userrow['landallies'] . "' WHERE username = '" . $userrow['username'] . "'");
 	return $userrow;
 }
 

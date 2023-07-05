@@ -8,12 +8,9 @@ $db_username = $_ENV['DB_USERNAME'];
 $db_password = $_ENV['DB_PASSWORD'];
 $db_database = $_ENV['DB_DATABASE'];
 
-try
-{
+try {
 	$db = new PDO("mysql:host=$db_hostname;dbname=$db_database;", $db_username, $db_password);
-}
-catch (PDOException $e)
-{
+} catch (PDOException $e) {
 	exit("Could not connect to database: {$e->getMessage()}<br/>");
 }
 
