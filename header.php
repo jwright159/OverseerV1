@@ -249,69 +249,35 @@ require 'includes/global_functions.php';
 					$classresulta = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[$classy]';");
 					$classrowa = $classresulta->fetch_array();
 					$unarmedpowera = floor($userrow['Echeladder'] * (pow(((empty($classrowa['godtierfactor']) ? 0 : $classrowa['godtierfactor']) / 100), $userrow['Godtier'])));
-					if (!empty($_POST['equipmain'])) {
-						$equippedmain = $_POST['equipmain'];
-						$itemname = str_replace("'", "\\\\''", $userrow[$equippedmain]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-						$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-						while ($row = $itemresult->fetch_array()) {
-							$itemname = $row['name'];
-							$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-							if ($itemname == $userrow[$equippedmain]) {
-								$mainpowera = $row['power'];
-							}
-						}
-					} else {
-						if ($userrow['equipped'] != "") {
-							$itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-							$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-							while ($row = $itemresult->fetch_array()) {
-								$itemname = $row['name'];
-								$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-								if ($itemname == $userrow[$userrow['equipped']]) {
-									$mainpowera = $row['power'];
-								}
-							}
-						} else {
-							$mainpowera = 0;
-						}
-					}
-					if (!empty($_POST['equipmain'])) {
-						$equippedoff = $_POST['equipmain'];
-						$itemname = str_replace("'", "\\\\''", $userrow[$equippedoff]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-						$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-						while ($row = $itemresult->fetch_array()) {
-							$itemname = $row['name'];
-							$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-							if ($itemname == $userrow[$equippedoff]) {
-								$offpower = ($row['power'] / 2);
-							}
-						}
-					} else {
-						if ($userrow['offhand'] != "" && $userrow['offhand'] != $equippedmain && $equippedoff != "2HAND") {
-							$itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-							$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-							while ($row = $itemresult->fetch_array()) {
-								$itemname = $row['name'];
-								$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-								if ($itemname == $userrow[$userrow['offhand']]) {
-									$offpowera = ($row['power'] / 2);
-								}
-							}
-						} else {
-							$offpowera = 0;
-						}
-					}
-					$spritepowera = $userrow['sprite_strength'];
-					if ($spritepowera < 0) {
-						$spritepowera = 0;
-					}
+					
+					if (!empty($_POST['equipmain']))
+						$mainhandInvSlot = $_POST['equipmain'];
+					elseif (!empty($userrow['equipped']))
+						$mainhandInvSlot = $userrow['equipped'];
+					else
+						$mainhandInvSlot = '';
+					$mainPower = getItemPower($mainhandInvSlot);
+
+					if (!empty($_POST['equipoff']))
+						$offhandInvSlot = $_POST['equipoff'];
+					elseif (!empty($userrow['offhand']) && $userrow['offhand'] != $userrow['equipped'])
+						$offhandInvSlot = $userrow['offhand'];
+					else
+						$offhandInvSlot = '';
+					$offPower = getItemPower($offhandInvSlot) / 2;
+
+					$spritePower = $userrow['sprite_strength'];
+					if ($spritePower < 0)
+						$spritePower = 0;
+					
 					if ($userrow['dreamingstatus'] == "Awake") {
 						$healthy = strval(floor(($userrow['Health_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max HP remaining.
-						$powerlevela = $unarmedpowera + $mainpowera + $offpowera + $spritepowera + $userrow['powerboost'];
+						$powerLevel = $unarmedpowera + $mainPower + $offPower + $spritePower + $userrow['powerboost'];
 					} else {
 						$healthy = strval(floor(($userrow['Dream_Health_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max HP remaining in a Dreaming state.
-						$powerlevela = $unarmedpowera + $userrow['powerboost'];
+						$powerLevel = $unarmedpowera + $userrow['powerboost'];
 					}
+
 					$minuta = strval(produceMinutes($interval - ($time - $lasttick)));
 					$seconda = strval(produceSeconds($interval - ($time - $lasttick)));
 					?>
@@ -328,21 +294,19 @@ require 'includes/global_functions.php';
 					</span>
 
 					<div class="lefy">
-						<a href="strife.php"><img src="/Images/title/sl.png" align="center"
-								title="Number of Encounters"></a> <span class="c3">
+						<a href="strife.php"><img src="/Images/title/sl.png" align="center" title="Number of Encounters"></a> <span class="c3">
 							<?php echo strval($encounters); ?>
 						</span>
 						</br>
 						<a href="portfolio.php"><img src="/Images/title/power.png" align="center" title="Strife Power"></a>
-						<?php echo $powerlevela; ?>
+						<?php echo $powerLevel; ?>
 						</br>
 						<a href="grist.php"><img src="/Images/title/gristling.png" align="center" title="Grist Count"></a>
 						<?php echo strval($gristed); ?>
 					</div>
 
 					<div class="righy">
-						<a href="strife.php"><img src="/Images/title/enc.png" align="center"
-								title="Time Until Next Encounter"></a> <span class="c1">
+						<a href="strife.php"><img src="/Images/title/enc.png" align="center" title="Time Until Next Encounter"></a> <span class="c1">
 							<?php echo $minuta; ?>
 						</span>:<span class="c2">
 							<?php echo $seconda; ?>
@@ -351,8 +315,7 @@ require 'includes/global_functions.php';
 						<a href="echeviewer.php"><img src="/Images/title/eche.png" align="center" title="Echeladder"></a>
 						<?php echo strval($ecchi); ?>
 						</br>
-						<a href="porkhollow.php"><img src="/Images/title/<?php echo strval($booni); ?>" align="center"
-								title="Boondollars"></a>
+						<a href="porkhollow.php"><img src="/Images/title/<?php echo strval($booni); ?>" align="center" title="Boondollars"></a>
 						<?php echo strval($booned); ?>
 					</div>
 
@@ -365,8 +328,7 @@ require 'includes/global_functions.php';
 					<nobr><a href="overview.php"><img src="/Images/title/health.png" align="center" title="Health"></a>
 						<?php echo $healthy; ?>%
 					</nobr>
-					<nobr><a href="strife.php"><img src="/Images/title/sl.png" align="center"
-								title="Number of Encounters"></a><span class="d3">
+					<nobr><a href="strife.php"><img src="/Images/title/sl.png" align="center" title="Number of Encounters"></a><span class="d3">
 							<?php echo strval($encounters); ?>
 						</span></nobr>
 					<nobr><a href="strife.php"><img src="/Images/title/enc.png" align="center"

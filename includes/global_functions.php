@@ -383,4 +383,23 @@ function aspectDamage($resistances, $aspect, $damage, $resfactor = 1) {
 	$damage = $damage * ($resfactor - $resistances[$aspect]) / $resfactor;
 	return ceil($damage);
 }
-?>
+
+function getItemPower($invSlot)
+{
+	global $mysqli, $userrow;
+
+	if (empty($userrow[$invSlot]))
+		return 0;
+
+	$itemName = $userrow[$invSlot];
+	$itemNameEscaped = str_replace("'", "\\\\''", $itemName); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
+	$itemResult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemNameEscaped . "'");
+	while ($row = $itemResult->fetch_array())
+	{
+		$itemResultNameEscaped = $row['name'];
+		$itemResultName = str_replace("\\", "", $itemResultNameEscaped); //Remove escape characters.
+		if ($itemResultName == $itemName)
+			return $row['power'];
+	}
+	return 0;
+}

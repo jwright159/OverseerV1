@@ -146,7 +146,7 @@ function autoUnequip($userrow, $exception, $invslot)
 		$mysqli->query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$userrow[username]'");
 		$lookfor = "offhand";
 	}
-	if (strpos($userrow['permstatus'], "." . $lookfor) !== false && !empty($lookfor)) { //this wearable is granting a perm effect
+	if (!empty($lookfor) && strpos($userrow['permstatus'], "." . $lookfor) !== false) { //this wearable is granting a perm effect
 		$statusarray = explode("|", $userrow['permstatus']);
 		$i = 0;
 		while (!empty($statusarray[$i])) {
@@ -268,16 +268,13 @@ function compuRefresh($userrow)
 function specialArray($itemeffects, $search)
 { //finds a tag in the "effects" field and returns the array associated with it, useful for looking up single effects
 	$effectarray = explode('|', $itemeffects);
-	$effectnumber = 0;
-	while (!empty($effectarray[$effectnumber])) {
+	for ($effectnumber = 0; !empty($effectarray[$effectnumber]); $effectnumber++) {
 		$currenteffect = $effectarray[$effectnumber];
 		$currentarray = explode(':', $currenteffect);
 		if ($currentarray[0] == $search)
 			return $currentarray;
-		$effectnumber++;
 	}
-	$currentarray[0] == "notfound"; //indicates the searched tag doesn't appear
-	return $currentarray;
+	return ["notfound"]; //indicates the searched tag doesn't appear
 }
 
 function grantEffects($userrow, $itemeffects, $slot)

@@ -1,5 +1,5 @@
 <?php
-require 'additem.php';
+require_once 'additem.php';
 require_once 'includes/effectprinter.php'; //for printing effects, consolidated into an include for simplicity (also includes glitches)
 require_once "header.php";
 require_once "includes/fieldparser.php";
@@ -226,6 +226,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	function checkvalues($itemname)
 	{
 		//echo "wut";
+		global $mysqli;
 		$itemname = str_replace("'", "\\\\''", $itemname); //tch tch.
 		$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 		while ($itemrow = $itemresult->fetch_array()) { //Pull itemrow data from mysqli array
@@ -324,74 +325,22 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 			echo 'Current Echeladder rung: <input id="echename" name="echename" type="text" /><input type="submit" value="Name it!" /> </form>';
 		}
 	}
-	$mainpower = 0;
-	$offpower = 0;
-	$powerlevel = 0;
-	$spritepower = $userrow['sprite_strength'];
-	if ($equippedmain != "") {
-		$itemname = str_replace("'", "\\\\''", $userrow[$equippedmain]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-		$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-		while ($row = $itemresult->fetch_array()) {
-			$itemname = $row['name'];
-			$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-			if ($itemname == $userrow[$equippedmain]) {
-				$mainpower = $row['power'];
-			}
-		}
-	} else {
-		if ($userrow['equipped'] != "") {
-			$itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-			while ($row = $itemresult->fetch_array()) {
-				$itemname = $row['name'];
-				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-				if ($itemname == $userrow[$userrow['equipped']]) {
-					$mainpower = $row['power'];
-				}
-			}
-		} else {
-			$mainpower = 0;
-		}
-	}
-	if ($equippedoff != "") {
-		$itemname = str_replace("'", "\\\\''", $userrow[$equippedoff]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-		$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-		while ($row = $itemresult->fetch_array()) {
-			$itemname = $row['name'];
-			$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-			if ($itemname == $userrow[$equippedoff]) {
-				$offpower = ($row['power'] / 2);
-			}
-		}
-	} else {
-		if ($userrow['offhand'] != "" && $userrow['offhand'] != $equippedmain && $equippedoff != "2HAND") {
-			$itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-			while ($row = $itemresult->fetch_array()) {
-				$itemname = $row['name'];
-				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-				if ($itemname == $userrow[$userrow['offhand']]) {
-					$offpower = ($row['power'] / 2);
-				}
-			}
-		} else {
-			$offpower = 0;
-		}
-	}
-	echo "Sprite's power level: $spritepower</br>";
-	if ($spritepower < 0) {
-		echo "Your sprite is useless in combat! You decide to leave it behind.</br>";
-		$spritepower = 0;
-	}
+
 	if ($userrow['powerboost'] != 0)
 		echo "Current temporary power modifier: $userrow[powerboost]</br>";
 	if ($userrow['offenseboost'] != 0)
 		echo "Current temporary offense modifier: $userrow[offenseboost]</br>";
 	if ($userrow['defenseboost'] != 0)
 		echo "Current temporary defense modifier: $userrow[defenseboost]</br>";
-	$powerlevel = $unarmedpower + $mainpower + $offpower + $spritepower + $userrow['powerboost'];
-	echo "Current power level: $powerlevel </br>";
-	if ($powerlevel == 9001)
+	
+	echo "Sprite's power level: $spritePower</br>";
+	if ($spritePower < 0) {
+		echo "Your sprite is useless in combat! You decide to leave it behind.</br>";
+		$spritePower = 0;
+	}
+
+	echo "Current power level: $powerLevel </br>";
+	if ($powerLevel == 9001)
 		echo "(Yes, yes, very funny.)</br>";
 	echo "Health Vial: ";
 	if ($userrow['dreamingstatus'] == "Awake") {
