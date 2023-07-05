@@ -5,9 +5,14 @@ require 'includes/chaincheck.php';
 require 'includes/pricesandvaules.php';
 require 'includes/fieldparser.php';
 
-$currentresultad = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
-$currentrowad = $currentresultad->fetch_array();
-$sonsort = $currentrowad['consort_name'];
+if (empty($_GET['land']))
+	$sonsort = '';
+else
+{
+	$currentresultad = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
+	$currentrowad = $currentresultad->fetch_array();
+	$sonsort = $currentrowad['consort_name'];
+}
 $sona = explode(" ", $sonsort);
 $bona = $sona[0];
 
