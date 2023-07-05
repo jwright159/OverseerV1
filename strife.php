@@ -79,8 +79,8 @@ if (empty($_SESSION['username'])) {
 				echo '<form action="strifebegin.php" method="post">';
 				echo '<input type="hidden" name="gristtype" value="' . $userrow['lastgristtype'] . '">';
 				echo "Enemies fought last:</br>";
-				$i = 1;
-				while ($i <= $max_enemies) { //Fetch up the enemies the player last fought.
+				for ($i = 1; $i <= $max_enemies; $i++) { //Fetch up the enemies the player last fought.
+					if (empty($userrow['oldenemy' . strval($i)])) break;
 					$oldgrist = $userrow['oldgrist' . strval($i)];
 					$oldenemy = $userrow['oldenemy' . strval($i)];
 					$griststr = "grist" . strval($i);
@@ -94,7 +94,6 @@ if (empty($_SESSION['username'])) {
 					}
 					echo '<input type="hidden" name="' . $griststr . '" value="' . $oldgrist . '">';
 					echo '<input type="hidden" name="' . $enemystr . '" value="' . $oldenemy . '">';
-					$i++;
 				}
 				$mysqli->query("UPDATE `Players` SET `correctgristtype` = '$userrow[lastgristtype]' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Should be safe.
 				echo '<input type="hidden" name="land" value="LASTFOUGHT">';
