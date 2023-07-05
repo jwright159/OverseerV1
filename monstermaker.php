@@ -3,16 +3,14 @@ require_once 'includes/fieldparser.php'; //monstermaker implies fieldparser
 function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus, $tospooky = false)
 { //Takes a userrow, enemy, and grist type and level, and adds the enemy to the user's enemies.
 	//Grist entries are blank for non-grist enemies.
+	global $mysqli;
 	$max_enemies = 50; //Max number of enemies per encounter. May need changing. Probably not.
-	require_once "includes/SQLconnect.php";
 	//$userrow = parseEnemydata($userrow);
-	$username = $_SESSION['username'];
-	$i = 1;
 	$power = -1;
 	$slot = -1;
-	while ($i <= $max_enemies) {
+	for ($i = 1; $i <= $max_enemies; $i++) {
 		$enemystr = "enemy" . strval($i) . "name";
-		if ($userrow[$enemystr] == "") { //Room for an enemy here
+		if (empty($userrow[$enemystr])) { //Room for an enemy here
 			$slot = $i;
 			$powerstr = "enemy" . strval($i) . "power";
 			$maxpowerstr = "enemy" . strval($i) . "maxpower";
@@ -183,9 +181,7 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 			$userrow[$descstr] = $description;
 			$userrow[$categorystr] = $gristtype;
 			writeEnemydata($userrow);
-			$i = $max_enemies + 1; //Done!
-		} else {
-			$i++; //Keep lookin';
+			break;
 		}
 	}
 	return $slot; //This will be -1 if no slot was found, or the slot the enemy was placed in if one was.

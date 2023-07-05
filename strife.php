@@ -616,10 +616,10 @@ if (empty($_SESSION['username'])) {
 				}*/
 				echo '<form action="striferesolve.php" method="post" style="display: inline;"><input type="hidden" id="abscond" name="abscond" value="abscond"><input type="submit" value="Abscond"></form>';
 				echo '</br>';
+				$npcechoed = false;
 				if (!empty($userrow['allies'])) { //here, we'll explode the currentstatus to see if we have any NPC allies
 					$thisstatus = explode("|", $userrow['allies']);
 					$st = 0;
-					$npcechoed = false;
 					while (!empty($thisstatus[$st])) {
 						$statusarg = explode(":", $thisstatus[$st]);
 						if ($statusarg[0] == "PARTY") { //this is an ally's stats, and we only care about allies here
@@ -640,7 +640,7 @@ if (empty($_SESSION['username'])) {
 								$npcdesc = $npcrow['description'];
 							$npcloyalty = $statusarg[2];
 							$aidpower += $npcpower;
-							if ($npcechoed == false) {
+							if (!$npcechoed) {
 								echo "NPC allies currently aiding you:<br />";
 								$npcechoed = true;
 							}

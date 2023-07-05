@@ -101,6 +101,7 @@ if (empty($_SESSION['username'])) {
 		}
 		echo '<a href="strife.php">Continue</a> <a href="/">Home</a>';
 	} else {
+		$perms = '';
 		if (!empty($userrow['permstatus'])) {
 			$thisstatus = explode("|", $userrow['permstatus']);
 			$st = 0;

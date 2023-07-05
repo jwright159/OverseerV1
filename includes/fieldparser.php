@@ -33,10 +33,10 @@ function parseEnemydata($userrow) {
 
 function writeEnemydata($userrow) {
 	//echo "begin enemy data write<br />";
-	$i = 0;
+	global $mysqli;
 	$endatastr = "";
 	if (empty($userrow['maxenemies'])) $userrow['maxenemies'] = 50;
-	while ($i < $userrow['maxenemies']) {
+	for ($i = 0; $i < $userrow['maxenemies']; $i++) {
 		$enstr = 'enemy' . strval($i + 1);
 		//echo $enstr . ":";
 		if (!empty($userrow[$enstr . 'name'])) { //name will be blanked when enemy is defeated, so we'll blank all of its stats. All other enemies will shift down a slot.
@@ -52,7 +52,6 @@ function writeEnemydata($userrow) {
 			$endatastr .= "|";
 			//echo $endatastr . "<br />";
 		}
-		$i++;
 	}
 	$endatastr = $mysqli->real_escape_string($endatastr); //yeeeeah
 	//echo "final countdown: " . "UPDATE `Players` SET `enemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;";
@@ -60,6 +59,7 @@ function writeEnemydata($userrow) {
 }
 
 function refreshEnemydata($userrow) { //a necessary function for functions like generateEnemy, so that they don't continually overwrite the same slot
+	global $mysqli;
 	$dataresult = $mysqli->query("SELECT `enemydata` FROM `Players` WHERE `Players`.`username` = '" . $userrow['username'] . "'");
 	$row = $dataresult->fetch_array();
 	$userrow['enemydata'] = $row['enemydata'];
@@ -68,6 +68,7 @@ function refreshEnemydata($userrow) { //a necessary function for functions like 
 }
 
 function endStrife($userrow) { //a quick function to reset all strife values and ensure they don't return via megaquery
+	global $mysqli;
 	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
  `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0, 
 `cantabscond` = 0, `motifcounter` = 0, `strifestatus` = '', `sessionbossengaged` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;"); //Power boosts wear off.
@@ -104,6 +105,7 @@ function freeSpecibi($userabs, $userslots, $echothem) {
 }
 
 function addSpecibus($userrow, $newabs) { //this function assumes you've already checked if the user has a free slot because reasons
+	global $mysqli;
 	$abs = $userrow['abstratus1'];
 	if (substr($abs,0,-1) != "|" && !empty($abs)) {
 		$abs .= "|";
@@ -136,8 +138,7 @@ function parseLastfought($userrow) {
 	$enemies = explode("|", $userrow['oldenemydata']);
 	$allenemies = count($enemies);
 	$actualenemies = $allenemies;
-	$i = 0;
-	while ($i < $allenemies) {
+	for ($i = 0; $i < $allenemies; $i++) {
 		if (!empty($enemies[$i])) {
 			$thisenemy = explode(":", $enemies[$i]);
 			$enstr = strval($i + 1);
@@ -147,7 +148,6 @@ function parseLastfought($userrow) {
 		} else {
 			$actualenemies--; //only the last entry should be empty if anything, hopefully this doesn't cause issues?
 		}
-		$i++;
 	}
 	$userrow['lastenemies'] = $actualenemies; //"lastenemies" doesn't exist as a user field, but it's inserted into the userrow so that the function can return it
 	return $userrow;
@@ -155,10 +155,10 @@ function parseLastfought($userrow) {
 
 function writeLastfought($userrow) {
 	//echo "writing last fought!<br />";
+	global $mysqli;
 	if (empty($userrow['lastenemies'])) $userrow['lastenemies'] = 50;
-	$i = 0;
 	$endatastr = "";
-	while ($i < $userrow['lastenemies']) {
+	for ($i = 0; $i < $userrow['lastenemies']; $i++) {
 		$enstr = strval($i + 1);
 		//echo "checking slot $enstr<br />";
 		if (!empty($userrow['oldenemy' . $enstr]) || !empty($userrow['olddreamenemy' . $enstr])) { //name will be blanked when enemy is defeated, so we'll blank all of its stats
@@ -169,7 +169,6 @@ function writeLastfought($userrow) {
 			$endatastr .= "|";
 			//echo $endatastr . "<br />";
 		}
-		$i++;
 	}
 	//echo "final countdown: $endatastr<br />";
 	$mysqli->query("UPDATE `Players` SET `oldenemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
@@ -179,27 +178,22 @@ function hydraSplitChance($abs) {
   switch ($abs) {
     case "bladekind":
     case "chainsawkind":
-      return 95; 
-      break;
+      return 95;
     case "axekind":
     case "knifekind":
     case "scythekind":
-      return 80; 
-      break;
+      return 80;
     case "polearmkind":
     case "ninjakind":
     case "razorkind":
-      return 60; 
-      break;
+      return 60;
     case "boomerangkind":
     case "laserkind":
     case "sicklekind":
-      return 50; 
-      break;
+      return 50;
     case "scissorkind":
     case "shearkind":
       return 40;
-      break;
     case "hammerkind":
     case "clubkind":
     case "flamethrowerkind":
@@ -207,22 +201,18 @@ function hydraSplitChance($abs) {
     case "rockkind":
     case "staffkind":
     case "yoyokind":
-      return 10; 
-      break;
+      return 10;
     case "bunnykind":
     case "cakekind":
     case "fabrickind":
     case "fancysantakind":
     case "inflatablekind":
       return 1;
-      break;
     case "metakind":
     case "pillowkind":
       return 0;
-      break;
     default:
       return 25;
-      break;
   }
 }
 

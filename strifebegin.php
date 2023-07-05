@@ -157,11 +157,11 @@ if (empty($_SESSION['username'])) {
 			writeLastfought($userrow);
 			if ($userrow['dreamingstatus'] == "Prospit") {
 				echo '<a href="strife.php">&quot;Strife&quot; initiated.</a></br>';
-				$userrow = $mysqli->fetch_array($mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;")) or die($mysqli->error());
+				$userrow = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;")->fetch_array() or die($mysqli->error());
 				include("strife.php");
 			} else {
 				echo '<a href="strife.php">Strife initiated.</a></br>';
-				$userrow = $mysqli->fetch_array($mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;"));
+				$userrow = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;")->fetch_array();
 				include("strife.php");
 			}
 		} else {
