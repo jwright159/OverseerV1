@@ -65,12 +65,17 @@ img, embed, object, video {
 }
 
 p {
-  margin: 0%;
+  margin: 0;
 }
 
 h1, h2, h3, h4, h5 {
   padding: 0;
   margin: 0;
+}
+
+.spacer {
+	margin-top: 1em;
+	margin-bottom: 1em;
 }
 
 #datea {
