@@ -425,7 +425,7 @@ if (empty($_SESSION['username'])) {
 							echo "...and then you wake up a few hours later with a mild headache. Perhaps you lack the IMAGINATION to use this liquor to its fullest effect.<br/>";
 						else {
 							echo "You drift off to sleep, awakening as your dream self moments later. Your IMAGINATION stat soars thanks to the candy corn liquor!<br/>";
-							$mysqli->query("UPDATE `Players` SET `dreamingstatus` = '$userrow[dreamer]', `powerboost` = $userrow[Echeladder], `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `strifesuceessexplore` = '', `strifefailureexlpore` = '', `correctgristtype` = 'None' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+							$mysqli->query("UPDATE `Players` SET `dreamingstatus` = '$userrow[dreamer]', `powerboost` = $userrow[Echeladder], `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `strifesuccessexplore` = '', `strifefailureexplore` = '', `correctgristtype` = 'None' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							if ($userrow['encountersspent'] > 0) { //Player spent encounters while awake.
 								$newhp = $userrow['Dream_Health_Vial'] + ceil(($userrow['Gel_Viscosity'] / 5) * $userrow['encountersspent']);
 								if ($newhp > $userrow['Gel_Viscosity'])
@@ -458,7 +458,7 @@ if (empty($_SESSION['username'])) {
 							echo "...and then you wake up a few hours later, reeling from the bizarre images you saw in your sleep. If only you could dream of a better place...<br/>";
 						else {
 							echo "You drift off to sleep, awakening as your dream self moments later.<br/>";
-							$mysqli->query("UPDATE `Players` SET `dreamingstatus` = '$userrow[dreamer]', `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `strifesuceessexplore` = '', `strifefailureexlpore` = '', `correctgristtype` = 'None' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+							$mysqli->query("UPDATE `Players` SET `dreamingstatus` = '$userrow[dreamer]', `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `strifesuccessexplore` = '', `strifefailureexplore` = '', `correctgristtype` = 'None' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							if ($userrow['encountersspent'] > 0) { //Player spent encounters while awake.
 								$newhp = $userrow['Gel_Viscosity']; //the item gives a full heal of the dreamself
 								$mysqli->query("UPDATE `Players` SET `Dream_Health_Vial` = $newhp WHERE `Players`.`username` = '$username' LIMIT 1 ;");

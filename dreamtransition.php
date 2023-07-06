@@ -25,8 +25,8 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 			$mysqli->query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			$mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			$mysqli->query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-			$mysqli->query("UPDATE `Players` SET `strifesuceessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-			$mysqli->query("UPDATE `Players` SET `strifefailureexlpore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+			$mysqli->query("UPDATE `Players` SET `strifesuccessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+			$mysqli->query("UPDATE `Players` SET `strifefailureexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			$mysqli->query("UPDATE `Players` SET `correctgristtype` = '$userrow[lastgristtype]' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			if (!empty($_POST['nextevent']))
 				$mysqli->query("UPDATE `Players` SET `exploration` = '" . $_POST['nextevent'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -68,8 +68,8 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 					$mysqli->query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					$mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					$mysqli->query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-					$mysqli->query("UPDATE `Players` SET `strifesuceessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-					$mysqli->query("UPDATE `Players` SET `strifefailureexlpore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+					$mysqli->query("UPDATE `Players` SET `strifesuccessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+					$mysqli->query("UPDATE `Players` SET `strifefailureexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					echo "You head back to your dwelling and sleep, feeling marginally better when you awaken.<br/>";
 					if (!empty($abilities[9]))
 						echo $abilities[9]; //Aspect Connection occurrence message.
@@ -86,8 +86,8 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				$mysqli->query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-				$mysqli->query("UPDATE `Players` SET `strifesucceessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-				$mysqli->query("UPDATE `Players` SET `strifefailureexlpore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+				$mysqli->query("UPDATE `Players` SET `strifesuccessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+				$mysqli->query("UPDATE `Players` SET `strifefailureexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Stops anti-cheating going off for Prospit/Derse encounters.
 				if ($userrow['encountersspent'] > 0) { //Player spent encounters while awake.
 					$newhp = $userrow['Dream_Health_Vial'] + ceil(($userrow['Gel_Viscosity'] / 5) * $userrow['encountersspent']);
