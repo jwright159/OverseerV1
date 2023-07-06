@@ -1,30 +1,6 @@
 <?php
-require 'designix.php';
+require_once 'designix.php';
 require_once "header.php";
-
-function initGrists()
-{
-	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
-	$reachgrist = false;
-	$terminateloop = false;
-	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
-		$gristcost = $col->name;
-		$gristtype = substr($gristcost, 0, -5);
-		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-			$reachgrist = true;
-		}
-		if ($gristcost == "End_of_Grists") { //Reached the end of the grists.
-			$reachgrist = false;
-			$terminateloop = true;
-		}
-		if ($reachgrist == true) {
-			$gristname[$totalgrists] = $gristtype;
-			$totalgrists++;
-		}
-	}
-	return $gristname;
-}
 
 function totalGristcost($countrow, $gristname, $totalgrists)
 {

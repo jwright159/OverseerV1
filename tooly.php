@@ -7,30 +7,6 @@ require_once "header.php";
 require_once "includes/grist_icon_parser.php";
 $max_items = 50;
 
-function initGrists()
-{
-	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1"); //document grist types now so we don't have to do it later
-	$reachgrist = false;
-	$terminateloop = false;
-	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
-		$gristcost = $col->name;
-		$gristtype = substr($gristcost, 0, -5);
-		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-			$reachgrist = true;
-		}
-		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
-			$reachgrist = false;
-			$terminateloop = true;
-		}
-		if ($reachgrist == true) {
-			$gristname[$totalgrists] = $gristtype;
-			$totalgrists++;
-		}
-	}
-	return $gristname;
-}
-
 echo "<!DOCTYPE html><html><head><style>gristvalue{color: #FF0000; font-size: 60px;}</style><style>gristvalue2{color: #0FAFF1; font-size: 60px;}</style><style>itemcode{font-family:'Courier New'}</style></head><body>";
 $gristed = false; //will be set to true when grist types are initialized
 

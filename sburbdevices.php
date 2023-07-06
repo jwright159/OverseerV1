@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
-require 'additem.php';
-require 'designix.php';
+require_once 'additem.php';
+require_once 'designix.php';
 $max_items = 50;
 if (empty($_SESSION['username'])) {
 	echo "Log in to mess around with equipment.<br/>";
