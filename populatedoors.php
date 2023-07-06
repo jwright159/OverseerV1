@@ -24,21 +24,21 @@ function initGrists()
 	return $gristname;
 }
 if (empty($_SESSION['username'])) {
-	echo "Log in to do stuff bro<br />";
+	echo "Log in to do stuff bro<br/>";
 } elseif ($userrow['session_name'] != "Developers") {
-	echo "Dude go away this shit be private yo<br />";
+	echo "Dude go away this shit be private yo<br/>";
 } else {
 	$gristname = initGrists();
 	$keyresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`abstratus` LIKE '%keykind%'");
 	while ($krow = $keyresult->fetch_array()) {
-		echo "Key: " . $krow['name'] . "<br />";
+		echo "Key: " . $krow['name'] . "<br/>";
 		$alreadyfound = false;
 		$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`keys` LIKE '%" . $mysqli->real_escape_string($krow['name']) . "%'");
 		while ($drow = $doorresult->fetch_array()) {
 			$alreadyfound = true;
 		}
 		if (strpos($krow['abstratus'], "bladekind") !== false || strpos($krow['abstratus'], "birdkind") !== false || strpos($krow['description'], "blade") !== false || strpos($krow['description'], "sword") !== false) {
-			echo "nope screw it<br />";
+			echo "nope screw it<br/>";
 			$alreadyfound = true;
 		}
 		if (!$alreadyfound) {
@@ -64,11 +64,11 @@ if (empty($_SESSION['username'])) {
 				$newgate = 1;
 			$newkeys = $mysqli->real_escape_string($krow['name']);
 			$query = "INSERT INTO `Dungeon_Doors` (`gate`,`keys`,`description`,`strength`) VALUES ($newgate, '$newkeys', '$newdesc', $newpower);";
-			echo $query . "<br />";
+			echo $query . "<br/>";
 			//$mysqli->query($query);
 		}
 	}
-	echo "Done!<br />";
+	echo "Done!<br/>";
 }
 
 require 'footer.php';

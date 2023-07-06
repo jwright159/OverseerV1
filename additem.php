@@ -44,7 +44,7 @@ function addItem($item, $userrow, $incode = "00000000")
 					while ($gostrow = $compuresult->fetch_array()) {
 						$ghosters = specialArray($gostrow['effects'], "GHOSTER");
 						if ($ghosters[0] == "GHOSTER") {
-							echo "<br />This item is too big for you to captchalogue! Instead, you use your " . $gostrow['name'] . " to create a ghost image of it.<br />";
+							echo "<br/>This item is too big for you to captchalogue! Instead, you use your " . $gostrow['name'] . " to create a ghost image of it.<br/>";
 							$mysqli->query("UPDATE `Players` SET `" . $invstr . "` = '" . $mysqli->real_escape_string($item . " (ghost image)") . "' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;");
 							$athenresult = $mysqli->query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
 							$athenrow = $athenresult->fetch_array();
@@ -57,7 +57,7 @@ function addItem($item, $userrow, $incode = "00000000")
 					}
 					$j++;
 				}
-				echo "<br />This item is too big for you to captchalogue! You will need to find a way to upgrade your Fetch Modus first.<br />";
+				echo "<br/>This item is too big for you to captchalogue! You will need to find a way to upgrade your Fetch Modus first.<br/>";
 				return "inv-1";
 			}
 		}
@@ -69,7 +69,7 @@ function addItem($item, $userrow, $incode = "00000000")
 function addAbstratus($absstring, $userrow)
 {
 	global $mysqli;
-	echo "WARNING: addAbstratus function is now defunct. Please use addSpecibus (includes/fieldparser.php) instead. If you're not a developer and you see this message, please submit a bug report immediately!<br />";
+	echo "WARNING: addAbstratus function is now defunct. Please use addSpecibus (includes/fieldparser.php) instead. If you're not a developer and you see this message, please submit a bug report immediately!<br/>";
 	$strifeslots = 16;
 	//require_once "includes/SQLconnect.php";
 	/*$result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "'");
@@ -208,7 +208,7 @@ function storageSpace($storestring)
 function compuRefresh($userrow)
 {
 	global $mysqli;
-	//echo "running compuRefresh() for $userrow[username]<br />";
+	//echo "running compuRefresh() for $userrow[username]<br/>";
 	$complevel = 0;
 	if (strpos($userrow['storeditems'], "ISCOMPUTER") !== false)
 		$complevel = 1; //the player has a computer in storage
@@ -234,7 +234,7 @@ function compuRefresh($userrow)
 		$i++;
 	}
 	$captchalogue = substr($captchalogue, 0, -4);
-	//echo $captchalogue . "<br />";
+	//echo $captchalogue . "<br/>";
 	$captchalogueresult = $mysqli->query($captchalogue);
 	while ($compurow = $captchalogueresult->fetch_array()) {
 		$pureitemname = str_replace("\\", "", $compurow['name']);
@@ -260,7 +260,7 @@ function compuRefresh($userrow)
 			//echo "complevel is $complevel</br>";
 		}
 	}
-	//echo "final compulevel: $complevel<br />";
+	//echo "final compulevel: $complevel<br/>";
 	if ($complevel != $userrow['hascomputer'])
 		$mysqli->query("UPDATE `Players` SET `hascomputer` = $complevel WHERE `Players`.`username` = '$userrow[username]'");
 }

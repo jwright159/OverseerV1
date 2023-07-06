@@ -27,12 +27,12 @@ require_once "header.php"; ?>
 
 <?php
 if (empty($_SESSION['username'])) {
-	echo '<form id="loginb" action="login.php" method="post"> Username: <input id="usernameb" maxlength="50" name="usernameb" type="text" /><br /> Password: <input id="passwordb" maxlength="50" name="passwordb" type="password" /><br />
+	echo '<form id="loginb" action="login.php" method="post"> Username: <input id="usernameb" maxlength="50" name="usernameb" type="text" /><br/> Password: <input id="passwordb" maxlength="50" name="passwordb" type="password" /><br/>
 <a href="playerform.php">Enter a Session</a> |
 <a href="sessionform.php"> Create a Session</a>
-<br />
+<br/>
 <a href="forgotpassword.php">Forget your password?</a>
-<br />
+<br/>
 <input name="Submit" type="submit" value="Submit" /> </form>
 <span style="color: red;" id="catchb"></span>
 

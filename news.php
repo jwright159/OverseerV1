@@ -85,7 +85,7 @@ if (!empty($_GET['view'])) {
 			echo '<a href="news.php?view=' . strval($row['ID']) . '">Read more</a></br><hr></br>'; //...and add a "read more" link to show the whole post :L
 		}
 	}
-	//echo '<form action="news.php" method="post">Look at news stories<input id="build" name="startpoint" type="text" />entries back:<br />';
+	//echo '<form action="news.php" method="post">Look at news stories<input id="build" name="startpoint" type="text" />entries back:<br/>';
 //echo '<input type="submit" value="Read it!" /></form>';
 	if ($startpoint < $newestrow['ID'])
 		echo '<div style = "float: right;"><a href="news.php?startpoint=' . strval($_GET['startpoint'] - 10) . '">Next 10 posts ==&gt;</a></div>';

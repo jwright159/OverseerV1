@@ -7,11 +7,11 @@ if (empty($_SESSION['username'])) {
 	echo "You need to be a developer to do that!";
 } else {
 	if (!empty($_POST['clone'])) {
-		echo "Looking up session " . $_POST['clone'] . "...<br />";
+		echo "Looking up session " . $_POST['clone'] . "...<br/>";
 		$cloneresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $_POST['clone'] . "' LIMIT 1;");
 		$clonerow = $cloneresult->fetch_array();
 		if ($clonerow['name'] == $_POST['clone']) {
-			echo "Session found! Cloning...<br />";
+			echo "Session found! Cloning...<br/>";
 			$fieldresult = $mysqli->query("SELECT * FROM `Sessions` LIMIT 1;");
 			$clonequery = "INSERT INTO `Sessions` (";
 			$clonevalues = "VALUES (";
@@ -32,8 +32,8 @@ if (empty($_SESSION['username'])) {
 			$clonequery = substr($clonequery, 0, -2) . ") ";
 			$clonevalues = substr($clonevalues, 0, -2) . ");";
 			//$mysqli->query($clonequery . $clonevalues);
-			echo $clonequery . $clonevalues . "<br />"; //testing
-			echo "Done! Looking up players...<br />";
+			echo $clonequery . $clonevalues . "<br/>"; //testing
+			echo "Done! Looking up players...<br/>";
 			$fieldresult = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //get the fields
 			$i = 1;
 			$clonequery = "INSERT INTO `Players` (";
@@ -62,24 +62,24 @@ if (empty($_SESSION['username'])) {
 				}
 				$clonevalues = substr($clonevalues, 0, -2) . ");";
 				//$mysqli->query($clonequery . $clonevalues);
-				echo $clonequery . $clonevalues . "<br />"; //testing
+				echo $clonequery . $clonevalues . "<br/>"; //testing
 				$mysqli->query("INSERT INTO `Echeladders` (`username`) VALUES ('$row[username]');"); //Give the player an Echeladder. Players love echeladders.
 				$mysqli->query("INSERT INTO `Messages` (`username`) VALUES ('$row[username]');"); //Create entry in message table.
 				$mysqli->query("INSERT INTO `Ability_Patterns` (`username`) VALUES ('$row[username]');"); //Create entry in pattern table.
 				//we're making new rows here instead of copying them because they're not as important
-				echo $row['username'] . " cloned.<br />";
+				echo $row['username'] . " cloned.<br/>";
 			}
-			echo "Cloning complete! Global password for cloned session: " . $dbpass . "<br />This password can be used to log in to any cloned account in this session, or to create a new account in this session.<br />";
+			echo "Cloning complete! Global password for cloned session: " . $dbpass . "<br/>This password can be used to log in to any cloned account in this session, or to create a new account in this session.<br/>";
 		} else {
-			echo "Session not found. Aborting.<br />";
+			echo "Session not found. Aborting.<br/>";
 		}
 	}
 
 	if (!empty($_POST['clean'])) {
 		if (strpos($_POST['clean'], "_DEBUG") !== false) {
-			echo "Cleaning session " . $_POST['clean'] . "...<br />";
+			echo "Cleaning session " . $_POST['clean'] . "...<br/>";
 			$mysqli->query("DELETE FROM `Sessions` WHERE `Sessions`.`name` = '" . $_POST['clean'] . "'");
-			echo "Cleaning players from session...<br />";
+			echo "Cleaning players from session...<br/>";
 			$cloneresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $_POST['clean'] . "'");
 			while ($row = $cloneresult->fetch_array()) {
 				$thisname = $row['username'];
@@ -88,15 +88,15 @@ if (empty($_SESSION['username'])) {
 				$mysqli->query("DELETE FROM `Ability_Patterns` WHERE `Ability_Patterns`.`username` = '" . $thisname . "'");
 				$mysqli->query("DELETE FROM `Messages` WHERE `Messages`.`username` = '" . $thisname . "'");
 			}
-			echo "Done!<br />";
+			echo "Done!<br/>";
 		} else
-			echo "You can't clean a non-debug session!<br />";
+			echo "You can't clean a non-debug session!<br/>";
 	}
 
-	echo "Blahsadfeguie's Session Cloner<br />";
-	echo '<form action="sessioncloner.php" method="post">Session to clone: <input type="text" name="clone" /><input type="submit" value="Clone it!" /></form><br />';
-	echo "Be sure to clean up the debug session when you're done with it:<br />";
-	echo '<form action="sessioncloner.php" method="post">Cloned session to clean up: <input type="text" name="clean" /><input type="submit" value="Clean it!" /></form><br />';
+	echo "Blahsadfeguie's Session Cloner<br/>";
+	echo '<form action="sessioncloner.php" method="post">Session to clone: <input type="text" name="clone" /><input type="submit" value="Clone it!" /></form><br/>';
+	echo "Be sure to clean up the debug session when you're done with it:<br/>";
+	echo '<form action="sessioncloner.php" method="post">Cloned session to clean up: <input type="text" name="clean" /><input type="submit" value="Clean it!" /></form><br/>';
 }
 
 require_once "footer.php";

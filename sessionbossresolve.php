@@ -605,7 +605,7 @@ if (empty($_SESSION['username'])) {
 									//possibly consider adding a roletech that helps resist?
 									if ($roll > (100 - intval($currentarray[1]))) {
 										$recoildamage += $enemydamage * ($currentarray[2] / 100);
-										$bosslog = $bosslog . $buddyrow['username'] . "'s attack causes some recoil damage!<br />";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s attack causes some recoil damage!<br/>";
 										//note that recoil is applied AFTER enemy damage, and cannot kill the player
 									}
 									break;

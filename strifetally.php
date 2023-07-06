@@ -51,10 +51,10 @@ if ($_GET['sort'] == "yes") {
 		$k = 0;
 		while ($k < $allabs) {
 			if ($ordered[$abs[$k]] == $i) {
-				echo $abs[$k] . ": " . strval($ordered[$abs[$k]]) . "<br />";
+				echo $abs[$k] . ": " . strval($ordered[$abs[$k]]) . "<br/>";
 				$countresult = $mysqli->query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`comments` LIKE '%" . $abs[$k] . "%' AND `Feedback`.`suspended` = 0");
 				while ($row = $countresult->fetch_array()) {
-					echo ' - Submission <a href="submissions.php?view=' . strval($row['ID']) . '">' . strval($row['ID']) . '</a><br />';
+					echo ' - Submission <a href="submissions.php?view=' . strval($row['ID']) . '">' . strval($row['ID']) . '</a><br/>';
 				}
 			}
 			$k++;

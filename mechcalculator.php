@@ -42,12 +42,12 @@ if (!empty($_POST['weaponpower'])) {
 echo "NOTE - Use the armor's defense rating against the type of attack used.</br>";
 echo "Additionally, functionality ratings are a number between 0 and 100.";
 echo '<form action="mechcalculator.php" method="post">';
-echo 'Attack type: <select name="attackused"><option value="wholemech">Whole mech</option><option value="part">Single part</option><option value="component">Single component</option></select><br />';
+echo 'Attack type: <select name="attackused"><option value="wholemech">Whole mech</option><option value="part">Single part</option><option value="component">Single component</option></select><br/>';
 echo 'Functionality of weapon: <input id="functionweapon" name="functionweapon" type="text" />';
 echo 'Functionality of weapon\'s mounted part: <input id="functionweaponmount" name="functionweaponmount" type="text" />';
 echo 'Accuracy of weapon: <input id="weaponaccuracy" name="weaponaccuracy" type="text" />';
 echo 'Attacker\'s relevant skill: <input id="pilotattack" name="pilotattack" type="text" />';
-echo 'Defense applied: <select name="defenseused"><option value="dodge">Dodge</option><option value="parry">Parry</option><option value="soak">Soak</option></select><br />';
+echo 'Defense applied: <select name="defenseused"><option value="dodge">Dodge</option><option value="parry">Parry</option><option value="soak">Soak</option></select><br/>';
 echo 'Functionality of mobility parts (average, defender, if dodging): <input id="functiondodge" name="functiondodge" type="text" />';
 echo 'Defender\'s dodge skill (if dodging): <input id="pilotdodge" name="pilotdodge" type="text" />';
 echo 'Dodge rating of mech: <input id="mechdodge" name="mechdodge" type="text" />';
@@ -57,9 +57,9 @@ echo 'Parry rating of interposed item: <input id="mechparry" name="mechparry" ty
 echo 'Defender\'s mitigation skill (if soaking): <input id="pilotsoak" name="pilotsoak" type="text" />';
 echo '<input type="submit" value="Calculate hit" /></form></br>';
 echo '<form action="mechcalculator.php" method="post">';
-echo 'Weapon power: <input id="weaponpower" name="weaponpower" type="text" /><br />';
-echo 'Armor protection (struck part): <input id="armorprotection" name="armorprotection" type="text" /><br />';
-echo 'Armor resilience (struck part): <input id="armorresilience" name="armorresilience" type="text" /><br />';
-echo 'Armor toughness (struck part): <input id="armortoughness" name="armortoughness" type="text" /><br />';
+echo 'Weapon power: <input id="weaponpower" name="weaponpower" type="text" /><br/>';
+echo 'Armor protection (struck part): <input id="armorprotection" name="armorprotection" type="text" /><br/>';
+echo 'Armor resilience (struck part): <input id="armorresilience" name="armorresilience" type="text" /><br/>';
+echo 'Armor toughness (struck part): <input id="armortoughness" name="armortoughness" type="text" /><br/>';
 echo '<input type="submit" value="Calculate damage" /></form></br>';
 ?>

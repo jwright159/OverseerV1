@@ -34,7 +34,7 @@ function parseEnemydata($userrow)
 
 function writeEnemydata(array $userrow)
 {
-	//echo "begin enemy data write<br />";
+	//echo "begin enemy data write<br/>";
 	global $mysqli;
 	$endatastr = "";
 	if (empty($userrow['maxenemies']))
@@ -53,7 +53,7 @@ function writeEnemydata(array $userrow)
 			$endatastr .= $userrow[$enstr . 'desc'] . ":";
 			$endatastr .= $userrow[$enstr . 'category'];
 			$endatastr .= "|";
-			//echo $endatastr . "<br />";
+			//echo $endatastr . "<br/>";
 		}
 	}
 	$endatastr = $mysqli->real_escape_string($endatastr); //yeeeeah
@@ -104,7 +104,7 @@ function freeSpecibi($userabs, $userslots, $echothem)
 		if (!empty($abs[$i])) {
 			$free--;
 			if ($echothem)
-				echo $abs[$i] . "<br />";
+				echo $abs[$i] . "<br/>";
 		}
 		$i++;
 	}
@@ -167,24 +167,24 @@ function parseLastfought($userrow)
 
 function writeLastfought($userrow)
 {
-	//echo "writing last fought!<br />";
+	//echo "writing last fought!<br/>";
 	global $mysqli;
 	if (empty($userrow['lastenemies']))
 		$userrow['lastenemies'] = 50;
 	$endatastr = "";
 	for ($i = 0; $i < $userrow['lastenemies']; $i++) {
 		$enstr = strval($i + 1);
-		//echo "checking slot $enstr<br />";
+		//echo "checking slot $enstr<br/>";
 		if (!empty($userrow['oldenemy' . $enstr]) || !empty($userrow['olddreamenemy' . $enstr])) { //name will be blanked when enemy is defeated, so we'll blank all of its stats
 			//echo "data found: ";
 			$endatastr .= $userrow['oldenemy' . $enstr] . ":";
 			$endatastr .= $userrow['oldgrist' . $enstr] . ":";
 			$endatastr .= $userrow['olddreamenemy' . $enstr];
 			$endatastr .= "|";
-			//echo $endatastr . "<br />";
+			//echo $endatastr . "<br/>";
 		}
 	}
-	//echo "final countdown: $endatastr<br />";
+	//echo "final countdown: $endatastr<br/>";
 	$mysqli->query("UPDATE `Players` SET `oldenemydata` = '$endatastr' WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1;");
 }
 

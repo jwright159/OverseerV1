@@ -209,10 +209,10 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($userrow['cantabscond'] == 1) {
 				if (time() - $aidrow['bossbegintime'] > 86400) {
-					echo 'It has been over 24 hours since the main strifer began the boss fight. You can leave at any time.<br />';
+					echo 'It has been over 24 hours since the main strifer began the boss fight. You can leave at any time.<br/>';
 					echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form></br>';
 				} else {
-					echo 'You are aiding in a boss fight and cannot leave until 24 hours has passed since it began.<br />';
+					echo 'You are aiding in a boss fight and cannot leave until 24 hours has passed since it began.<br/>';
 				}
 			} else
 				echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form></br>';
@@ -237,7 +237,7 @@ if (empty($_SESSION['username'])) {
 						$i++;
 					}
 					if (!$threatremains) { //the day is saved!
-						echo "The threat has been completely neutralized! You should talk to the quest giver and claim your reward.<br />";
+						echo "The threat has been completely neutralized! You should talk to the quest giver and claim your reward.<br/>";
 						$mysqli->query("UPDATE `Players` SET `enemydata` = '' WHERE `Players`.`username` = '$username'");
 						echo "<a href='consortquests.php'>==&gt;</a></br>";
 						$dontechostrife = true;
@@ -549,7 +549,7 @@ if (empty($_SESSION['username'])) {
 					}
 					echo '</select></br>';
 					echo '<input type="hidden" name="redirect" value="redirect">';
-					//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br>';
+					//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br/>';
 					//DO NOT RE-ENABLE THE ABOVE. It fucks everything up. I'll test it personally some time later.
 					echo '<input type="submit" value="Attack" /></form>';
 				} else {
@@ -599,7 +599,7 @@ if (empty($_SESSION['username'])) {
 					}
 					echo '</select></br>';
 					echo '<input type="hidden" name="redirect" value="redirect">';
-					//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br>';
+					//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br/>';
 					//DO NOT RE-ENABLE THE ABOVE. It fucks everything up. I'll test it personally some time later.
 					echo '<input type="submit" value="Attack" /></form>';
 				} //we won't even need the following now that auto-select is a thing!
@@ -641,16 +641,16 @@ if (empty($_SESSION['username'])) {
 							$npcloyalty = $statusarg[2];
 							$aidpower += $npcpower;
 							if (!$npcechoed) {
-								echo "NPC allies currently aiding you:<br />";
+								echo "NPC allies currently aiding you:<br/>";
 								$npcechoed = true;
 							}
-							echo "<b>$npcname</b>. Power: $npcpower. Loyalty: $npcloyalty.<br />$npcdesc<br />";
+							echo "<b>$npcname</b>. Power: $npcpower. Loyalty: $npcloyalty.<br/>$npcdesc<br/>";
 						}
 						$st++;
 					}
 				}
 				if ($npcechoed)
-					echo "<br />";
+					echo "<br/>";
 				$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '$username'");
 				while ($row = $sessionmates->fetch_array()) {
 					if ($row['aiding'] == $username) { //Aiding character.

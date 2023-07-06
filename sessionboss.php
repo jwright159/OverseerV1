@@ -423,7 +423,7 @@ if (empty($_SESSION['username'])) {
 			echo '<option value="abstain">"ABSTAIN" (' . $abstain . ')</option>';
 		echo '</select></br>';
 		echo '<input type="hidden" name="redirect" value="redirect">';
-		//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br>';
+		//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br/>';
 		//DO NOT RE-ENABLE THE ABOVE. It fucks everything up. I'll test it personally some time later.
 		echo '<input type="submit" value="Attack" /></form>';
 	} else {
@@ -464,7 +464,7 @@ if (empty($_SESSION['username'])) {
 			echo '<option value="abstain">ABSTAIN (' . $abstain . ')</option>';
 		echo '</select></br>';
 		echo '<input type="hidden" name="redirect" value="redirect">';
-		//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br>';
+		//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br/>';
 		//DO NOT RE-ENABLE THE ABOVE. It fucks everything up. I'll test it personally some time later.
 		echo '<input type="submit" value="Lock in these commands" /></form>';
 	} //we won't even need the following now that auto-select is a thing!

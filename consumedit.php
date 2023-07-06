@@ -64,7 +64,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			$editresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`consumable` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
 			$irow = $editresult->fetch_array();
 			if ($irow['captchalogue_code'] != $editcode) {
-				echo "No item with that code was found!<br />";
+				echo "No item with that code was found!<br/>";
 				$blocked = true;
 			}
 			if ($irow['consumable'] == 0) {
@@ -135,7 +135,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			}
 			if ($victory && $makeconsumable) {
 				$mysqli->query("UPDATE `Captchalogue` SET `consumable` = 1 WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
-				echo "Note: This item wasn't originally marked as consumable. It has been updated automatically.<br />";
+				echo "Note: This item wasn't originally marked as consumable. It has been updated automatically.<br/>";
 			}
 		}
 	}
@@ -144,18 +144,18 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	if ($populate) {
 		$editresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
 		while ($row = $editresult->fetch_array()) {
-			echo $row['name'] . " recognized<br />";
+			echo $row['name'] . " recognized<br/>";
 			$editname = str_replace("'", "", $row['name']);
 			$editname = str_replace("\\", "", $editname); //consumables don't have apostrophes or backslashes
 			$editresult = $mysqli->query("SELECT * FROM `Consumables` WHERE `Consumables`.`name` = '$editname' LIMIT 1;");
 			$row = $editresult->fetch_array();
 			if ($row['name'] == $editname) {
 				$founditem = true;
-				echo "Consumable row loaded<br />";
+				echo "Consumable row loaded<br/>";
 				$erow = $row;
 			} else {
-				echo "Consumable row does not yet exist. One will be created upon submitting the following form.<br />";
-				echo "If this is already a functional consumable, then its effect is probably hardcoded and having a consumable row would be superfluous. If you want to have a hardcoded consumable edited, please talk to Blah or Overseer!<br />";
+				echo "Consumable row does not yet exist. One will be created upon submitting the following form.<br/>";
+				echo "If this is already a functional consumable, then its effect is probably hardcoded and having a consumable row would be superfluous. If you want to have a hardcoded consumable edited, please talk to Blah or Overseer!<br/>";
 			}
 		}
 	}

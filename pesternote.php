@@ -40,16 +40,16 @@ if (empty($_SESSION['username'])) {
 	echo "<a href='https://www.pesternote.com'>Pesternote</a> settings. Control how your Project account interacts with your Pesternote account here.</br>";
 	echo "Note that you can de-link by entering an empty username and password and submitting the linking form.</br></br>";
 	echo "Set your Pesternote account using this form:</br>";
-	echo '<form action="pesternote.php" method="post"> Pesternote username: <input id="username" name="username" type="text" /><br />
-Pesternote password: <input id="password" name="password" type="password" /><br />
-Confirm Pesternote password: <input id="confirmpw" name="confirmpw" type="password" /><br />
-<input type="checkbox" name="confirmation" value="confirmation"> Make a post to my Pesternote account immediately to check if the details work<br />
-<input type="submit" value="Link this Pesternote account to this Project account" /> </form><br />';
+	echo '<form action="pesternote.php" method="post"> Pesternote username: <input id="username" name="username" type="text" /><br/>
+Pesternote password: <input id="password" name="password" type="password" /><br/>
+Confirm Pesternote password: <input id="confirmpw" name="confirmpw" type="password" /><br/>
+<input type="checkbox" name="confirmation" value="confirmation"> Make a post to my Pesternote account immediately to check if the details work<br/>
+<input type="submit" value="Link this Pesternote account to this Project account" /> </form><br/>';
 	echo "Or change your Pesternote settings using this one (NOTE - an unchecked box will turn a given setting off):</br>";
 	echo '<form action="pesternote.php" method="post">
 <input type="hidden" name="settings" value="settings">
-<input type="checkbox" name="postbosses" value="postbosses"> Post to my Pesternote account when I defeat a boss<br />
-<input type="submit" value="Apply these settings" /> </form><br />';
+<input type="checkbox" name="postbosses" value="postbosses"> Post to my Pesternote account when I defeat a boss<br/>
+<input type="submit" value="Apply these settings" /> </form><br/>';
 	echo "Current settings:</br>";
 	if ($userrow['postbosses'] == 0) {
 		echo "Do not post boss defeats to my Pesternote account</br>";

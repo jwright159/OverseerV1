@@ -67,7 +67,7 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
 						echo 'All flags cleared.</br>';
 					} else
-						echo "Your mod level is not yet high enough to clear or overwrite existing flags (need level 2).<br />";
+						echo "Your mod level is not yet high enough to clear or overwrite existing flags (need level 2).<br/>";
 				} else {
 					$dostring = $_POST['modaction'];
 					if (!empty($dostring)) {
@@ -77,7 +77,7 @@ if (empty($_SESSION['username'])) {
 								if ($userrow['modlevel'] >= 2) {
 									$aok = true;
 								} else
-									echo "Your mod level is not yet high enough to clear or overwrite existing flags (need level 2).<br />";
+									echo "Your mod level is not yet high enough to clear or overwrite existing flags (need level 2).<br/>";
 							} else {
 								$aok = true;
 							}
@@ -171,16 +171,16 @@ if (empty($_SESSION['username'])) {
 												$subrow = $subresult->fetch_array();
 												if ($subrow['encounters'] + $reward < 100) {
 													$newenc = $subrow['encounters'] + $reward;
-													echo "The submitter was gifted $reward encounters.<br />";
+													echo "The submitter was gifted $reward encounters.<br/>";
 												} else {
 													$newenc = 100;
-													echo "The submitter was gifted $reward encounters, topping them off at 100.<br />";
+													echo "The submitter was gifted $reward encounters, topping them off at 100.<br/>";
 												}
 												$mysqli->query("UPDATE Players SET `encounters` = $newenc WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
 												$newmsgstring .= "</br>You were also granted $reward encounter(s) for your creativity!";
 											}
 										} else
-											echo "Your mod level is not yet high enough to grant encounters (need level 3).<br />";
+											echo "Your mod level is not yet high enough to grant encounters (need level 3).<br/>";
 									}
 									$mysqli->query("UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `Messages`.`username` = '" . $feedrow['user'] . "'");
 									$mysqli->query("UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
@@ -207,7 +207,7 @@ if (empty($_SESSION['username'])) {
 							echo 'Yellow flag unset. A mod will get back to this submission shortly.</br>';
 						}
 					} else
-						echo "You are unable to post comments because you have a negative mod level. This is probably because some of your previous comments have been inappropriate or hurtful in some fashion.<br />";
+						echo "You are unable to post comments because you have a negative mod level. This is probably because some of your previous comments have been inappropriate or hurtful in some fashion.<br/>";
 				}
 				$stylestring = "normal";
 				if ($feedrow['defunct'] == 1) {
@@ -273,7 +273,7 @@ if (empty($_SESSION['username'])) {
 					echo "Reference";
 				}
 				if ($props)
-					echo "<br />";
+					echo "<br/>";
 				echo 'Power level: ' . strval($feedrow['power']) . '</br>';
 				if (!empty($feedrow['bonuses'])) {
 					$barray = explode("|", $feedrow['bonuses']);
@@ -284,7 +284,7 @@ if (empty($_SESSION['username'])) {
 						$amoutn = intval($aarray[1]);
 						if ($amoutn > 0)
 							echo "+";
-						echo strval($amoutn) . "<br />";
+						echo strval($amoutn) . "<br/>";
 						$i++;
 					}
 				}
@@ -303,12 +303,12 @@ if (empty($_SESSION['username'])) {
 						echo strval($amoutn) . "; ";
 						$i++;
 					}
-					echo "<br />";
+					echo "<br/>";
 				}
 				if (!empty($feedrow['abstratus']))
-					echo "Abstratus: " . $feedrow['abstratus'] . "<br />";
+					echo "Abstratus: " . $feedrow['abstratus'] . "<br/>";
 				if (!empty($feedrow['size']))
-					echo "Size: " . $feedrow['size'] . "<br />";
+					echo "Size: " . $feedrow['size'] . "<br/>";
 				if ($feedrow['comments'] != "")
 					echo "Submitter's comments: " . $feedrow['comments'] . "</br>";
 				echo "</br>";
@@ -474,32 +474,32 @@ if (empty($_SESSION['username'])) {
 	} else {
 		echo 'Next page';
 	}
-	echo "<br />Total results: $alltotal</center><br /><br />";
+	echo "<br/>Total results: $alltotal</center><br/><br/>";
 	echo '<form action="submissions.php" method="get"><input type="hidden" name="view" value="' . strval($feedrow['ID']) . '"><table width="100%" cellpadding="3" cellspacing="3"><tr><td><center>Show only:</center></br>';
-	echo '<input type="radio" name="mode" value="none" checked /> All<br /><input type="radio" name="mode" value="yours" /> Your submissions<br /><input type="radio" name="mode" value="black" /> Unmarked<br /><input type="radio" name="mode" value="red" /> Defunct<br /><input type="radio" name="mode" value="yellow" /> Clarification needed<br /><input type="radio" name="mode" value="green" /> Greenlit<br /><input type="radio" name="mode" value="blue" /> Challenge Mode<br /><input type="radio" name="mode" value="gray" /> Suspended<br /><input type="radio" name="mode" value="orange" /> Randomized<br /><input type="radio" name="mode" value="white" /> Dev requested</td>';
+	echo '<input type="radio" name="mode" value="none" checked /> All<br/><input type="radio" name="mode" value="yours" /> Your submissions<br/><input type="radio" name="mode" value="black" /> Unmarked<br/><input type="radio" name="mode" value="red" /> Defunct<br/><input type="radio" name="mode" value="yellow" /> Clarification needed<br/><input type="radio" name="mode" value="green" /> Greenlit<br/><input type="radio" name="mode" value="blue" /> Challenge Mode<br/><input type="radio" name="mode" value="gray" /> Suspended<br/><input type="radio" name="mode" value="orange" /> Randomized<br/><input type="radio" name="mode" value="white" /> Dev requested</td>';
 	echo '<td><center>Sort by:</center></br>';
-	echo '<input type="radio" name="sort" value="id" checked /> ID<br /><input type="radio" name="sort" value="name" /> Name<br /><input type="radio" name="sort" value="like" /> Likes<br /><input type="radio" name="sort" value="comm" /> Comments<br /><input type="radio" name="sort" value="time" /> Time since last update</td>';
+	echo '<input type="radio" name="sort" value="id" checked /> ID<br/><input type="radio" name="sort" value="name" /> Name<br/><input type="radio" name="sort" value="like" /> Likes<br/><input type="radio" name="sort" value="comm" /> Comments<br/><input type="radio" name="sort" value="time" /> Time since last update</td>';
 	echo '<td><center>In this order:</center></br>';
-	echo '<input type="radio" name="order" value="ASC" checked /> Ascending<br /><input type="radio" name="order" value="DESC" /> Descending</td></tr><tr><td colspan="3"><center>Search: <input type="text" name="search" />';
+	echo '<input type="radio" name="order" value="ASC" checked /> Ascending<br/><input type="radio" name="order" value="DESC" /> Descending</td></tr><tr><td colspan="3"><center>Search: <input type="text" name="search" />';
 	echo ' In: <select name="sfield"><option value="name">Item Name</option><option value="user">Submitter</option><option value="recipe">Recipe</option><option value="description">Description</option><option value="comments">Submitter Comments</option><option value="usercomments">Viewer Comments</option></select>';
 	echo '</center></td></tr><tr><td colspan="3"><center><input type="submit" value="Go for it!" /></center></td></tr></table></form>';
 	if ($userrow['modlevel'] > 0) {
-		echo "The dev team has deemed you worthy of utilizing moderator powers!<br />";
-		echo "Your mod level is: <b>" . strval($userrow['modlevel']) . "</b><br />Your abilities:<br />";
+		echo "The dev team has deemed you worthy of utilizing moderator powers!<br/>";
+		echo "Your mod level is: <b>" . strval($userrow['modlevel']) . "</b><br/>Your abilities:<br/>";
 		if ($userrow['modlevel'] >= 1)
-			echo "- You may apply the five moderative flags (red, yellow, green, gray, white) to any unmarked submission.<br />";
+			echo "- You may apply the five moderative flags (red, yellow, green, gray, white) to any unmarked submission.<br/>";
 		if ($userrow['modlevel'] >= 2)
-			echo "- You may overwrite an existing flag or clear all flags on a submission.<br />";
+			echo "- You may overwrite an existing flag or clear all flags on a submission.<br/>";
 		if ($userrow['modlevel'] >= 3)
-			echo "- You may delete red-flagged subs and grant encounters for greenlit items.<br />";
+			echo "- You may delete red-flagged subs and grant encounters for greenlit items.<br/>";
 		if ($userrow['modlevel'] >= 4)
-			echo "- You may use the Item Editor to add greenlit items to the game. Look for the 'Take this to the Item Editor' button when viewing a greenlit item.<br />";
+			echo "- You may use the Item Editor to add greenlit items to the game. Look for the 'Take this to the Item Editor' button when viewing a greenlit item.<br/>";
 		if ($userrow['modlevel'] >= 5)
-			echo "- You may freely use the <a href='devtools/itemedit.php'>Item Editor</a> to edit items or create items from scratch. You may also use the <a href='devtools/consumedit.php'>Consumable Editor</a>.<br />";
+			echo "- You may freely use the <a href='devtools/itemedit.php'>Item Editor</a> to edit items or create items from scratch. You may also use the <a href='devtools/consumedit.php'>Consumable Editor</a>.<br/>";
 		if ($userrow['modlevel'] >= 6)
-			echo "- You can view the working item addlog and may post item updates from the Item/Consumable Editor.<br />";
+			echo "- You can view the working item addlog and may post item updates from the Item/Consumable Editor.<br/>";
 		if ($userrow['modlevel'] >= 10)
-			echo "- You have the powers of a Global Moderator and can access <a href='devtools'>a variety of tools</a>.<br />";
+			echo "- You have the powers of a Global Moderator and can access <a href='devtools'>a variety of tools</a>.<br/>";
 		if ($userrow['modlevel'] >= 99)
 			echo "- You have the powers of a Developer and can do pretty much anything!";
 	}

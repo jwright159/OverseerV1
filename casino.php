@@ -22,7 +22,7 @@ if (empty($_SESSION['username'])) {
 	$rand = rand(1, 99) * 10;
 
 	$tokens = $userrow['tokens'];
-	echo "Stored: " . $tokens . "<br />";
+	echo "Stored: " . $tokens . "<br/>";
 	store($rand);
 	echo "Storing: " . $rand;
 

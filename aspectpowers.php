@@ -65,10 +65,10 @@ if (empty($_SESSION['username'])) {
 		while (!empty($modifiernames[$thingy])) {
 			$random = rand(-50, 250);
 			//echo $modifiernames[$thingy] . strval($random) . "=" . strval($random / 100);
-			//echo "; aspect: " . strval($aspectrow[$modifiernames[$thingy]]) . "; class: " . strval($classrow[$modifiernames[$thingy]]) . "<br />";
+			//echo "; aspect: " . strval($aspectrow[$modifiernames[$thingy]]) . "; class: " . strval($classrow[$modifiernames[$thingy]]) . "<br/>";
 			$aspectrow[$modifiernames[$thingy]] = $aspectrow[$modifiernames[$thingy]] * ($random / 100);
 			$classrow[$modifiernames[$thingy]] = $classrow[$modifiernames[$thingy]] * ($random / 100);
-			//echo "afterwards we have aspect: " . strval($aspectrow[$modifiernames[$thingy]]) . "; class: " . strval($classrow[$modifiernames[$thingy]]) . "<br />";
+			//echo "afterwards we have aspect: " . strval($aspectrow[$modifiernames[$thingy]]) . "; class: " . strval($classrow[$modifiernames[$thingy]]) . "<br/>";
 			$thingy++;
 		}
 	}
@@ -126,7 +126,7 @@ if (empty($_SESSION['username'])) {
 	}
 	if (!empty($_POST['usepattern'])) { //User accessing a pattern.
 		//Constants defining how much each function gets. 10000 equates to one per Echeladder rung. Less is better, as you can see.
-		//echo "DEBUG: using pattern<br />";
+		//echo "DEBUG: using pattern<br/>";
 		$powerupdivider = 10000;
 		$healdivider = 800;
 		$damagedivider = 160;
@@ -142,7 +142,7 @@ if (empty($_SESSION['username'])) {
 			if (empty($patternrow[$namestr])) {
 				echo "That ability slot is not currently in use.</br>";
 			} else {
-				//echo "DEBUG: pattern recognized<br />";
+				//echo "DEBUG: pattern recognized<br/>";
 				$damagestr = "pattern" . strval($slot) . "damage";
 				$powerdownstr = "pattern" . strval($slot) . "powerdown";
 				$offenseupstr = "pattern" . strval($slot) . "offenseup";
@@ -402,7 +402,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 									$statustr = "ENEMY" . strval($i) . ":";
 									if (!empty($abilities[28])) { //the Witch roletech Curse activates, providing a chance for the damaging/power reducing patterns to inflict a status
 										if ($j == 1)
-											echo $abilities[28] . "<br />"; //just echo this once
+											echo $abilities[28] . "<br/>"; //just echo this once
 										$statuschance = $patternrow[$damagestr] + $patternrow[$powerdownstr];
 										if ($statuschance == 100)
 											$statuschance = 150; //make it almost certain to trigger at all times if the user poured all their points into it
@@ -749,7 +749,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$effstr = "Bleeding";
 							break;
 					}
-					echo "Chance to inflict $effstr: $statuschance%<br />";
+					echo "Chance to inflict $effstr: $statuschance%<br/>";
 				}
 			}
 			if ($patternrow[$offenseupstr] != 0)

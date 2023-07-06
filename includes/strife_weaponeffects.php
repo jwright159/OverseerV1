@@ -50,7 +50,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "TIMESTOP|";
 					$message = $message . "$werow[$enemystr] is frozen in time!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the timestop effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the timestop effect!<br/>";
 				break;
 			case "AFFINITY": //Format is AFFINITY:<affinity type>:<percentage>|
 				if ($currentarray[1] == "All" && $userrow['aspect'] != "")
@@ -75,7 +75,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "RESIST:$currentarray[1]:$currentarray[2]|";
 					$message = $message . "$werow[$enemystr]'s resistance to $currentarray[1] is modified to $currentarray[2]%!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr]'s $currentarray[1] resistance remains the same.<br />";
+					$failedmessage .= "$werow[$enemystr]'s $currentarray[1] resistance remains the same.<br/>";
 				break;
 			case "WATERYGEL": //Format is WATERYGEL:<%chance>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -84,7 +84,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "WATERYGEL|";
 					$message = $message . "$werow[$enemystr] appears to have lost some viscosity.</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the watery gel effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the watery gel effect!<br/>";
 				break;
 			case "POISON": //Format is POISON:<%chance>:<%severity>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -94,7 +94,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "POISON:" . $severity . "|";
 					$message = $message . "$werow[$enemystr] doesn't look too well...</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the poison effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the poison effect!<br/>";
 				break;
 			case "SHRUNK": //Format is SIZECHANGE:<%chance>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -103,7 +103,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "SHRUNK|";
 					$message = $message . "$werow[$enemystr] suddenly shrinks!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the shrinking effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the shrinking effect!<br/>";
 				break;
 			case "LOCKDOWN": //Format is LOCKDOWN:<%chance>:<turns>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -112,7 +112,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "LOCKDOWN:$currentarray[2]|"; //applying multiple instances will have no additional effect
 					$message = $message . "$werow[$enemystr]'s connection to its abilities is severed!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the lockdown effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the lockdown effect!<br/>";
 				break;
 			case "CHARMED": //Format is CHARMED:<%chance>|
 				$charmstr = ($statustr . "CHARMED|");
@@ -123,7 +123,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 						$currentstatus = $currentstatus . $statustr . "CHARMED|";
 						$message = $message . "$werow[$enemystr] is charmed temporarily to your side!</br>";
 					} else
-						$failedmessage .= "$werow[$enemystr] resists the charm effect!<br />";
+						$failedmessage .= "$werow[$enemystr] resists the charm effect!<br/>";
 				}
 				break;
 			case "LIFESTEAL": //Format is LIFESTEAL:<%chance>:<%absorbed>|. A lifesteal weapon, er, steals life.
@@ -173,7 +173,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "UNLUCKY|";
 					$message = $message . "$werow[$enemystr] looks unlucky. Hm? What does unlucky look like? How should I know?</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] doesn't look any luckier or unluckier than before, whatever that means.<br />";
+					$failedmessage .= "$werow[$enemystr] doesn't look any luckier or unluckier than before, whatever that means.<br/>";
 				break;
 			case "RANDAMAGE": //format is RANDAMAGE:<%variance>|
 				$roll = rand(($currentarray[1] * -1) + floor(($currentarray[1] * 2) * ($luck / 100)), $currentarray[1]);
@@ -188,7 +188,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "BLEEDING:" . $currentarray[2] . "|";
 					$message = $message . "$werow[$enemystr] is bleeding!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the bleeding effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the bleeding effect!<br/>";
 				break;
 			case "HOPELESS": //Format is HOPELESS:<%chance>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -197,7 +197,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "HOPELESS|";
 					$message = $message . "$werow[$enemystr] looks dejected...</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] remains hopeful!<br />";
+					$failedmessage .= "$werow[$enemystr] remains hopeful!<br/>";
 				break;
 			case "DISORIENTED": //Format is DISORIENTED:<%chance>:<duration>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -206,7 +206,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "DISORIENTED:" . $currentarray[2] . "|";
 					$message = $message . "$werow[$enemystr] is wandering around the battlefield in a daze!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the disoriented effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the disoriented effect!<br/>";
 				break;
 			case "DISTRACTED": //Format is DISTRACTED:<%chance>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -215,7 +215,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "DISTRACTED|";
 					$message = $message . "$werow[$enemystr] looks away for a moment</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] manages to stay focused!<br />";
+					$failedmessage .= "$werow[$enemystr] manages to stay focused!<br/>";
 				break;
 			case "ENRAGED": //Format is ENRAGED:<%chance>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -229,7 +229,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					}
 					$message = $message . "$werow[$enemystr] looks really angry!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists becoming enraged!<br />";
+					$failedmessage .= "$werow[$enemystr] resists becoming enraged!<br/>";
 				break;
 			case "MELLOW": //Format is MELLOW:<%chance>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -244,7 +244,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					}
 					$message = $message . "$werow[$enemystr] looks super chill, man...</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the mellow effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the mellow effect!<br/>";
 				break;
 			case "KNOCKDOWN": //Format is KNOCKDOWN:<%multiplier>|. Knockdown chance depends on damage dealt.
 				//The multiplier effectively multiplies damage for the purposes of calculating the knockdown chance only.
@@ -258,7 +258,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$currentstatus = $currentstatus . $statustr . "KNOCKDOWN|";
 					$message = $message . "$werow[$enemystr] is sent flying by the force of the blow!</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] stands firm!<br />";
+					$failedmessage .= "$werow[$enemystr] stands firm!<br/>";
 				break;
 			case "GLITCHED": //Format is GLITCHED:<%chance>|. NOTE - Glitching is a permanent status ailment. Please balance accordingly.
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -268,19 +268,19 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$glitchstr = horribleMess();
 					$message = $message . "$werow[$enemystr] appears somewhat $glitchstr</br>";
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the glitchy effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the glitchy effect!<br/>";
 				break;
 			case "GLITCHY": //Format is GLITCHY:<%chance>|. Serves no purpose other than to randomly spew glitch messages :L
 				$roll = rand(1, 100);
 				if ($roll < intval($currentarray[1]))
-					$message = $message . generateGlitchString() . "<br />"; //yep, that's all it does
+					$message = $message . generateGlitchString() . "<br/>"; //yep, that's all it does
 				break;
 			case "RECOIL": //format is RECOIL:<%chance>:<%damage>|.
 				$roll = rand(0, (100 - $luck)); //luck REDUCES chance for player to take recoil
 				//possibly consider adding a roletech that helps resist?
 				if ($roll > (100 - intval($currentarray[1]))) {
 					$recoildamage += $enemydamage * ($currentarray[2] / 100);
-					$message = $message . "You take some recoil damage from the attack!<br />";
+					$message = $message . "You take some recoil damage from the attack!<br/>";
 					//note that recoil is applied AFTER enemy damage, and cannot kill the player
 				}
 				break;
@@ -303,11 +303,11 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 						if (intval($currentarray[3]) == 1)
 							$ammocheck[$mainoff] = "good";
 						if ($mainoff == 1)
-							$message = $message . $getstr . " from your $mainrow[name]!<br />";
+							$message = $message . $getstr . " from your $mainrow[name]!<br/>";
 						if ($mainoff == 2)
-							$message = $message . $getstr . " from your $offrow[name]!<br />";
+							$message = $message . $getstr . " from your $offrow[name]!<br/>";
 						if ($mainoff == 3)
-							$message = $message . $getstr . "!<br />";
+							$message = $message . $getstr . "!<br/>";
 					}
 				}
 				break;
@@ -316,7 +316,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$bonusdamage = ceil($userrow[$currentarray[1]] * ($boost / 100));
 				if ($bonusdamage > 0) {
 					$enemydamage += $bonusdamage;
-					$message = $message . "Your $currentarray[1] inflicts bonus damage on $werow[$enemystr]!<br />";
+					$message = $message . "Your $currentarray[1] inflicts bonus damage on $werow[$enemystr]!<br/>";
 				}
 				break;
 			case "BURNING": //Format is BURNING:<%chance>:<damage>|
@@ -332,7 +332,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 						$message = $message . "$werow[$enemystr] catches fire!</br>";
 					}
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the burning effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the burning effect!<br/>";
 				break;
 			case "FREEZING": //Format is FREEZING:<%chance>|
 				$roll = rand((1 + floor($luck / 10)), 100);
@@ -347,7 +347,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 						$message = $message . "$werow[$enemystr] becomes encased in ice!</br>";
 					}
 				} else
-					$failedmessage .= "$werow[$enemystr] resists the freezing effect!<br />";
+					$failedmessage .= "$werow[$enemystr] resists the freezing effect!<br/>";
 				break;
 			case "SMITE": //Format is SMITE:<% of bonus>|
 				$bonusdamage = 0;
@@ -358,7 +358,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				}
 				if ($bonusdamage > 0) { //smite has no effect on anything with positive/zero resist_Life
 					$enemydamage += $bonusdamage;
-					$message = $message . "Your weapon smites " . $werow[$enemystr] . "!<br />";
+					$message = $message . "Your weapon smites " . $werow[$enemystr] . "!<br/>";
 				}
 				break;
 			default:

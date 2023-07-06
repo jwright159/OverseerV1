@@ -7,7 +7,7 @@ if (empty($_SESSION['username']) || $userrow['session_name'] != "Developers") {
 } else {
 	$allresult = $mysqli->query("SELECT * FROM `Players`");
 	while ($row = $allresult->fetch_array()) {
-		echo "Updating " . $row['username'] . "<br />";
+		echo "Updating " . $row['username'] . "<br/>";
 		$i = 1;
 		$newstr = "";
 		while ($i <= 16) {

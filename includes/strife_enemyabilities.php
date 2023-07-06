@@ -155,7 +155,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			if ($difference > 0) {
 				$roll = rand(0, rand(0, 49));
 				if ($roll > 0) {
-					$message = $message . "The True Hekatonchire forms a defensive wall using " . strval($roll) . " of its arms, blocking some of the damage!<br />";
+					$message = $message . "The True Hekatonchire forms a defensive wall using " . strval($roll) . " of its arms, blocking some of the damage!<br/>";
 					$blocked = $roll * 35;
 					if ($blocked > $difference)
 						$blocked = $difference;
@@ -172,7 +172,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					}
 					$damage = $damage + (35 * $roll); //this can add up quickly
 				} else {
-					echo "Noticing you are now impervious to damage, the True Hekatonchire decides to pick you up and toss you out of the room instead.<br />";
+					echo "Noticing you are now impervious to damage, the True Hekatonchire decides to pick you up and toss you out of the room instead.<br/>";
 					//player is forcibly ejected from strife as if they absconded lolol
 					$userrow = terminateStrife($userrow, 2);
 					if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
@@ -186,7 +186,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Blurred Hydra Head":
 			$roll = rand(1, 7);
 			if ($roll == 7) { //all hydra abilities trigger on a 1/7 chance.
-				$message = $message . "The Blurred Head strikes at you so fast, you can hardly see it coming!<br />";
+				$message = $message . "The Blurred Head strikes at you so fast, you can hardly see it coming!<br/>";
 				if ($userrow['invulnerability'] == 0) {
 					if ($damage > 250)
 						$damage = $damage * 2; //doubles damage that it did this round
@@ -198,7 +198,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Cosmic Hydra Head":
 			$roll = rand(1, 7);
 			if ($roll == 7) { //all hydra abilities trigger on a 1/7 chance.
-				$message = $message . "The Cosmic Head evacuates all of the air around you, choking you briefly!<br />";
+				$message = $message . "The Cosmic Head evacuates all of the air around you, choking you briefly!<br/>";
 				$damage = $damage + 300; //hits through invuln because you still need to breathe
 			}
 			break;
@@ -209,16 +209,16 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				$chance = rand(1, 100);
 				if ($chance > 50) {
 					$currentstatus .= "PLAYER:STUN|";
-					$message = $message . ", sending you tumbling around the room!<br />";
+					$message = $message . ", sending you tumbling around the room!<br/>";
 				} else {
-					$message = $message . "! You barely manage to brace yourself and stay standing.<br />";
+					$message = $message . "! You barely manage to brace yourself and stay standing.<br/>";
 				}
 			}
 			break;
 		case "Shining Hydra Head":
 			$roll = rand(1, 7);
 			if ($roll == 7) { //all hydra abilities trigger on a 1/7 chance.
-				$message = $message . "The Shining Head fires a blinding beam of light at you, making it harder to see!<br />";
+				$message = $message . "The Shining Head fires a blinding beam of light at you, making it harder to see!<br/>";
 				$currentstatus .= "PLAYER:BLIND|";
 			}
 			break;
@@ -229,9 +229,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				$chance = rand(1, 100);
 				if ($chance > 50) {
 					$currentstatus .= "PLAYER:NOCAP|";
-					$message = $message . " Your hope starts to waver!<br />";
+					$message = $message . " Your hope starts to waver!<br/>";
 				} else {
-					$message = $message . " You remain unfazed.<br />";
+					$message = $message . " You remain unfazed.<br/>";
 				}
 			}
 			break;
@@ -242,9 +242,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				$chance = rand(1, 100);
 				if ($chance > 50) {
 					$currentstatus .= "PLAYER:POISON:2|";
-					$message = $message . " You are poisoned by its vileness!<br />";
+					$message = $message . " You are poisoned by its vileness!<br/>";
 				} else {
-					$message = $message . " You hold your breath just in time, resisting the poison.<br />";
+					$message = $message . " You hold your breath just in time, resisting the poison.<br/>";
 				}
 			}
 			break;
@@ -255,9 +255,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				$chance = rand(1, 100);
 				if ($chance > 50) {
 					$currentstatus .= "PLAYER:CONFUSE|";
-					$message = $message . " You start to feel a bit dizzy...<br />";
+					$message = $message . " You start to feel a bit dizzy...<br/>";
 				} else {
-					$message = $message . " You manage to resist the influence.<br />";
+					$message = $message . " You manage to resist the influence.<br/>";
 				}
 			}
 			break;
@@ -271,9 +271,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$userrow['Aspect_Vial'] -= $aspectdamage;
 					if ($userrow['Aspect_Vial'] < 0)
 						$userrow['Aspect_Vial'] = 0;
-					$message = $message . " You feel disheartened, losing some aspect vial!<br />";
+					$message = $message . " You feel disheartened, losing some aspect vial!<br/>";
 				} else {
-					$message = $message . " You are unaffected.<br />";
+					$message = $message . " You are unaffected.<br/>";
 				}
 			}
 			break;
@@ -299,10 +299,10 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			if ($roll == 7) { //all hydra abilities trigger on a 1/7 chance.
 				$message = $message . "The Bleeding Head spits a very potent acid!";
 				if ($userrow['invulnerability'] == 0) {
-					$message . " It really burns! Like, a lot!<br />";
+					$message . " It really burns! Like, a lot!<br/>";
 					$damage = $damage + 500;
 				} else {
-					$message . " The acid eats through your invulnerability and negates it!<br />";
+					$message . " The acid eats through your invulnerability and negates it!<br/>";
 					$userrow['invulnerability'] = 0;
 				}
 			}
@@ -310,14 +310,14 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Faceless Hydra Head":
 			$roll = rand(1, 7);
 			if ($roll == 7) { //all hydra abilities trigger on a 1/7 chance.
-				$message = $message . "The Faceless Head breathes a chilling breath... somehow... making it harder for you to deal damage!<br />";
+				$message = $message . "The Faceless Head breathes a chilling breath... somehow... making it harder for you to deal damage!<br/>";
 				$userrow['offenseboost'] -= rand(100, 200);
 			}
 			break;
 		case "Screaming Hydra Head":
 			$roll = rand(1, 7);
 			if ($roll == 7) { //all hydra abilities trigger on a 1/7 chance.
-				$message = $message . "The Screaming Head shrieks and bellows a raging blast of flame at you! The resulting burn makes you more sensitive to damage!<br />";
+				$message = $message . "The Screaming Head shrieks and bellows a raging blast of flame at you! The resulting burn makes you more sensitive to damage!<br/>";
 				$userrow['defenseboost'] -= rand(100, 200);
 			}
 			break;
@@ -426,7 +426,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$userrow[$healthstr] = $material * $robopower;
 					$userrow[$maxhealthstr] = $material * $robopower;
 				} else
-					echo "Error spawning Progenitor minion!<br />";
+					echo "Error spawning Progenitor minion!<br/>";
 			} elseif ($roll >= 30) { //Reprieve! Nothing happens.
 			} else { //Small power buff to all surviving minions
 				$message = $message . "Progenitor grabs a hammer and wrench and begins to modify itself and any other still-functioning machines in the room, repairing and strengthening them!</br>";
@@ -492,9 +492,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			if ($roll > $summonroll) { //chance increases as blade cloud is weakened, either power-wise or health-wise
 				$amount = floor(rand(3, 9) / 3); //summons 1-2 or rarely 3 blades
 				if ($amount == 1)
-					echo "A blade falls out of the Blade Cloud!<br />";
+					echo "A blade falls out of the Blade Cloud!<br/>";
 				else
-					echo "Some blades fall out of the Blade Cloud!<br />";
+					echo "Some blades fall out of the Blade Cloud!<br/>";
 				$thisone = 0;
 				while ($thisone < $amount) {
 					$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
@@ -514,7 +514,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			$absresult = $mysqli->query("SELECT `name`,`power` FROM `Captchalogue` WHERE `abstratus` LIKE 'bladekind%' OR `abstratus` LIKE '%, bladekind%' LIMIT $choice, 1");
 			$arow = $absresult->fetch_array();
 			$arow['name'] = str_replace("\\", "", $arow['name']);
-			$message = $message . $arow['name'] . " flies out of the Blade Cloud and stabs you!<br />";
+			$message = $message . $arow['name'] . " flies out of the Blade Cloud and stabs you!<br/>";
 			if ($userrow['invulnerability'] == 0) { //I COULD have it hit through invuln, but I'm not THAT mean
 				$damage = $damage + ceil($arow['power'] / 8); //max damage from this attack: 1250
 			}
@@ -524,11 +524,11 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			if ($roll <= 25) {
 				$quantity = floor(rand(0, 9) / 3); //can be anywhere up to 3, with a chance of failing
 				if ($quantity == 0)
-					$message = $message . "The Necromancer attempts to raise more skeletons, but fails!<br />";
+					$message = $message . "The Necromancer attempts to raise more skeletons, but fails!<br/>";
 				elseif ($quantity == 1)
-					$message = $message . "The Necromancer raises another skeletal minion!<br />";
+					$message = $message . "The Necromancer raises another skeletal minion!<br/>";
 				else
-					$message = $message . "The Necromancer raises some skeletal minions!<br />";
+					$message = $message . "The Necromancer raises some skeletal minions!<br/>";
 				while ($quantity > 0) {
 					$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
 					$slot = generateEnemy($userrow, "None", "None", "Skeletal Consort", False);
@@ -539,18 +539,18 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$quantity--;
 				}
 			} elseif ($roll <= 35) {
-				$message = $message . "The Necromancer curses you! It's just a string of insults, though. Unless you're emotionally sensitive, it doesn't do anything.<br />";
+				$message = $message . "The Necromancer curses you! It's just a string of insults, though. Unless you're emotionally sensitive, it doesn't do anything.<br/>";
 				//lol no effect
 			} elseif ($roll <= 45) {
-				$message = $message . "The Necromancer throws a bone at you! Oh man. This consort's really pulling out all the stops here.<br />";
+				$message = $message . "The Necromancer throws a bone at you! Oh man. This consort's really pulling out all the stops here.<br/>";
 				$damage = $damage + ceil($userrow['Gel_Viscosity'] / 100); //adds 1% damage
 			} elseif ($roll <= 55) {
 				$newroll = rand(1, 100);
 				if ($newroll <= 10) {
-					$message = $message . "The Necromancer consults a dark grimoire and recites an incantation! Despite it stuttering a few times, you still feel the forces of death pressing against your soul.<br />";
+					$message = $message . "The Necromancer consults a dark grimoire and recites an incantation! Despite it stuttering a few times, you still feel the forces of death pressing against your soul.<br/>";
 					$damage = $damage + 100;
 				} else {
-					$message = $message . "The Necromancer consults a dark grimoire and recites an incantation, but totally butchers it so nothing happens. How adorably pitiful.<br />";
+					$message = $message . "The Necromancer consults a dark grimoire and recites an incantation, but totally butchers it so nothing happens. How adorably pitiful.<br/>";
 					//also no effect
 				}
 			}
@@ -566,7 +566,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$message = $message . "The fire spreads to another nearby building!</br>";
 				}
 			} elseif ($roll <= 30) {
-				$message = $message . "The fire rages higher. The smoke is almost too much to bear!<br />";
+				$message = $message . "The fire rages higher. The smoke is almost too much to bear!<br/>";
 				$damage = $damage * 2;
 				$currentstatus .= $statustr . "BURNING:100|"; //apply another burning instance
 			}
@@ -588,37 +588,37 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				switch ($specialarray[2]) { //similar to weapon effects
 					case NOCAP:
 						if ($roll <= $chance) {
-							$message .= $userrow[$enemystr] . "'s attack increases your vulnerability to massive damage!<br />";
+							$message .= $userrow[$enemystr] . "'s attack increases your vulnerability to massive damage!<br/>";
 							$currentstatus .= "PLAYER:NOCAP|";
 						}
 						break;
 					case POISON:
 						if ($roll <= $chance) {
-							$message .= $userrow[$enemystr] . "'s attack poisons you!<br />";
+							$message .= $userrow[$enemystr] . "'s attack poisons you!<br/>";
 							$currentstatus .= "PLAYER:POISON:" . $specialarray[4] . "|";
 						}
 						break;
 					case BLIND:
 						if ($roll <= $chance) {
-							$message .= $userrow[$enemystr] . "'s attack blinds you temporarily!<br />";
+							$message .= $userrow[$enemystr] . "'s attack blinds you temporarily!<br/>";
 							$currentstatus .= "PLAYER:BLIND|";
 						}
 						break;
 					case CONFUSE:
 						if ($roll <= $chance) {
-							$message .= $userrow[$enemystr] . "'s attack clouds your mind!<br />";
+							$message .= $userrow[$enemystr] . "'s attack clouds your mind!<br/>";
 							$currentstatus .= "PLAYER:CONFUSED|";
 						}
 						break;
 					case STUN:
 						if ($roll <= $chance) {
-							$message .= $userrow[$enemystr] . "'s attack stuns you!<br />";
+							$message .= $userrow[$enemystr] . "'s attack stuns you!<br/>";
 							$currentstatus .= "PLAYER:STUN|";
 						}
 						break;
 					case BURNING:
 						if ($roll <= $chance) {
-							$message .= $userrow[$enemystr] . "'s attack sets you on fire!<br />";
+							$message .= $userrow[$enemystr] . "'s attack sets you on fire!<br/>";
 							$currentstatus .= "PLAYER:BURNING:" . $specialarray[4] . "|";
 						}
 						break;

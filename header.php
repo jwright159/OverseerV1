@@ -179,8 +179,8 @@ require_once 'includes/global_functions.php';
 							}
 						</style>
 						<?php
-						echo '<form id="login" action="login.php" method="post"> Username: <input id="username" maxlength="50" name="username" type="text" /><br /> Password: <input id="password" maxlength="50" name="password" type="password" />
-    <br />
+						echo '<form id="login" action="login.php" method="post"> Username: <input id="username" maxlength="50" name="username" type="text" /><br/> Password: <input id="password" maxlength="50" name="password" type="password" />
+    <br/>
     <input name="Submit" type="submit" value="Submit" /> </form>
     <span style="color: red;" id="catch"></span>
     ';

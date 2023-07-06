@@ -97,7 +97,7 @@ function heaviestBonus($workrow)
 if (empty($_SESSION['username'])) {
 	echo "Log in to suggest items or alchemical combinations.</br>";
 } elseif ($userrow['modlevel'] <= -3 && ($_GET['type'] == "item" || $_GET['type'] == "itemadv")) {
-	echo "You have been banned from submitting items, likely due to abuse or spam.<br />";
+	echo "You have been banned from submitting items, likely due to abuse or spam.<br/>";
 } else {
 	echo '<!DOCTYPE html><html><head><style>urgent{color: #0000CC;}</style></head><body>';
 	$sessionname = $userrow['session_name'];
@@ -205,7 +205,7 @@ if (empty($_SESSION['username'])) {
 					}
 					if ($_POST['operate'] == "nochange") {
 						if ($editid == 0) {
-							echo "Submission error: Please select an operation.<br />";
+							echo "Submission error: Please select an operation.<br/>";
 							$aok = false;
 						}
 					} else {
@@ -286,7 +286,7 @@ if (empty($_SESSION['username'])) {
 			$existresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE `name` = '" . $mysqli->real_escape_string($newitem) . "'");
 			$existrow = $existresult->fetch_array();
 			if ($existrow['name'] == $newitem) {
-				echo "Submission error: an item with that name ($newitem) already exists; if you're sure your submission is different enough from the existing item to warrant both of them being in the game, you must change the name<br />";
+				echo "Submission error: an item with that name ($newitem) already exists; if you're sure your submission is different enough from the existing item to warrant both of them being in the game, you must change the name<br/>";
 				$aok = false;
 			}
 		}
@@ -333,7 +333,7 @@ if (empty($_SESSION['username'])) {
 				$bname = getBonus($i);
 				if (!empty($_POST[$bname]) && intval($_POST[$bname]) != 0) {
 					if (intval($_POST[$bname]) > 9999 || intval($_POST[$bname]) < -9999) {
-						echo "Submission error: $bname, like all bonuses, cannot be above 9999 or below -9999<br />";
+						echo "Submission error: $bname, like all bonuses, cannot be above 9999 or below -9999<br/>";
 						$aok = false;
 					} else {
 						$bonuses .= "$bname:" . strval($_POST[$bname]) . "|";
@@ -504,16 +504,16 @@ if (empty($_SESSION['username'])) {
 				$nucodetext = 'value="' . $_GET['newcode'] . '"';
 			else
 				$nucodetext = " ";
-			echo '</br>Suggested item code (if any): <input id="code" name="code" type="text"' . $nucodetext . '/><br />';
-			echo 'First item used to make this item (code or name): <input id="item1" name="item1" type="text" /><br />';
-			echo 'Second item used to make this item (code or name): <input id="item2" name="item2" type="text" /><br />';
+			echo '</br>Suggested item code (if any): <input id="code" name="code" type="text"' . $nucodetext . '/><br/>';
+			echo 'First item used to make this item (code or name): <input id="item1" name="item1" type="text" /><br/>';
+			echo 'Second item used to make this item (code or name): <input id="item2" name="item2" type="text" /><br/>';
 			echo '<input type="checkbox" name="ignoresearch" value="yes"> One or both of these have not yet been added to the game</br>';
-			echo 'Operation to use: <select name="operate"><option value="nochange">Select one / No change</option><option value="base">None, this is a base item</option><option value="loot">None, this is dungeon loot</option><option value="and">&&</option><option value="or">||</option></select><br />';
-			echo 'New item\'s name: <input id="newitem" name="newitem" type="text" /><br />';
-			echo 'New item\'s description:</br><textarea name="newdesc" rows="6" cols="40" form="newitem"></textarea><br />';
-			echo 'Comments on the new item. This field is for suggestions like command bonuses, abstratus the item should have, grist to be used, etc. The more details supplied, the better:</br><a href="https://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a><br /><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br />';
+			echo 'Operation to use: <select name="operate"><option value="nochange">Select one / No change</option><option value="base">None, this is a base item</option><option value="loot">None, this is dungeon loot</option><option value="and">&&</option><option value="or">||</option></select><br/>';
+			echo 'New item\'s name: <input id="newitem" name="newitem" type="text" /><br/>';
+			echo 'New item\'s description:</br><textarea name="newdesc" rows="6" cols="40" form="newitem"></textarea><br/>';
+			echo 'Comments on the new item. This field is for suggestions like command bonuses, abstratus the item should have, grist to be used, etc. The more details supplied, the better:</br><a href="https://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a><br/><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br/>';
 			echo 'Keep in mind that submitting grist types is a good way to get your items greenlit faster. Don\'t worry about exact costs, as those can be easily supplied by the devs.</br>';
-			echo 'Suggested level of power (if weapon) or defense (if wearable): <input id="power" name="power" type="text" /><br />';
+			echo 'Suggested level of power (if weapon) or defense (if wearable): <input id="power" name="power" type="text" /><br/>';
 			echo '<input type="submit" name="button" value="Suggest it!" /></form></br>';
 		} elseif ($_GET['type'] == "art") {
 			echo "Art submission form. Ensure that the name of the item the artwork is for is correct before submitting. Art should be the sort of thing that would be used as an inventory icon.</br>";
@@ -523,21 +523,21 @@ if (empty($_SESSION['username'])) {
 			echo "Submitting art means you're agreeing to let me use it as an inventory icon for the item in question. Don't worry though, the artwork is still yours to use as you like!</br>";
 			echo "All artwork should be submitted after being placed on the following empty captchalogue card (right click and choose 'Save image as...' to download it):</br>";
 			echo '<img src="Images/Items/emptycard.png"></br>';
-			echo '<form action="feedback.php?type=art" method="post">Item that this artwork is for: <input id="artitem" name="artitem" type="text" /><br />';
-			echo 'Link to the artwork: <input id="newart" name="newart" type="text" /><br />';
-			echo 'Reward requested: <input id="reward" name="reward" type="text" /><br />';
+			echo '<form action="feedback.php?type=art" method="post">Item that this artwork is for: <input id="artitem" name="artitem" type="text" /><br/>';
+			echo 'Link to the artwork: <input id="newart" name="newart" type="text" /><br/>';
+			echo 'Reward requested: <input id="reward" name="reward" type="text" /><br/>';
 			echo '<input type="submit" value="Submit it!" /></form></br>';
 		} elseif ($_GET['type'] == "bug") {
 			echo 'Bug report form. Please enter as much detail about the bug encountered as possible. Wait a few minutes and attempt to reproduce before filing a bug report:</br>';
 			echo 'Sometimes I create and fix bugs within the span of a couple minutes while experimenting!</br>';
 			//echo 'NOTE: Most bug reports are answered on <a href="https://babbyoverseer.tumblr.com">the item dev blog</a>, so keep an eye on it!</br>';
-			echo '<form action="feedback.php?type=bug" method="post" id="bugreport">Bug encountered, in as much detail as possible, with how to reproduce it if possible: </br><textarea name="bugdesc" rows="6" cols="40" form="bugreport"></textarea><br />';
+			echo '<form action="feedback.php?type=bug" method="post" id="bugreport">Bug encountered, in as much detail as possible, with how to reproduce it if possible: </br><textarea name="bugdesc" rows="6" cols="40" form="bugreport"></textarea><br/>';
 			echo '<input type="submit" name="button" value="Report it!" /></form></br>';
 		} elseif ($_GET['type'] == "misc") {
 			echo 'Game feedback form. Keep it constructive, please: Criticism is fine, but scathing personal attacks will simply be ignored, so do not bother.</br>';
 			echo 'Improvement suggestions to go along with negative feedback are always appreciated.</br>';
 			//echo 'NOTE: Like bugs, most game feedback is answered on <a href="https://babbyoverseer.tumblr.com">the item dev blog</a>, so keep an eye on it!</br>';
-			echo '<form action="feedback.php?type=misc" method="post" id="feedback">What you want to say about the game: </br><textarea name="gamefeedback" rows="6" cols="40" form="feedback"></textarea><br />';
+			echo '<form action="feedback.php?type=misc" method="post" id="feedback">What you want to say about the game: </br><textarea name="gamefeedback" rows="6" cols="40" form="feedback"></textarea><br/>';
 			echo '<input type="submit" name="button" value="Evaluate it!" /></form></br>';
 		} elseif ($_GET['type'] == "itemadv") {
 			echo "Advanced object application form. Please fill out as many fields as accurately and completely as you can to facilitate speedy approval of your item.</br>";
@@ -565,37 +565,37 @@ if (empty($_SESSION['username'])) {
 				$nucodetext = 'value="' . $_GET['newcode'] . '"';
 			else
 				$nucodetext = " ";
-			echo '</br>Suggested item code (if any): <input id="code" name="code" type="text"' . $nucodetext . '/><br />';
-			echo 'First item used to make this item (code or name): <input id="item1" name="item1" type="text" /><br />';
-			echo 'Second item used to make this item (code or name): <input id="item2" name="item2" type="text" /><br />';
+			echo '</br>Suggested item code (if any): <input id="code" name="code" type="text"' . $nucodetext . '/><br/>';
+			echo 'First item used to make this item (code or name): <input id="item1" name="item1" type="text" /><br/>';
+			echo 'Second item used to make this item (code or name): <input id="item2" name="item2" type="text" /><br/>';
 			echo '<input type="checkbox" name="ignoresearch" value="yes"> One or both of these have not yet been added to the game</br>';
-			echo 'Operation to use: <select name="operate"><option value="nochange">Select one / No change</option><option value="none">No recipe</option><option value="and">&&</option><option value="or">||</option></select><br />';
-			echo 'New item\'s name: <input id="newitem" name="newitem" type="text" /><br />';
-			echo '<input type="checkbox" name="consumable" value="yes" /> This item is a consumable<br /><input type="checkbox" name="catalogue" value="yes" /> This item is available from the Item Catalogue<br /><input type="checkbox" name="lootonly" value="yes" /> This item is specifically meant to drop from dungeon bosses<br /><input type="checkbox" name="refrance" value="yes" /> This item is a reference item<br />';
-			echo 'New item\'s description:</br><textarea name="newdesc" rows="6" cols="40" form="newitem"></textarea><br />';
-			echo 'Power: <input id="power" name="power" type="text" /><br />';
-			echo 'Bonuses: (don\'t include plusses for positive bonuses, only minuses for negative ones)<br />';
-			echo 'Aggrieve: <input name="aggrieve" type="text" /><br />';
-			echo 'Aggress: <input name="aggress" type="text" /><br />';
-			echo 'Assail: <input name="assail" type="text" /><br />';
-			echo 'Assault: <input name="assault" type="text" /><br />';
-			echo 'Abuse: <input name="abuse" type="text" /><br />';
-			echo 'Accuse: <input name="accuse" type="text" /><br />';
-			echo 'Abjure: <input name="abjure" type="text" /><br />';
-			echo 'Abstain: <input name="abstain" type="text" /><br />';
-			echo 'Abstratus: <input name="abstratus" type="text" /> (This is the item\'s entire abstratus/wearable designation as it would appear on the inventory page)<br />';
+			echo 'Operation to use: <select name="operate"><option value="nochange">Select one / No change</option><option value="none">No recipe</option><option value="and">&&</option><option value="or">||</option></select><br/>';
+			echo 'New item\'s name: <input id="newitem" name="newitem" type="text" /><br/>';
+			echo '<input type="checkbox" name="consumable" value="yes" /> This item is a consumable<br/><input type="checkbox" name="catalogue" value="yes" /> This item is available from the Item Catalogue<br/><input type="checkbox" name="lootonly" value="yes" /> This item is specifically meant to drop from dungeon bosses<br/><input type="checkbox" name="refrance" value="yes" /> This item is a reference item<br/>';
+			echo 'New item\'s description:</br><textarea name="newdesc" rows="6" cols="40" form="newitem"></textarea><br/>';
+			echo 'Power: <input id="power" name="power" type="text" /><br/>';
+			echo 'Bonuses: (don\'t include plusses for positive bonuses, only minuses for negative ones)<br/>';
+			echo 'Aggrieve: <input name="aggrieve" type="text" /><br/>';
+			echo 'Aggress: <input name="aggress" type="text" /><br/>';
+			echo 'Assail: <input name="assail" type="text" /><br/>';
+			echo 'Assault: <input name="assault" type="text" /><br/>';
+			echo 'Abuse: <input name="abuse" type="text" /><br/>';
+			echo 'Accuse: <input name="accuse" type="text" /><br/>';
+			echo 'Abjure: <input name="abjure" type="text" /><br/>';
+			echo 'Abstain: <input name="abstain" type="text" /><br/>';
+			echo 'Abstratus: <input name="abstratus" type="text" /> (This is the item\'s entire abstratus/wearable designation as it would appear on the inventory page)<br/>';
 			echo 'Size: <select name="size"><option value="miniature">miniature (1)</option><option value="tiny">tiny (5)</option><option value="small">small (10)</option><option value="average" selected>average (20)</option><option value="large">large (40)</option><option value="huge">huge (100)</option><option value="immense">immense (250)</option><option value="ginormous">ginormous (1000)</option></select>';
 			echo ' (note that large is used for two-handed weapons and headgear that covers the face; huge and above cannot be equipped and are mostly for notaweapon fluff)';
 			$gristname = initGrists();
 			$totalgrists = count($gristname);
 			$i = 0;
-			echo '<br />Grist types:<br />Note that grist costs will be autobalanced based on the given power level, so instead of costs, think of these as ratios. For every grist that you want to assign to this item, put down a number representing its weight among the total grist costs. For example: putting 2 in Build_Grist and 1 in Amber will make the item cost twice as much build as amber. If you don\'t care about ratios, just put 1\'s in the grists you want.<br />';
+			echo '<br/>Grist types:<br/>Note that grist costs will be autobalanced based on the given power level, so instead of costs, think of these as ratios. For every grist that you want to assign to this item, put down a number representing its weight among the total grist costs. For example: putting 2 in Build_Grist and 1 in Amber will make the item cost twice as much build as amber. If you don\'t care about ratios, just put 1\'s in the grists you want.<br/>';
 			while ($i < $totalgrists) {
 				echo "<img src='/Images/Grist/" . gristNameToImagePath($gristname[$i]) . "' height='15' width='15' alt = 'xcx'/>";
-				echo $gristname[$i] . ': <input type="text" name="' . $gristname[$i] . '" /><br />';
+				echo $gristname[$i] . ': <input type="text" name="' . $gristname[$i] . '" /><br/>';
 				$i++;
 			}
-			echo 'Comments on the new item. Things such as consumable or extra item effects go here.<br /><a href="https://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a></br><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br />';
+			echo 'Comments on the new item. Things such as consumable or extra item effects go here.<br/><a href="https://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a></br><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br/>';
 			echo '<input type="submit" name="button" value="Suggest it!" /></form></br>';
 		} elseif ($_GET['type'] == "quest") {
 			echo 'Consort quest suggestion form. Current quest types include single-item fetch quests, strife quests, rescue quests (reduce all enemies to 0 power), and dungeon quests. Quests can also trigger another quest on completion for quest chains.</br>';

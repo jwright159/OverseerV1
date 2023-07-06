@@ -66,14 +66,14 @@ if (empty($_SESSION['username'])) {
 							} elseif ($feedrow['type'] == "misc") {
 								$newmsgstring = $newmsgstring . "Feedback Response (ID " . strval($feedrow['ID']) . ")|";
 							}
-							$newmsgstring = $mysqli->real_escape_string($newmsgstring . $realbody . "<br /><br />Original:<br />" . $feedrow['comments']);
+							$newmsgstring = $mysqli->real_escape_string($newmsgstring . $realbody . "<br/><br/>Original:<br/>" . $feedrow['comments']);
 							$mysqli->query("UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `Messages`.`username` = '" . $feedrow['user'] . "'");
 							$mysqli->query("UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
-							echo "Message sent!<br />";
+							echo "Message sent!<br/>";
 						} else
-							echo "ERROR: Response could not be sent because this user's inbox is full.<br />";
+							echo "ERROR: Response could not be sent because this user's inbox is full.<br/>";
 					} else
-						echo "ERROR: Response could not be sent because this user has opted out of receiving feedback notices.<br />";
+						echo "ERROR: Response could not be sent because this user has opted out of receiving feedback notices.<br/>";
 					//echo $_POST['body'] . "</br>";
 					$newcomments = $feedrow['usercomments'] . $username . $exstring . $realbody . "|";
 					$newncomments = $mysqli->real_escape_string($newcomments);
@@ -175,7 +175,7 @@ if (empty($_SESSION['username'])) {
 	} else {
 		echo 'Next page';
 	}
-	echo "<br />Total results: $alltotal</center>";
+	echo "<br/>Total results: $alltotal</center>";
 }
 require_once "footer.php";
 ?>

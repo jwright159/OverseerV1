@@ -153,7 +153,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				}
 			}
 		} else
-			echo "You cannot equip that.<br />";
+			echo "You cannot equip that.<br/>";
 	}
 	if (!empty($_POST['equipoff'])) { //User is equipping an item to their offhand.
 		$inum = intval(str_replace("inv", "", $_POST['equipoff']));
@@ -189,7 +189,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				}
 			}
 		} else
-			echo "You cannot equip that.<br />";
+			echo "You cannot equip that.<br/>";
 	}
 
 	//--End equipping code here.--

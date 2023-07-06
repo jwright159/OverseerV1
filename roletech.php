@@ -18,7 +18,7 @@ if (empty($_SESSION['username'])) {
 	}
 	if ($dreambot) {
 		if (strpos($userrow['storeditems'], "ISCOMPUTER.") == 0) { //dreambot checks for a computer in storage, regardless of player computability
-			//echo "Your dreambot can't use the SBURB server program without access to a computer in storage!<br />";
+			//echo "Your dreambot can't use the SBURB server program without access to a computer in storage!<br/>";
 			$compugood = false;
 		}
 	} else {

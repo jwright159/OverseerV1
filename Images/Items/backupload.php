@@ -16,12 +16,12 @@ if (empty($_SESSION['username'])) {
   } else {
     if (!empty($_POST['file'])) {
       if ($_FILES["file"]["error"] > 0) {
-	echo "ERROR! Return Code: " . $_FILES["file"]["error"] . "<br>";
+	echo "ERROR! Return Code: " . $_FILES["file"]["error"] . "<br/>";
       } else {
-	echo "Upload: " . $_FILES["file"]["name"] . "<br>";
-	echo "Type: " . $_FILES["file"]["type"] . "<br>";
-	echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
-	echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
+	echo "Upload: " . $_FILES["file"]["name"] . "<br/>";
+	echo "Type: " . $_FILES["file"]["type"] . "<br/>";
+	echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br/>";
+	echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br/>";
 	//if (file_exists("/www/overseerproject/Images/Items/" . $_FILES["file"]["name"])) {
 	//echo $_FILES["file"]["name"] . " already exists. ";
 	//} else {

@@ -20,7 +20,7 @@ MIT License
  *                     If true:
  *                     * Tabs will be expanded to the number of spaces 
  *                       indicated by the 'tabs' argument.
- *                     * Line breaks will be converted to <br />.
+ *                     * Line breaks will be converted to <br/>.
  *
  *                     If false:
  *                     * Tabs and linebreaks get turned into &#____;
@@ -42,7 +42,7 @@ var htmlEncode = function (source, display, tabs) {
 		i += 1;
 	};
 	
-	// Start a new "line" of output, to be joined later by <br />
+	// Start a new "line" of output, to be joined later by <br/>
 	endline = function () {
 		line = line.join('');
 		if (display) {
@@ -128,7 +128,7 @@ var htmlEncode = function (source, display, tabs) {
 	endline();
 	
 	// If you can't beat 'em, join 'em.
-	result = result.join('<br />');
+	result = result.join('<br/>');
 
 	if (display) {
 		// Break up contiguous blocks of spaces with non-breaking spaces

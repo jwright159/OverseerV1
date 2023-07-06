@@ -82,9 +82,9 @@ if (!empty($holoCode)) {
 		if (substr($itemname, 0, 2) == "A " || substr($itemname, 0, 3) == "An " || substr($itemname, 0, 4) == "The ")
 			echo "The holopad displays $itemname. It also prints out a short description:</br>";
 		else
-			echo "<b>$itemname</b>:<br>";
+			echo "<b>$itemname</b>:<br/>";
 		$desc = descvarConvert($userrow, $itemrow['description'], $itemrow['effects']);
-		echo $desc . "<br><b>It costs:</b>";
+		echo $desc . "<br/><b>It costs:</b>";
 		$reachgrist = False;
 		$terminateloop = False; //time-saver
 		if ($gristed == false) {
@@ -151,11 +151,11 @@ if ($itemfound == False)
 if ($itemfound == True)
 	echo "</br>";
 //FORMS-----------------------------------------------------------------
-echo '<form action="tooly.php" method="post">First item :<input id="code1" name="code1" type="text" /><br>';
-echo 'Second item:<input id="code2" name="code2" type="text" /><br>';
+echo '<form action="tooly.php" method="post">First item :<input id="code1" name="code1" type="text" /><br/>';
+echo 'Second item:<input id="code2" name="code2" type="text" /><br/>';
 echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
 echo '<input type="submit" value="Design it!" /></form></br>';
-echo '<form action="tooly.php" method="post">Item to preview: <input id="holocode" name="holocode" type="text" /><br />';
+echo '<form action="tooly.php" method="post">Item to preview: <input id="holocode" name="holocode" type="text" /><br/>';
 echo '<input type="submit" value="Observe it!" /></form></br>';
 echo '</br>';
 require_once "footer.php";

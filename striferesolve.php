@@ -66,7 +66,7 @@ if (empty($_SESSION['username'])) {
 						$npcname = $statusarg[3];
 					else
 						$npcname = $statusarg[1];
-					echo $npcname . " loses all loyalty and keeps absconding even after reaching safety!<br />";
+					echo $npcname . " loses all loyalty and keeps absconding even after reaching safety!<br/>";
 					$userrow['allies'] = preg_replace('/' . $thisstatus[$st] . '/', '', $userrow['allies'], 1);
 				} else {
 					$replaced = implode(":", $statusarg);
@@ -426,7 +426,7 @@ if (empty($_SESSION['username'])) {
 						$rounds--;
 						if ($rounds <= 0) {
 							$currentstatus = str_replace($thisstatus[$st] . "|", "", $currentstatus); //effect wears off
-							$message = $message . "An instance of $statusarg[2] imbuement has worn off.<br />";
+							$message = $message . "An instance of $statusarg[2] imbuement has worn off.<br/>";
 						} else {
 							$replacethis = "HASEFFECT:$statusarg[1]:$statusarg[2]";
 							$replaceitwith = "HASEFFECT:$rounds:$statusarg[2]";
@@ -441,7 +441,7 @@ if (empty($_SESSION['username'])) {
 						$charmstr = "enemy" . $thischarm . "name";
 						$charmpstr = "enemy" . $thischarm . "power";
 						$aidpower += $userrow[$charmpstr];
-						$npcaidmsg .= $userrow[$charmstr] . " is charmed into contributing its power to your side!<br />";
+						$npcaidmsg .= $userrow[$charmstr] . " is charmed into contributing its power to your side!<br/>";
 						$charmed[intval($thischarm)] = true;
 					}
 				}
@@ -466,7 +466,7 @@ if (empty($_SESSION['username'])) {
 					else
 						$npcname = $npcrow['basename'];
 					$aidpower += $npcpower;
-					$npcaidmsg .= $npcname . " contributes to the fight!<br />";
+					$npcaidmsg .= $npcname . " contributes to the fight!<br/>";
 					if (strpos($npcrow['spawnstatus'], "SPECIAL") !== false) {
 						$thatstatus = explode("|", $npcrow['spawnstatus']);
 						$ts = 0;
@@ -643,7 +643,7 @@ if (empty($_SESSION['username'])) {
 					$targetedenemies++;
 				$i++;
 			}
-			//echo "DEBUG: " . strval($targetedenemies) . " enemies targeted<br />";
+			//echo "DEBUG: " . strval($targetedenemies) . " enemies targeted<br/>";
 			$i = 1;
 			while ($i <= $max_enemies) {
 				$statustr = "ENEMY" . strval($i) . ":";
@@ -725,11 +725,11 @@ if (empty($_SESSION['username'])) {
 											if ($ammoamount > 0) { //we'll handle negative values on a successful hit so that they can't be abused (as easily)
 												if ($userrow[$currentarray[1]] < $ammoamount) {
 													if ($mainoff == 1)
-														$message = $message . "You have run out of $currentarray[1] to use your $mainrow[name]!<br />";
+														$message = $message . "You have run out of $currentarray[1] to use your $mainrow[name]!<br/>";
 													elseif ($mainoff == 2)
-														$message = $message . "You have run out of $currentarray[1] to use your $offrow[name]!<br />";
+														$message = $message . "You have run out of $currentarray[1] to use your $offrow[name]!<br/>";
 													elseif ($mainoff == 3) //there's an "imbued" ammo requirement, could be used as a debuff or something
-														$message = $message . "You cannot make an attack without $currentarray[1] at the moment!<br />";
+														$message = $message . "You cannot make an attack without $currentarray[1] at the moment!<br/>";
 													$enemydamage = 0; //weapon cannot damage enemy, but can still be used to defend
 													if (intval($currentarray[3]) == 1)
 														$ammocheck[$mainoff] = "bad";
@@ -753,7 +753,7 @@ if (empty($_SESSION['username'])) {
 						}
 						$recoildamage = 0;
 						$bonusboons = 0;
-						//echo " and your damage is $enemydamage<br />";
+						//echo " and your damage is $enemydamage<br/>";
 						$waterygelstr = ($statustr . "WATERYGEL|");
 						$enragedstr = ($statustr . "ENRAGED|");
 						if (strpos($currentstatus, $waterygelstr) !== False) { //This enemy is suffering from watery health gel.
@@ -870,7 +870,7 @@ if (empty($_SESSION['username'])) {
 						$repeat = False; //Don't do it again.
 						require 'includes/strife_rewards.php';
 						if ($bonusboons > 0) {
-							echo "You also find $bonusboons on the ground near the enemy!<br />";
+							echo "You also find $bonusboons on the ground near the enemy!<br/>";
 							$userrow['Boondollars'] += $bonusboons;
 							//aaaand... that's it. EOT query should take care of updating the boons at the end
 						}
@@ -891,7 +891,7 @@ if (empty($_SESSION['username'])) {
 							$loyaltydrain -= 50; //defeating a boss is a serious accomplishment and your allies will respect you for it
 							if ($userrow['Echeladder'] < 612) {
 								$rungs = climbEcheladder($userrow, 5);
-								echo "Defeating the boss of this dungeon has earned you $rungs rungs on your Echeladder!<br>";
+								echo "Defeating the boss of this dungeon has earned you $rungs rungs on your Echeladder!<br/>";
 								$refreshresult = $mysqli->query("SELECT `Gel_Viscosity`,`Health_Vial`,`Dream_Health_Vial`,`Aspect_Vial`,`Boondollars` FROM `Players` WHERE `Players`.`username` = '$username'");
 								$refreshrow = $refreshresult->fetch_array(); //kinda wish this wasn't necessary but that megaquery be dangerous yo
 								$userrow['Echeladder'] += $rungs; //Set these values so that the regular level-up code will handle them properly.
@@ -951,7 +951,7 @@ if (empty($_SESSION['username'])) {
 							$message = $message . generateGlitchString();
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} elseif ($frozed == true) { //Time stopped/frozen enemies can't get up from knockdown.
-							$message = $message . $userrow[$enemystr] . " remains frozen in ice and cannot move!<br />";
+							$message = $message . $userrow[$enemystr] . " remains frozen in ice and cannot move!<br/>";
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} elseif (strpos($currentstatus, $knockdownstr) !== False) { //Time stopped/frozen enemies can't get up from knockdown.
 							$message = $message . $userrow[$enemystr] . " picks itself back up.</br>";
@@ -1001,7 +1001,7 @@ if (empty($_SESSION['username'])) {
 								$message = $message . "$abilities[2]</br>";
 							}
 							if (!empty($abilities[4]) && $playerdamage > 0) { //Roll for Dissipate. (ID 4)
-								echo "DEBUG: rolling for Dissipate<br />";
+								echo "DEBUG: rolling for Dissipate<br/>";
 								$targetvalue = 100 - (1 + floor($userrow['Echeladder'] / 100) + ($userrow['Godtier'] * 6) + floor($luck / 10));
 								if ($targetvalue < 50)
 									$targetvalue = 50; //Maximum 50% chance.
@@ -1078,9 +1078,9 @@ if (empty($_SESSION['username'])) {
 									$p++;
 								}
 								if ($lockeddown == false)
-									$message = $message . $userrow[$enemystr] . " recovers from lockdown!<br />"; //if we're here, it can only mean all instances of lockdown just wore off
+									$message = $message . $userrow[$enemystr] . " recovers from lockdown!<br/>"; //if we're here, it can only mean all instances of lockdown just wore off
 								else
-									$message = $message . $userrow[$enemystr] . " remains locked down and can't use special abilities.<br />";
+									$message = $message . $userrow[$enemystr] . " remains locked down and can't use special abilities.<br/>";
 							}
 							$damage += $playerdamage;
 							require "includes/strife_enemyabilities.php";
@@ -1178,7 +1178,7 @@ if (empty($_SESSION['username'])) {
 								$npcname = $statusarg[3];
 							else
 								$npcname = $statusarg[1];
-							$message = $message . $npcname . " has lost all loyalty and absconds from the strife!<br />";
+							$message = $message . $npcname . " has lost all loyalty and absconds from the strife!<br/>";
 							$userrow['allies'] = preg_replace('/' . $thisstatus[$st] . '/', '', $userrow['allies'], 1);
 						} else {
 							$replaced = implode(":", $statusarg);

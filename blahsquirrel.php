@@ -11,16 +11,16 @@ if ($userrow['session_name'] != "Developers") {
 			$query = str_replace("\\\"", "\"", $query);
 			$query = str_replace("\\\\", "\\", $query);
 		}
-		echo $query . "<br />";
+		echo $query . "<br/>";
 		if (strpos($_POST['query'], "SELECT") !== false) {
 			$result = $mysqli->query($query);
 			if (!$result)
 				echo "We got an error... " . $mysqli->error();
 			else {
-				echo strval($mysqli->num_rows($result)) . " row(s) returned.<br />";
+				echo strval($mysqli->num_rows($result)) . " row(s) returned.<br/>";
 				while ($row = $result->fetch_array()) {
 					print_r($row);
-					echo "<br />";
+					echo "<br/>";
 				}
 			}
 		} elseif (strpos($_POST['query'], "INSERT") !== false) {
@@ -28,22 +28,22 @@ if ($userrow['session_name'] != "Developers") {
 			if (!$result)
 				echo "We got an error... " . $mysqli->error();
 			else {
-				echo strval($mysqli->affected_rows()) . " row(s) inserted.<br />";
+				echo strval($mysqli->affected_rows()) . " row(s) inserted.<br/>";
 			}
 		} elseif (strpos($_POST['query'], "UPDATE") !== false) {
 			$result = $mysqli->query($query);
 			if (!$result)
 				echo "We got an error... " . $mysqli->error();
 			else {
-				echo strval($mysqli->affected_rows()) . " row(s) affected.<br />";
+				echo strval($mysqli->affected_rows()) . " row(s) affected.<br/>";
 			}
 		} else
-			echo "I don't think it's safe to do that kind of thing from here.<br />";
-		echo "<br />";
+			echo "I don't think it's safe to do that kind of thing from here.<br/>";
+		echo "<br/>";
 	}
 
-	echo "New from Blahsadfeguie Inc., it's I Can't Believe it's Not PHPmyadmin! 99% of squirrels can't tell the difference!<br /><br />";
-	echo '<form action="blahsquirrel.php" method="post" id="blahsql">Query to execute:<br /><textarea name="query" rows="6" cols="40" form="blahsql"></textarea><br />';
+	echo "New from Blahsadfeguie Inc., it's I Can't Believe it's Not PHPmyadmin! 99% of squirrels can't tell the difference!<br/><br/>";
+	echo '<form action="blahsquirrel.php" method="post" id="blahsql">Query to execute:<br/><textarea name="query" rows="6" cols="40" form="blahsql"></textarea><br/>';
 	echo '<input type="hidden" name="teststring" value="test\'s" />';
 	echo '<input type="submit" value="Execute it!" /></form>';
 }

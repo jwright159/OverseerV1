@@ -417,7 +417,7 @@ if ($dona == "Gold") {
 									</span>
 								</label>
 							</label>
-							<br />
+							<br/>
 							<?php
 							$csi++;
 						}

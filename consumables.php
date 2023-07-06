@@ -18,7 +18,7 @@ if (empty($_SESSION['username'])) {
 		$fail = False;
 		$donotconsume = False;
 		if (strpos($_POST['consume'], "inv") === false) { //player is trying to consume from outside their inventory!
-			echo "Look at you, trying to be clever! Unfortunately, you can only consume items from your inventory.<br />";
+			echo "Look at you, trying to be clever! Unfortunately, you can only consume items from your inventory.<br/>";
 			$fail = true;
 		}
 		if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") { //User strifing
@@ -46,7 +46,7 @@ if (empty($_SESSION['username'])) {
 		if ($fail != True) {
 			switch ($userrow[$_POST['consume']]) { //Determine the consumable and act accordingly.
 				case "Klatchian Coffee":
-					echo "As you drink the coffee, everything begins to clear up... AAAAAAAA-<br />";
+					echo "As you drink the coffee, everything begins to clear up... AAAAAAAA-<br/>";
 					if ($userrow['powerboost'] != 0) {
 						$offense = $userrow['powerboost'] * -1; //negates the power boost and gives it to offense
 						$defense = $userrow['powerboost']; //retains same penalty/boost for defense
@@ -63,14 +63,14 @@ if (empty($_SESSION['username'])) {
 					}
 					break;
 				case "Cruxite Faygo":
-					echo "This Faygo has a very unique taste to it. The only way to describe it is... miracles.<br />";
+					echo "This Faygo has a very unique taste to it. The only way to describe it is... miracles.<br/>";
 					if ($userrow['Echeladder'] < 612) { //Below Echeladder cap
 						echo "Whoa! Shortly after downing the Faygo, you ascend one rung on your Echeladder. It's a miracle!";
 						climbEcheladder($userrow, 1);
 					} else {
-						echo "...but nothing else happens. You don't seem to be in need of a miracle anymore, or at least not the kind of miracle that this provides.<br />";
+						echo "...but nothing else happens. You don't seem to be in need of a miracle anymore, or at least not the kind of miracle that this provides.<br/>";
 						if (!empty($abilities[19]) && $userrow['Luck'] < 20) { //Light's Favour catchup activates. This is to set the luck of players at 612 who have insufficient quantities.
-							echo "Your Luck catches up with you, however.<br />";
+							echo "Your Luck catches up with you, however.<br/>";
 							$mysqli->query("UPDATE `Players` SET `Luck` = 20 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 						}
 					}
@@ -80,10 +80,10 @@ if (empty($_SESSION['username'])) {
 					$health = $userrow['Gel_Viscosity'];
 					$status = $userrow['strifestatus'] . "PLAYER:CONFUSE|";
 					$mysqli->query("UPDATE `Players` SET `powerboost` = $boost, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Health_Vial` = $health, `Aspect_Vial` = $health, `strifestatus` = '$status' WHERE `Players`.`username` = '$username'");
-					echo "Much like how the name broke the character limit, you're pretty sure you broke some kind of power limit by eating these gushers.<br />";
+					echo "Much like how the name broke the character limit, you're pretty sure you broke some kind of power limit by eating these gushers.<br/>";
 					break;
 				case "Fizzy Cola Gushers Extreme":
-					echo "Mere moments after ingesting, your entire being is overrun with a bubbling sensation! You feel empowered, but your senses become hazy...<br />";
+					echo "Mere moments after ingesting, your entire being is overrun with a bubbling sensation! You feel empowered, but your senses become hazy...<br/>";
 					$boost = $userrow['Echeladder'] * 2;
 					$boost += $userrow['powerboost'];
 					$status = $userrow['strifestatus'] . "PLAYER:CONFUSE|";
@@ -97,9 +97,9 @@ if (empty($_SESSION['username'])) {
 						else
 							$asdrain = $userrow['Aspect_Vial'];
 						$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$asdrain, `Aspect_Vial` = $userrow[Aspect_Vial]-$asdrain WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-						echo "You drink the Fountain of Youth Faygo. It draws on your Aspect Vial to replenish your health!<br />";
+						echo "You drink the Fountain of Youth Faygo. It draws on your Aspect Vial to replenish your health!<br/>";
 					} else {
-						echo "You would drink this, but you're not sure you could magic up any youth out of thin air with your Aspect Vial completely depleted.<br />";
+						echo "You would drink this, but you're not sure you could magic up any youth out of thin air with your Aspect Vial completely depleted.<br/>";
 						$donotconsume = true;
 					}
 					break;
@@ -109,7 +109,7 @@ if (empty($_SESSION['username'])) {
 						$devresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = 'Blahdev'");
 						$devrow = $devresult->fetch_array();
 						if ($devrow['enemydata'] == "" && $devrow['aiding'] == "" && $username != "Blahdev") {
-							echo "Blahdev emerges from the Furthest Ring with his " . $devrow[$devrow['equipped']] . " to aid you in your current strife!<br />";
+							echo "Blahdev emerges from the Furthest Ring with his " . $devrow[$devrow['equipped']] . " to aid you in your current strife!<br/>";
 							if ($userrow['aiding'] != "")
 								$aidman = $userrow['aiding'];
 							else
@@ -120,7 +120,7 @@ if (empty($_SESSION['username'])) {
 							$devresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = 'The Overseer'");
 							$devrow = $devresult->fetch_array();
 							if ($devrow['enemydata'] == "" && $devrow['aiding'] == "" && $username != "The Overseer") {
-								echo "The Overseer emerges from the Furthest Ring with his " . $devrow[$devrow['equipped']] . " to aid you in your current strife!<br />";
+								echo "The Overseer emerges from the Furthest Ring with his " . $devrow[$devrow['equipped']] . " to aid you in your current strife!<br/>";
 								if ($userrow['aiding'] != "")
 									$aidman = $userrow['aiding'];
 								else
@@ -128,30 +128,30 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Players` SET `aiding` = '$aidman' WHERE `Players`.`username` = 'The Overseer'");
 								$donotconsume = true;
 							} else {
-								echo "Unfortunately, nobody answers the call. Maybe they're busy... you'll have to try again later!<br />";
+								echo "Unfortunately, nobody answers the call. Maybe they're busy... you'll have to try again later!<br/>";
 								$donotconsume = true;
 							}
 						}
 					} else { //uh oh, player isn't strifing! (or they're up against the black king)
 						if ($userrow['sessionbossengaged'] == 1) {
-							echo "Blahdev emerges from the Furthest Ring and immediately notices you're up against the Black King.<br />";
-							echo "\"Sorry bro,\" he apologizes as he ducks back into the void, \"you're on your own for this one!\"<br />";
+							echo "Blahdev emerges from the Furthest Ring and immediately notices you're up against the Black King.<br/>";
+							echo "\"Sorry bro,\" he apologizes as he ducks back into the void, \"you're on your own for this one!\"<br/>";
 							$donotconsume = true;
 						} else {
-							echo "Blahdev emerges from the Furthest Ring. He spends a good long time scanning the area for any threats, but when he sees none, he angrily seizes your Dev Request Flag and snaps it in half.<br />";
-							echo "As he disappears back into the void, you hear him shout: \"Don't abuse the power if you're not prepared to waste millions of grist!\"<br />";
+							echo "Blahdev emerges from the Furthest Ring. He spends a good long time scanning the area for any threats, but when he sees none, he angrily seizes your Dev Request Flag and snaps it in half.<br/>";
+							echo "As he disappears back into the void, you hear him shout: \"Don't abuse the power if you're not prepared to waste millions of grist!\"<br/>";
 						}
 					}
 					break;
 				case "Four In The Mourning Perfume":
 					$healthlost = $userrow['Gel_Viscosity'] - $userrow['Health_Vial'];
 					$heal = ceil($healthlost / 20); //heals 5% of lost health
-					echo "You apply the perfume to your person with dignity, and you feel just fresh enough to overlook some of your more glaring wounds.<br />";
+					echo "You apply the perfume to your person with dignity, and you feel just fresh enough to overlook some of your more glaring wounds.<br/>";
 					$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					break;
 				case "Quantum Escape Portal Key":
 					if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") { //User strifing
-						echo "You quickly throw the escape key onto the floor and step on it, pressing it down. A massive portal in time and space opens, sucking in you and any of your allies who happen to also be here.<br />";
+						echo "You quickly throw the escape key onto the floor and step on it, pressing it down. A massive portal in time and space opens, sucking in you and any of your allies who happen to also be here.<br/>";
 						$userrow = terminateStrife($userrow, -1);
 						if (!empty($userrow['strifesuccessexplore']) && !empty($userrow['strifefailureexplore'])) { //User exploring!
 							$mysqli->query("UPDATE `Players` SET `exploration` = '" . $userrow['strifeabscondexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -168,37 +168,37 @@ if (empty($_SESSION['username'])) {
 							echo "<a href='dungeons.php#display'>==&gt;</a></br>";
 						}
 					} elseif ($userrow['indungeon'] == 1) {
-						echo "You place the escape key against a wall and press it in. Moments later, a portal opens in the wall and you jump through it, landing outside of the dungeon.<br />";
+						echo "You place the escape key against a wall and press it in. Moments later, a portal opens in the wall and you jump through it, landing outside of the dungeon.<br/>";
 						$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 					} else {
-						echo "Using this now won't help you with anything. You decide to hang onto it for the time being.<br />";
+						echo "Using this now won't help you with anything. You decide to hang onto it for the time being.<br/>";
 						$donotconsume = true;
 					}
 					break;
 				case "Fetch Modus Upgrade: Huge Items":
 					if (itemSize("huge") > itemSize($userrow['moduspower'])) {
-						echo "You install the 'Huge Items' upgrade to your Fetch Modus. You can now captchalogue bigger items than before! There may be some objects that are still too big for it, though.<br />";
+						echo "You install the 'Huge Items' upgrade to your Fetch Modus. You can now captchalogue bigger items than before! There may be some objects that are still too big for it, though.<br/>";
 						$mysqli->query("UPDATE `Players` SET `moduspower` = 'huge' WHERE `Players`.`username` = '$username' LIMIT 1");
 					} else {
-						echo "Either you already have that upgrade installed, or you have one that makes it obsolete.<br />";
+						echo "Either you already have that upgrade installed, or you have one that makes it obsolete.<br/>";
 						$donotconsume = true;
 					}
 					break;
 				case "Fetch Modus Upgrade: Immense Items":
 					if (itemSize("immense") > itemSize($userrow['moduspower'])) {
-						echo "You install the 'Immense Items' upgrade to your Fetch Modus. You can now captchalogue all but the biggest of items!<br />";
+						echo "You install the 'Immense Items' upgrade to your Fetch Modus. You can now captchalogue all but the biggest of items!<br/>";
 						$mysqli->query("UPDATE `Players` SET `moduspower` = 'immense' WHERE `Players`.`username` = '$username' LIMIT 1");
 					} else {
-						echo "Either you already have that upgrade installed, or you have one that makes it obsolete.<br />";
+						echo "Either you already have that upgrade installed, or you have one that makes it obsolete.<br/>";
 						$donotconsume = true;
 					}
 					break;
 				case "Fetch Modus Upgrade: Ginormous Items":
 					if (itemSize("ginormous") > itemSize($userrow['moduspower'])) {
-						echo "You install the 'Ginormous Items' upgrade to your Fetch Modus. You feel there is nothing your modus can't captchalogue now!<br />";
+						echo "You install the 'Ginormous Items' upgrade to your Fetch Modus. You feel there is nothing your modus can't captchalogue now!<br/>";
 						$mysqli->query("UPDATE `Players` SET `moduspower` = 'ginormous' WHERE `Players`.`username` = '$username' LIMIT 1");
 					} else {
-						echo "Either you already have that upgrade installed, or you have one that makes it obsolete.<br />";
+						echo "Either you already have that upgrade installed, or you have one that makes it obsolete.<br/>";
 						$donotconsume = true;
 					}
 					break;
@@ -207,15 +207,15 @@ if (empty($_SESSION['username'])) {
 					$athenrow = $athenresult->fetch_array();
 					$newatheneum = $athenrow['atheneum'];
 					$upresult = $mysqli->query("SELECT `captchalogue_code`, `name` FROM `Captchalogue` WHERE `Captchalogue`.`effects` LIKE '%UPGRADE|%'");
-					echo "You flip through the Encyclopedia of SBURB Device Upgrades. Inside, you find codes for the following items:<br />";
+					echo "You flip through the Encyclopedia of SBURB Device Upgrades. Inside, you find codes for the following items:<br/>";
 					while ($uprow = $upresult->fetch_array()) {
 						if (!strrpos($athenrow['atheneum'], $uprow['captchalogue_code'])) {
 							$newatheneum .= $uprow['captchalogue_code'] . "|";
 						}
 						$uprow['name'] = str_replace("\\", "", $uprow['name']);
-						echo $uprow['name'] . "<br />";
+						echo $uprow['name'] . "<br/>";
 					}
-					echo "These codes have been automatically added to your session's Atheneum!<br />";
+					echo "These codes have been automatically added to your session's Atheneum!<br/>";
 					$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
 					$donotconsume = true; //allow the player to use this at any time if new upgrades are added
 					break;
@@ -249,7 +249,7 @@ if (empty($_SESSION['username'])) {
 					$chosenconsume = rand(1, $totalconsumes); //pick one at random
 					$consumeresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`name` LIKE '%Poster%' AND `Captchalogue`.`abstratus` = 'notaweapon' LIMIT " . $chosenconsume . " , 1 ;"); //this should return only the item that it chose
 					$crow = $consumeresult->fetch_array();
-					echo "You can't hold in your hype any longer. You unroll the poster, and discover that it is a " . $crow['name'] . "! How exciting! You decide to captchalogue it for now.<br />";
+					echo "You can't hold in your hype any longer. You unroll the poster, and discover that it is a " . $crow['name'] . "! How exciting! You decide to captchalogue it for now.<br/>";
 					$blockloot = addItem($crow['name'], $userrow);
 					if ($blockloot == "inv-1") { //no inventory space, so we'll replace the item that was just used with the new item. Not ideal, but it's better than being all "you can't hold it lol" when you JUST used up an item.
 						$mysqli->query("UPDATE `Players` SET `" . $_POST['consume'] . "` = '" . $crow['name'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -653,7 +653,7 @@ if (empty($_SESSION['username'])) {
 					$mysqli->query("UPDATE `Players` SET `defenseboost` = $userrow[defenseboost]+$boost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					break;
 				case "Malpractice Core":
-					echo "Against your better judgment, you activate the Malpractice Core. Several sharp and probably not sterilized instruments protrude from it, and proceed to perform a very painful operation...<br />";
+					echo "Against your better judgment, you activate the Malpractice Core. Several sharp and probably not sterilized instruments protrude from it, and proceed to perform a very painful operation...<br/>";
 					//does a series of random effects weighted towards the negative
 					$heal = rand(-200, rand(-100, 100));
 					if ($heal > $userrow['Gel_Viscosity'] - $userrow['Health_Vial'])

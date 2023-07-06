@@ -30,7 +30,7 @@ if (empty($_SESSION['username'])) {
 			$storerow = $itemresult->fetch_array();
 			if (strpos($itemnom, " (ghost image)") !== false) {
 				$itemnom = str_replace(" (ghost image)", "", $itemnom);
-				echo "You go to store your " . $itemnom . ", but as it's a ghost image, it simply disappears upon being removed from your inventory.<br />";
+				echo "You go to store your " . $itemnom . ", but as it's a ghost image, it simply disappears upon being removed from your inventory.<br/>";
 				$mysqli->query("UPDATE `Players` SET `" . $_POST['storeitem'] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1;");
 				$storecode[$s] = "nope";
 			} else {
@@ -157,9 +157,9 @@ if (empty($_SESSION['username'])) {
 						autoUnequip($userrow, "none", $rslot);
 						$mysqli->query("UPDATE `Players` SET `$rslot` = '' WHERE `Players`.`username` = '$username' LIMIT 1");
 						$userrow[$rslot] = "";
-						echo $storename[$s] . " stored.<br />";
+						echo $storename[$s] . " stored.<br/>";
 					} else {
-						echo "Not enough space to store " . $storename[$s] . ".<br />";
+						echo "Not enough space to store " . $storename[$s] . ".<br/>";
 						$nospace = true;
 					}
 				}
@@ -189,9 +189,9 @@ if (empty($_SESSION['username'])) {
 								autoUnequip($userrow, "none", $rslot);
 								$mysqli->query("UPDATE `Players` SET `$rslot` = '' WHERE `Players`.`username` = '$username' LIMIT 1");
 								$userrow[$rslot] = "";
-								echo $storename[$t] . " stored.<br />";
+								echo $storename[$t] . " stored.<br/>";
 							} else {
-								echo "Not enough space to store " . $storename[$t] . ".<br />";
+								echo "Not enough space to store " . $storename[$t] . ".<br/>";
 								$nospace = true;
 							}
 						}
@@ -227,7 +227,7 @@ if (empty($_SESSION['username'])) {
 	}
 	echo "Item Storage Service v some number.</br>";
 	echo "Items stored in your house:</br></br>";
-	echo '<form action="storage.php" method="post">To retrieve items, enter the quantity to retrieve in the box to the left of the desired item(s).<br />';
+	echo '<form action="storage.php" method="post">To retrieve items, enter the quantity to retrieve in the box to the left of the desired item(s).<br/>';
 	$i = 0;
 	while ($i < $totalitems) {
 		if (!empty($itemcode[$i]) && $itemno[$i] != 0) {
@@ -242,7 +242,7 @@ if (empty($_SESSION['username'])) {
 	echo '<input type="submit" value="Quickly retrieve items."></form></br>';
 	echo "</br>Storage space used: " . strval($space) . "/" . strval($maxstorage);
 	echo "</br>You can increase your maximum storage space by building up your house.</br></br>";
-	echo "You have the following items that provide an effect from storage:<br />";
+	echo "You have the following items that provide an effect from storage:<br/>";
 	$nothing = true;
 	$i = 0;
 	while ($i < $totalitems) {
@@ -258,14 +258,14 @@ if (empty($_SESSION['username'])) {
 		$i++;
 	}
 	if ($nothing == true)
-		echo "Nothing! If you find an item that you think might help you from storage, try storing it.<br />";
-	echo "<br />";
+		echo "Nothing! If you find an item that you think might help you from storage, try storing it.<br/>";
+	echo "<br/>";
 	echo '<form action="storage.php" method="post">Offload items from inventory:</br>';
 	$i = 1;
 	while ($i <= $max_items) {
 		$inv = 'inv' . strval($i);
 		if (!empty($userrow[$inv]))
-			echo '<input type="checkbox" name="' . $inv . '" value="' . $inv . '" />' . $userrow[$inv] . '<br />';
+			echo '<input type="checkbox" name="' . $inv . '" value="' . $inv . '" />' . $userrow[$inv] . '<br/>';
 		$i++;
 	}
 	echo '<input type="submit" value="Quickly relieve items."></form>';

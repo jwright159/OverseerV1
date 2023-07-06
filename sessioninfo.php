@@ -42,11 +42,11 @@ if (!empty($session)) { //Session to examine
 		$sessionurl = str_replace("#", "%23", $session);
 		$sessionurl = str_replace(" ", "%20", $sessionurl);
 		echo '<a href="https://www.overseerreboot.xyz/sessioninfo.php?session=' . $sessionurl . '">Permanent link to this page.</a></br>';
-		echo "This session's head admin: " . $sessionrow['admin'] . "<br />";
+		echo "This session's head admin: " . $sessionrow['admin'] . "<br/>";
 		if (!empty($sessionrow['exchangeland']))
-			echo "Player whose land hosts the Stock Exchange: " . $sessionrow['exchangeland'] . "<br />";
+			echo "Player whose land hosts the Stock Exchange: " . $sessionrow['exchangeland'] . "<br/>";
 		else
-			echo "This session's Stock Exchange is not yet available.<br />";
+			echo "This session's Stock Exchange is not yet available.<br/>";
 		echo "Dersite army power destroyed by this session: $sessionrow[battlefieldtotal]</br></br>";
 		if ($sessionrow['checkmate'] == 1)
 			echo "This session has successfully defeated The Black King!</br></br>";
@@ -135,10 +135,10 @@ if (!empty($session)) { //Session to examine
 					$i++;
 				}
 				if ($adv) { //user has a session viewer upgrade
-					echo "Highest gate reached: " . strval(highestGate($gaterow, $row['house_build_grist'])) . "<br />";
-					echo "Dreaming status: " . $row['dreamingstatus'] . "<br />";
+					echo "Highest gate reached: " . strval(highestGate($gaterow, $row['house_build_grist'])) . "<br/>";
+					echo "Dreaming status: " . $row['dreamingstatus'] . "<br/>";
 					if (!empty($row['aiding']))
-						echo "Currently assisting in the strife of: " . $row['aiding'] . '<br />';
+						echo "Currently assisting in the strife of: " . $row['aiding'] . '<br/>';
 					else {
 						echo "Strifing against: ";
 						$strifestring = "";
@@ -156,12 +156,12 @@ if (!empty($session)) { //Session to examine
 						}
 						if ($strifestring == "")
 							$strifestring = "Nobody.";
-						echo $strifestring . '<br />';
+						echo $strifestring . '<br/>';
 					}
 					if ($row['indungeon'] != 0)
-						echo "Currently exploring a dungeon.<br />";
-					echo "Land wealth: " . strval($row['econony']) . "<br />";
-					echo "Consorts: " . $row['consort_name'] . "<br />";
+						echo "Currently exploring a dungeon.<br/>";
+					echo "Land wealth: " . strval($row['econony']) . "<br/>";
+					echo "Consorts: " . $row['consort_name'] . "<br/>";
 				}
 				echo "</br>";
 			}

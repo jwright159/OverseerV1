@@ -41,7 +41,7 @@ function totalGristcost($countrow, $gristname, $totalgrists)
 if (empty($_SESSION['username'])) {
 	echo "Log in to use the Randomizer.</br>";
 } elseif ($userrow['modlevel'] <= -2) {
-	echo "You have been banned from using the Randomizer, most likely due to abuse or spam.<br />";
+	echo "You have been banned from using the Randomizer, most likely due to abuse or spam.<br/>";
 } else {
 
 	$showdetails = False;
@@ -348,7 +348,7 @@ if (empty($_SESSION['username'])) {
 		$recc = "and";
 	if ($bitcountand < $bitcountor && $bitcountand < 8)
 		$recc = "or";
-	echo '<form action="randomizer.php' . $urladdon . '" method="post" id="newitem">Like this combo? Why not turn it into a suggestion! (Code and recipe will be automatically filled out.)<br />';
+	echo '<form action="randomizer.php' . $urladdon . '" method="post" id="newitem">Like this combo? Why not turn it into a suggestion! (Code and recipe will be automatically filled out.)<br/>';
 
 	echo 'Operation to use: <select name="items">';
 	if ($recc == "and")
@@ -357,11 +357,11 @@ if (empty($_SESSION['username'])) {
 		echo '<option value="' . $orstring . '">|| (Recommended)</option><option value="' . $andstring . '">&&</option>';
 	else
 		echo '<option value="' . $andstring . '">&&</option><option value="' . $orstring . '">||</option>';
-	echo '</select><br />';
+	echo '</select><br/>';
 	echo '<input type="hidden" name="andcode" value="' . $codeand . '"><input type="hidden" name="orcode" value="' . $codeor . '">';
-	echo 'New item\'s name: <input id="newitem" name="newitem" type="text" /><br />';
-	echo 'New item\'s description:</br><textarea name="newdesc" rows="6" cols="40" form="newitem"></textarea><br />';
-	echo 'Comments on the new item. This field is for suggestions like command bonuses, abstratus the item should have, grist to be used, etc:</br><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br />';
+	echo 'New item\'s name: <input id="newitem" name="newitem" type="text" /><br/>';
+	echo 'New item\'s description:</br><textarea name="newdesc" rows="6" cols="40" form="newitem"></textarea><br/>';
+	echo 'Comments on the new item. This field is for suggestions like command bonuses, abstratus the item should have, grist to be used, etc:</br><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br/>';
 	if ($irow1['power'] == 0 || $irow2['power'] == 0) {
 		$gristname = initGrists();
 		$totalgrists = count($gristname);
@@ -378,7 +378,7 @@ if (empty($_SESSION['username'])) {
 		$reccpower = 19998;
 	if ($fullpower * 1.5 > 19998)
 		$fullpower = 13332;
-	echo 'Suggested power/defense level: <input id="power" name="power" type="text" /><br />';
+	echo 'Suggested power/defense level: <input id="power" name="power" type="text" /><br/>';
 	echo 'Average recommended power for these components, if a weapon (including bonuses): ' . strval(ceil($fullpower * 1.5)) . '</br>';
 	echo '<input type="checkbox" name="recpower" value="' . strval($reccpower) . '">Use the randomizer\'s recommendation, randomized (will give a random value near the recommended level)</br>';
 	echo '<input type="submit" name="button" value="Suggest it!" /></form></br></br>';

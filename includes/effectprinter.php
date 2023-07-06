@@ -10,7 +10,7 @@ function printEffects($currentarray)
 			echo "$currentarray[1] affinity: $currentarray[2]%</br>";
 			break;
 		case 'RESIST':
-			echo "This item has a $currentarray[3]% chance to modify an enemy's $currentarray[1] resistance to $currentarray[2]% on hit.<br />";
+			echo "This item has a $currentarray[3]% chance to modify an enemy's $currentarray[1] resistance to $currentarray[2]% on hit.<br/>";
 			break;
 		case 'WATERYGEL':
 			echo "Waters down enemy Health Gel: $currentarray[1]% probability on hit.</br>";
@@ -19,7 +19,7 @@ function printEffects($currentarray)
 			echo "Inflicts poisoning: $currentarray[1]% probability on hit, $currentarray[2]% severity.</br>";
 			break;
 		case 'STORAGE':
-			echo "When placed in storage, this device functions as:<br />";
+			echo "When placed in storage, this device functions as:<br/>";
 			$alleffects = explode(".", $currentarray[1]);
 			$j = 0;
 			while (!empty($alleffects[$j])) {
@@ -91,39 +91,39 @@ function printEffects($currentarray)
 			echo "This item has a $currentarray[1]% chance of $glitchstr during strife.</br>";
 			break;
 		case 'RECOIL':
-			echo "This weapon has a $currentarray[1]% chance to inflict $currentarray[2]% recoil damage to the wielder when it hits an enemy.<br />";
+			echo "This weapon has a $currentarray[1]% chance to inflict $currentarray[2]% recoil damage to the wielder when it hits an enemy.<br/>";
 			break;
 		case 'COMPOUNDHIT':
-			echo "This weapon is more effective against multiple targets.<br />";
+			echo "This weapon is more effective against multiple targets.<br/>";
 			break;
 		case 'HYBRIDMOD':
 			$divisor = 10 * ($currentarray[1] / 100);
 			$hybridpercent = round(100 / $divisor);
-			echo "The power level of this item when used as a wearable is effectively $hybridpercent% of what it would be as a weapon.<br />";
+			echo "The power level of this item when used as a wearable is effectively $hybridpercent% of what it would be as a weapon.<br/>";
 			break;
 		case 'SHUNT':
-			echo "Has an effect when placed in a Punch Card Shunt.<br />";
+			echo "Has an effect when placed in a Punch Card Shunt.<br/>";
 			break;
 		case 'LUCK':
-			echo "Passively increases luck by $currentarray[1]% when equipped.<br />";
+			echo "Passively increases luck by $currentarray[1]% when equipped.<br/>";
 			break;
 		case 'GRANT':
-			echo "Grants a unique effect when equipped.<br />";
+			echo "Grants a unique effect when equipped.<br/>";
 			break;
 		case 'DVISION':
 			if ($currentarray[1] == 1)
-				echo "Grants increased vision in dungeons when equipped.<br />";
+				echo "Grants increased vision in dungeons when equipped.<br/>";
 			else
-				echo "When equipped, automatically reveals the entire dungeon map.<br />";
+				echo "When equipped, automatically reveals the entire dungeon map.<br/>";
 			break;
 		case 'SVISION':
-			echo "When equipped, allows you to view many more details about a given session.<br />";
+			echo "When equipped, allows you to view many more details about a given session.<br/>";
 			break;
 		case 'PAYDAY':
-			echo "Grants $currentarray[1]% bonus boondollars at the end of a battle.<br />";
+			echo "Grants $currentarray[1]% bonus boondollars at the end of a battle.<br/>";
 			break;
 		case 'PIERCING':
-			echo "$currentarray[1]% of this weapon's power can pierce through enemy defenses.<br />";
+			echo "$currentarray[1]% of this weapon's power can pierce through enemy defenses.<br/>";
 			break;
 		case 'HASABILITY':
 			$rtresult = $mysqli->query("SELECT `ID`,`Name` FROM `Abilities` WHERE `Abilities`.`ID` = $currentarray[1]");
@@ -132,7 +132,7 @@ function printEffects($currentarray)
 				$roletech = $rtrow['Name'];
 			else
 				$roletech = "UNKNOWN";
-			echo "Grants access to the roletech $roletech when equipped.<br />";
+			echo "Grants access to the roletech $roletech when equipped.<br/>";
 			break;
 		case 'AMMO':
 			if (intval($currentarray[3]) == 1)
@@ -141,29 +141,29 @@ function printEffects($currentarray)
 				$freqstr = "for every target";
 			$ammoamount = intval($currentarray[2]);
 			if ($ammoamount > 0) {
-				echo "Requires $ammoamount $currentarray[1] $freqstr to function.<br />";
+				echo "Requires $ammoamount $currentarray[1] $freqstr to function.<br/>";
 			} else {
 				$ammoamount = $ammoamount * -1;
-				echo "Generates $ammoamount $currentarray[1] $freqstr.<br />";
+				echo "Generates $ammoamount $currentarray[1] $freqstr.<br/>";
 			}
 			break;
 		case 'VARBOOST':
-			echo "Inflicts bonus damage based on your $currentarray[1].<br />";
+			echo "Inflicts bonus damage based on your $currentarray[1].<br/>";
 			break;
 		case 'BURNING':
-			echo "Has a $currentarray[1]% chance to set an enemy on fire, dealing $currentarray[2] damage per round.<br />";
+			echo "Has a $currentarray[1]% chance to set an enemy on fire, dealing $currentarray[2] damage per round.<br/>";
 			break;
 		case 'FREEZING':
-			echo "Has a $currentarray[1]% chance to freeze an enemy, keeping them from acting until they break free.<br />";
+			echo "Has a $currentarray[1]% chance to freeze an enemy, keeping them from acting until they break free.<br/>";
 			break;
 		case 'SMITE':
-			echo "Inflicts $currentarray[1]% bonus damage against undead/skeletal enemies.<br />";
+			echo "Inflicts $currentarray[1]% bonus damage against undead/skeletal enemies.<br/>";
 			break;
 		case 'CONTAINER':
-			echo "Adds $currentarray[1] units of storage space while in storage.<br />";
+			echo "Adds $currentarray[1] units of storage space while in storage.<br/>";
 			break;
 		case 'RANDEFFECT':
-			echo "Has a $currentarray[1]% chance to invoke a random effect with an effectiveness of $currentarray[2].<br />";
+			echo "Has a $currentarray[1]% chance to invoke a random effect with an effectiveness of $currentarray[2].<br/>";
 			break;
 		//properties that shouldn't be echoed go here so that they don't trigger the error
 		case 'NOCONSORT':
@@ -183,77 +183,77 @@ function printStorageEffects($currentarray, $fromjumper)
 {
 	switch ($currentarray[0]) {
 		case 'ISCOMPUTER':
-			echo "- A computer that works from storage, allowing you to perform basic computing tasks while idle.<br />";
+			echo "- A computer that works from storage, allowing you to perform basic computing tasks while idle.<br/>";
 			break;
 		case 'PUNCHDESIGNIX':
-			echo "- A device that can punch captchalogue cards with codes for the purpose of alchemy.<br />";
+			echo "- A device that can punch captchalogue cards with codes for the purpose of alchemy.<br/>";
 			break;
 		case 'CRUXTRUDER':
-			echo "- A device that can produce fresh, uncarved Cruxite Dowels.<br />";
+			echo "- A device that can produce fresh, uncarved Cruxite Dowels.<br/>";
 			break;
 		case 'TOTEMLATHE':
-			echo "- A device that can carve Cruxite Dowels and combine codes for the purpose of alchemy.<br />";
+			echo "- A device that can carve Cruxite Dowels and combine codes for the purpose of alchemy.<br/>";
 			break;
 		case 'ALCHEMITER':
-			echo "- A device that can alchemize items.<br />";
+			echo "- A device that can alchemize items.<br/>";
 			break;
 		case 'HOLOPAD':
-			echo "- A device that can preview items.<br />";
+			echo "- A device that can preview items.<br/>";
 			break;
 		case 'HOLOPLUS':
-			echo "- A preview device that gives you many more details than usual about items.<br />";
+			echo "- A preview device that gives you many more details than usual about items.<br/>";
 			break;
 		case 'LASERSTATION':
-			echo "- A device that can read captcha codes.<br />";
+			echo "- A device that can read captcha codes.<br/>";
 			break;
 		case 'JUMPER':
-			echo "- A jumper extension for your Alchemiter, allowing you to equip various upgrades.<br />";
+			echo "- A jumper extension for your Alchemiter, allowing you to equip various upgrades.<br/>";
 			break;
 		case 'USELESS':
-			echo "- An \"upgrade\" that renders your Alchemiter functionally useless.<br />";
+			echo "- An \"upgrade\" that renders your Alchemiter functionally useless.<br/>";
 			break;
 		case 'GRISTWIRE':
-			echo "- A program that grants the ability to wire grist to other players.<br />";
+			echo "- A program that grants the ability to wire grist to other players.<br/>";
 			break;
 		case 'RECYCLER':
-			echo "- A device that breaks down items into their component grists.<br />";
+			echo "- A device that breaks down items into their component grists.<br/>";
 			break;
 		case 'GLITCHGATE':
-			echo "- Some kind of strange gate that may or may not take you somewhere cool! Or dangerous. Or both.<br />";
+			echo "- Some kind of strange gate that may or may not take you somewhere cool! Or dangerous. Or both.<br/>";
 			break;
 		case 'DREAMBOT':
-			echo "- A dreambot that gives you access to your computer while you sleep!<br />";
+			echo "- A dreambot that gives you access to your computer while you sleep!<br/>";
 			break;
 		case 'ADVSESSIONVIEW':
-			echo "- A device that lets you see many more details about any given session, including your own.<br />";
+			echo "- A device that lets you see many more details about any given session, including your own.<br/>";
 			break;
 		case 'CAPTCHACOMBINE':
-			echo "- A device that automatically calculates the combined result of any two given codes.<br />";
+			echo "- A device that automatically calculates the combined result of any two given codes.<br/>";
 			break;
 		case 'REMOTEHOLO':
-			echo "- A Holopad that accepts manually-typed codes, rather than taking cards or totems.<br />";
+			echo "- A Holopad that accepts manually-typed codes, rather than taking cards or totems.<br/>";
 			break;
 		case 'MANUALCHEMITER':
-			echo "- An Alchemiter that allows you to type in the item's code manually.<br />";
+			echo "- An Alchemiter that allows you to type in the item's code manually.<br/>";
 			break;
 		case 'CAPTCHASCAN':
-			echo "- A device that can scan your sylladex and combine item codes.<br />";
+			echo "- A device that can scan your sylladex and combine item codes.<br/>";
 			break;
 		case 'CRUXBLEND':
-			echo "- A device that can rapidly destroy Cruxite Dowels.<br />";
+			echo "- A device that can rapidly destroy Cruxite Dowels.<br/>";
 			break;
 		case 'CARDSHRED':
-			echo "- A device that can rapidly destroy Captchalogue Cards.<br />";
+			echo "- A device that can rapidly destroy Captchalogue Cards.<br/>";
 			break;
 		case 'SENDIFICATOR':
-			echo "- A device that allows you to transport items \"$currentarray[1]\" or smaller directly to the storage of another player from your session.<br />";
+			echo "- A device that allows you to transport items \"$currentarray[1]\" or smaller directly to the storage of another player from your session.<br/>";
 			break;
 		case 'COMBOFINDER':
 			if (intval($currentarray[2]) == 0)
 				$amountstr = "all";
 			else
 				$amountstr = $currentarray[2];
-			echo "- A device that scans your $currentarray[1], randomly combining codes. It then returns $amountstr working recipes. This process costs $currentarray[3] encounter(s).<br />";
+			echo "- A device that scans your $currentarray[1], randomly combining codes. It then returns $amountstr working recipes. This process costs $currentarray[3] encounter(s).<br/>";
 			break;
 		default:
 			return true;
@@ -339,11 +339,11 @@ function npcEffects($npcstatus, $baseworth, $uniqueeffects)
 						$worth += intval($specialarg[2]) * intval($specialarg[3]) * 2;
 						break;
 					case 'STUN':
-						$lolreturn[0] .= "This ally can knock enemies over, stunning them for the round.<br />";
+						$lolreturn[0] .= "This ally can knock enemies over, stunning them for the round.<br/>";
 						$worth += intval($specialarg[2]) * 5;
 						break;
 					case 'BURNING':
-						$lolreturn[0] .= "Has a $specialarg[2]% chance to set an enemy on fire, dealing $specialarg[3] damage per round.<br />";
+						$lolreturn[0] .= "Has a $specialarg[2]% chance to set an enemy on fire, dealing $specialarg[3] damage per round.<br/>";
 						$worth += intval($specialarg[2]) * intval($specialarg[3]);
 						break;
 					case 'HASEFFECT':

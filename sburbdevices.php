@@ -108,7 +108,7 @@ if (empty($_SESSION['username'])) {
 				$oldcode = substr($userrow[$_POST['punchcard']], -9, 8);
 				$newcode = $_POST['punchcode'];
 				if (strpos($sessionrow['atheneum'], $newcode) === false && $challenge) {
-					echo "In Challenge Mode, you can't input a code that your session hasn't yet discovered in its atheneum.<br />";
+					echo "In Challenge Mode, you can't input a code that your session hasn't yet discovered in its atheneum.<br/>";
 				} else {
 					$combinecode = orcombine($oldcode, $newcode);
 					echo "You punch the card with the code <itemcode>$newcode</itemcode>. The card now contains the code <itemcode>$combinecode</itemcode>.</br>";
@@ -238,16 +238,16 @@ if (empty($_SESSION['username'])) {
 			if ($cruxblend)
 				$aok = true;
 			else
-				echo "You don't have a device that can destroy cruxite dowels, other than the recycler.<br />";
+				echo "You don't have a device that can destroy cruxite dowels, other than the recycler.<br/>";
 		} elseif ($_POST['disposalaction'] == "cardinv" || $_POST['disposalaction'] == "cardstore") {
 			$breakname = "Captchalogue Card (CODE:";
 			$breakcode = "11111111";
 			if ($cardshred)
 				$aok = true;
 			else
-				echo "You don't have a device that can destroy captchalogue cards, other than the recycler.<br />";
+				echo "You don't have a device that can destroy captchalogue cards, other than the recycler.<br/>";
 		} else
-			echo "not a statement<br />";
+			echo "not a statement<br/>";
 		if ($aok) {
 			if (strpos($_POST['disposalaction'], "inv") !== false) {
 				$allquery = "UPDATE `Players` SET ";
@@ -264,9 +264,9 @@ if (empty($_SESSION['username'])) {
 					$allquery = substr($allquery, 0, -2);
 					$allquery .= " WHERE `Players`.`username` = '$username';";
 					$mysqli->query($allquery);
-					echo "Items destroyed successfully.<br />";
+					echo "Items destroyed successfully.<br/>";
 				} else
-					echo "You don't have any of those in your inventory.<br />";
+					echo "You don't have any of those in your inventory.<br/>";
 			} elseif (strpos($_POST['disposalaction'], "store") !== false) {
 				$storeitems = explode("|", $userrow['storeditems']);
 				$i = 0;
@@ -281,9 +281,9 @@ if (empty($_SESSION['username'])) {
 				if ($updatestorage != $userrow['storeditems']) {
 					$userrow['storeditems'] = $updatestorage;
 					$mysqli->query("UPDATE `Players` SET `storeditems` = '$updatestorage' WHERE `Players`.`username` = '$username';");
-					echo "Items destroyed successfully.<br />";
+					echo "Items destroyed successfully.<br/>";
 				} else
-					echo "You don't have any of those in storage.<br />";
+					echo "You don't have any of those in storage.<br/>";
 			}
 		}
 	}
@@ -291,7 +291,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['ilitem'])) {
 		if ($intlaser) {
 			if (strpos($_POST['ilitem'], "inv") === false) { //player is trying to consume from outside their inventory!
-				echo "Look at you, trying to be clever! Unfortunately, you can only scan items from your inventory.<br />";
+				echo "Look at you, trying to be clever! Unfortunately, you can only scan items from your inventory.<br/>";
 				$fail = true;
 			} else {
 				$compuname = str_replace("'", "\\\\''", $userrow[$_POST['ilitem']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -312,7 +312,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['senditem'])) {
 		if ($sendify) {
 			if (strpos($_POST['senditem'], "inv") === false) { //player is trying to consume from outside their inventory!
-				echo "Look at you, trying to be clever! Unfortunately, you can only send items from your inventory.<br />";
+				echo "Look at you, trying to be clever! Unfortunately, you can only send items from your inventory.<br/>";
 			} else {
 				if (strpos($userrow[$_POST['senditem']], "(CODE:") !== false) {
 					$compuname = substr($userrow[$_POST['senditem']], 0, -16);
@@ -329,19 +329,19 @@ if (empty($_SESSION['username'])) {
 					if ($materow['session_name'] == $userrow['session_name']) {
 						$actualstore = storeItem($userrow[$_POST['senditem']], 1, $materow);
 						if ($actualstore != 0) {
-							echo "You put your " . $userrow[$_POST['senditem']] . " in the Sendificator, and it is promptly transported to " . $materow['username'] . "'s house.<br />";
+							echo "You put your " . $userrow[$_POST['senditem']] . " in the Sendificator, and it is promptly transported to " . $materow['username'] . "'s house.<br/>";
 							autoUnequip($userrow, "none", $_POST['senditem']);
 							$mysqli->query("UPDATE `Players` SET `" . $_POST['senditem'] . "` = '' WHERE `Players`.`username` = '$username'");
 							$userrow[$_POST['senditem']] = "";
 						} else
-							echo "Target player does not have enough storage space for that item.<br />";
+							echo "Target player does not have enough storage space for that item.<br/>";
 					} else
-						echo "You can't send items to players outside of your own session.<br />";
+						echo "You can't send items to players outside of your own session.<br/>";
 				} else
-					echo "That item is too big to fit into the sendificator.<br />";
+					echo "That item is too big to fit into the sendificator.<br/>";
 			}
 		} else
-			echo "You don't have a device that can sendify items.<br />";
+			echo "You don't have a device that can sendify items.<br/>";
 	}
 
 	if (!empty($_POST['ghostitem'])) {
@@ -351,9 +351,9 @@ if (empty($_SESSION['username'])) {
 				$compurow = $compuresult->fetch_array();
 				$ghostadd = addItem($compurow['name'] . " (ghost image)", $userrow);
 				if ($ghostadd == "inv-1") {
-					echo "You don't have room in your inventory for a ghost item.<br />";
+					echo "You don't have room in your inventory for a ghost item.<br/>";
 				} else {
-					echo $compurow['name'] . " successfully ghosted!<br />";
+					echo $compurow['name'] . " successfully ghosted!<br/>";
 					$athenresult = $mysqli->query("SELECT `atheneum` FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1;");
 					$athenrow = $athenresult->fetch_array();
 					if (!strrpos($athenrow['atheneum'], $compurow['captchalogue_code']) && strpos($compurow['effects'], "OBSCURED|") === false) {
@@ -362,9 +362,9 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 			} else
-				echo "You don't have that item in storage!<br />";
+				echo "You don't have that item in storage!<br/>";
 		} else
-			echo "You don't have an item that can create ghost images!<br />";
+			echo "You don't have an item that can create ghost images!<br/>";
 	}
 
 	if (!empty($_POST['shuntcard'])) {
@@ -384,11 +384,11 @@ if (empty($_SESSION['username'])) {
 				$userrow[$cruxinv] = "Punch Card Shunt (CODE:" . $code1 . ")";
 				$userrow[$_POST['shuntcard']] = "";
 				$mysqli->query("UPDATE `Players` SET `$cruxinv` = '" . $userrow[$cruxinv] . "', `" . $_POST['shuntcard'] . "` = '' WHERE `Players`.`username` = '$username'");
-				echo "You insert the card containing the code $code1 into one of your empty Punch Card Shunts. You can now put it in storage to see what effect it has on your Alchemiter.<br />";
+				echo "You insert the card containing the code $code1 into one of your empty Punch Card Shunts. You can now put it in storage to see what effect it has on your Alchemiter.<br/>";
 			} else
-				echo "You don't have any empty shunts into which to put that!<br />";
+				echo "You don't have any empty shunts into which to put that!<br/>";
 		} else
-			echo "You can't insert that into a shunt!<br />";
+			echo "You can't insert that into a shunt!<br/>";
 	}
 
 	if (!empty($_POST['clearshunt'])) {
@@ -399,11 +399,11 @@ if (empty($_SESSION['username'])) {
 				$userrow[$_POST['clearshunt']] = "Punch Card Shunt";
 				$userrow[$retrieve] = "Captchalogue Card (CODE:" . $code1 . ")";
 				$mysqli->query("UPDATE `Players` SET `" . $_POST['clearshunt'] . "` = '" . $userrow[$_POST['clearshunt']] . "' WHERE `Players`.`username` = '$username'");
-				echo "You retrieve the card containing the code $code1 from the Punch Card Shunt.<br />";
+				echo "You retrieve the card containing the code $code1 from the Punch Card Shunt.<br/>";
 			} else
-				echo "You don't have room in your Sylladex to get the card out!<br />";
+				echo "You don't have room in your Sylladex to get the card out!<br/>";
 		} else
-			echo "You can't insert that into a shunt!<br />";
+			echo "You can't insert that into a shunt!<br/>";
 	}
 
 	if (!empty($_POST['combodevice'])) {
@@ -411,7 +411,7 @@ if (empty($_SESSION['username'])) {
 			$device = intval($_POST['combodevice']);
 			$enc = chargeEncounters($userrow, $combofind['cost'][$device], 0);
 			if ($enc) {
-				echo "You boot up the " . $combofind['name'][$device] . " and spend some time waiting for the codes to process...<br />";
+				echo "You boot up the " . $combofind['name'][$device] . " and spend some time waiting for the codes to process...<br/>";
 				$captchalogue = "SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE";
 				if ($combofind['area'][$device] == "inventory") {
 					$invcount = 1;
@@ -489,7 +489,7 @@ if (empty($_SESSION['username'])) {
 					$i++;
 				}
 				if ($foundcombos > 0) {
-					echo "The device returns the following:<br /><b>";
+					echo "The device returns the following:<br/><b>";
 					if ($combofind['return'][$device] >= $foundcombos)
 						$returns = 0; //less recipes found than the device can return, so print all of them
 					else
@@ -497,7 +497,7 @@ if (empty($_SESSION['username'])) {
 					if ($returns == 0) {
 						$i = 1;
 						while ($i <= $foundcombos) {
-							echo $foundcombo[$i] . "<br />";
+							echo $foundcombo[$i] . "<br/>";
 							$i++;
 						}
 					} else {
@@ -508,21 +508,21 @@ if (empty($_SESSION['username'])) {
 								$report = rand(1, $foundcombos);
 							}
 							$reported[$report] = true;
-							echo $foundcombo[$report] . "<br />";
+							echo $foundcombo[$report] . "<br/>";
 							$returns -= 1;
 						}
 					}
 					echo "</b>";
 				} else
-					echo "The device reports that none of the items in your " . $combofind['area'][$device] . " can combine to make anything that has been defined yet. Well, THAT was a waste of time!<br />";
+					echo "The device reports that none of the items in your " . $combofind['area'][$device] . " can combine to make anything that has been defined yet. Well, THAT was a waste of time!<br/>";
 			} else
-				echo "You don't have enough encounters to wait for a full code calculation cycle.<br />";
+				echo "You don't have enough encounters to wait for a full code calculation cycle.<br/>";
 		} else
-			echo "You don't have a device that can look up combinations!<br />";
+			echo "You don't have a device that can look up combinations!<br/>";
 	}
 
 	if (!$canon)
-		echo "Your session is a non-canon one. You still may use the canon machinery, but you might find your other options (on the inventory page) more convenient.<br />";
+		echo "Your session is a non-canon one. You still may use the canon machinery, but you might find your other options (on the inventory page) more convenient.<br/>";
 
 	echo "Your usable machinery:</br>";
 	$hasanything = false;
@@ -567,7 +567,7 @@ if (empty($_SESSION['username'])) {
 		echo "</br><b>Totem Lathe</b></br>";
 		echo "You can insert up to two cards in the device's slot, carving a blank cruxite dowel with a code.</br>";
 		echo "Inserting one card will carve the dowel with the code on the card; inserting two cards will combine the two codes with the operation &&.</br>";
-		echo "Uncarved dowels in inventory: <b>$dcount</b><br />";
+		echo "Uncarved dowels in inventory: <b>$dcount</b><br/>";
 		echo '<form action="sburbdevices.php" method="post">First card: <select name="lathecard1">';
 		$i = 1;
 		while ($i <= $max_items) {
@@ -606,8 +606,8 @@ if (empty($_SESSION['username'])) {
 				}
 				$i++;
 			}
-			echo '</select><br />Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
-			echo '<br /><input name="autostore" type="checkbox"> Send all created items to storage</br>';
+			echo '</select><br/>Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
+			echo '<br/><input name="autostore" type="checkbox"> Send all created items to storage</br>';
 			echo '<input type="submit" value="Create it!" /></form>';
 			echo "(You will be taken to the inventory page.)</br>";
 		}
@@ -693,12 +693,12 @@ if (empty($_SESSION['username'])) {
 										echo "You're... not sure that it does anything. (If you think it should, send the devs some feedback!)";
 										break;
 								}
-								echo "<br />";
+								echo "<br/>";
 							}
 							$addthis = $args[0] . ":" . $args[1] . ":CODE=" . $thiscode . "." . $shunttag[1]; //refresh the storage thing so that the effect actually applies
 							$newstorage .= $addthis . "|";
 						} else {
-							echo "- Your Alchemiter has the " . $irow['name'] . " upgrade! You're... not sure that it does anything. (If you think it should, send the devs some feedback!)<br />";
+							echo "- Your Alchemiter has the " . $irow['name'] . " upgrade! You're... not sure that it does anything. (If you think it should, send the devs some feedback!)<br/>";
 							if (!empty($boom[$i]))
 								$newstorage .= $boom[$i] . "|";
 						}
@@ -710,17 +710,17 @@ if (empty($_SESSION['username'])) {
 				$i++;
 			}
 			if (!$hasanupgrade)
-				echo "None yet!<br />";
+				echo "None yet!<br/>";
 			else {
 				if ($userrow['storeditems'] != $newstorage && $newstorage != "") {
-					//echo "DEBUG: Storage refresh imminent.<br />OLD: " . $userrow['storeditems'] . "<br />NEW: $newstorage<br />";
+					//echo "DEBUG: Storage refresh imminent.<br/>OLD: " . $userrow['storeditems'] . "<br/>NEW: $newstorage<br/>";
 					$mysqli->query("UPDATE `Players` SET `storeditems` = '$newstorage' WHERE `Players`.`username` = '$username'");
 				}
 			}
-			echo "To get an upgrade, insert a punched card into an empty shunt from your inventory and then store it. It will automatically be placed on your Alchemiter and its upgrade will be applied to it.<br />";
+			echo "To get an upgrade, insert a punched card into an empty shunt from your inventory and then store it. It will automatically be placed on your Alchemiter and its upgrade will be applied to it.<br/>";
 		} else
-			echo "This device would attach to your Alchemiter, if you had one!<br />You can still manipulate and attach Punch Card Shunts, but you need to store an Alchemiter to make use of them.<br />";
-		echo "Insert a card into an empty shunt:<br />";
+			echo "This device would attach to your Alchemiter, if you had one!<br/>You can still manipulate and attach Punch Card Shunts, but you need to store an Alchemiter to make use of them.<br/>";
+		echo "Insert a card into an empty shunt:<br/>";
 		echo '<form action="sburbdevices.php" method="post">Card to insert: <select name="shuntcard">';
 		$i = 1;
 		while ($i <= $max_items) {
@@ -731,7 +731,7 @@ if (empty($_SESSION['username'])) {
 			$i++;
 		}
 		echo '</select></br><input type="submit" value="Insert it!"></form>';
-		echo "Remove a card from an occupied shunt:<br />";
+		echo "Remove a card from an occupied shunt:<br/>";
 		echo '<form action="sburbdevices.php" method="post">Shunt to empty out: <select name="clearshunt">';
 		$i = 1;
 		while ($i <= $max_items) {
@@ -746,7 +746,7 @@ if (empty($_SESSION['username'])) {
 
 	if ($cruxblend || $cardshred) {
 		echo "</br><b>Alchemy Material Disposal Unit</b></br>";
-		echo "You have the ability to quickly dispose of Captchalogue Cards and/or Cruxite Dowels. Select an action below to execute it.<br />";
+		echo "You have the ability to quickly dispose of Captchalogue Cards and/or Cruxite Dowels. Select an action below to execute it.<br/>";
 		echo '<form action="sburbdevices.php" method="post"><select name="disposalaction">';
 		if ($cruxblend) {
 			echo '<option value="cruxinv">Destroy all Cruxite Dowels in inventory</option><option value="cruxstore">Destroy all Cruxite Dowels in storage</option>';
@@ -778,9 +778,9 @@ if (empty($_SESSION['username'])) {
 
 	if ($combofinder) {
 		echo "</br><b>Recipe Finder</b></br>";
-		echo "This device scans codes within a given area, randomly mashes them together, and spits out at least one recipe if it finds something that creates an existing item.<br />";
-		echo "The process takes forever, though, and you must spend at least one encounter waiting for it to finish scanning and registering all of your cards.<br />";
-		echo "Select a recipe-finding device from storage to use. Each device has a unique work area, encounter cost, and recipe return.<br />";
+		echo "This device scans codes within a given area, randomly mashes them together, and spits out at least one recipe if it finds something that creates an existing item.<br/>";
+		echo "The process takes forever, though, and you must spend at least one encounter waiting for it to finish scanning and registering all of your cards.<br/>";
+		echo "Select a recipe-finding device from storage to use. Each device has a unique work area, encounter cost, and recipe return.<br/>";
 		echo "<form action='sburbdevices.php' method='post'><select name='combodevice'>";
 		$i = 1;
 		while ($i <= $cf) {
@@ -820,21 +820,21 @@ if (empty($_SESSION['username'])) {
 				echo '<option value="' . $invstr . '">' . $userrow[$invstr] . '</option>';
 			$i++;
 		}
-		echo '</select><br />Target player: <select name="sendplayer">';
+		echo '</select><br/>Target player: <select name="sendplayer">';
 		$materesult = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`session_name` = '" . $mysqli->real_escape_string($userrow['session_name']) . "'");
 		while ($materow = $materesult->fetch_array()) {
 			if ($materow['username'] != $username) //don't send items to yourself because that's silly
 				echo '<option value="' . $materow['username'] . '">' . $materow['username'] . '</option>';
 		}
-		echo '</select><br /><input type="submit" value="Send it!" /></form>';
+		echo '</select><br/><input type="submit" value="Send it!" /></form>';
 		$hasanything = true;
 	}
 
 	if ($canghost) {
 		echo "</br><b>" . $ghostname . "</b></br>";
-		echo "You can use this to create ghost images from items in storage that you can't captchalogue otherwise.<br />";
-		echo "Ghost images can't be used physically and are worth no grist, but you will be able to view the item's code and information, as well as use it in alchemy.<br />";
-		echo "To get rid of a ghost image, either recycle it or attempt to store it. It will disappear either way.<br />";
+		echo "You can use this to create ghost images from items in storage that you can't captchalogue otherwise.<br/>";
+		echo "Ghost images can't be used physically and are worth no grist, but you will be able to view the item's code and information, as well as use it in alchemy.<br/>";
+		echo "To get rid of a ghost image, either recycle it or attempt to store it. It will disappear either way.<br/>";
 		echo '<form action="sburbdevices.php" method="post">Item to ghostify: <select name="ghostitem">';
 		$storedstuff = explode("|", $userrow['storeditems']);
 		$totalstored = count($storedstuff);

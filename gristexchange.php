@@ -110,7 +110,7 @@ function getBasecost($gristname)
 }
 
 if ($seisopen == false) {
-	echo "The Stock Exchange is currently closed due to balance issues. This is non-negotiable and it will re-open when these issues have been resolved. Please be patient.<br />";
+	echo "The Stock Exchange is currently closed due to balance issues. This is non-negotiable and it will re-open when these issues have been resolved. Please be patient.<br/>";
 } elseif (empty($_SESSION['username'])) {
 	echo "Log in to use the Grist Stock Exchange.</br>";
 } else {
@@ -122,20 +122,20 @@ if ($seisopen == false) {
 		if ($userrow['econony'] >= 4000000) {
 			if (!empty($_POST['setupland'])) {
 				$mysqli->query("UPDATE `Sessions` SET `exchangeland` = '$username' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
-				echo "The Stock Exchange has been established on the Land of $userrow[land1] and $userrow[land2]! You and your sessionmates will now be able to trade with the multiverse and, if you play your cards right, strike it rich!<br />";
+				echo "The Stock Exchange has been established on the Land of $userrow[land1] and $userrow[land2]! You and your sessionmates will now be able to trade with the multiverse and, if you play your cards right, strike it rich!<br/>";
 				echo "<a href='gristexchange.php'>==&gt;</a>";
 			} else {
-				echo "Your session has yet to establish its Stock Exchange facilities.<br />";
-				echo "Your land's economy is strong enough to support them!<br />";
-				echo "Note that only players who can reach the land the Stock Exchange is on can use it.<br />";
-				echo "You can only set up the Stock Exchange on one land in your session, so if you're sure you want it on your land, click the following button to get started.<br />";
+				echo "Your session has yet to establish its Stock Exchange facilities.<br/>";
+				echo "Your land's economy is strong enough to support them!<br/>";
+				echo "Note that only players who can reach the land the Stock Exchange is on can use it.<br/>";
+				echo "You can only set up the Stock Exchange on one land in your session, so if you're sure you want it on your land, click the following button to get started.<br/>";
 				echo "<form action='gristexchange.php' method='post'><input type='hidden' name='setupland' value='yes' /><input type='submit' value='Set up the Stock Exchange on The Land of $userrow[land1] and $userrow[land2]' /></form>";
 			}
 		} else {
-			echo "Your session has yet to establish its Stock Exchange facilities.<br />";
-			echo "Your land's economy is not yet strong enough to support them.<br />";
-			echo "If you want to set them up on your land, you will need to raise its economy value first.<br />";
-			echo "You can raise a land's economy by buying from its shops or doing quests on it.<br />";
+			echo "Your session has yet to establish its Stock Exchange facilities.<br/>";
+			echo "Your land's economy is not yet strong enough to support them.<br/>";
+			echo "If you want to set them up on your land, you will need to raise its economy value first.<br/>";
+			echo "You can raise a land's economy by buying from its shops or doing quests on it.<br/>";
 		}
 	} else {
 		$canreach = false;
@@ -151,7 +151,7 @@ if ($seisopen == false) {
 			}
 		}
 		if (!$canreach) {
-			echo "You cannot reach the stock exchange on $sessionrow[exchangeland]'s land at the moment.<br />";
+			echo "You cannot reach the stock exchange on $sessionrow[exchangeland]'s land at the moment.<br/>";
 		} else {
 
 			//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
@@ -238,7 +238,7 @@ if ($seisopen == false) {
 				while ($i < $totalgrists) { //second loop is for actual price calculation
 					$thechange = 1;
 					$pricehike = 0;
-					//echo "<br />" . $gristname[$i];
+					//echo "<br/>" . $gristname[$i];
 					$griststr = $gristname[$i] . "_price";
 					$buystr = $gristname[$i] . "_bought";
 					$sellstr = $gristname[$i] . "_sold";
@@ -299,10 +299,10 @@ if ($seisopen == false) {
 						if (!empty($_POST['oldprices']) && $timeenabled) {
 							$xchangerate -= $stockrow[$changestr];
 							if ($userrow['encounters'] < 1) {
-								echo "You don't have a spare encounter to send yourself back in time.<br />";
+								echo "You don't have a spare encounter to send yourself back in time.<br/>";
 								$stop = true;
 							} else {
-								echo $abilities[27] . "<br />";
+								echo $abilities[27] . "<br/>";
 								$userrow['encounters'] -= 1;
 								$mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters] WHERE `Players`.`username` = '$username'");
 							}
@@ -313,7 +313,7 @@ if ($seisopen == false) {
 								if ($stockrow[$supplystr] > 0) {
 									if ($stockrow[$supplystr] - $quantity < 0) {
 										$quantity = $stockrow[$supplystr];
-										echo "The Exchange seems to only have $quantity $_POST[buygrist] in stock.<br />";
+										echo "The Exchange seems to only have $quantity $_POST[buygrist] in stock.<br/>";
 										$totalcost = ceil($xchangerate * $quantity);
 									}
 									$leftoverboon = $userrow['Boondollars'] - $totalcost;
@@ -325,11 +325,11 @@ if ($seisopen == false) {
 									$mysqli->query("UPDATE `Grist_Exchange` SET `$buystr` = $stockrow[$buystr], `$supplystr` = $stockrow[$supplystr] WHERE `Grist_Exchange`.`name` = '$xchangename'");
 									echo "You have purchased $quantity " . $_POST['buygrist'] . " for $totalcost.</br>";
 								} else
-									echo "The Exchange is out of " . $_POST['buygrist'] . "! You'll have to wait until the stock replenishes.<br />";
+									echo "The Exchange is out of " . $_POST['buygrist'] . "! You'll have to wait until the stock replenishes.<br/>";
 							} else
 								echo "It costs $totalcost boondollars to buy $quantity " . $_POST['buygrist'] . ". You don't have enough!</br>";
 						} else
-							echo "The transaction could not be performed.<br />";
+							echo "The transaction could not be performed.<br/>";
 					} else
 						echo "You don't seem to have given a grist type that exists.</br>";
 				} else
@@ -346,10 +346,10 @@ if ($seisopen == false) {
 						if (!empty($_POST['oldprices']) && $timeenabled) {
 							$xchangerate -= $stockrow[$changestr];
 							if ($userrow['encounters'] < 1) {
-								echo "You don't have a spare encounter to send yourself back in time.<br />";
+								echo "You don't have a spare encounter to send yourself back in time.<br/>";
 								$stop = true;
 							} else {
-								echo $abilities[27] . "<br />";
+								echo $abilities[27] . "<br/>";
 								$userrow['encounters'] -= 1;
 								$mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters] WHERE `Players`.`username` = '$username'");
 							}
@@ -369,7 +369,7 @@ if ($seisopen == false) {
 							} else
 								echo "You don't have that much " . $_POST['sellgrist'] . ".</br>";
 						} else
-							echo "The transaction could not be performed.<br />";
+							echo "The transaction could not be performed.<br/>";
 					} else
 						echo "You don't seem to have given a grist type that exists.</br>";
 				} else
@@ -383,7 +383,7 @@ if ($seisopen == false) {
 				while ($i < $totalgrists) { //second loop is for actual price calculation
 					$thechange = 1;
 					$pricehike = 0;
-					//echo "<br />" . $gristname[$i];
+					//echo "<br/>" . $gristname[$i];
 					$griststr = $gristname[$i] . "_price";
 					$buystr = $gristname[$i] . "_bought";
 					$sellstr = $gristname[$i] . "_sold";
@@ -435,11 +435,11 @@ if ($seisopen == false) {
 				$landshort .= strtoupper(substr($boom[$bcount], 0, 1));
 				$bcount++;
 			}
-			echo "The $landshort Stock Exchange<br />The Stock Exchange is a place where you can buy or sell grist of any sort for Boondollars. Each grist has a given price, which will increase or decrease every update based on how much of it is bought or sold across the multiverse, and how much of it is left in stock.<br />";
+			echo "The $landshort Stock Exchange<br/>The Stock Exchange is a place where you can buy or sell grist of any sort for Boondollars. Each grist has a given price, which will increase or decrease every update based on how much of it is bought or sold across the multiverse, and how much of it is left in stock.<br/>";
 			$updatestr = produceTimeString($updatetime - ($currenttime - $stockrow['tick']));
-			echo "Prices will update in $updatestr.<br />";
+			echo "Prices will update in $updatestr.<br/>";
 			if ($timeenabled)
-				echo "You have the ability to see how the prices will change next update, if everything stays the way it is now.<br />";
+				echo "You have the ability to see how the prices will change next update, if everything stays the way it is now.<br/>";
 			echo '<table border="1" bordercolor="#CCCCCC" style="background-color:#EEEEEE" width="100%" cellpadding="3" cellspacing="3">';
 			echo '<tr><td>Grist</td><td>Boons/Unit</td><td>Change</td>';
 			if ($timeenabled) {
@@ -478,7 +478,7 @@ if ($seisopen == false) {
 				echo "</tr>";
 				$i++;
 			}
-			echo '</table><br /><br />';
+			echo '</table><br/><br/>';
 
 			echo '<form method="post" action="gristexchange.php">Buy Grist:</br>Type: <select name="buygrist">';
 			$i = 0;
@@ -489,7 +489,7 @@ if ($seisopen == false) {
 			}
 			echo '</select></br>';
 			if ($timeenabled)
-				echo '<input type="checkbox" name="oldprices" value="yes" /> Use prices from last update (cost: 1 encounter)<br />';
+				echo '<input type="checkbox" name="oldprices" value="yes" /> Use prices from last update (cost: 1 encounter)<br/>';
 			echo 'Amount to buy: <input type="text" name="buyamount"><input type="submit" value="Buy!"></form></br></br>';
 
 			echo '<form method="post" action="gristexchange.php">Sell Grist:</br>Type: <select name="sellgrist">';
@@ -501,7 +501,7 @@ if ($seisopen == false) {
 			}
 			echo '</select></br>';
 			if ($timeenabled)
-				echo '<input type="checkbox" name="oldprices" value="yes" /> Use prices from last update (cost: 1 encounter)<br />';
+				echo '<input type="checkbox" name="oldprices" value="yes" /> Use prices from last update (cost: 1 encounter)<br/>';
 			echo 'Amount to sell: <input type="text" name="sellamount"><input type="submit" value="Sell!"></form></br>';
 		}
 	}

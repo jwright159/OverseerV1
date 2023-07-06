@@ -68,12 +68,12 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 
 	echo 'Recipe finder v0.1124 Alpha. Enter search terms below.</br>
 The page will return every recipe it can find in the database.</br></br>
-<form action="recipefinder.php" method="post">Component search:<br />
-Name: <input type="text" name="compname"> / Code: <input type="text" name="compcode"><br />
-<input type="submit" value="Search"></form><br />
-<br />
-<form action="recipefinder.php" method="post">Result search:<br />
-Name: <input type="text" name="resname"> / Code: <input type="text" name="rescode"><br />
+<form action="recipefinder.php" method="post">Component search:<br/>
+Name: <input type="text" name="compname"> / Code: <input type="text" name="compcode"><br/>
+<input type="submit" value="Search"></form><br/>
+<br/>
+<form action="recipefinder.php" method="post">Result search:<br/>
+Name: <input type="text" name="resname"> / Code: <input type="text" name="rescode"><br/>
 <input type="submit" value="Search"></form>';
 }
 require_once "footer.php";

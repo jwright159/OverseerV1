@@ -15,11 +15,11 @@ if (empty($_SESSION['username'])) {
 	$totalchain = count($chain);
 	if (!empty($_POST['land'])) { //player is attempting to hire a mercenary
 		if ($userrow['availablequests'] == 0) {
-			echo "You don't have any opportunities to find allies at the moment.<br />";
+			echo "You don't have any opportunities to find allies at the moment.<br/>";
 		} elseif ($_POST['boons'] <= 0) {
-			echo "You won't be hiring anybody unless you offer at least some Boondollars!<br />";
+			echo "You won't be hiring anybody unless you offer at least some Boondollars!<br/>";
 		} elseif ($_POST['boons'] > $userrow['Boondollars']) {
-			echo "You don't have that many Boondollars!<br />";
+			echo "You don't have that many Boondollars!<br/>";
 		} else {
 			$aok = false;
 			$gateresult = $mysqli->query("SELECT * FROM Gates");
@@ -29,13 +29,13 @@ if (empty($_SESSION['username'])) {
 				if ($yogate >= 1 || canFly($userrow)) {
 					$aok = true;
 				} else {
-					echo "You won't be able to find any consorts unless you can reach the first gate.<br />";
+					echo "You won't be able to find any consorts unless you can reach the first gate.<br/>";
 				}
 			} elseif ($_POST['land'] == "Battlefield") {
 				if ($userrow['battlefield_access'] != 0) {
 					$aok = true;
 				} else {
-					echo "You can't reach the Battlefield yet.<br />";
+					echo "You can't reach the Battlefield yet.<br/>";
 				}
 			} else {
 				$i = 0;
@@ -45,7 +45,7 @@ if (empty($_SESSION['username'])) {
 					$i++;
 				}
 				if (!$aok)
-					echo "You can't reach that land.<br />";
+					echo "You can't reach that land.<br/>";
 			}
 			if ($aok) { //preliminary checks pass, let's look for someone to hire
 				$landresult = $mysqli->query("SELECT * FROM Players WHERE username = '" . $_POST['land'] . "'");
@@ -53,7 +53,7 @@ if (empty($_SESSION['username'])) {
 				$landrow = mercRefresh($landrow); //might as well do this here
 				$landname = "The Land of " . $landrow['land1'] . " and " . $landrow['land2'];
 				$offer = $_POST['boons'];
-				echo "You visit a village tavern on $landname and put $offer Boondollars on the table.<br />";
+				echo "You visit a village tavern on $landname and put $offer Boondollars on the table.<br/>";
 				$mercsresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE appearson = 'Ally' AND minboons < $offer ORDER BY basepower ASC");
 				$types = 0;
 				$lowest = $offer;
@@ -79,12 +79,12 @@ if (empty($_SESSION['username'])) {
 						$mercname = str_replace("Consort", $landrow['consort_name'], $hired);
 					} else
 						$mercname = $hired;
-					echo "A $mercname steps forward, eager to serve you for your offered payment. Your party grows in number.<br />";
+					echo "A $mercname steps forward, eager to serve you for your offered payment. Your party grows in number.<br/>";
 					$userrow['allies'] .= $newally . "|";
 					$userrow['Boondollars'] -= $offer;
 					$mysqli->query("UPDATE Players SET Boondollars = $userrow[Boondollars], availablequests = $userrow[availablequests]-1 WHERE username = '$username'");
 				} else {
-					echo "Nobody even reacts. It seems there are no mercenaries on this land that are willing to work for that much.<br />";
+					echo "Nobody even reacts. It seems there are no mercenaries on this land that are willing to work for that much.<br/>";
 				}
 			}
 		}
@@ -115,7 +115,7 @@ if (empty($_SESSION['username'])) {
 				$acttext = str_replace("+", "&#43;", $acttext);
 				$acttext = str_replace("?", "&#63;", $acttext);
 			} else
-				echo "Name/description can't be blank.<br />";
+				echo "Name/description can't be blank.<br/>";
 		}
 	} else
 		$operatingon = 0;
@@ -148,48 +148,48 @@ if (empty($_SESSION['username'])) {
 				switch ($action) {
 					case "rename":
 						if (!empty($acttext)) {
-							echo $npcname . " has been renamed to $acttext.<br />";
+							echo $npcname . " has been renamed to $acttext.<br/>";
 							$statusarg[3] = $acttext;
 							$npcname = $acttext;
 						}
 						break;
 					case "redesc":
 						if (!empty($acttext)) {
-							echo $npcname . "'s description has been updated.<br />";
+							echo $npcname . "'s description has been updated.<br/>";
 							$statusarg[4] = $acttext;
 						}
 						break;
 					case "dropoff":
 						$statusarg[0] = "IDLE";
-						echo "$npcname leaves your party and stands by at your house, awaiting further instructions.<br />";
+						echo "$npcname leaves your party and stands by at your house, awaiting further instructions.<br/>";
 						break;
 					case "pickup":
 						$statusarg[0] = "PARTY";
-						echo "$npcname joins your active party, ready to strife by your side!<br />";
+						echo "$npcname joins your active party, ready to strife by your side!<br/>";
 						$newallypower = $npcpower;
 						$justpickedup = true;
 						break;
 					case "dismiss":
 						$removeme = true;
-						echo "$npcname is released into the wild. Goodbye, $npcname!<br />";
+						echo "$npcname is released into the wild. Goodbye, $npcname!<br/>";
 						break;
 				}
 			}
 			if (!$removeme) {
 				if ($npcname != $npcrow['basename'])
 					$partyechostr .= $npcname . " - ";
-				$partyechostr .= $npcrow['basename'] . ". Power: $npcpower. Loyalty: " . strval($statusarg[2]) . "<br />";
+				$partyechostr .= $npcrow['basename'] . ". Power: $npcpower. Loyalty: " . strval($statusarg[2]) . "<br/>";
 				if (!empty($statusarg[4]))
 					$partyechostr .= $statusarg[4];
 				else
 					$partyechostr .= $npcrow['description'];
-				$partyechostr .= "<br />";
+				$partyechostr .= "<br/>";
 				$lolreturn = npcEffects($npcrow['spawnstatus'], $npcpower, $speffects);
 				$worth = $lolreturn[1];
 				$partyechostr .= $lolreturn[0];
 				$speffect .= $lolreturn[2];
 				$speffects = $lolreturn[3];
-				$partyechostr .= "Pulchritude required to control: $worth<br />Status: ";
+				$partyechostr .= "Pulchritude required to control: $worth<br/>Status: ";
 				if ($statusarg[0] == "PARTY") {
 					$occupied += $worth;
 					if ($justpickedup)
@@ -199,7 +199,7 @@ if (empty($_SESSION['username'])) {
 				} else {
 					$partyechostr .= "Idle.";
 				}
-				$partyechostr .= "<br /><br />";
+				$partyechostr .= "<br/><br/>";
 				$partyformstr .= "<option value='ally" . strval($partymems) . "'>$npcname</option>";
 				$newallybit = implode(":", $statusarg);
 				$newallystr .= $newallybit . "|";
@@ -208,7 +208,7 @@ if (empty($_SESSION['username'])) {
 		}
 		if ($newallystr != $userrow['allies']) {
 			if ($occupied > $pulchritude) { //this should only happen because of an ally you just tried to add to the party
-				echo "...except you don't quite have the pulchritude to command an army of such power! You drop off the newly-added party member again before things get out of hand.<br />";
+				echo "...except you don't quite have the pulchritude to command an army of such power! You drop off the newly-added party member again before things get out of hand.<br/>";
 				$occupied -= $newallypower;
 				$partyechostr = str_replace("!!!PENDING!!!", "Idle.", $partyechostr);
 				//don't update the allystr
@@ -219,11 +219,11 @@ if (empty($_SESSION['username'])) {
 			}
 		}
 	}
-	echo "Followers<br /><br />";
-	echo "Party's total power / available Pulchritude: $occupied / $pulchritude<br />(The combined power level of all followers in your active party cannot exceed your Pulchritude stat.)<br /><br />";
-	echo "The following allies are available for your cause:<br />";
+	echo "Followers<br/><br/>";
+	echo "Party's total power / available Pulchritude: $occupied / $pulchritude<br/>(The combined power level of all followers in your active party cannot exceed your Pulchritude stat.)<br/><br/>";
+	echo "The following allies are available for your cause:<br/>";
 	if ($partymems == 0)
-		echo "None. It's just you at the moment!<br /><br />";
+		echo "None. It's just you at the moment!<br/><br/>";
 	else {
 		$omgwhy = explode("!!!REPLACE!!!", $partyechostr);
 		$bluuuh = explode("|", $speffect);
@@ -241,10 +241,10 @@ if (empty($_SESSION['username'])) {
 		echo "<select name='partymember'>" . $partyformstr . "</select>";
 		echo "<input type='text' name='partytext' /><input type='submit' value='Go' /></form>";
 	}
-	echo "<br />Hire additional allies:<br />To hire an ally, first choose a land and a Boondollar amount.<br />";
-	echo "The more Boondollars you offer, the better your chance of getting a higher-ranking ally, or one with a higher starting loyalty.<br />";
-	echo "Note: Not all ally types will be available right off the bat. Boosting your land's economy or doing specific quests may unlock new types.<br />";
-	echo "It costs 1 available quest to hire a mercenary. You have $userrow[availablequests] quests remaining.<br /><br />";
+	echo "<br/>Hire additional allies:<br/>To hire an ally, first choose a land and a Boondollar amount.<br/>";
+	echo "The more Boondollars you offer, the better your chance of getting a higher-ranking ally, or one with a higher starting loyalty.<br/>";
+	echo "Note: Not all ally types will be available right off the bat. Boosting your land's economy or doing specific quests may unlock new types.<br/>";
+	echo "It costs 1 available quest to hire a mercenary. You have $userrow[availablequests] quests remaining.<br/><br/>";
 	echo '<form action="mercenaries.php" method="post">Land to search: <select name="land"> ';
 	$locationstr = "Land of " . $userrow['land1'] . " and " . $userrow['land2'];
 	echo '<option value="' . $userrow['username'] . '">' . $locationstr . '</option>';
@@ -259,8 +259,8 @@ if (empty($_SESSION['username'])) {
 	if ($userrow['battlefield_access'] != 0) { //Player has handled their denizen or gone god tier. The battlefield is available as a zone.
 		echo '<option value="Battlefield">The Battlefield</option>';
 	}
-	echo '</select><br />';
-	echo 'Boondollars to offer: <input type="text" name="boons" /><br /><input type="submit" value="Search (cost: 1 available quest)" /></form>';
+	echo '</select><br/>';
+	echo 'Boondollars to offer: <input type="text" name="boons" /><br/><input type="submit" value="Search (cost: 1 available quest)" /></form>';
 }
 
 require_once "footer.php";

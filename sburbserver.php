@@ -43,7 +43,7 @@ if (empty($_SESSION['username'])) {
 	$compugood = true;
 	if ($dreambot) {
 		if (strpos($userrow['storeditems'], "ISCOMPUTER.") == 0) { //dreambot checks for a computer in storage, regardless of player computability
-			echo "Your dreambot can't use the SBURB server program without access to a computer in storage!<br />";
+			echo "Your dreambot can't use the SBURB server program without access to a computer in storage!<br/>";
 			$compugood = false;
 		}
 	} else {
@@ -96,7 +96,7 @@ if (empty($_SESSION['username'])) {
 
 		if (empty($userrow['client_player'])) {
 			echo "You haven't registered a player as your client yet.</br>";
-			echo '<form action="sburbserver.php" method="post">Register client player: <input id="client" name="client" type="text" /><br />';
+			echo '<form action="sburbserver.php" method="post">Register client player: <input id="client" name="client" type="text" /><br/>';
 			echo '<input type="submit" value="Connect it!" /></form></br>';
 		} else {
 			$clientresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
@@ -105,7 +105,7 @@ if (empty($_SESSION['username'])) {
 			$landrow = $landresult->fetch_array();
 			$tier1grist = $landrow['grist1'];
 			if ($clientrow['server_player'] == "") {
-				echo "Something went amiss, and your client player doesn't have you set as their server! We've just attempted to fix this, but if you see this message multiple times, please submit a bug report.<br />";
+				echo "Something went amiss, and your client player doesn't have you set as their server! We've just attempted to fix this, but if you see this message multiple times, please submit a bug report.<br/>";
 				$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 			}
 
@@ -230,11 +230,11 @@ if (empty($_SESSION['username'])) {
 										$mysqli->query($refundquery); //Un-pay.
 									}
 									$args[1] -= $_POST['q-' . $args[0]];
-									echo '<br />';
+									echo '<br/>';
 								} else
-									"Error: Client does not have " . $args[1] . " of " . $irow['name'] . "<br />";
+									"Error: Client does not have " . $args[1] . " of " . $irow['name'] . "<br/>";
 							} else {
-								echo 'Error: unknown item<br />';
+								echo 'Error: unknown item<br/>';
 							}
 						}
 						if ($args[1] > 0) {
@@ -246,7 +246,7 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Players` SET `storeditems` = '$updatestore' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
 					}
 				} else
-					echo "Your client has nothing to recycle!<br />";
+					echo "Your client has nothing to recycle!<br/>";
 				compuRefresh($clientrow);
 			}
 
@@ -276,7 +276,7 @@ if (empty($_SESSION['username'])) {
 			}
 			echo strval($gates) . "</br>";
 			echo "Building up your client's house will increase their item storage space, as well as help them reach higher gates.</br>";
-			echo '<form action="sburbserver.php" method="post">Amount of build grist to spend on client\'s housing: <input id="build" name="build" type="text" /><br />';
+			echo '<form action="sburbserver.php" method="post">Amount of build grist to spend on client\'s housing: <input id="build" name="build" type="text" /><br/>';
 			echo '<input type="submit" value="Build it!" /></form></br>';
 
 			echo "&gt;Deploy</br>";
@@ -292,10 +292,10 @@ if (empty($_SESSION['username'])) {
 					$coststring = strval($drow['Build_Grist_Cost']) . " Build Grist";
 				echo '<option value="' . $drow['captchalogue_code'] . '">' . $drow['name'] . ' (Cost: ' . $coststring . ')</option>';
 			}
-			echo '</select></br><input type="submit" value="Deploy it!"></form><br />';
+			echo '</select></br><input type="submit" value="Deploy it!"></form><br/>';
 
-			echo "&gt;Recycle<br />";
-			echo "Your client may be unable to recycle items directly from their storage, but you sure can!<br />";
+			echo "&gt;Recycle<br/>";
+			echo "Your client may be unable to recycle items directly from their storage, but you sure can!<br/>";
 			if (!empty($clientrow['storeditems'])) {
 				echo '<form method="post" action="sburbserver.php"><input type="hidden" name="recycling" value="yes">';
 				$boom = explode("|", $clientrow['storeditems']);
@@ -316,12 +316,12 @@ if (empty($_SESSION['username'])) {
 					} else {
 						echo 'Error: unknown item';
 					}
-					echo '<br />';
+					echo '<br/>';
 					$i++;
 				}
 				echo '<input type="submit" value="Recycle it!"></form>';
 			} else {
-				echo "...if your client HAD anything in storage, that is.<br />";
+				echo "...if your client HAD anything in storage, that is.<br/>";
 			}
 		}
 	}

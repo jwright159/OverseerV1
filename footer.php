@@ -1,19 +1,19 @@
 </div>
 <span style="font-size: 11px;">Copyright &copy; 2013 <a style="color: #555555;" href="https://charatrp.com/">Charat</a> &
 	<a style="color: #555555;" href="https://overseerreboot.xyz/">The Overseer</a>. All rights reserved.</span>
-<br />
+<br/>
 <span style="font-size: 11px;"><a style="color: #555555;"
 		href="https://www.mspaintadventures.com/?s=6&p=001901">Homestuck</a> is copyright &copy; Andrew Hussie.</span>
 <?php
 if (!empty($userrow['dreamingstatus']) && $userrow['dreamingstatus'] == "Prospit") {
-	echo '<br />
+	echo '<br/>
   <span style="font-size: 11px;"><a style="color: #555555;" href="https://juls-art.tumblr.com/post/27674167117/15-derse-or-prospit-prospit-i-wasnt-sure-if-it">Prospit background image</a> by
   <a style="color: #555555;" href="https://splitsoulsister.tumblr.com/">splitsoulsister</a></span>';
 }
 $supertime_end = microtime(true);
 if (!empty($supertime_begin)) {
 	$supertime_total = $supertime_end - $supertime_begin;
-	echo '<br /><span style="font-size: 11px;">Page executed in ' . strval($supertime_total) . ' seconds.</span>';
+	echo '<br/><span style="font-size: 11px;">Page executed in ' . strval($supertime_total) . ' seconds.</span>';
 }
 ?>
 </div>

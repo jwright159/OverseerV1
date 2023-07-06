@@ -31,41 +31,41 @@ The colours are for changes by: <overseer>The Overseer</overseer> | <blahdev>Bla
 Current version: Alpha 3.0 bepis</br>
 </br>
 Version Alpha 3.0 bepis - July 4, 2023:</br>
-<jd>- Rebooted the server! This includes upgrading the software this all runs on.<br>
-	- This section might be a work-in-progress until things settle down.</jd><br>
-<br>
+<jd>- Rebooted the server! This includes upgrading the software this all runs on.<br/>
+	- This section might be a work-in-progress until things settle down.</jd><br/>
+<br/>
 Version Alpha 2.3 hot fudge sundae:</br>
 <blahdev>- Consort quests have been expanded to allow for quests that aren't just item fetch quests. New quest
-	types:<br>
-	&nbsp;&nbsp;- Strife quests: to complete the quest, you must defeat an enemy or group of enemies in strife<br>
+	types:<br/>
+	&nbsp;&nbsp;- Strife quests: to complete the quest, you must defeat an enemy or group of enemies in strife<br/>
 	&nbsp;&nbsp;- Rescue quests: similar to strife quests, you are pitted against a group of enemies, but the goal is to
-	reduce their power to 0<br>
+	reduce their power to 0<br/>
 	&nbsp;&nbsp;- Dungeon quests: you are taken to a dungeon and must beat the boss and/or reach a specific location
-	within the dungeon<br>
-	- Quests can also link to other quests and have unique victory messages<br>
-	- Added the ability to have NPC followers contribute power to your strifes, similarly to player assisting<br>
+	within the dungeon<br/>
+	- Quests can also link to other quests and have unique victory messages<br/>
+	- Added the ability to have NPC followers contribute power to your strifes, similarly to player assisting<br/>
 	&nbsp;&nbsp;- You can hire and manage your followers from the new "Followers" page under Explore, including giving
-	them custom names and descriptions<br>
+	them custom names and descriptions<br/>
 	&nbsp;&nbsp;- Your ability to command NPC followers is determined by your Pulchritude stat, which increases with
-	Echeladder rung<br>
-	&nbsp;&nbsp;- You can unlock new follower types by building your land's economy or doing specific questlines<br>
-	- Introduced a system that can allow for status effects to be tied to wearables, or last more than one encounter<br>
+	Echeladder rung<br/>
+	&nbsp;&nbsp;- You can unlock new follower types by building your land's economy or doing specific questlines<br/>
+	- Introduced a system that can allow for status effects to be tied to wearables, or last more than one encounter<br/>
 	- Added item effects: Payday, Piercing, Ammo, Hybrid Mod, Burning, Freezing, Soulsteal, Lockdown, Charmed,
-	Randeffect, Varboost<br>
-	- Added enemy status afflictions: Burning, Freezing, Lockdown, Charmed<br>
+	Randeffect, Varboost<br/>
+	- Added enemy status afflictions: Burning, Freezing, Lockdown, Charmed<br/>
 	- Implemented a use for affinity on wearables; it will now increase your passive resistance to certain
-	aspect-specific attacks (such as those of denizens)<br>
+	aspect-specific attacks (such as those of denizens)<br/>
 	- There is now a new version of the item submission form where many more details can be specified. The advantage
-	here is that once greenlit, items can be added as-is with no additional effort required 90% of the time!<br>
-	- You should now be able to access all dungeons and your Denizen with a flying item<br>
-	- A few changes were made to the Blade Cloud to better balance out the effort with the reward:<br>
+	here is that once greenlit, items can be added as-is with no additional effort required 90% of the time!<br/>
+	- You should now be able to access all dungeons and your Denizen with a flying item<br/>
+	- A few changes were made to the Blade Cloud to better balance out the effort with the reward:<br/>
 	&nbsp;&nbsp;- It has a new special ability to summon Animated Blades (new enemy type); chance increases as it gets
-	weaker<br>
+	weaker<br/>
 	&nbsp;&nbsp;- Spawn rate is halved, maxing out at 50% for endgame weapons, and won't spawn if you are down or
-	already strifing<br>
-	&nbsp;&nbsp;- When you defeat it, you are KOed and must spend the next encounter recovering<br>
-	- Various efficiency tweaks</blahdev><br>
-<br>
+	already strifing<br/>
+	&nbsp;&nbsp;- When you defeat it, you are KOed and must spend the next encounter recovering<br/>
+	- Various efficiency tweaks</blahdev><br/>
+<br/>
 Version Alpha 2.2 pineapple:</br>
 <blahdev>- Multi-floor dungeons! A dungeon can have up to its gate number in floors, and stairs will spawn in place of
 	where the boss would spawn if it's not the final floor. Later floors will start at the difficulty the last floor
@@ -158,7 +158,7 @@ Version Alpha 2.0!:</br>
 	- Fonts are now Courier New!
 	- Edit permissions!</br></gh>
 <sho>
-	- CSS has been optimized.<br />
+	- CSS has been optimized.<br/>
 </sho>
 </br>
 Version Alpha 1.6:</br>

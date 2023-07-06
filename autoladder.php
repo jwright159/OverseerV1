@@ -183,15 +183,15 @@ if (empty($_SESSION['username'])) {
 	}
 
 	//Begin actual page
-	echo "Class: " . $class . "<br />";
-	echo "Aspect: " . $aspect . "<br />";
+	echo "Class: " . $class . "<br/>";
+	echo "Aspect: " . $aspect . "<br/>";
 
 	$maxrands = count($adjs) * count($nouns) * count($verbs) * 5;
-	echo "<br />Randomability (612 is minimum. Ideal is 6,120+): " . $maxrands . "<br />";
+	echo "<br/>Randomability (612 is minimum. Ideal is 6,120+): " . $maxrands . "<br/>";
 
 	$i = 1;
 	while ($i <= 611) {
-		echo $i . ". " . generate() . "<br />";
+		echo $i . ". " . generate() . "<br/>";
 		$i++;
 	}
 

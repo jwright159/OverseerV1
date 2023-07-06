@@ -333,7 +333,7 @@ function terminateStrife(array $userrow, int $result)
 			} else {
 				$qrow = fetchOne("SELECT context FROM Consort_Dialogue WHERE ID = :id", ['id' => $userrow['currentquest']]);
 				if (strpos($qrow['context'], "questrescue") !== false)
-					echo "This quest's challenge has gotten the better of you! It looks as though you will not have a second chance, unfortunately...<br />";
+					echo "This quest's challenge has gotten the better of you! It looks as though you will not have a second chance, unfortunately...<br/>";
 				else
 					echo "You have failed the quest! You should come back and try again after you're rested up and fully prepared.</br>";
 			}
@@ -363,7 +363,7 @@ function terminateStrife(array $userrow, int $result)
 			$qrow = fetchOne("SELECT context FROM Consort_Dialogue WHERE ID = :id", ['id' => $userrow['currentquest']]);
 			if (strpos($qrow['context'], "questrescue") !== false) //whoops, you weren't supposed to kill them all!
 			{
-				echo "<br />...however, defeating all the enemies has caused you to fail the quest!<br />";
+				echo "<br/>...however, defeating all the enemies has caused you to fail the quest!<br/>";
 				query("UPDATE Players SET dungeonstrife = 5 WHERE username = :username LIMIT 1;", ['username' => $username]);
 				$userrow['dungeonstrife'] = 5;
 			} else

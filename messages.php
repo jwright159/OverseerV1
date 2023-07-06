@@ -204,9 +204,9 @@ if (empty($_SESSION['username'])) {
 			}
 			$k++;
 		}
-		echo 'Messages stored: ' . strval($msgs) . ' / ' . strval($max_inbox) . '<br />';
+		echo 'Messages stored: ' . strval($msgs) . ' / ' . strval($max_inbox) . '<br/>';
 		if ($msgs == $max_inbox) {
-			echo '<b>Your inbox is full! You will be unable to receive messages until you make some room.</b><br />';
+			echo '<b>Your inbox is full! You will be unable to receive messages until you make some room.</b><br/>';
 		}
 
 		//let's generate that message table~

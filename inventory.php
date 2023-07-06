@@ -104,7 +104,7 @@ if (empty($_SESSION['username'])) {
 			if (!empty($_POST['code1']) && !empty($_POST['code2']))
 				$camefromscanner = true;
 		} else
-			echo "You don't have a machine that can auto-scan and combine codes!<br />";
+			echo "You don't have a machine that can auto-scan and combine codes!<br/>";
 	}
 
 	if (!empty($_POST['code1']) && !empty($_POST['code2'])) { //User is performing designix operations.
@@ -146,7 +146,7 @@ if (empty($_SESSION['username'])) {
 				echo "You need four Build Grist to produce the cards required to use the designix!</br>";
 			}
 		} else
-			echo "You don't have a machine that can auto-combine codes!<br />";
+			echo "You don't have a machine that can auto-combine codes!<br/>";
 	}
 
 	//--End designix code here. Begin holopad code here.--
@@ -193,7 +193,7 @@ if (empty($_SESSION['username'])) {
 				else
 					echo "The holopad displays the $itemname. It also prints out a short description:</br>";
 				$desc = descvarConvert($userrow, $itemrow['description'], $itemrow['effects']);
-				echo $desc . "</br>" . "The inputted holocode is repeated: <span style='color:#F3C; font-size:30px; font-weight:bold;'>" . $_GET['holocode'] . "</span><br />" . "It costs ";
+				echo $desc . "</br>" . "The inputted holocode is repeated: <span style='color:#F3C; font-size:30px; font-weight:bold;'>" . $_GET['holocode'] . "</span><br/>" . "It costs ";
 				$reachgrist = False;
 				$terminateloop = False; //time-saver
 				if ($gristed == false) {
@@ -478,8 +478,8 @@ if (empty($_SESSION['username'])) {
 									echo $itemname;
 								else
 									echo "the " . $itemname;
-								echo " floats off of the alchemiter and summons a bunch of other swords from seemingly nowhere, which spiral into a whirlwind of blades hurtling straight at you!<br />";
-								echo '<a href="strife.php">==&gt;</a><br />';
+								echo " floats off of the alchemiter and summons a bunch of other swords from seemingly nowhere, which spiral into a whirlwind of blades hurtling straight at you!<br/>";
+								echo '<a href="strife.php">==&gt;</a><br/>';
 							}
 							$bc = $bctries;
 						}
@@ -616,8 +616,8 @@ if (empty($_SESSION['username'])) {
 		$itemslot = "inv-1";
 	if (!$canon || strpos($userrow['storeditems'], "CAPTCHACOMBINE.") !== false) {
 		echo "Remote Punch Designix access v0.0.1a. Insert two codes and four Build Grist to continue.";
-		echo '<form action="inventory.php" method="post">First code: <input id="code1" name="code1" type="text" /><br />';
-		echo 'Second code: <input id="code2" name="code2" type="text" /><br />';
+		echo '<form action="inventory.php" method="post">First code: <input id="code1" name="code1" type="text" /><br/>';
+		echo 'Second code: <input id="code2" name="code2" type="text" /><br/>';
 		echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
 		echo '<input type="submit" value="Design it!" /></form></br>';
 	}
@@ -635,7 +635,7 @@ if (empty($_SESSION['username'])) {
 		if ($itemslot != "inv-1" && !empty($itemslot)) { //Player alchemized an item.
 			echo '<option value = "' . $itemslot . '">' . $alchitem . '</option>';
 		}
-		echo '</select><br />Second item:<select name="invcode2">';
+		echo '</select><br/>Second item:<select name="invcode2">';
 		$invcount = 1;
 		while ($invcount <= $max_items) {
 			$invslot = 'inv' . strval($invcount);
@@ -647,21 +647,21 @@ if (empty($_SESSION['username'])) {
 		if ($itemslot != "inv-1" && !empty($itemslot)) { //Player alchemized an item.
 			echo '<option value = "' . $itemslot . '">' . $alchitem . '</option>';
 		}
-		echo '</select><br />';
+		echo '</select><br/>';
 		echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
 		echo '<input type="submit" value="Design it!" /></form></br>';
 		echo '</br>';
 	}
 	if (!$canon || strpos($userrow['storeditems'], "REMOTEHOLO.") !== false) {
 		echo "Remote holopad access v0.0.1a. Insert code to preview.";
-		echo '<form action="inventory.php" method="get">Captchalogue code: <input id="holocode" name="holocode" type="text" /><br />';
+		echo '<form action="inventory.php" method="get">Captchalogue code: <input id="holocode" name="holocode" type="text" /><br/>';
 		echo '<input type="submit" value="Observe it!" /></form></br>';
 		echo '</br>';
 	}
 	if (!$canon || strpos($userrow['storeditems'], "MANUALCHEMITER.") !== false) {
 		echo "Alchemiter v0.0.1a. Insert code to synthesize.";
-		echo '<form action="inventory.php" method="post">Captchalogue code: <input id="alchcode" name="alchcode" type="text" /><br />Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
-		echo '<br /><input name="autostore" type="checkbox"> Send all created items to storage</br>';
+		echo '<form action="inventory.php" method="post">Captchalogue code: <input id="alchcode" name="alchcode" type="text" /><br/>Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
+		echo '<br/><input name="autostore" type="checkbox"> Send all created items to storage</br>';
 		echo '<input type="submit" value="Create it!" /></form></br>';
 		echo '</br>';
 	}

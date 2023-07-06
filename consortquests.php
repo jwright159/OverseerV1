@@ -24,11 +24,11 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 				$mercname = str_replace("Consort", $currentrow['consort_name'], $unlockname[1]);
 			} else
 				$mercname = $unlockname[1];
-			echo "a new ally: $mercname!<br />The $mercname heads off to your house and waits patiently for your orders.<br />";
+			echo "a new ally: $mercname!<br/>The $mercname heads off to your house and waits patiently for your orders.<br/>";
 			$newally = joinParty($userrow, $unlockname[1], $realbasecost, $currentrow['consort_name']);
 			if (strpos($currentrow['landallies'], $unlockname[1]) === false) {
 				$currentrow['landallies'] .= $unlockname[1] . "|";
-				echo "$mercname is now unlocked for hire on The Land of " . $currentrow['land1'] . " and " . $currentrow['land2'] . "!<br />";
+				echo "$mercname is now unlocked for hire on The Land of " . $currentrow['land1'] . " and " . $currentrow['land2'] . "!<br/>";
 				$mysqli->query("UPDATE Players SET landallies = '" . $mysqli->real_escape_string($currentrow['landallies']) . "' WHERE username = '" . $currentrow['username'] . "'");
 			}
 		} else {
@@ -73,9 +73,9 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 		if ($rewarded == "inv-1") {
 			$stored = storeItem($rewardname, 1, $userrow);
 			if ($stored > 0) {
-				echo "You have no room in your inventory for the item, so the consort offers to bring it to your house posthaste.<br />";
+				echo "You have no room in your inventory for the item, so the consort offers to bring it to your house posthaste.<br/>";
 			} else {
-				echo "...but you have no room in your inventory or storage for the item! The consort keeps it and gives you $rewarditemcost Boondollars instead.<br />";
+				echo "...but you have no room in your inventory or storage for the item! The consort keeps it and gives you $rewarditemcost Boondollars instead.<br/>";
 				$basecost += $rewarditemcost;
 			}
 		} else
@@ -164,12 +164,12 @@ if (empty($_SESSION['username'])) {
 								if ($userrow['availablequests'] > 0) {
 									$newquest = $nextrow['ID']; //if no result found, it'll stay 0 I believe
 									echo $nextrow['dialogue'];
-									echo "<br />Your reward for the last quest: ";
+									echo "<br/>Your reward for the last quest: ";
 								} else
 									echo "The consort is impressed with your victory over the dungeon! You are rewarded with: ";
 							} else {
 								echo $nextrow['dialogue']; //linked entry is probably a victory message, feel free to add in more cases later
-								echo "<br />Your reward for the last quest: ";
+								echo "<br/>Your reward for the last quest: ";
 							}
 						} else
 							echo "The consort is impressed with your victory over the dungeon! You are rewarded with: ";
@@ -196,12 +196,12 @@ if (empty($_SESSION['username'])) {
 
 						echo '<a href="consortquests.php">==&gt;</a>';
 					} else
-						echo "You must be on the goal square for your current quest in order to turn it in.<br />";
+						echo "You must be on the goal square for your current quest in order to turn it in.<br/>";
 				} else
 					echo "You are not on a dungeon quest.";
 			} elseif (!empty($_POST['questitem'])) {
 				if ($qrow['context'] != "quest" && $qrow['context'] != "quest+") {
-					echo "The quest you are undertaking isn't an item fetch quest!<br />";
+					echo "The quest you are undertaking isn't an item fetch quest!<br/>";
 				} else {
 					$itemsearchname = str_replace("'", "\\\\''", $userrow[$_POST['questitem']]);
 					$questitemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '$itemsearchname' LIMIT 1");
@@ -319,7 +319,7 @@ if (empty($_SESSION['username'])) {
 									echo $nextrow['dialogue']; //linked entry is probably a victory message, feel free to add in more cases later
 							} else
 								echo "The consort is overjoyed, this item is perfect!";
-							echo "<br />";
+							echo "<br/>";
 							$reward = rand(1, (100 - (($userrow['Luck'] + $userrow['Brief_Luck']) / 2))); //chance of getting an item instead of boons
 							$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 							$landrow = $landresult->fetch_array();
@@ -350,11 +350,11 @@ if (empty($_SESSION['username'])) {
 				}
 			} elseif (!empty($_POST['gostrife'])) {
 				if ($qrow['context'] != "queststrife" && $qrow['context'] != "queststrife+" && $qrow['context'] != "questrescue" && $qrow['context'] != "questrescue+") {
-					echo "The quest you are undertaking isn't a strife quest!<br />";
+					echo "The quest you are undertaking isn't a strife quest!<br/>";
 				} elseif (!empty($userrow['enemydata']) || !empty($userrow['aiding'])) {
-					echo "You are already engaged in strife!<br />";
+					echo "You are already engaged in strife!<br/>";
 				} elseif ($userrow['encounters'] < 1) {
-					echo "You cannot engage any more enemies as you are out of encounters.<br />";
+					echo "You cannot engage any more enemies as you are out of encounters.<br/>";
 				} else {
 					if (!empty($qrow['req_grist'])) {
 						$enemygrists = explode("|", $qrow['req_grist']);
@@ -365,7 +365,7 @@ if (empty($_SESSION['username'])) {
 					}
 					$enemynames = explode("|", $qrow['req_keyword']);
 					$i = 0;
-					echo "The consort leads you to the enemies:<br />";
+					echo "The consort leads you to the enemies:<br/>";
 					while (!empty($enemynames[$i])) {
 						if (!empty($enemygrists[$i])) {
 							$tier = 'grist' . strval($enemygrists[$i]);
@@ -380,7 +380,7 @@ if (empty($_SESSION['username'])) {
 							echo " - An error occurred while generating this enemy. The devs have been notified.";
 							logDebugMessage($username . " - enemy $i ($enemygrists[$i] $enemynames[$i]) for quest $qrow[ID] failed to generate");
 						}
-						echo "<br />";
+						echo "<br/>";
 						$i++;
 					}
 					$newenc = $userrow['encounters'] - 1;
@@ -399,12 +399,12 @@ if (empty($_SESSION['username'])) {
 						if ($userrow['availablequests'] > 0) {
 							$newquest = $nextrow['ID']; //if no result found, it'll stay 0 I believe
 							echo $nextrow['dialogue'];
-							echo "<br />Your reward for the last quest: ";
+							echo "<br/>Your reward for the last quest: ";
 						} else
 							echo "For winning the strife, the consort happily rewards you with ";
 					} else {
 						echo $nextrow['dialogue']; //linked entry is probably a victory message, feel free to add in more cases later
-						echo "<br />Your reward for the last quest: ";
+						echo "<br/>Your reward for the last quest: ";
 					}
 				} else
 					echo "For winning the strife, the consort happily rewards you with ";
@@ -424,7 +424,7 @@ if (empty($_SESSION['username'])) {
 					$questtext = $qrow['dialogue'];
 				echo "You have an ongoing quest on the $locationstr.</br>";
 				if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods")
-					echo "This quest's ID is: $qrow[ID]<br />";
+					echo "This quest's ID is: $qrow[ID]<br/>";
 				echo "The $consort's request:</br>";
 				echo "<b>\"" . $qrow['dialogue'] . "\"</b></br></br>";
 				switch ($qrow['context']) {
@@ -445,15 +445,15 @@ if (empty($_SESSION['username'])) {
 					case 'queststrife+':
 						if (!empty($userrow['enemydata']) || !empty($userrow['aiding'])) {
 							if ($userrow['dungeonstrife'] == 6)
-								echo "You are currently strifing with this quest's enemies! <a href='strife.php'>Go here.</a><br />";
+								echo "You are currently strifing with this quest's enemies! <a href='strife.php'>Go here.</a><br/>";
 							else
-								echo "You should finish up your current strife before taking on this quest!<br />";
+								echo "You should finish up your current strife before taking on this quest!<br/>";
 						} else {
 							if ($userrow['dungeonstrife'] == 5) {
-								echo "You may have failed this time, but you can always try again!<br />";
+								echo "You may have failed this time, but you can always try again!<br/>";
 								$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username'");
 							}
-							echo "You are tasked with defeating the following:<br />";
+							echo "You are tasked with defeating the following:<br/>";
 							if (!empty($qrow['req_grist'])) {
 								$enemygrists = explode("|", $qrow['req_grist']);
 								$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
@@ -470,7 +470,7 @@ if (empty($_SESSION['username'])) {
 								} else {
 									echo $enemynames[$i];
 								}
-								echo "<br />";
+								echo "<br/>";
 								$i++;
 							}
 							echo '<form action="consortquests.php" method="post"><input type="hidden" name="gostrife" value="gostrife" /><input type="submit" value="Engage!" /></form>';
@@ -480,15 +480,15 @@ if (empty($_SESSION['username'])) {
 					case 'questrescue+':
 						if (!empty($userrow['enemydata']) || !empty($userrow['aiding'])) {
 							if ($userrow['dungeonstrife'] == 6)
-								echo "You are currently strifing with this quest's enemies! <a href='strife.php'>Go here.</a><br />";
+								echo "You are currently strifing with this quest's enemies! <a href='strife.php'>Go here.</a><br/>";
 							else
-								echo "You should finish up your current strife before taking on this quest!<br />";
+								echo "You should finish up your current strife before taking on this quest!<br/>";
 						} elseif ($userrow['dungeonstrife'] == 5) {
-							echo "You have failed this quest.<br />";
+							echo "You have failed this quest.<br/>";
 							$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0, `currentquest` = 0 WHERE `Players`.`username` = '$username'");
 							echo '<a href="consortquests.php">==&gt;</a>';
 						} else {
-							echo "You are tasked with neutralizing the following:<br />";
+							echo "You are tasked with neutralizing the following:<br/>";
 							if (!empty($qrow['req_grist'])) {
 								$enemygrists = explode("|", $qrow['req_grist']);
 								$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
@@ -505,19 +505,19 @@ if (empty($_SESSION['username'])) {
 								} else {
 									echo $enemynames[$i];
 								}
-								echo "<br />";
+								echo "<br/>";
 								$i++;
 							}
-							echo "Warning: You will fail this quest if you abscond or KO the enemies! To succeed, you must reduce their power level(s) to zero.<br />";
+							echo "Warning: You will fail this quest if you abscond or KO the enemies! To succeed, you must reduce their power level(s) to zero.<br/>";
 							echo '<form action="consortquests.php" method="post"><input type="hidden" name="gostrife" value="gostrife" /><input type="submit" value="Engage!" /></form>';
 						}
 						break;
 					case 'questdungeon': //the objective is to go to a specific area in a dungeon
 					case 'questdungeon+':
 						if ($userrow['indungeon'] != 0) {
-							echo "You're already in a dungeon.<br />";
+							echo "You're already in a dungeon.<br/>";
 						} else {
-							echo "Your task is to brave the perils of the dungeon " . $qrow['req_keyword'] . ".<br />";
+							echo "Your task is to brave the perils of the dungeon " . $qrow['req_keyword'] . ".<br/>";
 							$dgnstring = $userrow['questland'] . ":" . $qrow['gate'];
 							echo '<form action="dungeons.php" method="post"><input type="hidden" name="questdungeon" value="yes" /><input type="hidden" name="newdungeon" value="' . $dgnstring . '" />';
 							echo '<input type="submit" value="Enter the dungeon (Cost: 3 encounters)" /></form>';
@@ -601,7 +601,7 @@ if (empty($_SESSION['username'])) {
 						echo "<b>\"" . $qrow['dialogue'] . "\"</b></br></br>";
 						$questid = $qrow['ID'];
 						if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods")
-							echo "This quest's ID is: $questid<br />";
+							echo "This quest's ID is: $questid<br/>";
 						echo "Will you accept this quest?</br>";
 						$mysqli->query("UPDATE `Players` SET `currentquest` = $questid, `questland` = '" . $_GET['land'] . "' WHERE `Players`.`username` = '$username' "); //set this here so the player can't do weird things
 						echo '<form action="consortquests.php?land=' . $_GET['land'] . '" method="post"><input type="hidden" name="questapproval" value="' . strval($questid) . '"><input type="submit" value="Accept it!"></form>';

@@ -98,7 +98,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['equiphead'])) {
 		//User is equipping an item to their head.
 		if (strpos($_POST['equiphead'], "inv") === false && $_POST['equiphead'] != "none") { //player is trying to consume from outside their inventory!
-			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br />";
+			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br/>";
 			$_POST['equiphead'] = "none";
 		}
 		if ($_POST['equiphead'] == "none") {
@@ -151,7 +151,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['equipface'])) {
 		//User is equipping an item to their face.
 		if (strpos($_POST['equipface'], "inv") === false && $_POST['equipface'] != "none") { //player is trying to consume from outside their inventory!
-			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br />";
+			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br/>";
 			$_POST['equipface'] = "none";
 		}
 		if ($_POST['equipface'] == "none") {
@@ -201,7 +201,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['equipbody'])) {
 		//User is equipping an item to their head.
 		if (strpos($_POST['equipbody'], "inv") === false && $_POST['equipbody'] != "none") { //player is trying to consume from outside their inventory!
-			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br />";
+			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br/>";
 			$_POST['equipbody'] = "none";
 		}
 		if ($_POST['equipbody'] == "none") {
@@ -245,7 +245,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['equipacc'])) {
 		//User is equipping an item to their head.
 		if (strpos($_POST['equipacc'], "inv") === false && $_POST['equipacc'] != "none") { //player is trying to consume from outside their inventory!
-			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br />";
+			echo "Look at you, trying to be clever! Unfortunately, you can only equip items from your inventory.<br/>";
 			$_POST['equipacc'] = "none";
 		}
 		if ($_POST['equipacc'] == "none") {
@@ -714,10 +714,10 @@ if (empty($_SESSION['username'])) {
 	}
 
 	echo "Currently wearing:</br>";
-	echo "Headgear: $headname" . checkvalues($headname) . "<br />";
-	echo "Facegear: $facename" . checkvalues($facename) . "<br />";
-	echo "Bodygear: $bodyname" . checkvalues($bodyname) . "<br />";
-	echo "Accessory: $accname" . checkvalues($accname) . "<br />";
+	echo "Headgear: $headname" . checkvalues($headname) . "<br/>";
+	echo "Facegear: $facename" . checkvalues($facename) . "<br/>";
+	echo "Bodygear: $bodyname" . checkvalues($bodyname) . "<br/>";
+	echo "Accessory: $accname" . checkvalues($accname) . "<br/>";
 	if ($equippedhead != "") {
 		$itemname = str_replace("'", "\\\\''", $userrow[$equippedhead]);
 		//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.

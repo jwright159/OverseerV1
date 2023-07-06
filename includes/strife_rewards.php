@@ -206,7 +206,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			if (strpos($userrow[$headstr], "Hydra Head") !== false) {
 				$userrow[$headhp] = 0;
 				if ($foundthehydra == false) { //go ahead and execute reward for heads before this hydra in the list, in case the user switched focus around
-					echo "<br />The $userrow[$headstr] is severed and crashes to the ground, degenerating into grist: ";
+					echo "<br/>The $userrow[$headstr] is severed and crashes to the ground, degenerating into grist: ";
 					$gristlevel = 1;
 					while ($gristlevel <= 3) {
 						$gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
@@ -267,7 +267,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			}
 			$gristlevel++;
 		}
-		echo "<br />";
+		echo "<br/>";
 		$splitchance = 15;
 		$mainabs = explode(", ", $mainrow['abstratus']);
 		$noti = 0;
@@ -292,7 +292,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		if ($bossdead == true)
 			$splitchance = 0; //hydra is dead, don't split
 		if ($roll < $splitchance) {
-			echo "When you look up at the hydra again after collecting your grist, you notice that there are now two heads in the old one's place! It seems the sever was so clean that the hydra was able to regenerate its lost appendages twofold!<br />";
+			echo "When you look up at the hydra again after collecting your grist, you notice that there are now two heads in the old one's place! It seems the sever was so clean that the hydra was able to regenerate its lost appendages twofold!<br/>";
 			$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head'");
 			$countr = 0;
 			while ($randrow = $randomresult->fetch_array()) {
@@ -314,7 +314,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 					//$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!</br>";
 				}
 			} else
-				echo "DEBUGNOTE: Tried to spawn hydra head with ID of $whodat, returned empty.<br />";
+				echo "DEBUGNOTE: Tried to spawn hydra head with ID of $whodat, returned empty.<br/>";
 			$whodat = rand(1, $countr);
 			$whodat--;
 			$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
@@ -329,7 +329,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 					//$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!</br>";
 				}
 			} else
-				echo "DEBUGNOTE: Tried to spawn hydra head with ID of $whodat, returned empty.<br />";
+				echo "DEBUGNOTE: Tried to spawn hydra head with ID of $whodat, returned empty.<br/>";
 		} else { //see if there are any other heads remaining
 			$hcount = 1;
 			$thehydra = "enemy0name";
@@ -410,7 +410,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		}
 		break;
 	case "Blade Cloud":
-		echo "Whatever winds were holding the Blade Cloud together have finally died down completely, causing all of its blades to fall to the gro--DEAR GOD SO MANY BLADES THERE ARE JUST SO MANY GOD DAMN IT'S SO POINTY JESUS FUCK THIS HURTS SO MUUUUUCH DEAR GOD THEY'RE ALL OVER THE ENTIRETY OF EVERYTHING EVER JESUS FUCK JUST MAKE IT STOOOOOP<br />";
+		echo "Whatever winds were holding the Blade Cloud together have finally died down completely, causing all of its blades to fall to the gro--DEAR GOD SO MANY BLADES THERE ARE JUST SO MANY GOD DAMN IT'S SO POINTY JESUS FUCK THIS HURTS SO MUUUUUCH DEAR GOD THEY'RE ALL OVER THE ENTIRETY OF EVERYTHING EVER JESUS FUCK JUST MAKE IT STOOOOOP<br/>";
 		$userrow['Health_Vial'] = 1; //player is rained upon by blades. like how WOULDN'T that cause you serious pain
 		$userrow['down'] = 1; //player is KO'ed, essentially costing them the necessary encounter
 		$keepgoing = true;
@@ -432,10 +432,10 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 				$keepgoing = false;
 			}
 		}
-		echo "When the blade rain finally ends, you find not only that you've barely survived it, but also that all of your previously empty captchalogue cards are somehow filled with random swords. Wonderful.<br />";
+		echo "When the blade rain finally ends, you find not only that you've barely survived it, but also that all of your previously empty captchalogue cards are somehow filled with random swords. Wonderful.<br/>";
 		break;
 	case "Animated Blade":
-		echo "The Animated Blade clatters to the floor. You did so much damage to it that you doubt even your Recycler would accept it.<br />";
+		echo "The Animated Blade clatters to the floor. You did so much damage to it that you doubt even your Recycler would accept it.<br/>";
 		break;
 	default:
 		$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");

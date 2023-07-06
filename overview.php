@@ -160,7 +160,7 @@ if (empty($_SESSION['username'])) {
 	//End status code here. Begin symbol code
 	if (!empty($_POST['newimage'])) { //Reimagining image.
 		if ($newimg == "nobody.png") {
-			echo "You're not a nobody, you're a special snowflake!<br />";
+			echo "You're not a nobody, you're a special snowflake!<br/>";
 		} else {
 			$newimg = $mysqli->real_escape_string($_POST['newimage']);
 			$newimg = str_replace("<", "&lt;", $newimg);
@@ -284,7 +284,7 @@ if (empty($_SESSION['username'])) {
 	}
 	echo "</select></br>";
 	echo '<input type="submit" value="Select it!" /></form></br>';
-	echo 'Symbol:<br /><img src="/Images/symbols/' . $userrow['symbol'] . '"><br /><form action="overview.php" method="post">Choose an image: <select name="newimage">';
+	echo 'Symbol:<br/><img src="/Images/symbols/' . $userrow['symbol'] . '"><br/><form action="overview.php" method="post">Choose an image: <select name="newimage">';
 	$dir = "./Images/symbols";
 	if (is_dir($dir)) {
 		$dh = opendir($dir);
@@ -306,9 +306,9 @@ if (empty($_SESSION['username'])) {
 		}
 		$i++;
 	}
-	echo '</select><input type="submit" value="Select it!" /></form><br />';
+	echo '</select><input type="submit" value="Select it!" /></form><br/>';
 	if ($symbols == false)
-		echo "I'm working on this right now dw<br />";
+		echo "I'm working on this right now dw<br/>";
 	if (empty($userrow['consort_name'])) {
 		echo 'Consorts: Your consorts are currently undefined. Define them below by choosing a color and species.</br>';
 		echo '<form action="overview.php" method="post"><select name="consortcolor">';

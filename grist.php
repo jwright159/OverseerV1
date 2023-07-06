@@ -42,7 +42,7 @@ if (empty($_SESSION['username'])) {
 			if ($_POST['target'] == $username) { //Player is trying to mail themselves grist!
 				echo "You can't send grist to yourself!</br>";
 			} elseif (empty($_POST['target'])) {
-				echo "You did not specify a recipient player.<br />";
+				echo "You did not specify a recipient player.<br/>";
 			} else {
 				$wireresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
 				$targetfound = False;
@@ -112,7 +112,7 @@ if (empty($_SESSION['username'])) {
 			if ($ysessionrow['username'] != $username)
 				echo '<option value="' . $ysessionrow['username'] . '">' . $ysessionrow['username'] . '</option>';
 		}
-		echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br /> Type of grist: <select name="grist_type"> ';
+		echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br/> Type of grist: <select name="grist_type"> ';
 		$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;");
 		$reachgrist = False;
 		$terminateloop = False;
@@ -130,7 +130,7 @@ if (empty($_SESSION['username'])) {
 			}
 		}
 		$reachgrist = False; //Paranoia: Reset this just in case
-		echo '</select></br>Amount to transfer: <input id="amount" name="amount" type="text" /><br />Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /> </form>';
+		echo '</select></br>Amount to transfer: <input id="amount" name="amount" type="text" /><br/>Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /> </form>';
 	}
 
 	$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1 ;");

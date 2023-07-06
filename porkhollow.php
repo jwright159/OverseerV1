@@ -37,7 +37,7 @@ if (empty($_SESSION['username'])) {
 			if ($_POST['target'] == $username) { //Player is trying to wire themselves boondollars!
 				echo "You can't wire boondollars to yourself!</br>";
 			} elseif (empty($_POST['target'])) {
-				echo "You didn't specify a recipient!<br />";
+				echo "You didn't specify a recipient!<br/>";
 			} else {
 				$wireresult2 = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
 				$targetfound = False;
@@ -104,8 +104,8 @@ if (empty($_SESSION['username'])) {
 			if ($ysessionrow['username'] != $username)
 				echo '<option value="' . $ysessionrow['username'] . '">' . $ysessionrow['username'] . '</option>';
 		}
-		echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br />';
-		echo 'Amount of boondollars to transfer: <input id="amount" name="amount" type="text" /><br />Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /></form>';
+		echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br/>';
+		echo 'Amount of boondollars to transfer: <input id="amount" name="amount" type="text" /><br/>Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /></form>';
 	} else
 		echo "Boondollars: " . strval($userrow[$boon]);
 	$mysqli->close();

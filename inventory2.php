@@ -424,8 +424,8 @@ if (empty($_SESSION['username'])) {
 	if (empty($itemslot))
 		$itemslot = "inv-1";
 	echo "Remote Punch Designix access v0.0.1a. Insert two codes and four Build Grist to continue.";
-	echo '<form action="inventory.php" method="post">First code: <input id="code1" name="code1" type="text" /><br />';
-	echo 'Second code: <input id="code2" name="code2" type="text" /><br />';
+	echo '<form action="inventory.php" method="post">First code: <input id="code1" name="code1" type="text" /><br/>';
+	echo 'Second code: <input id="code2" name="code2" type="text" /><br/>';
 	echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
 	echo '<input type="submit" value="Design it!" /></form></br>';
 	echo "Remote Punch Designix access with Captchalogue Scanner v0.0.1a. Insert two captchalogue cards and four Build Grist to continue.";
@@ -463,7 +463,7 @@ if (empty($_SESSION['username'])) {
 		}
 		echo '<option value = "' . $captchaloguecode . '">' . $alchitem . '</option>';
 	}
-	echo '</select><br />Second item:<select name="code2">';
+	echo '</select><br/>Second item:<select name="code2">';
 	$reachinv = false;
 	$terminateloop = False;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
@@ -497,16 +497,16 @@ if (empty($_SESSION['username'])) {
 		}
 		echo '<option value = "' . $captchaloguecode . '">' . $alchitem . '</option>';
 	}
-	echo '</select><br />';
+	echo '</select><br/>';
 	echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
 	echo '<input type="submit" value="Design it!" /></form></br>';
 	echo '</br>';
 	echo "Remote holopad access v0.0.1a. Insert code to preview.";
-	echo '<form action="inventory.php" method="get">Captchalogue code: <input id="holocode" name="holocode" type="text" /><br />';
+	echo '<form action="inventory.php" method="get">Captchalogue code: <input id="holocode" name="holocode" type="text" /><br/>';
 	echo '<input type="submit" value="Observe it!" /></form></br>';
 	echo '</br>';
 	echo "Alchemiter v0.0.1a. Insert code to synthesize.";
-	echo '<form action="inventory.php" method="post">Captchalogue code: <input id="alchcode" name="alchcode" type="text" /><br />Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
+	echo '<form action="inventory.php" method="post">Captchalogue code: <input id="alchcode" name="alchcode" type="text" /><br/>Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
 	echo '<input type="submit" value="Create it!" /></form></br>';
 	echo '</br>';
 	echo "Grist Recycler v0.0.1a. Please select a captchalogued item.</br>";

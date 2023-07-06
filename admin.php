@@ -22,13 +22,13 @@ if (empty($_SESSION['username'])) {
 					if ($_POST['newsespw'] == $_POST['consespw']) {
 						$newpw = $mysqli->real_escape_string($_POST['newsespw']);
 						$mysqli->query("UPDATE `Sessions` SET `password` = '$newpw' WHERE `Sessions`.`name` = '$userrow[session_name]'");
-						echo "Password changed successfully!<br />";
+						echo "Password changed successfully!<br/>";
 					} else
-						echo "Error changing password: Confirmation did not match the new password given.<br />";
+						echo "Error changing password: Confirmation did not match the new password given.<br/>";
 				} else
-					echo "Error changing password: Password given for 'Current password' field did not match current password.<br />";
+					echo "Error changing password: Password given for 'Current password' field did not match current password.<br/>";
 			} else
-				echo "Only the session's head admin can change the session password.<br />";
+				echo "Only the session's head admin can change the session password.<br/>";
 		}
 
 		if (!empty($_POST['exile'])) { //Attempting to exile
@@ -99,13 +99,13 @@ if (empty($_SESSION['username'])) {
 			$playerresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['forceclient'] . "'");
 			$clientrow = $playerresult->fetch_array();
 			if ($clientrow['session_name'] != $userrow['session_name'] || ($clientrow['username'] == $sessionrow['admin'] && $sessionrow['admin'] != $username)) { //Target is either the primary admin or not in the session (the head admin can still target themselves)
-				echo "You cannot manipulate the connections of the player you specified as the client.<br />";
+				echo "You cannot manipulate the connections of the player you specified as the client.<br/>";
 				$allow = false;
 			}
 			$playerresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['forceserver'] . "'");
 			$serverrow = $playerresult->fetch_array();
 			if ($serverrow['session_name'] != $userrow['session_name'] || ($serverrow['username'] == $sessionrow['admin'] && $sessionrow['admin'] != $username)) { //Target is either the primary admin or not in the session (the head admin can still target themselves)
-				echo "You cannot manipulate the connections of the player you specified as the server.<br />";
+				echo "You cannot manipulate the connections of the player you specified as the server.<br/>";
 				$allow = false;
 			}
 			if ($allow) { //Targets valid
@@ -137,7 +137,7 @@ if (empty($_SESSION['username'])) {
 			if ($nullrow['session_name'] != $userrow['session_name']) { //Target is either the primary admin or not in the session
 				echo "You cannot eject this player from a dungeon!</br>";
 			} elseif ($nullrow['cantabscond'] == 1) {
-				echo "You cannot eject a player from a dungeon while they strifing the dungeon boss!<br />";
+				echo "You cannot eject a player from a dungeon while they strifing the dungeon boss!<br/>";
 			} else { //Target valid
 				$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$nullrow[username]'");
 				echo "$nullrow[username] has been ejected from their dungeon.</br>";
@@ -232,19 +232,19 @@ if (empty($_SESSION['username'])) {
 			$mates++;
 		}
 		echo '</select><input type="submit" value="Disconnect this player"></form></br>';
-		echo '<form action="admin.php" method="post">Force connect one player as another\'s server:<br />Server:<select name="forceserver">';
+		echo '<form action="admin.php" method="post">Force connect one player as another\'s server:<br/>Server:<select name="forceserver">';
 		$mates = 0;
 		while ($mates < $totalmates) {
 			echo '<option value="' . $sessionmate[$mates] . '">' . $sessionmate[$mates] . '</option>';
 			$mates++;
 		}
-		echo '</select><br />Client:<select name="forceclient">';
+		echo '</select><br/>Client:<select name="forceclient">';
 		$mates = 0;
 		while ($mates < $totalmates) {
 			echo '<option value="' . $sessionmate[$mates] . '">' . $sessionmate[$mates] . '</option>';
 			$mates++;
 		}
-		echo '</select><br /><input type="submit" value="Connect these players"></form></br>';
+		echo '</select><br/><input type="submit" value="Connect these players"></form></br>';
 		echo '<form action="admin.php" method="post">Nullify prototypings:<select name="protonull">';
 		$mates = 0;
 		while ($mates < $totalmates) {
@@ -285,8 +285,8 @@ if (empty($_SESSION['username'])) {
 				$mates++;
 			}
 			echo '</select><input type="submit" value="Make this player head admin"></form></br>';
-			echo '<form action="admin.php" method="post">Change session password:<br />';
-			echo 'Current password: <input type="text" name="oldsespw" /><br />New password: <input type="text" name="newsespw" /><br />Confirm new password: <input type="text" name="consespw" /><br /><input type="submit" value="Change it!" /></form><br />';
+			echo '<form action="admin.php" method="post">Change session password:<br/>';
+			echo 'Current password: <input type="text" name="oldsespw" /><br/>New password: <input type="text" name="newsespw" /><br/>Confirm new password: <input type="text" name="consespw" /><br/><input type="submit" value="Change it!" /></form><br/>';
 			echo '<form action="admin.php" method="post">Session-wide settings:</br></br><input type="hidden" name="settingschange" value="settingschange">';
 			echo '<input type="radio" name="randoms" value="yes">Allow players to randomly join this session</br><input type="radio" name="randoms" value="no">Block players from randomly joining this session</br></br>';
 			echo '<input type="radio" name="unique" value="yes">Players cannot share class/aspect with another</br><input type="radio" name="unique" value="no">Players can have any classpect they want</br>';

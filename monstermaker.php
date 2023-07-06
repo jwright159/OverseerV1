@@ -117,12 +117,12 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 				$enemyname = $enemytype; //Non-prototyping enemy, used as is.
 			}
 			if ($enemyrow['canwield'] == 1 && $canusespecibus) { //this enemy might be wielding a weapon!
-				//echo "DEBUG: rolling up weapon chance<br />";
+				//echo "DEBUG: rolling up weapon chance<br/>";
 				$xtracardchance = rand(1, 100);
 				$luckmod = floor(($userrow['Luck'] + $userrow['Brief_Luck']) / 25);
-				//echo "DEBUG: roll: $xtracardchance - $luckmod<br />";
+				//echo "DEBUG: roll: $xtracardchance - $luckmod<br/>";
 				if ($xtracardchance <= 1 + $luckmod) { //1% chance of this happening, up to 5% at max luck
-					//echo "DEBUG: strife card rolled!<br />";
+					//echo "DEBUG: strife card rolled!<br/>";
 					$weaponresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`power` < " . strval($power) . " AND `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%';");
 					$weaponcount = 0;
 					while ($row = $weaponresult->fetch_array()) {

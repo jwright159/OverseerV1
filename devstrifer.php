@@ -13,16 +13,16 @@ if (empty($_SESSION['username'])) {
 			$_POST['newgrist'] = "None";
 		$slot = generateEnemy($userrow, $_POST['newland'], $_POST['newgrist'], $_POST['newenemy'], false);
 		if ($slot == -1) {
-			echo "There was an error generating the enemy.<br />";
+			echo "There was an error generating the enemy.<br/>";
 		} else {
-			echo "Enemy generated successfully.<br />";
+			echo "Enemy generated successfully.<br/>";
 			$mysqli->query("UPDATE `Players` SET `down` = 0, `Health_Vial` = $userrow[Gel_Viscosity] WHERE `Players`.`username` = '$username'");
 		}
-		echo "<br />";
+		echo "<br/>";
 	}
 
-	echo "Strife Generator<br />";
-	echo "<form action='devstrifer.php' method='post'>Land type of enemy's origin: <input type='text' name='newland' /><br />Grist: <input type='text' name='newgrist' /><br />Enemy's basename: <input type='text' name='newenemy' /><br /><input type='submit' value='Generate' /></form>";
+	echo "Strife Generator<br/>";
+	echo "<form action='devstrifer.php' method='post'>Land type of enemy's origin: <input type='text' name='newland' /><br/>Grist: <input type='text' name='newgrist' /><br/>Enemy's basename: <input type='text' name='newenemy' /><br/><input type='submit' value='Generate' /></form>";
 
 }
 

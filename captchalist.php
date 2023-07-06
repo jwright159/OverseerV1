@@ -20,7 +20,7 @@ if (empty($_SESSION['username'])) {
 		}
 		$sresult = $mysqli->query("SELECT * FROM System");
 		$srow = $sresult->fetch_array();
-		$newaddlog = $srow['debuglog'] . "<br />Dev Captchalist accessed by " . $username;
+		$newaddlog = $srow['debuglog'] . "<br/>Dev Captchalist accessed by " . $username;
 		$newaddlog = $mysqli->real_escape_string($newaddlog);
 		$mysqli->query("UPDATE `System` SET `debuglog` = '$newaddlog' WHERE 1");
 	}

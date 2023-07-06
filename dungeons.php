@@ -91,7 +91,7 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 		if ($lootonly) {
 			if (!empty($trow['bossloots'])) {
 				$exstr = "WHERE " . $trow['bossloots'];
-				//echo "DEBUG: Lootonly query: SELECT `name` FROM `Captchalogue` $exstr<br />";
+				//echo "DEBUG: Lootonly query: SELECT `name` FROM `Captchalogue` $exstr<br/>";
 				$min = -999999999999; //ensure that min/max doesn't affect this selection since it's manually set
 				$max = 999999999999;
 			} else {
@@ -117,7 +117,7 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 			$itemresult = $mysqli->query("SELECT * FROM Captchalogue $exstr LIMIT " . $item . " , 1 ;");
 			$itemrow = $itemresult->fetch_array();
 			$itemname = $itemrow['name'];
-			//if ($debugprintbossloots) echo "checking $itemname<br />";
+			//if ($debugprintbossloots) echo "checking $itemname<br/>";
 			$total = 0;
 			$grist = 0;
 			while (!empty($gristname[$grist])) {
@@ -176,7 +176,7 @@ function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $
 							$randrow = $randomresult->fetch_array();
 							$randenemy = $randrow['basename'];
 							if (empty($randenemy))
-								echo "DEBUGNOTE: Tried to spawn G3F3 boss thing with ID of $whodat, returned empty. This is no cause for alarm if you are not a dev, unless you see this message a bunch of times.<br />";
+								echo "DEBUGNOTE: Tried to spawn G3F3 boss thing with ID of $whodat, returned empty. This is no cause for alarm if you are not a dev, unless you see this message a bunch of times.<br/>";
 							$boss .= $randenemy;
 							$hcount++;
 						}
@@ -642,7 +642,7 @@ if (empty($_SESSION['username'])) {
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Okay look, I know you probably told one of your friends that you could run a dungeon in your sleep or something. Trust me on this: Don't try it.";
 } elseif ($userrow['dungeonstrife'] == 6) { //since this will probably screw with dungeons one way or another, forbid them entirely
-	echo "You still have a consort quest to turn in! You should do that before getting yourself lost in a dungeon.<br />";
+	echo "You still have a consort quest to turn in! You should do that before getting yourself lost in a dungeon.<br/>";
 } else {
 	$dgnvision = -1;
 	if (strpos($userrow['permstatus'], "DVISION") !== false) {
@@ -663,7 +663,7 @@ if (empty($_SESSION['username'])) {
 			$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 			$userrow['indungeon'] = 0;
 		} else
-			echo "You can't do that, sorry!<br />";
+			echo "You can't do that, sorry!<br/>";
 	}
 	echo '<a id="display"></a>'; //This tag is at the very top of the page.
 	$dungeonrows = 10;
@@ -694,13 +694,13 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Players` SET `dungeonrow` = " . strval($coords[0]) . ",`dungeoncol` = " . strval($coords[1]) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
 								$userrow['dungeonrow'] = $coords[0];
 								$userrow['dungeoncol'] = $coords[1];
-								echo "The transportalizer whisks you away to another floor of the dungeon.<br />";
+								echo "The transportalizer whisks you away to another floor of the dungeon.<br/>";
 							} else {
-								echo "ERROR: Matching staircase not found on destination floor!<br />";
+								echo "ERROR: Matching staircase not found on destination floor!<br/>";
 								logDebugMessage($username . " - in a dungeon, tried to ascend to $floorrow[name] from $userrow[currentdungeon], failed");
 							}
 						} else {
-							echo "That transportalizer doesn't lead there!<br />";
+							echo "That transportalizer doesn't lead there!<br/>";
 						}
 					}
 					$i++;
@@ -768,9 +768,9 @@ if (empty($_SESSION['username'])) {
 					//note that the original dungeonrow/dungeoncol variables will always mark the dungeon's initial entrance
 					$dungeongen = true;
 				} else
-					echo "You can't reach the land that dungeon is on!<br />";
+					echo "You can't reach the land that dungeon is on!<br/>";
 			} else
-				echo "ERROR: Dungeon not found.<br />";
+				echo "ERROR: Dungeon not found.<br/>";
 		}
 	}
 	if (!empty($_POST['newdungeon'])) { //Player generating a dungeon.
@@ -792,7 +792,7 @@ if (empty($_SESSION['username'])) {
 						$tresult = $mysqli->query("SELECT * FROM Dungeon_Templates WHERE name = '" . $mysqli->real_escape_string($qrow['req_keyword']) . "'");
 						$trow = $tresult->fetch_array();
 						if ($trow['name'] != $qrow['req_keyword']) {
-							echo "ERROR: Cannot find dungeon template '$template'; generating normal dungeon instead<br />";
+							echo "ERROR: Cannot find dungeon template '$template'; generating normal dungeon instead<br/>";
 							logDebugMessage($userrow['username'] . " - tried to spawn dungeon of template $template and could not find template row");
 						} else {
 							$tfound = true;
@@ -803,9 +803,9 @@ if (empty($_SESSION['username'])) {
 								$onboss = false;
 						}
 					} else
-						echo "The quest you are on either doesn't exist or is not a dungeon quest.<br />";
+						echo "The quest you are on either doesn't exist or is not a dungeon quest.<br/>";
 				} else
-					echo "You are not currently on a quest.<br />";
+					echo "You are not currently on a quest.<br/>";
 			}
 			$gateresult = $mysqli->query("SELECT * FROM Gates");
 			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
@@ -826,7 +826,7 @@ if (empty($_SESSION['username'])) {
 							if ($tfound) { //we're loading up a quest dungeon, so make sure this is the land the player is questing on
 								if ($currentrow['username'] != $userrow['questland']) {
 									$access = false;
-									echo "That land isn't the land you're questing on.<br />";
+									echo "That land isn't the land you're questing on.<br/>";
 								}
 							}
 						}
@@ -868,7 +868,7 @@ if (empty($_SESSION['username'])) {
 					$i++;
 					if ($i > 100) {
 						break; //...or unless something is clearly wrong
-						echo "Infinite loop protection activated!<br />";
+						echo "Infinite loop protection activated!<br/>";
 					}
 				}
 				$floors = rand(1, $gate);
@@ -903,7 +903,7 @@ if (empty($_SESSION['username'])) {
 							while ($row <= 10 && empty($bossroom)) {
 								while ($col <= 10 && empty($bossroom)) {
 									$room = strval($row) . "," . strval($col);
-									//echo $room . " -- " . $ffrow[$room] . "<br />";
+									//echo $room . " -- " . $ffrow[$room] . "<br/>";
 									if (strpos($ffrow[$room], "|BOSS") !== false) {
 										$bossroom = $room;
 									}
@@ -915,7 +915,7 @@ if (empty($_SESSION['username'])) {
 							$room = $bossroom;
 						}
 						if (empty($ffrow[$room])) { //couldn't find the boss
-							echo "ERROR: Could not spawn quest goal in the dungeon.<br />";
+							echo "ERROR: Could not spawn quest goal in the dungeon.<br/>";
 							logDebugMessage($userrow['username'] . " - goal specified for quest $questgoal, found nowhere to spawn (dungeon: " . $lolname . "_" . strval($i) . ")");
 						} else {
 							if (!empty($questgoal)) {
@@ -1166,11 +1166,11 @@ if (empty($_SESSION['username'])) {
 												if ($connection) { //one way or another, the door is open.
 													$flag = "LINK:" . $oldroom; //remove the door from the link, it is gone for good.
 												} else
-													echo "Try as you might, you are unable to get the door open with that item.<br />";
+													echo "Try as you might, you are unable to get the door open with that item.<br/>";
 											} else
-												echo "ERROR: The item you selected could not be found.<br />";
+												echo "ERROR: The item you selected could not be found.<br/>";
 										} else {
-											echo "Upon closer inspection, that door does not actually exist, so you are able to enter the next room with no problems.<br />";
+											echo "Upon closer inspection, that door does not actually exist, so you are able to enter the next room with no problems.<br/>";
 											$connection = true;
 											$flag = "LINK:" . $oldroom; //remove the door from the link, it is gone for good.
 										}
@@ -1204,7 +1204,7 @@ if (empty($_SESSION['username'])) {
 										echo $argument[2];
 									else
 										echo "You have completed the quest!";
-									echo "<br /><form action='consortquests.php' method='post'><input type='hidden' name='turnindungeonquest' value='yes' /><input type='submit' value='Claim the quest reward!' /></form><br />";
+									echo "<br/><form action='consortquests.php' method='post'><input type='hidden' name='turnindungeonquest' value='yes' /><input type='submit' value='Claim the quest reward!' /></form><br/>";
 									$isquestcomplete = true;
 								}
 							} elseif ($connection) { //Connection confirmed: do shit. Note that if this is never set to true, nothing ever happens.
@@ -1295,7 +1295,7 @@ if (empty($_SESSION['username'])) {
 					$newflags = $newflags . "|VISITED"; //Mark this location as having been visited, because it was. Don't double up though.
 					if (strpos($newflags, "STAIRS") !== false) { //there are stairs on this tile that we haven't visited before.
 						//Note that this shouldn't repeat when the user ascends because the stairs on the next floor are already marked 'visited'.
-						echo 'You reach these stairs for the first time and, realizing there\'s at least one more floor to this dungeon, you decide to take a quick break. You recover 3 encounters.<br />';
+						echo 'You reach these stairs for the first time and, realizing there\'s at least one more floor to this dungeon, you decide to take a quick break. You recover 3 encounters.<br/>';
 						$encounters = 100 - $userrow['encounters'];
 						if ($encounters > 3)
 							$encounters = 3;
@@ -1309,7 +1309,7 @@ if (empty($_SESSION['username'])) {
 					$allyquery = $mysqli->query("SELECT `username` FROM `Players` WHERE `Players`.`currentdungeon` = '$dgnstring' AND `Players`.`dungeonrow` = $row AND `Players`.`dungeoncol` = $col AND `Players`.`aiding` = '' AND `Players`.`indungeon` = 1");
 					$allyrow = $allyquery->fetch_array();
 					if (!empty($allyrow['username'])) { //found someone!
-						echo "You enter the room to find " . $allyrow['username'] . " engaging in strife!<br />";
+						echo "You enter the room to find " . $allyrow['username'] . " engaging in strife!<br/>";
 						$mysqli->query("UPDATE `Players` SET `aiding` = '" . $allyrow['username'] . "' WHERE `Players`.`username` = '$username' LIMIT 1;"); //help them out
 					} else {
 						echo "As you examine the room, you are ";
@@ -1441,7 +1441,7 @@ if (empty($_SESSION['username'])) {
 		if (!empty($dungeongen)) { //Just generated a dungeon.
 			//header('location:/dungeons.php'); //Reload the page now that we're in a dungeon.
 			if (!empty($_POST['joinmate'])) {
-				echo "You shortly arrive at the dungeon that your ally discovered. The dungeon guardian has already been taken care of, so you stroll right through the front gate!<br />";
+				echo "You shortly arrive at the dungeon that your ally discovered. The dungeon guardian has already been taken care of, so you stroll right through the front gate!<br/>";
 				echo "<a href='dungeons.php'>==&gt;</a>";
 			} else {
 				if (!empty($trow['guardian'])) {
@@ -1468,7 +1468,7 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 				if ($guardian == "NONE") {
-					echo 'You find yourself at the entrance to a dungeon. It is unguarded, so you are able to enter with little difficulty.<br />';
+					echo 'You find yourself at the entrance to a dungeon. It is unguarded, so you are able to enter with little difficulty.<br/>';
 					echo "<a href='dungeons.php'>==&gt;</a>";
 				} else {
 					if ($gtier != 0) { //guardian is tiered
@@ -1547,7 +1547,7 @@ if (empty($_SESSION['username'])) {
 				}
 				if ($aok) {
 					if ($firstone) {
-						echo '<br /><form action="dungeons.php#display" method="post">At least one of your sessionmates are currently dungeon diving:<br /><select name="joinmate">';
+						echo '<br/><form action="dungeons.php#display" method="post">At least one of your sessionmates are currently dungeon diving:<br/><select name="joinmate">';
 						$firstone = false;
 					}
 					$start = 0;
