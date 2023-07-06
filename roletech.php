@@ -1,21 +1,16 @@
 <?php
 require_once "header.php";
 require_once "includes/fieldparser.php";
+
 if (empty($_SESSION['username'])) {
 	echo "Log in to access roletech.<br/>";
 } elseif (empty($_SESSION['adjective'])) {
 	echo "You have not accepted your title yet!<br/>";
 } else {
 
-
-	$compugood = true;
-	if (strpos($userrow['storeditems'], "DREAMBOT") !== false && $userrow['dreamingstatus'] != "Awake") {
-		//items in storage with the DREAMBOT tag will grant access to computability as one's dreamself
-		$dreambot == true;
-	} else {
-		$dreambot == false;
-		$compugood = false;
-	}
+	//items in storage with the DREAMBOT tag will grant access to computability as one's dreamself
+	$dreambot = $compugood = strpos($userrow['storeditems'], "DREAMBOT") !== false && $userrow['dreamingstatus'] != "Awake";
+	
 	if ($dreambot) {
 		if (strpos($userrow['storeditems'], "ISCOMPUTER.") == 0) { //dreambot checks for a computer in storage, regardless of player computability
 			//echo "Your dreambot can't use the SBURB server program without access to a computer in storage!<br/>";
@@ -42,8 +37,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['ability'])) { //Active ability used.
 		$bonusconsumable = false;
 		$id = $_POST['ability'];
-		$usage = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` 
-BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] AND `Abilities`.`ID` = $id;"); //Pulls ID ability IF the player has it.
+		$usage = $mysqli->query("SELECT * FROM Abilities WHERE Aspect IN ('$userrow[Aspect]','All') AND Class IN ('$userrow[Class]','All') AND Rungreq BETWEEN 0 AND $userrow[Echeladder] AND Godtierreq BETWEEN 0 AND $userrow[Godtier] AND ID = $id;"); //Pulls ID ability IF the player has it.
 		$currentstatus = $userrow['strifestatus'];
 		if (!empty($currentstatus)) { //Check for any instances of HASABILITY
 			$thisstatus = explode("|", $currentstatus);
@@ -53,7 +47,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 				if ($statusarg[0] == "HASABILITY") { //This is an ability the player possesses.
 					$abilityid = intval($statusarg[1]);
 					if ($abilityid == $id) { //This instance of HASABILITY corresponds to the ability being used
-						$usage = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`ID` = $id;"); //Ability use is legal; go for it!
+						$usage = $mysqli->query("SELECT * FROM Abilities WHERE ID = $id;"); //Ability use is legal; go for it!
 					}
 				}
 				$st++;
@@ -74,7 +68,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 					}
 				}
 				if ($userrow['Aspect_Vial'] >= $abilityrow['Aspect_Cost']) {
-					if ($userrow['combatconsume'] == 0 || $strifing == false) { //User has an action or isn't strifing
+					if ($userrow['combatconsume'] == 0 || !$strifing) { //User has an action or isn't strifing
 						$targetfound = false;
 						if ($abilityrow['targets'] == 1) { //Check to see if the chosen target can be reached.
 							if (!empty($_POST['target']) && $mysqli->real_escape_string($_POST['target']) != $username) { //Target is another player.
@@ -112,7 +106,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 									$instancefound = true;
 									$removethis = $statusarray[$p] . "|";
 									$userrow['strifestatus'] = preg_replace('/' . $removethis . '/', '', $userrow['strifestatus'], 1);
-									$mysqli->query("UPDATE `Players` SET `Players`.`strifestatus` = '$userrow[strifestatus]' WHERE `Players`.`username` = '$username' LIMIT 1;");
+									$mysqli->query("UPDATE Players SET strifestatus = '$userrow[strifestatus]' WHERE username = '$username' LIMIT 1;");
 								}
 								$p++;
 							}
@@ -270,8 +264,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 			echo "You do not have that ability!<br/>";
 		}
 	}
-	$abilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` 
-BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
+	$abilities = $mysqli->query("SELECT * FROM Abilities WHERE Aspect IN ('$userrow[Aspect]','All') AND Class IN ('$userrow[Class]','All') AND Rungreq BETWEEN 0 AND $userrow[Echeladder] AND Godtierreq BETWEEN 0 AND $userrow[Godtier] ORDER BY Rungreq DESC;");
 	//Note that other special restrictions may be checked at some stage.
 	$aspectvial = floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100);
 	echo "Aspect Vial: $aspectvial%<br/>";
@@ -283,7 +276,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 		while (!empty($thisstatus[$st])) {
 			$statusarg = explode(":", $thisstatus[$st]);
 			if ($statusarg[0] == "HASABILITY") { //This is an ability the player possesses.
-				if ($tempfound == false) {
+				if (!$tempfound) {
 					echo "You have temporary roletechs:<br/><br/>";
 					$tempfound = true;
 				}
@@ -337,8 +330,8 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 		}
 		echo "<br/>";
 	}
-	if ($tech == false)
+	if (!$tech)
 		echo "None!";
 }
+
 require_once "footer.php";
-?>
