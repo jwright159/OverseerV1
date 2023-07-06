@@ -1,17 +1,16 @@
 <?php
-require 'monstermaker.php';
-require 'additem.php';
-require 'includes/chaincheck.php';
-//require 'includes/fieldparser.php'; //monstermaker includes fieldparser already
+require_once 'monstermaker.php';
+require_once 'additem.php';
+require_once 'includes/chaincheck.php';
+//require_once 'includes/fieldparser.php'; //monstermaker includes fieldparser already
 require_once "header.php";
 $canusespecibus = true;
 function initGrists()
 {
-	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
+	//document grist types now so we don't have to do it later
 	$reachgrist = false;
-	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
+	foreach (fetchColumns('Captchalogue')  as $col) {
 		$gristcost = $col->name;
 		$gristtype = substr($gristcost, 0, -5);
 		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
@@ -19,9 +18,9 @@ function initGrists()
 		}
 		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
 			$reachgrist = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachgrist == true) {
+		if ($reachgrist) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}

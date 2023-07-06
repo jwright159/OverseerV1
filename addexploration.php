@@ -1,21 +1,12 @@
 <?php
 require_once "header.php";
 
-function getColumns(string $table)
-{
-	$columns = [];
-	$result = query('SELECT * FROM :table LIMIT 0;', ['table' => $table]);
-	for ($i = 0; $i < $result->columnCount(); $i++)
-		$columns[] = $result->getColumnMeta($i)['name'];
-	return $columns;
-}
-
 function insertFromPost(string $table)
 {
 	$query = "INSERT INTO `$table` VALUES (";
 	$params = [];
 	
-	foreach (getColumns($table) as $column)
+	foreach (fetchColumns($table) as $column)
 	{
 		$query .= "?, ";
 		$params[] = $_POST[$column];
@@ -32,7 +23,7 @@ function updateFromPost(string $table, string $key, string $keyValue)
 	$query = "UPDATE `$table` SET ";
 	$params = [];
 	
-	foreach (getColumns($table) as $column)
+	foreach (fetchColumns($table) as $column)
 	{
 		$query .= "`$column` = ?, ";
 		$params[] = $_POST[$column];
