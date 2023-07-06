@@ -356,7 +356,7 @@ require_once 'includes/global_functions.php';
 						</span></nobr>
 					<nobr><a href="portfolio.php"><img src="/Images/title/power.png" align="center"
 								title="Strife Power"></a>
-						<?php echo $powerlevela; ?>
+						<?php echo $powerLevel; ?>
 					</nobr>
 					<nobr><a href="echeviewer.php"><img src="/Images/title/eche.png" align="center" title="Echeladder"></a>
 						<?php echo strval($ecchi); ?>
