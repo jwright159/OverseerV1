@@ -9,7 +9,7 @@ function updateSubmission($subid)
 }
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to view item submissions.</br>";
+	echo "Log in to view item submissions.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</style><style>normal{color: #111111;}</style><style>urgent{color: #0000CC;}</style><style>defunct{color: #CC0000;}</style><style>clarify{color: #CCCC00;}</style><style>greenlit{color: #00AA00;}</style><style>suspended{color: #999999;}</style><style>randomized{color: #EE6606;}</style><style>halp{color: #FFFFFF;}</style></head><body>";
@@ -25,11 +25,11 @@ if (empty($_SESSION['username'])) {
 		if ($feedrow['user'] == $username || $userrow['session_name'] == "Developers") {
 			if ($feedrow['type'] == "bug" || $feedrow['type'] == "misc") {
 				$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
-				echo 'Submission deleted.</br>';
+				echo 'Submission deleted.<br/>';
 			} else
-				echo "You can't delete non-bug/misc submissions from here.</br>";
+				echo "You can't delete non-bug/misc submissions from here.<br/>";
 		} else
-			echo "You don't have permission to delete that submission. (lol rhyme)</br>";
+			echo "You don't have permission to delete that submission. (lol rhyme)<br/>";
 	}
 
 	//first thing's first, view the submission if the player clicked on one
@@ -74,13 +74,13 @@ if (empty($_SESSION['username'])) {
 							echo "ERROR: Response could not be sent because this user's inbox is full.<br/>";
 					} else
 						echo "ERROR: Response could not be sent because this user has opted out of receiving feedback notices.<br/>";
-					//echo $_POST['body'] . "</br>";
+					//echo $_POST['body'] . "<br/>";
 					$newcomments = $feedrow['usercomments'] . $username . $exstring . $realbody . "|";
 					$newncomments = $mysqli->real_escape_string($newcomments);
-					//echo $newcomments . "</br>";
+					//echo $newcomments . "<br/>";
 					$mysqli->query("UPDATE `Feedback` SET `usercomments` = '" . $newncomments . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 					$feedrow['usercomments'] = $newcomments;
-					echo "Your comment has been posted.</br>";
+					echo "Your comment has been posted.<br/>";
 					updateSubmission($_GET['view']);
 				}
 				$stylestring = "normal";
@@ -90,38 +90,38 @@ if (empty($_SESSION['username'])) {
 					$stylestring = "clarify";
 				}
 				$likestring = "+" . strval($feedrow['likes']);
-				echo '<' . $stylestring . '>Submission ID: ' . strval($feedrow['ID']) . '</' . $stylestring . '></br>';
+				echo '<' . $stylestring . '>Submission ID: ' . strval($feedrow['ID']) . '</' . $stylestring . '><br/>';
 				if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods") {
-					echo 'Submitted by: ' . $feedrow['user'] . '</br>';
+					echo 'Submitted by: ' . $feedrow['user'] . '<br/>';
 				}
 				if ($feedrow['comments'] != "")
-					echo "Submitter's comments: " . $feedrow['comments'] . "</br>";
-				echo "</br>";
+					echo "Submitter's comments: " . $feedrow['comments'] . "<br/>";
+				echo "<br/>";
 				if ($feedrow['usercomments'] != "") {
-					echo "Reviewers' comments:</br>";
+					echo "Reviewers' comments:<br/>";
 					$count = 0;
 					$boom = explode("|", $feedrow['usercomments']);
 					$allmessages = count($boom);
 					while ($count <= $allmessages) {
 						$boom[$count] = str_replace("THIS IS A LINE", "|", $boom[$count]);
-						echo $boom[$count] . "</br>";
+						echo $boom[$count] . "<br/>";
 						$count++;
 					}
 				}
 				echo produceTimeSinceUpdate($feedrow['lastupdated']);
-				echo "</br>";
+				echo "<br/>";
 				echo '<form action="bugsubmissions.php?view=' . strval($feedrow['ID']) . '&page=' . strval($page) . '" method="post" id="usercomment">';
-				echo 'Respond to this feedback:</br><textarea name="body" rows="6" cols="40" form="usercomment"></textarea></br>';
+				echo 'Respond to this feedback:<br/><textarea name="body" rows="6" cols="40" form="usercomment"></textarea><br/>';
 				echo '<input type="submit" value="Share your opinion" /></form>';
 				if ($feedrow['user'] == $username || $userrow['session_name'] == "Developers") {
-					echo '</br><form action="bugsubmissions.php?page=' . strval($page) . '" method="post"><input type="hidden" name="delete" value="' . strval($feedrow['ID']) . '"><input type="submit" value="Delete this submission"></form></br>';
+					echo '<br/><form action="bugsubmissions.php?page=' . strval($page) . '" method="post"><input type="hidden" name="delete" value="' . strval($feedrow['ID']) . '"><input type="submit" value="Delete this submission"></form><br/>';
 				}
 			} else
-				echo 'The submission with that ID is not a bug/feedback report.</br>';
+				echo 'The submission with that ID is not a bug/feedback report.<br/>';
 		} else
-			echo 'No item submission with that ID exists.</br>';
+			echo 'No item submission with that ID exists.<br/>';
 	}
-	echo 'Bug/Feedback viewer v0.0.1a. Click on a submission to view/review it.</br>';
+	echo 'Bug/Feedback viewer v0.0.1a. Click on a submission to view/review it.<br/>';
 	//let's generate that message table~
 
 	$startpoint = strval(($page - 1) * 20);
@@ -146,12 +146,12 @@ if (empty($_SESSION['username'])) {
 	}
 	if (!$results)
 		echo '<tr><td colspan="3">No submissions found. Either this is an invalid page number, or nothing matches those parameters.</td></tr>';
-	echo '</table></br>';
+	echo '</table><br/>';
 	$countresult = $mysqli->query("SELECT `ID` FROM `Feedback` WHERE `Feedback`.`type` = 'bug' OR `Feedback`.`type` = 'misc'");
 	$pcount = 20;
 	$ptotal = 0;
 	$alltotal = 0;
-	echo '<center>Pages:</br>';
+	echo '<center>Pages:<br/>';
 	if ($page > 1) {
 		echo '<a href="bugsubmissions.php?page=' . strval($page - 1) . '">Previous page</a> | ';
 	} else {

@@ -43,10 +43,10 @@
 	}, 1000);
 </script>
 <span class="c3">100</span>
-</br>
+<br/>
 <span class="c1">00</span>:<span class="c2">01</span>
-</br>
-</br>
+<br/>
+<br/>
 <span class="d3">100</span>
-</br>
+<br/>
 <span class="d1">00</span>:<span class="d2">01</span>

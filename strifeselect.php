@@ -6,10 +6,10 @@ require_once "header.php";
 require_once 'includes/fieldparser.php';
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if (empty($_SESSION['username'])) {
-	echo "Log in to engage in strife.</br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to engage in strife.<br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } elseif ($userrow['sessionbossengaged'] == 1) {
-	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
+	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a><br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	if (empty($_POST['land'])) {
@@ -65,12 +65,12 @@ if (empty($_SESSION['username'])) {
 									echo '<option value="' . $enemytype . '">' . $enemytype . ' ("Power": ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 							}
 						}
-						echo '</select></br>';
+						echo '</select><br/>';
 						$enemies++;
 					}
 					echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
-					echo '<input type="submit" value="&quot;Fight&quot; it!" /> </form></br>';
-					echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:</br>';
+					echo '<input type="submit" value="&quot;Fight&quot; it!" /> </form><br/>';
+					echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:<br/>';
 					echo '<input type="hidden" name="gristtype" value="None">'; //Gristless enemies.
 					$griststr = "gristall";
 					echo '<input type="hidden" name="' . $griststr . '" value="None">'; //Gristless enemies.
@@ -84,7 +84,7 @@ if (empty($_SESSION['username'])) {
 							echo '<option value="' . $enemytype . '">' . $enemytype . ' ("Power": ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 						}
 					}
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
 					echo '<input type="submit" value="&quot;Fight&quot; it!" /> </form>';
 					break;
@@ -110,12 +110,12 @@ if (empty($_SESSION['username'])) {
 									echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 							}
 						}
-						echo '</select></br>';
+						echo '</select><br/>';
 						$enemies++;
 					}
 					echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
-					echo '<input type="submit" value="Fight it!" /> </form></br>';
-					echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:</br>';
+					echo '<input type="submit" value="Fight it!" /> </form><br/>';
+					echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:<br/>';
 					echo '<input type="hidden" name="gristtype" value="None">'; //Gristless enemies.
 					$griststr = "gristall";
 					echo '<input type="hidden" name="' . $griststr . '" value="None">'; //Gristless enemies.
@@ -129,9 +129,9 @@ if (empty($_SESSION['username'])) {
 							echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 						}
 					}
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
-					echo '<input type="submit" value="Fight it!" /> </form></br>';
+					echo '<input type="submit" value="Fight it!" /> </form><br/>';
 					break;
 				case "Battlefield":
 					$mysqli->query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -155,12 +155,12 @@ if (empty($_SESSION['username'])) {
 									echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 							}
 						}
-						echo '</select></br>';
+						echo '</select><br/>';
 						$enemies++;
 					}
 					echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
-					echo '<input type="submit" value="Fight it!" /> </form></br>';
-					echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:</br>';
+					echo '<input type="submit" value="Fight it!" /> </form><br/>';
+					echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:<br/>';
 					echo '<input type="hidden" name="gristtype" value="None">'; //Gristless enemies.
 					$griststr = "gristall";
 					echo '<input type="hidden" name="' . $griststr . '" value="None">'; //Gristless enemies.
@@ -174,16 +174,16 @@ if (empty($_SESSION['username'])) {
 							echo '<option value="' . $enemytype . '">' . $enemytype . ' (Power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 						}
 					}
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
-					echo '<input type="submit" value="Fight it!" /> </form></br>';
+					echo '<input type="submit" value="Fight it!" /> </form><br/>';
 					break;
 				case "Cheatyland":
-					echo "Your ill-advised attempt to travel to another session predictably ends poorly. Now stop fucking around with inspect elements.</br>";
+					echo "Your ill-advised attempt to travel to another session predictably ends poorly. Now stop fucking around with inspect elements.<br/>";
 					break;
 				default:
 					echo $_POST['land'];
-					echo ": Land not found.</br>"; //Ruh roh, raggy!
+					echo ": Land not found.<br/>"; //Ruh roh, raggy!
 					break;
 			}
 		} else { //We have the player details we need.
@@ -226,12 +226,12 @@ if (empty($_SESSION['username'])) {
 							echo '<option value="' . $enemytype . '">' . $enemytype . ' (Base power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 					}
 				}
-				echo '</select></br>';
+				echo '</select><br/>';
 				$enemies++;
 			}
 			echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
-			echo '<input type="submit" value="Fight it!" /> </form></br>';
-			echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:</br>';
+			echo '<input type="submit" value="Fight it!" /> </form><br/>';
+			echo '<form method="post" action="strifebegin.php">Alternatively, use the following to fill out all five enemy slots:<br/>';
 			echo '<input type="hidden" name="gristtype" value="' . $landrow['grist_type'] . '">';
 			$griststr = "gristall";
 			echo '<select name="' . $griststr . '">';
@@ -253,12 +253,12 @@ if (empty($_SESSION['username'])) {
 					echo '<option value="' . $enemytype . '">' . $enemytype . ' (Base power: ' . $row['basepower'] . ')</option>'; //Produce an option in the dropdown menu for this type of enemy.
 				}
 			}
-			echo '</select></br>';
+			echo '</select><br/>';
 			echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
-			echo '<input type="submit" value="Fight it!" /> </form></br>';
+			echo '<input type="submit" value="Fight it!" /> </form><br/>';
 		}
 	}
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 }
 require_once "footer.php";
 ?>

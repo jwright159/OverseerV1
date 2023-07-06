@@ -2,8 +2,8 @@
 require_once "header.php";
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to upload art.</br>";
-	echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to upload art.<br/>";
+	echo '<br/><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
 	require_once "includes/SQLconnect.php";
 	if ($userrow['session_name'] != "Developers") {
@@ -32,9 +32,9 @@ if (empty($_SESSION['username'])) {
 
          <form action="uploadart.php" method="post" enctype="multipart/form-data">
          <label for="file">Filename:</label>
-         <input type="file" name="file" id="file"></br>
-         Captchalogue code for item whose art this is (because fuck apostrophes)<input type="text" name="artcode" id="artcode"></br>
-         Player to receive credit:<input type="text" name="credit" id="credit"></br>
+         <input type="file" name="file" id="file"><br/>
+         Captchalogue code for item whose art this is (because fuck apostrophes)<input type="text" name="artcode" id="artcode"><br/>
+         Player to receive credit:<input type="text" name="credit" id="credit"><br/>
          <input type="submit" name="submit" value="Submit">
          </form>
 

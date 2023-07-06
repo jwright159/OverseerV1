@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (empty($_SESSION['username'])) {
-	echo "Log in to use consumable items.</br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to use consumable items.<br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
 	$con = $mysqli->connect("localhost", "theovers_DC", "pi31415926535");
 	if (!$con) {
@@ -23,7 +23,7 @@ if (empty($_SESSION['username'])) {
 		$players = $mysqli->query("SELECT * FROM Players");
 		while ($row = $players->fetch_array()) {
 			$mysqli->query("INSERT INTO `Ability_Patterns` (`username`) VALUES ('" . $mysqli->real_escape_string($row['username']) . "');");
-			echo $row['username'] . " added.</br>";
+			echo $row['username'] . " added.<br/>";
 		}
 	}
 }

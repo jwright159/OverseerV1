@@ -6,8 +6,8 @@ require 'time.php';
 require 'location.php';
 session_start();
 if (empty($_SESSION['username'])) {
-	echo "Log in to view and change your location.</br>";
-	echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to view and change your location.<br/>";
+	echo '<br/><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
 	$con = $mysqli->connect("localhost", "theovers_DC", "pi31415926535");
 	if (!$con) {
@@ -33,6 +33,6 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	$locationstr = location($userrow, $locationrow);
-	echo "Current location: $locationstr </br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Current location: $locationstr <br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 }

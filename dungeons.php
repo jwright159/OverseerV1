@@ -498,7 +498,7 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 							$newcol--;
 							break;
 						default:
-							echo "ERROR: Unsupported direction $direction</br>";
+							echo "ERROR: Unsupported direction $direction<br/>";
 							logDebugMessage($username . " - dungeon generator tried to continue arm in direction $direction");
 							//ERROR ERROR
 							break;
@@ -635,10 +635,10 @@ function findStairs($dungeonrow, $oldfloor)
 }
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to go dungeon diving.</br>";
+	echo "Log in to go dungeon diving.<br/>";
 } elseif ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 	//User currently strifing. Send them back to the strife page!
-	echo "You can't explore the dungeon while strifing!</br>";
+	echo "You can't explore the dungeon while strifing!<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Okay look, I know you probably told one of your friends that you could run a dungeon in your sleep or something. Trust me on this: Don't try it.";
 } elseif ($userrow['dungeonstrife'] == 6) { //since this will probably screw with dungeons one way or another, forbid them entirely
@@ -671,7 +671,7 @@ if (empty($_SESSION['username'])) {
 	$dgnstring = $userrow['currentdungeon'];
 	if (!empty($_POST['ascend'])) { //user is taking some stairs
 		if ($userrow['indungeon'] == 0) { //Player not in a dungeon.
-			echo "You are not currently in a dungeon, so you can't use a transportalizer.</br>";
+			echo "You are not currently in a dungeon, so you can't use a transportalizer.<br/>";
 		} else {
 			$playertile = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
 			$dungeonresult = $mysqli->query("SELECT `$playertile` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
@@ -706,13 +706,13 @@ if (empty($_SESSION['username'])) {
 					$i++;
 				}
 			} else {
-				echo "You can't use a transportalizer that isn't there!</br>";
+				echo "You can't use a transportalizer that isn't there!<br/>";
 			}
 		}
 	}
 	if (!empty($_POST['exitdungeon'])) {
 		if ($userrow['indungeon'] == 0) { //Player not in a dungeon.
-			echo "You are not currently in a dungeon, so you can't exit one.</br>";
+			echo "You are not currently in a dungeon, so you can't exit one.<br/>";
 		} else {
 			$playertile = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
 			$dungeonresult = $mysqli->query("SELECT `$playertile` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
@@ -721,15 +721,15 @@ if (empty($_SESSION['username'])) {
 				$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 				$userrow['indungeon'] = 0;
 			} else {
-				echo "You may only exit the dungeon while standing on the entrance!</br>";
+				echo "You may only exit the dungeon while standing on the entrance!<br/>";
 			}
 		}
 	}
 	if (!empty($_POST['joinmate'])) { //player is joining a sessionmate's dungeon
 		if ($userrow['indungeon'] != 0) { //Player already IN a dungeon.
-			echo "You are already in a dungeon!</br>";
+			echo "You are already in a dungeon!<br/>";
 		} elseif ($userrow['encounters'] < 3) {
-			echo "You don't have enough encounters to travel that far.</br>";
+			echo "You don't have enough encounters to travel that far.<br/>";
 		} else {
 			$dgnstring = $_POST['joinmate'];
 			$start = 0;
@@ -775,9 +775,9 @@ if (empty($_SESSION['username'])) {
 	}
 	if (!empty($_POST['newdungeon'])) { //Player generating a dungeon.
 		if ($userrow['indungeon'] != 0) { //Player already IN a dungeon.
-			echo "You are already in a dungeon!</br>";
+			echo "You are already in a dungeon!<br/>";
 		} elseif ($userrow['encounters'] < 3) {
-			echo "You fail to encounter a dungeon.</br>";
+			echo "You fail to encounter a dungeon.<br/>";
 		} else {
 			if ($userrow['dungeonstrife'] <= 4)
 				$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;"); //Paranoia: Ensure dungeonstrife not active.
@@ -948,7 +948,7 @@ if (empty($_SESSION['username'])) {
 				$mysqli->query("UPDATE `Players` SET `indungeon` = 1, `currentdungeon` = '" . $lolname . "_1' WHERE `Players`.`username` = '$username' LIMIT 1;");
 				$dgnstring = $username . "_1";
 			} else {
-				echo "You do not have access to that gate for dungeoneering purposes.</br>";
+				echo "You do not have access to that gate for dungeoneering purposes.<br/>";
 			}
 		}
 	}
@@ -962,7 +962,7 @@ if (empty($_SESSION['username'])) {
 			$userrow['dungeoncol'] = $userrow['olddungeoncol'];
 			header('location:/dungeons.php');
 		} elseif ($userrow['dungeonstrife'] == 2) { //Victory!
-			echo "You have defeated the enemies guarding this room!</br>";
+			echo "You have defeated the enemies guarding this room!<br/>";
 			$room = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
 			$dungeonresult = $mysqli->query("SELECT `dungeonrow`,`dungeoncol`,`$room` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
 			$dungeonrow = $dungeonresult->fetch_array();
@@ -976,17 +976,17 @@ if (empty($_SESSION['username'])) {
 			$userrow['indungeon'] = 0;
 			header('location:/dungeons.php');
 		} elseif ($userrow['dungeonstrife'] == 4) { //Victory (dungeon guardian)!
-			echo "You enter the dungeon. The danger has only just begun...</br>";
+			echo "You enter the dungeon. The danger has only just begun...<br/>";
 		}
 	}
 	if (!empty($_POST['targetrow']) && !empty($_POST['targetcol']) && $userrow['dungeonstrife'] == 0) { //User is in a dungeon. Ignore movement attempts if user just returned from dungeon strife.
 		if ($userrow['indungeon'] == 0) { //...or not.
-			echo "You are not currently exploring a dungeon!</br>";
+			echo "You are not currently exploring a dungeon!<br/>";
 		} else {
 			$row = $_POST['targetrow'];
 			$col = $_POST['targetcol'];
 			if ($row < 1 || $row > 10 || $col < 1 || $col > 10) {
-				echo "That location is out of bounds.</br>";
+				echo "That location is out of bounds.<br/>";
 			} else {
 				$newroom = strval($row) . "," . strval($col);
 				$dungeonresult = $mysqli->query("SELECT `$newroom`,`dungeongate`,`dungeonrow`,`dungeoncol`,`dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //land needed if encounter appears
@@ -1077,7 +1077,7 @@ if (empty($_SESSION['username'])) {
 										$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
 										chargeEncounters($userrow, 1, 1);
 									} else {
-										echo "There are enemies in this room, but you do not have any encounters remaining or you're still down. You are therefore unable to fight them, and are forced to turn back.</br>";
+										echo "There are enemies in this room, but you do not have any encounters remaining or you're still down. You are therefore unable to fight them, and are forced to turn back.<br/>";
 										$row = $userrow['dungeonrow'];
 										$col = $userrow['dungeoncol'];
 										echo "<form action='dungeons.php#display' method='post'>";
@@ -1142,7 +1142,7 @@ if (empty($_SESSION['username'])) {
 													if ($irow['name'] == $keys[$k]) { //the item used is one of the keys required
 														$connection = true;
 														$k = $keyn;
-														echo "You successfully unlock the door with the key and pass through it.</br>";
+														echo "You successfully unlock the door with the key and pass through it.<br/>";
 													} else
 														$k++;
 												}
@@ -1160,7 +1160,7 @@ if (empty($_SESSION['username'])) {
 													}
 													if ($irow['power'] > $drow['strength']) {
 														$connection = true;
-														echo "You succeed at breaking down the door! You are able to pass through it.</br>";
+														echo "You succeed at breaking down the door! You are able to pass through it.<br/>";
 													}
 												}
 												if ($connection) { //one way or another, the door is open.
@@ -1175,11 +1175,11 @@ if (empty($_SESSION['username'])) {
 											$flag = "LINK:" . $oldroom; //remove the door from the link, it is gone for good.
 										}
 									} else {
-										echo "A locked door blocks your path to the $blockstr.</br>";
+										echo "A locked door blocks your path to the $blockstr.<br/>";
 										$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flag[2]");
 										$drow = $doorresult->fetch_array();
 										if (!empty($drow['ID'])) {
-											echo $drow['description'] . "</br>";
+											echo $drow['description'] . "<br/>";
 											echo '<form action="dungeons.php#display" method="post"> Select an item to use on the door: <select name="dooritem">';
 											$citem = 1;
 											if (empty($max_items))
@@ -1192,7 +1192,7 @@ if (empty($_SESSION['username'])) {
 											}
 											echo '</select><input type="hidden" name="targetrow" value="' . strval($coords[0]) . '"><input type="hidden" name="targetcol" value="' . strval($coords[1]) . '"><input type="submit" value="Try it!"></form>';
 										} else {
-											echo "ERROR: Unknown door ID $flag[2]. Please submit a bug report, but for now, you may pass through this area.</br>";
+											echo "ERROR: Unknown door ID $flag[2]. Please submit a bug report, but for now, you may pass through this area.<br/>";
 											logDebugMessage($username . " - dungeon generated a door with ID $flag[2] which doesn't exist");
 											echo '<form action="dungeons.php#display" method="post"><input type="hidden" name="targetrow" value="' . strval($coords[0]) . '"><input type="hidden" name="targetcol" value="' . strval($coords[1]) . '"><input type="hidden" name="dooritem" value="inv1"><input type="submit" value="Advance"></form>';
 										}
@@ -1243,20 +1243,20 @@ if (empty($_SESSION['username'])) {
 												//require_once "includes/SQLconnect.php";
 												if ($itemslot != "inv-1") { //Give them the item and check to see if they got it. inv-1 is the failure return.
 													if ($itemname == "Soviet Russia")
-														echo "In the room, " . $itemname . " x1 finds you!</br>";
+														echo "In the room, " . $itemname . " x1 finds you!<br/>";
 													else
-														echo "You find " . $itemname . " x1 in the room!</br>";
+														echo "You find " . $itemname . " x1 in the room!<br/>";
 													$flag = ""; //Loot collected, blank the flag.
 												} else { //Failure.
-													echo "You see " . $itemname . " x1 in the room, but do not have room in your Sylladex to retrieve it.</br>";
+													echo "You see " . $itemname . " x1 in the room, but do not have room in your Sylladex to retrieve it.<br/>";
 													$flag = "LOOT|$flag"; //Reinstate loot designation since, well, there's still loot. If multiple items cannot be collected this may result in redundant loot flags. Oh well.
 												}
 											} else { //Loot is a quantity (Boondollars, grist, even things like heals and aspect vial restoration eventually). Note that it must be properly spelled.
 												if ($argument[0] == "Boondollars" && (intval($argument[1]) % 1000000) == 0) { //Loot is boonbucks
 													$boonbux = ($argument[1] / 1000000); //Condition guarantees this will be an integer.
-													echo "You discover $boonbux Boonbucks in a chest in the room!</br>";
+													echo "You discover $boonbux Boonbucks in a chest in the room!<br/>";
 												} else {
-													echo "You loot $argument[1] $argument[0] from the room!</br>";
+													echo "You loot $argument[1] $argument[0] from the room!<br/>";
 												}
 												$mysqli->query("UPDATE `Players` SET `$argument[0]` = " . strval($userrow[$argument[0]] + $argument[1]) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
 												//Increment the quantity here. $argument[0] is the quantity to be incremented.
@@ -1272,13 +1272,13 @@ if (empty($_SESSION['username'])) {
 										}
 										break;
 									case 'DESCRIPTION':
-										echo $argument[1] . "</br>";
+										echo $argument[1] . "<br/>";
 										break;
 									case 'STAIRS': //don't need to deal with these here
 										break;
 									default:
 										if ($argument[0] != "STAIRS") { //really don't know why this is necessary, but it is
-											echo "ERROR: Flag expected for argument $argument[0].</br>";
+											echo "ERROR: Flag expected for argument $argument[0].<br/>";
 											logDebugMessage($username . " - dungeon expects flag for argument $argument[0], apparently failed to deliver");
 										}
 										break;
@@ -1351,7 +1351,7 @@ if (empty($_SESSION['username'])) {
 								echo "flim-flammed";
 								break;
 						}
-						echo " by enemies!</br>";
+						echo " by enemies!<br/>";
 						$i = 1;
 						while ($i <= $max_enemies) {
 							$enemyflag = "ENEMY" . strval($i);
@@ -1399,7 +1399,7 @@ if (empty($_SESSION['username'])) {
 										} else {
 											echo $encounterargs[$enemyflag];
 										}
-										echo "</br>";
+										echo "<br/>";
 									}
 								}
 							}
@@ -1407,7 +1407,7 @@ if (empty($_SESSION['username'])) {
 						}
 					}
 					if (!empty($encounterargs['BOSS'])) { //BOSS BATTLE
-						echo '<a href="https://homestuck.bandcamp.com/track/cascade" target="_blank">Music befitting an epic struggle</a> begins playing.</br>';
+						echo '<a href="https://homestuck.bandcamp.com/track/cascade" target="_blank">Music befitting an epic struggle</a> begins playing.<br/>';
 						$mysqli->query("UPDATE `Players` SET `noassist` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `cantabscond` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `buffstrip` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -1416,7 +1416,7 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `bossbegintime` = " . strval(time()) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					}
-					echo '<a href="strife.php">==&gt;</a></br>';
+					echo '<a href="strife.php">==&gt;</a><br/>';
 				}
 				if ($connection) {
 					$mysqli->query("UPDATE `Dungeons` SET `$newroom` = '" . $mysqli->real_escape_string($newflags) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Set the flags for this room on entry. 
@@ -1430,7 +1430,7 @@ if (empty($_SESSION['username'])) {
 					$userrow['dungeonrow'] = $row;
 					$userrow['dungeoncol'] = $col;
 				} else {
-					echo "The room you just tried to enter is not available from the one you were trying to leave.</br>";
+					echo "The room you just tried to enter is not available from the one you were trying to leave.<br/>";
 				}
 			}
 		}
@@ -1485,13 +1485,13 @@ if (empty($_SESSION['username'])) {
 					$monsterpower = generateEnemy($userrow, $gristrow['grist_type'], $grist, $guardian, True);
 					$userrow = refreshEnemydata($userrow);
 					$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 4 WHERE `Players`.`username` = '$username' LIMIT 1;"); //This is set to 3 by striferesolve if the player fails.
-					echo 'You find yourself at the entrance to a dungeon. An underling stands before it, likely tasked with keeping out thieves who might steal the treasures within.</br>';
-					echo '<a href="strife.php">The underling notices you and initiates strife!</a></br>';
+					echo 'You find yourself at the entrance to a dungeon. An underling stands before it, likely tasked with keeping out thieves who might steal the treasures within.<br/>';
+					echo '<a href="strife.php">The underling notices you and initiates strife!</a><br/>';
 					$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Empty combat messages.
 				}
 			}
 		} else {
-			echo "You are not currently exploring a dungeon.</br>";
+			echo "You are not currently exploring a dungeon.<br/>";
 			$gateresult = $mysqli->query("SELECT * FROM Gates");
 			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 			$currentrow = $userrow;
@@ -1743,7 +1743,7 @@ if (empty($_SESSION['username'])) {
 							echo $flag[$colons];
 							$colons++;
 						}
-						echo "</br>";
+						echo "<br/>";
 						break;
 					case "STAIRS":
 						echo "<form action='dungeons.php#display' method='post'><input type='hidden' name='ascend' value='$flag[1]' /><input type='submit' value='Transportalize to the next floor'></form>";
@@ -1788,11 +1788,11 @@ if (empty($_SESSION['username'])) {
 							//echo "</form>"; //NOTE - If link appears to self somehow, won't be printed because who cares. NOTE - Fix multiple buttons appearing on multilink.
 						}
 						if (!empty($blockstr)) {
-							echo "A locked door blocks your path to the $blockstr.</br>";
+							echo "A locked door blocks your path to the $blockstr.<br/>";
 							$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flag[2]");
 							$drow = $doorresult->fetch_array();
 							if (!empty($drow['ID'])) {
-								echo $drow['description'] . "</br>";
+								echo $drow['description'] . "<br/>";
 								echo '<form action="dungeons.php#display" method="post"> Select an item to use on the door: <select name="dooritem">';
 								$citem = 1;
 								if (empty($max_items))
@@ -1805,7 +1805,7 @@ if (empty($_SESSION['username'])) {
 								}
 								echo '</select><input type="hidden" name="targetrow" value="' . strval($coords[0]) . '"><input type="hidden" name="targetcol" value="' . strval($coords[1]) . '"><input type="submit" value="Try it!"></form>';
 							} else
-								echo "ERROR: Unknown door ID $flag[2]</br>";
+								echo "ERROR: Unknown door ID $flag[2]<br/>";
 						}
 						break;
 					default:
@@ -1815,9 +1815,9 @@ if (empty($_SESSION['username'])) {
 				$i++;
 			}
 		}
-		echo "</br>";
+		echo "<br/>";
 		if ($onentrance && empty($encounterargs)) {
-			echo "</br>";
+			echo "<br/>";
 			if ($isquestcomplete) {
 				echo "<form action='consortquests.php' method='post'><input type='hidden' name='turnindungeonquest' value='yes'><input type='submit' value='Claim the quest reward before leaving the dungeon!'></form>";
 			} else {
@@ -1854,7 +1854,7 @@ if (empty($_SESSION['username'])) {
 			echo "<input type='image' src='/Images/Dungeontiles/dgnbtn_south.png' alt='South'></form>";
 		} else
 			echo "<img src='/Images/Dungeontiles/dgnbtn_south_blocked.png'>";
-		echo "</td><td><img src='/Images/symbols/nobody.png'></td></tr></table></br>";
+		echo "</td><td><img src='/Images/symbols/nobody.png'></td></tr></table><br/>";
 		if ($transrows > 0) {
 			$i = 1;
 			while ($i <= $transrows) {

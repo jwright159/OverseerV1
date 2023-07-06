@@ -2,7 +2,7 @@
 require_once "header.php";
 require_once "includes/fieldparser.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to purchase and use fraymotifs.</br>";
+	echo "Log in to purchase and use fraymotifs.<br/>";
 } else {
 	$userrow = parseEnemydata($userrow);
 	//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
@@ -62,9 +62,9 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				break;
 		}
 		if ($userrow['Boondollars'] < $requirement) { //Player cannot afford motif.
-			echo "You can't afford to purchase that!</br>";
+			echo "You can't afford to purchase that!<br/>";
 		} else {
-			echo "You successfully purchase the fraymotif!</br>";
+			echo "You successfully purchase the fraymotif!<br/>";
 			$mysqli->query("UPDATE `Players` SET `" . $purchase . "` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			$mysqli->query("UPDATE `Players` SET `Boondollars` = $userrow[Boondollars]-$requirement WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			$newmotif = $purchase;
@@ -76,13 +76,13 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		$usagestr = "";
 		$fail = False;
 		if ($userrow['fraymotifuses'] == 0) { //User is out of fraymotifs
-			echo "You have no more fraymotif uses left!</br>";
+			echo "You have no more fraymotif uses left!<br/>";
 			$fail = True;
 		} elseif ($userrow[$_POST['usemotif']] == 0) { //HAAAAAX!
-			echo "Niice try, iidiiot.</br>";
+			echo "Niice try, iidiiot.<br/>";
 			$fail = True;
 		} elseif ($userrow['combatmotifuses'] == 0) {
-			echo "Okay, I'm sure you thought getting into a fight and waiting a day for all your fraymotifs to come back DURING that fight was clever. And it kind of was. Unfortunately, it's also a stupid tactic to need to balance around so you're not allowed to do it.</br>";
+			echo "Okay, I'm sure you thought getting into a fight and waiting a day for all your fraymotifs to come back DURING that fight was clever. And it kind of was. Unfortunately, it's also a stupid tactic to need to balance around so you're not allowed to do it.<br/>";
 			$fail = True;
 		} else {
 			//Check for enemy flags and stuff here. The first two arrays are used to store the new values for health/power resulting from a fraymotif.
@@ -112,7 +112,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 			$luck = ceil($userrow['Luck'] + $userrow['Brief_Luck']); //Calculate the player's luck total. Paranoia: Make sure we don't somehow have a non-integer.
 			if (!empty($abilities[19])) { //Light's Favour activates. Increase luck.
 				$luck += floor($userrow['Echeladder'] / 30);
-				echo "$abilities[19]</br>";
+				echo "$abilities[19]<br/>";
 			}
 			if ($luck > 100)
 				$luck = 100; //We work with luck as a percentage generally. This may be changed later.
@@ -356,29 +356,29 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										$roll = rand(floor(1 + ($luck / 50)), 8);
 										switch ($roll) {
 											case 1:
-												$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . " is incinerated!";
+												$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . " is incinerated!";
 												$damage += 10000;
 												break;
 											case 2:
-												$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . " is coated in acid!";
+												$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . " is coated in acid!";
 												$damage += 20000;
 												break;
 											case 3:
-												$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . " is struck by electricity!";
+												$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . " is struck by electricity!";
 												$damage += 40000;
 												break;
 											case 4:
-												$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . " looks ill...";
+												$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . " looks ill...";
 												$damage += ceil(($userrow[$maxhealthstr] / 5) * 2);
 												break;
 											case 5:
-												$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . " is turned to stone!";
+												$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . " is turned to stone!";
 												//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 												$userrow[$powerstr] = 0; //In case it rolls berserk later.
 												$monsterpowers[$i] = 0;
 												break;
 											case 6:
-												$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . " goes berserk and attacks everything!";
+												$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . " goes berserk and attacks everything!";
 												$j = 1;
 												while ($j <= $max_enemies) {
 													$healthstr2 = "enemy" . strval($j) . "health";
@@ -393,7 +393,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 												break;
 											case 7:
 												if ($reductionresist[$i] == 0 && $massiveresist[$i] == 100) { //Enemy has neither power reduction resistance or damage resistance.
-													$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . " is sent to another dimension!";
+													$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . " is sent to another dimension!";
 													$newdesc = 'It is a small paper replica of a ' . $userrow[$namestr] . ' with a note pinned to it that says "Piñata. Enjoy! -The Management"';
 													//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 													//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -403,7 +403,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 													$userrow[$healthstr] = 1;
 													$userrow[$powerstr] = 0;
 												} else {
-													$usagestr = $usagestr . "</br>The " . $userrow[$namestr] . "resists the dimensional phasing.";
+													$usagestr = $usagestr . "<br/>The " . $userrow[$namestr] . "resists the dimensional phasing.";
 													$rolls += 1; //Try again.
 												}
 												break;
@@ -551,7 +551,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -560,7 +560,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$usagestr = "A <a href='https://homestuck.bandcamp.com/track/valhalla' target='_blank'>soul-stirring melody</a> begins playing.";
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -579,7 +579,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -598,7 +598,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -607,7 +607,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$usagestr = "<a href='https://homestuck.bandcamp.com/track/aggrievance' target='_blank'>The song of an ancient Seer</a> begins playing.";
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -626,7 +626,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -635,7 +635,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$usagestr = "<a href='https://homestuck.bandcamp.com/track/showdown' target='_blank'>The tune of an ancient Knight</a> begins playing.";
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -657,7 +657,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -676,7 +676,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -695,7 +695,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -714,7 +714,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -736,7 +736,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								}
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
-								echo "A battle theme is already playing!</br>";
+								echo "A battle theme is already playing!<br/>";
 								$fail = True;
 							}
 							break;
@@ -759,7 +759,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 						}
 					}
 					if ($combo == False) { //No assisting player with the correct aspect and fraymotif
-						echo "You are not being assisted by any player able to help you perform this fraymotif!</br>";
+						echo "You are not being assisted by any player able to help you perform this fraymotif!<br/>";
 						$fail = True;
 					} else { //Gogogo!
 						switch ($motif) { //We're using a combo motif. Grab the non-player part of the combo.
@@ -1161,7 +1161,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 			$userrow['combatmotifuses'] -= 1;
 			$mysqli->query("UPDATE `Players` SET `fraymotifuses` = " . $userrow['fraymotifuses'] . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			$mysqli->query("UPDATE `Players` SET `combatmotifuses` = " . $userrow['combatmotifuses'] . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-			echo "You use the fraymotif, $motifname:</br>$usagestr</br>";
+			echo "You use the fraymotif, $motifname:<br/>$usagestr<br/>";
 			//Check for enemy resists here.
 			$i = 1;
 			while ($i <= $max_enemies) {
@@ -1170,12 +1170,12 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				$maxhealthstr = "enemy" . strval($i) . "maxhealth";
 				$powerstr = "enemy" . strval($i) . "power";
 				if ($reductionresist[$i] != 0 && ($oldpowers[$i] - $monsterpowers[$i]) > $reductionresist[$i]) { //Enemy resists power reduction applied.
-					echo $userrow[$enemystr] . " resists the power reduction!</br>";
+					echo $userrow[$enemystr] . " resists the power reduction!<br/>";
 					//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = " . ($oldpowers[$i] - $reductionresist[$i]) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					$userrow[$powerstr] = ($oldpowers[$i] - $reductionresist[$i]);
 				}
 				if ($massiveresist[$i] != 100 && (($oldhealth[$i] - $monsterhealth[$i]) > (floor($userrow[$maxhealthstr] / 100) * $massiveresist[$i]))) { //Enemy resists massive damage applied.
-					echo $userrow[$enemystr] . " resists the massive damage!</br>";
+					echo $userrow[$enemystr] . " resists the massive damage!<br/>";
 					//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . ($oldhealth[$i] - (floor($userrow[$maxhealthstr] / 100) * $massiveresist[$i])) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					$userrow[$healthstr] = ($oldhealth[$i] - (floor($userrow[$maxhealthstr] / 100) * $massiveresist[$i]));
 				}
@@ -1186,9 +1186,9 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	}
 	//End fraymotif usage code here.
 	if (empty($userrow['Aspect'])) {
-		echo "You have not accepted your title yet!</br>";
+		echo "You have not accepted your title yet!<br/>";
 	} else {
-		echo "WARNING - Currently, only the solo fraymotifs actually do anything. Although I doubt anyone can raise the cash for anything else, they currently do nothing.</br>";
+		echo "WARNING - Currently, only the solo fraymotifs actually do anything. Although I doubt anyone can raise the cash for anything else, they currently do nothing.<br/>";
 		$time = time();
 		$interval = 86400; //This is where the interval between fraymotif ticks is set. The reset is currently once per day.
 		if (!empty($abilities[16]))
@@ -1212,8 +1212,8 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		$mysqli->query("UPDATE `Players` SET `fraymotiftimer` = $lasttick WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 		if ($userrow['enemydata'] != "") {
 			//Player is strifing: Provide the fraymotif use menu. Note that you cannot use a fraymotif while assisting.
-			echo '<a href="strife.php">Strife</a></br>';
-			echo "Select a fraymotif to use. Fraymotif uses remaining: $userrow[fraymotifuses]. Fraymotif uses reset in: " . strval(produceTimeString($interval - ($time - $lasttick))) . "</br>";
+			echo '<a href="strife.php">Strife</a><br/>';
+			echo "Select a fraymotif to use. Fraymotif uses remaining: $userrow[fraymotifuses]. Fraymotif uses reset in: " . strval(produceTimeString($interval - ($time - $lasttick))) . "<br/>";
 			echo '<form action="fraymotifs.php" method="post"><select name="usemotif">';
 			$motifresult = $mysqli->query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $userrow['Aspect'] . "'");
 			while ($row = $motifresult->fetch_array()) {
@@ -1250,10 +1250,10 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 					echo '<option value = "' . $motifaspect . '">' . $motifname . '</option>'; //Add option to use this fraymotif.
 				}
 			}
-			echo '</select></br><input type="submit" value="Use it!" /> </form>';
+			echo '</select><br/><input type="submit" value="Use it!" /> </form>';
 		} else { //Player is not strifing: Provide the fraymotif purchase menu.
-			echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
-			echo "Fraymotif shop: Please select a fraymotif to purchase.</br>";
+			echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
+			echo "Fraymotif shop: Please select a fraymotif to purchase.<br/>";
 			echo '<form action="fraymotifs.php" method="post">Fraymotif to purchase:<select name="buymotif">';
 			$motifresult = $mysqli->query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $userrow['Aspect'] . "'");
 			while ($row = $motifresult->fetch_array()) {
@@ -1290,9 +1290,9 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 					echo '<option value = "' . $motifaspect . '">' . $motifname . '</option>'; //Add option to purchase this fraymotif.
 				}
 			}
-			echo '</select></br><input type="submit" value="Purchase it!" /> </form>';
-			echo "Fraymotif uses remaining: $userrow[fraymotifuses]. Fraymotif uses reset in: " . strval(produceTimeString($interval - ($time - $lasttick))) . "</br>";
-			echo "Fraymotifs available:</br>";
+			echo '</select><br/><input type="submit" value="Purchase it!" /> </form>';
+			echo "Fraymotif uses remaining: $userrow[fraymotifuses]. Fraymotif uses reset in: " . strval(produceTimeString($interval - ($time - $lasttick))) . "<br/>";
+			echo "Fraymotifs available:<br/>";
 			$motifresult = $mysqli->query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $userrow['Aspect'] . "'");
 			while ($row = $motifresult->fetch_array()) {
 				if ($row['Aspect'] == $userrow['Aspect'])
@@ -1325,7 +1325,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				if (empty($newmotif))
 					$newmotif = "";
 				if ($motifaspect != "Aspect" && ($userrow[$motifaspect] == 1 || $motifaspect == $newmotif)) { //Exclude aspect field. Ensure player owns this fraymotif.
-					echo $motifname . "</br>"; //Display it!
+					echo $motifname . "<br/>"; //Display it!
 				}
 			}
 		}

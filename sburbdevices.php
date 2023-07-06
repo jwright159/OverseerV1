@@ -4,7 +4,7 @@ require 'additem.php';
 require 'designix.php';
 $max_items = 50;
 if (empty($_SESSION['username'])) {
-	echo "Log in to mess around with equipment.</br>";
+	echo "Log in to mess around with equipment.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Your dream self doesn't have any equipment to use!";
 } else {
@@ -111,7 +111,7 @@ if (empty($_SESSION['username'])) {
 					echo "In Challenge Mode, you can't input a code that your session hasn't yet discovered in its atheneum.<br/>";
 				} else {
 					$combinecode = orcombine($oldcode, $newcode);
-					echo "You punch the card with the code <itemcode>$newcode</itemcode>. The card now contains the code <itemcode>$combinecode</itemcode>.</br>";
+					echo "You punch the card with the code <itemcode>$newcode</itemcode>. The card now contains the code <itemcode>$combinecode</itemcode>.<br/>";
 					$nucardname = "Captchalogue Card (CODE:$combinecode)";
 					$mysqli->query("UPDATE `Players` SET `" . $_POST['punchcard'] . "` = '$nucardname' WHERE `Players`.`username` = '$username'");
 					$userrow[$_POST['punchcard']] = $nucardname;
@@ -121,9 +121,9 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 			} else
-				echo "You can't punch holes in that for the purposes of alchemy!</br>";
+				echo "You can't punch holes in that for the purposes of alchemy!<br/>";
 		} else
-			echo "You don't have a machine that can punch cards!</br>";
+			echo "You don't have a machine that can punch cards!<br/>";
 	}
 
 	if (!empty($_POST['cruxtrude'])) {
@@ -161,9 +161,9 @@ if (empty($_SESSION['username'])) {
 				$sdowels = "dowels";
 			if ($dowelscaptchad + $actualstore > 0) {
 				if ($dowelscaptchad + $actualstore == $_POST['cruxamount']) {
-					echo "You turn the wheel of the Cruxtruder, producing " . strval($_POST['cruxamount']) . " $tdowels.</br>";
+					echo "You turn the wheel of the Cruxtruder, producing " . strval($_POST['cruxamount']) . " $tdowels.<br/>";
 				} else {
-					echo "You turn the wheel of the Cruxtruder, but are only able to produce " . strval($_POST['cruxamount']) . " $tdowels. You can't possibly fit any more in your inventory or storage.</br>";
+					echo "You turn the wheel of the Cruxtruder, but are only able to produce " . strval($_POST['cruxamount']) . " $tdowels. You can't possibly fit any more in your inventory or storage.<br/>";
 				}
 				if ($dowelscaptchad > 0) {
 					if ($actualstore > 0) {
@@ -171,22 +171,22 @@ if (empty($_SESSION['username'])) {
 					} else {
 						echo "You captchalogue ";
 						if ($cdowels == "dowels")
-							echo "all of them.</br>";
+							echo "all of them.<br/>";
 						else
-							echo "it.</br>";
+							echo "it.<br/>";
 					}
 				} elseif ($actualstore > 0) {
 					echo "You put ";
 					if ($sdowels == "dowels")
-						echo "all of them into storage.</br>";
+						echo "all of them into storage.<br/>";
 					else
-						echo "it into storage.</br>";
+						echo "it into storage.<br/>";
 				}
 			} else {
-				echo "You don't have room for any cruxite dowels in your inventory or storage!</br>";
+				echo "You don't have room for any cruxite dowels in your inventory or storage!<br/>";
 			}
 		} else
-			echo "You don't have a machine that produces cruxite dowels!</br>";
+			echo "You don't have a machine that produces cruxite dowels!<br/>";
 	}
 
 	if (!empty($_POST['lathecard1'])) {
@@ -207,8 +207,8 @@ if (empty($_SESSION['username'])) {
 						$code1 = substr($userrow[$_POST['lathecard1']], -9, 8);
 						$code2 = substr($userrow[$_POST['lathecard2']], -9, 8);
 						$combinecode = andcombine($code1, $code2);
-						echo "You slip both of the cards into the Totem Lathe, then feed it an uncarved dowel. The device whirs to life, carving a unique pattern into it.</br>";
-						echo "The dowel now corresponds to the code <itemcode>$combinecode</itemcode>.</br>";
+						echo "You slip both of the cards into the Totem Lathe, then feed it an uncarved dowel. The device whirs to life, carving a unique pattern into it.<br/>";
+						echo "The dowel now corresponds to the code <itemcode>$combinecode</itemcode>.<br/>";
 						if (!strrpos($sessionrow['atheneum'], $combinecode)) {
 							$newatheneum = $sessionrow['atheneum'] . $combinecode . "|";
 							$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
@@ -216,18 +216,18 @@ if (empty($_SESSION['username'])) {
 						$newname = "Cruxite Dowel (CODE:" . $combinecode . ")";
 					} else {
 						$code1 = substr($userrow[$_POST['lathecard1']], -9, 8);
-						echo "You slip the card into the Totem Lathe, then feed it an uncarved dowel. The device whirs to life, carving a unique pattern into it.</br>";
-						echo "The dowel now corresponds to the code <itemcode>$code1</itemcode>.</br>";
+						echo "You slip the card into the Totem Lathe, then feed it an uncarved dowel. The device whirs to life, carving a unique pattern into it.<br/>";
+						echo "The dowel now corresponds to the code <itemcode>$code1</itemcode>.<br/>";
 						$newname = "Cruxite Dowel (CODE:" . $code1 . ")";
 					}
 					$mysqli->query("UPDATE `Players` SET `$cruxinv` = '$newname' WHERE `Players`.`username` = '$username'");
 					$userrow[$cruxinv] = $newname;
 				} else
-					echo "You don't have a spare cruxite dowel to carve that isn't already carved. You'll have to pick one up from the Cruxtruder or from storage.</br>";
+					echo "You don't have a spare cruxite dowel to carve that isn't already carved. You'll have to pick one up from the Cruxtruder or from storage.<br/>";
 			} else
-				echo "One or both of the items you selected aren't captchalogue cards.</br>";
+				echo "One or both of the items you selected aren't captchalogue cards.<br/>";
 		} else
-			echo "You don't have a machine that can carve cruxite dowels!</br>";
+			echo "You don't have a machine that can carve cruxite dowels!<br/>";
 	}
 
 	if (!empty($_POST['disposalaction'])) {
@@ -299,14 +299,14 @@ if (empty($_SESSION['username'])) {
 				$compuresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
 				$compurow = $compuresult->fetch_array();
 				$ilcode = $compurow['captchalogue_code'];
-				echo "The Intellibeam Laserstation scans the card using its ultra-fine laser and eventually prints out the code: <itemcode>$ilcode</itemcode></br>";
+				echo "The Intellibeam Laserstation scans the card using its ultra-fine laser and eventually prints out the code: <itemcode>$ilcode</itemcode><br/>";
 				if (!strrpos($sessionrow['atheneum'], $ilcode)) {
 					$newatheneum = $sessionrow['atheneum'] . $ilcode . "|";
 					$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "' LIMIT 1 ;");
 				}
 			}
 		} else
-			echo "You don't have a machine that can read captchalogue codes, and you're quite certain that such a thing could not possibly exist.</br>";
+			echo "You don't have a machine that can read captchalogue codes, and you're quite certain that such a thing could not possibly exist.<br/>";
 	}
 
 	if (!empty($_POST['senditem'])) {
@@ -524,13 +524,13 @@ if (empty($_SESSION['username'])) {
 	if (!$canon)
 		echo "Your session is a non-canon one. You still may use the canon machinery, but you might find your other options (on the inventory page) more convenient.<br/>";
 
-	echo "Your usable machinery:</br>";
+	echo "Your usable machinery:<br/>";
 	$hasanything = false;
 
 	if ($designix) {
-		echo "</br><b>Punch Designix</b></br>";
-		echo "You can use this to punch a captchalogue card with a given 8-digit code.</br>";
-		echo "Punching a card that has already been punched will combine the two items with the operation ||.</br>";
+		echo "<br/><b>Punch Designix</b><br/>";
+		echo "You can use this to punch a captchalogue card with a given 8-digit code.<br/>";
+		echo "Punching a card that has already been punched will combine the two items with the operation ||.<br/>";
 		echo '<form action="sburbdevices.php" method="post">Card to punch: <select name="punchcard">';
 		$i = 1;
 		while ($i <= $max_items) {
@@ -540,18 +540,18 @@ if (empty($_SESSION['username'])) {
 			}
 			$i++;
 		}
-		echo '</select></br>';
-		echo 'Code to input: <input type="text" name="punchcode"></br>';
+		echo '</select><br/>';
+		echo 'Code to input: <input type="text" name="punchcode"><br/>';
 		echo '<input type="submit" value="Punch it!"></form>';
 		$hasanything = true;
 	}
 
 	if ($cruxtruder) {
-		echo "</br><b>Cruxtruder</b></br>";
-		echo "Turning the wheel on this device will produce a fresh Cruxite Dowel.</br>";
-		echo '<form action="sburbdevices.php" method="post">Number of dowels to extract: <input type="text" name="cruxamount" value="1"></br>Put dowel(s) into:</br>';
-		echo '<input type="radio" name="cruxtrude" value="inv"> Sylladex</br>';
-		echo '<input type="radio" name="cruxtrude" value="store"> Storage</br><input type="submit" value="Turn it!"></form>';
+		echo "<br/><b>Cruxtruder</b><br/>";
+		echo "Turning the wheel on this device will produce a fresh Cruxite Dowel.<br/>";
+		echo '<form action="sburbdevices.php" method="post">Number of dowels to extract: <input type="text" name="cruxamount" value="1"><br/>Put dowel(s) into:<br/>';
+		echo '<input type="radio" name="cruxtrude" value="inv"> Sylladex<br/>';
+		echo '<input type="radio" name="cruxtrude" value="store"> Storage<br/><input type="submit" value="Turn it!"></form>';
 		$hasanything = true;
 	}
 
@@ -564,9 +564,9 @@ if (empty($_SESSION['username'])) {
 			}
 			$i++;
 		}
-		echo "</br><b>Totem Lathe</b></br>";
-		echo "You can insert up to two cards in the device's slot, carving a blank cruxite dowel with a code.</br>";
-		echo "Inserting one card will carve the dowel with the code on the card; inserting two cards will combine the two codes with the operation &&.</br>";
+		echo "<br/><b>Totem Lathe</b><br/>";
+		echo "You can insert up to two cards in the device's slot, carving a blank cruxite dowel with a code.<br/>";
+		echo "Inserting one card will carve the dowel with the code on the card; inserting two cards will combine the two codes with the operation &&.<br/>";
 		echo "Uncarved dowels in inventory: <b>$dcount</b><br/>";
 		echo '<form action="sburbdevices.php" method="post">First card: <select name="lathecard1">';
 		$i = 1;
@@ -577,7 +577,7 @@ if (empty($_SESSION['username'])) {
 			}
 			$i++;
 		}
-		echo '</select></br>Second card: <select name="lathecard2"><option value="inv0">Don\'t insert a second card</option>';
+		echo '</select><br/>Second card: <select name="lathecard2"><option value="inv0">Don\'t insert a second card</option>';
 		$i = 1;
 		while ($i <= $max_items) {
 			$invstr = 'inv' . strval($i);
@@ -586,17 +586,17 @@ if (empty($_SESSION['username'])) {
 			}
 			$i++;
 		}
-		echo '</select></br><input type="submit" value="Carve it!"></form>';
+		echo '</select><br/><input type="submit" value="Carve it!"></form>';
 		$hasanything = true;
 	}
 
 	if ($alchemiter) {
-		echo "</br><b>Alchemiter</b></br>";
+		echo "<br/><b>Alchemiter</b><br/>";
 		if ($useless)
-			echo "One of your jumper block \"upgrades\" has made the Alchemiter completely useless!</br>";
+			echo "One of your jumper block \"upgrades\" has made the Alchemiter completely useless!<br/>";
 		else {
-			echo "You can place a cruxite totem on the smaller platform, and the device will scan its surface and produce the item with that code. If you have the grist, that is.</br>";
-			echo "If the code doesn't match an existing item, you will be given the opportunity to design one and submit your idea to the dev team for consideration.</br>";
+			echo "You can place a cruxite totem on the smaller platform, and the device will scan its surface and produce the item with that code. If you have the grist, that is.<br/>";
+			echo "If the code doesn't match an existing item, you will be given the opportunity to design one and submit your idea to the dev team for consideration.<br/>";
 			echo '<form action="inventory.php" method="post">Cruxite dowel to use: <select name="alchcrux">';
 			$i = 1;
 			while ($i <= $max_items) {
@@ -607,19 +607,19 @@ if (empty($_SESSION['username'])) {
 				$i++;
 			}
 			echo '</select><br/>Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
-			echo '<br/><input name="autostore" type="checkbox"> Send all created items to storage</br>';
+			echo '<br/><input name="autostore" type="checkbox"> Send all created items to storage<br/>';
 			echo '<input type="submit" value="Create it!" /></form>';
-			echo "(You will be taken to the inventory page.)</br>";
+			echo "(You will be taken to the inventory page.)<br/>";
 		}
 		$hasanything = true;
 	}
 
 	if ($jumper) {
-		echo "</br><b>Jumper Block Extension</b></br>";
+		echo "<br/><b>Jumper Block Extension</b><br/>";
 		if ($alchemiter) {
-			echo "This device attaches to your Alchemiter and can hold up to eight Punch Card Shunts. Each of those can hold a captchalogue card which you can use to upgrade your Alchemiter.</br>";
-			echo "The extension does nothing on its own, but you can manipulate the shunts from here.</br>";
-			echo "Current Alchemiter upgrades:</br>";
+			echo "This device attaches to your Alchemiter and can hold up to eight Punch Card Shunts. Each of those can hold a captchalogue card which you can use to upgrade your Alchemiter.<br/>";
+			echo "The extension does nothing on its own, but you can manipulate the shunts from here.<br/>";
+			echo "Current Alchemiter upgrades:<br/>";
 			$boom = explode("|", $userrow['storeditems']);
 			$totalitems = count($boom);
 			$i = 0;
@@ -646,7 +646,7 @@ if (empty($_SESSION['username'])) {
 						if ($shunttag[0] == "SHUNT") {
 							$hasanupgrade = true;
 							if (!empty($shunttag[2]))
-								echo "- " . $shunttag[2] . "</br>";
+								echo "- " . $shunttag[2] . "<br/>";
 							else {
 								echo "- Your Alchemiter has the " . $irow['name'] . " upgrade! ";
 								switch ($shunttag[1]) {
@@ -730,7 +730,7 @@ if (empty($_SESSION['username'])) {
 			}
 			$i++;
 		}
-		echo '</select></br><input type="submit" value="Insert it!"></form>';
+		echo '</select><br/><input type="submit" value="Insert it!"></form>';
 		echo "Remove a card from an occupied shunt:<br/>";
 		echo '<form action="sburbdevices.php" method="post">Shunt to empty out: <select name="clearshunt">';
 		$i = 1;
@@ -741,11 +741,11 @@ if (empty($_SESSION['username'])) {
 			}
 			$i++;
 		}
-		echo '</select></br><input type="submit" value="Empty it!"></form>';
+		echo '</select><br/><input type="submit" value="Empty it!"></form>';
 	}
 
 	if ($cruxblend || $cardshred) {
-		echo "</br><b>Alchemy Material Disposal Unit</b></br>";
+		echo "<br/><b>Alchemy Material Disposal Unit</b><br/>";
 		echo "You have the ability to quickly dispose of Captchalogue Cards and/or Cruxite Dowels. Select an action below to execute it.<br/>";
 		echo '<form action="sburbdevices.php" method="post"><select name="disposalaction">';
 		if ($cruxblend) {
@@ -758,10 +758,10 @@ if (empty($_SESSION['username'])) {
 	}
 
 	if ($holopad) {
-		echo "</br><b>Holopad</b></br>";
-		echo "Simply insert a card or place a dowel on the pad and it will show you a holographic image of the item to which that code corresponds. It will also inform you of the grist cost.</br>";
+		echo "<br/><b>Holopad</b><br/>";
+		echo "Simply insert a card or place a dowel on the pad and it will show you a holographic image of the item to which that code corresponds. It will also inform you of the grist cost.<br/>";
 		if (strpos($userrow['storeditems'], "HOLOPLUS.") !== false)
-			echo "<i>Thanks to your holopad upgrade, you will also learn the power level, abstratus, and size of the item!</i></br>";
+			echo "<i>Thanks to your holopad upgrade, you will also learn the power level, abstratus, and size of the item!</i><br/>";
 		echo '<form action="inventory.php" method="post">Code-containing item: <select name="holoitem">';
 		$i = 1;
 		while ($i <= $max_items) {
@@ -772,12 +772,12 @@ if (empty($_SESSION['username'])) {
 			$i++;
 		}
 		echo '</select><input type="submit" value="Observe it!" /></form>';
-		echo "(You will be taken to the inventory page.)</br>";
+		echo "(You will be taken to the inventory page.)<br/>";
 		$hasanything = true;
 	}
 
 	if ($combofinder) {
-		echo "</br><b>Recipe Finder</b></br>";
+		echo "<br/><b>Recipe Finder</b><br/>";
 		echo "This device scans codes within a given area, randomly mashes them together, and spits out at least one recipe if it finds something that creates an existing item.<br/>";
 		echo "The process takes forever, though, and you must spend at least one encounter waiting for it to finish scanning and registering all of your cards.<br/>";
 		echo "Select a recipe-finding device from storage to use. Each device has a unique work area, encounter cost, and recipe return.<br/>";
@@ -795,8 +795,8 @@ if (empty($_SESSION['username'])) {
 	}
 
 	if ($intlaser) {
-		echo "</br><b>Intellibeam Laserstation</b></br>";
-		echo "Simply put, this device reads codes on the back of captchalogue cards with perfect accuracy. Useful for when you are unable to read them yourself.</br>";
+		echo "<br/><b>Intellibeam Laserstation</b><br/>";
+		echo "Simply put, this device reads codes on the back of captchalogue cards with perfect accuracy. Useful for when you are unable to read them yourself.<br/>";
 		echo '<form action="sburbdevices.php" method="post">Item to decipher: <select name="ilitem">';
 		$i = 1;
 		while ($i <= $max_items) {
@@ -810,8 +810,8 @@ if (empty($_SESSION['username'])) {
 	}
 
 	if ($sendify) {
-		echo "</br><b>Sendificator</b></br>";
-		echo "Insert an item to sendify it directly to the storage of any of your sessionmates.</br>Your sendificator allows you to send items of size \"$maxsendsize\" or smaller.</br>";
+		echo "<br/><b>Sendificator</b><br/>";
+		echo "Insert an item to sendify it directly to the storage of any of your sessionmates.<br/>Your sendificator allows you to send items of size \"$maxsendsize\" or smaller.<br/>";
 		echo '<form action="sburbdevices.php" method="post">Item to send: <select name="senditem">';
 		$i = 1;
 		while ($i <= $max_items) {
@@ -831,7 +831,7 @@ if (empty($_SESSION['username'])) {
 	}
 
 	if ($canghost) {
-		echo "</br><b>" . $ghostname . "</b></br>";
+		echo "<br/><b>" . $ghostname . "</b><br/>";
 		echo "You can use this to create ghost images from items in storage that you can't captchalogue otherwise.<br/>";
 		echo "Ghost images can't be used physically and are worth no grist, but you will be able to view the item's code and information, as well as use it in alchemy.<br/>";
 		echo "To get rid of a ghost image, either recycle it or attempt to store it. It will disappear either way.<br/>";
@@ -852,7 +852,7 @@ if (empty($_SESSION['username'])) {
 	}
 
 	if (!$hasanything)
-		echo "None! Ask your server player to deploy something!</br>";
+		echo "None! Ask your server player to deploy something!<br/>";
 
 }
 

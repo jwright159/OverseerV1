@@ -297,10 +297,10 @@ require_once 'includes/global_functions.php';
 						<a href="strife.php"><img src="/Images/title/sl.png" align="center" title="Number of Encounters"></a> <span class="c3">
 							<?php echo strval($encounters); ?>
 						</span>
-						</br>
+						<br/>
 						<a href="portfolio.php"><img src="/Images/title/power.png" align="center" title="Strife Power"></a>
 						<?php echo $powerLevel; ?>
-						</br>
+						<br/>
 						<a href="grist.php"><img src="/Images/title/gristling.png" align="center" title="Grist Count"></a>
 						<?php echo strval($gristed); ?>
 					</div>
@@ -311,10 +311,10 @@ require_once 'includes/global_functions.php';
 						</span>:<span class="c2">
 							<?php echo $seconda; ?>
 						</span>
-						</br>
+						<br/>
 						<a href="echeviewer.php"><img src="/Images/title/eche.png" align="center" title="Echeladder"></a>
 						<?php echo strval($ecchi); ?>
-						</br>
+						<br/>
 						<a href="porkhollow.php"><img src="/Images/title/<?php echo strval($booni); ?>" align="center" title="Boondollars"></a>
 						<?php echo strval($booned); ?>
 					</div>

@@ -29,35 +29,35 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 				$leadintext = $_POST['publishbody'];
 			else
 				$leadintext = "This is an automatically generated addlog of items that were created using the on-site Item Editor. The person posting this is too lazy to actually include a message, so enjoy these items:";
-			$bodytext = $mysqli->real_escape_string($leadintext . "</br>" . $sysrow['addlog']);
+			$bodytext = $mysqli->real_escape_string($leadintext . "<br/>" . $sysrow['addlog']);
 			$mysqli->query("INSERT INTO `News` (`date`, `title`, `postedby`, `news`) VALUES ('$datetext', '$titletext', '$nametext', '$bodytext')");
 			echo $bodytext; //in case it fails to post
 			$mysqli->query("UPDATE `System` SET `addlog` = '' WHERE 1");
-			echo "</br>News has been posted, and the addlog has been cleared.</br>";
+			echo "<br/>News has been posted, and the addlog has been cleared.<br/>";
 		} else
-			"ERROR: Addlog is empty. Someone might have beaten you to it!</br>";
+			"ERROR: Addlog is empty. Someone might have beaten you to it!<br/>";
 	}
 
 	if (!empty($_POST['captchalogue_code'])) {
 		$blocked = false;
 		if ((!empty($_POST['offense_exact_temp']) || !empty($_POST['offense_scale_temp']) || !empty($_POST['defense_exact_temp']) || !empty($_POST['defense_scale_temp'])) && empty($_POST['temp_timer'])) {
-			echo "A positive temp_timer value is required when adding a temporary boost.</br>";
+			echo "A positive temp_timer value is required when adding a temporary boost.<br/>";
 			$blocked = true;
 		}
 		if ($_POST['outsideuse'] == 1 && $_POST['donotconsume'] == 1) {
-			echo "Infinite-use consumables that can be used outside of strife are overpowered! Please set outsideuse to 0 if you set donotconsume to 1.</br>";
+			echo "Infinite-use consumables that can be used outside of strife are overpowered! Please set outsideuse to 0 if you set donotconsume to 1.<br/>";
 			$blocked = true;
 		}
 		if ($_POST['luck'] > 100) {
-			echo "A consumable can't grant more than 100 luck.</br>";
+			echo "A consumable can't grant more than 100 luck.<br/>";
 			$blocked = true;
 		}
 		if (empty($_POST['number_targets'])) {
-			echo "Even if the consumable doesn't effect enemies, number_targets should be greater than zero. Better safe than sorry on this one.</br>";
+			echo "Even if the consumable doesn't effect enemies, number_targets should be greater than zero. Better safe than sorry on this one.<br/>";
 			$blocked = true;
 		}
 		if (strlen($_POST['captchalogue_code']) != 8 || strpos($_POST['captchalogue_code'], " ") || strpos($_POST['captchalogue_code'], "-")) {
-			echo "That is an invalid captchalogue code.</br>";
+			echo "That is an invalid captchalogue code.<br/>";
 			$blocked = true;
 		} else {
 			$editcode = $_POST['captchalogue_code'];
@@ -104,7 +104,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 				$updatequery = substr($updatequery, 0, -2);
 				$updatequery .= " WHERE `Consumables`.`name` = '$editname';";
 			}
-			echo $updatequery . "</br>";
+			echo $updatequery . "<br/>";
 			$mysqli->query($updatequery);
 			//now test to see if it worked
 			if (!$founditem) {
@@ -115,23 +115,23 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 					$victory = true;
 					$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
 					$sysrow = $sysresult->fetch_array();
-					$sysrow['addlog'] .= "</br>" . $username . " - Added consumable effect for " . $editname;
+					$sysrow['addlog'] .= "<br/>" . $username . " - Added consumable effect for " . $editname;
 					if (!empty($_POST['devcomments']))
 						$sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
 					$mysqli->query("UPDATE `System` SET `addlog` = '" . $mysqli->real_escape_string($sysrow['addlog']) . "' WHERE 1");
-					echo "Addlog updated.</br>";
+					echo "Addlog updated.<br/>";
 				} else {
-					echo "Oops, something is wrong! The query didn't go through, and the consumable row wasn't created. If all else fails, send that query to Blah!</br>";
+					echo "Oops, something is wrong! The query didn't go through, and the consumable row wasn't created. If all else fails, send that query to Blah!<br/>";
 				}
 			} else {
 				$victory = true;
 				$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
 				$sysrow = $sysresult->fetch_array();
-				$sysrow['addlog'] .= "</br>" . $username . " - Edited consumable effect for " . $editname;
+				$sysrow['addlog'] .= "<br/>" . $username . " - Edited consumable effect for " . $editname;
 				if (!empty($_POST['devcomments']))
 					$sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
 				$mysqli->query("UPDATE `System` SET `addlog` = '" . $mysqli->real_escape_string($sysrow['addlog']) . "' WHERE 1");
-				echo "Addlog updated.</br>";
+				echo "Addlog updated.<br/>";
 			}
 			if ($victory && $makeconsumable) {
 				$mysqli->query("UPDATE `Captchalogue` SET `consumable` = 1 WHERE `Captchalogue`.`captchalogue_code` = '$editcode' LIMIT 1;");
@@ -175,7 +175,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 				echo $erow[$fname];
 			elseif (!empty($_POST[$fname]))
 				echo $_POST[$fname];
-			echo '</textarea></br>';
+			echo '</textarea><br/>';
 		} elseif ($fname != "name") {
 			echo $fname . ':</td><td> <input type="text" name="' . $fname . '"';
 			if ($founditem)
@@ -190,15 +190,15 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 		}
 	}
 	echo '</tbody></table>';
-	echo 'Dev comments about the item: Same as the item editor; if you want to say anything about your edit/addition, speak now or forever hold your peace.</br><textarea name="devcomments" rows="6" cols="40" form="itemeditor"></textarea></br>';
-	echo '<input type="submit" value="Edit/Create"></form></br>';
+	echo 'Dev comments about the item: Same as the item editor; if you want to say anything about your edit/addition, speak now or forever hold your peace.<br/><textarea name="devcomments" rows="6" cols="40" form="itemeditor"></textarea><br/>';
+	echo '<input type="submit" value="Edit/Create"></form><br/>';
 	$sysresult = $mysqli->query("SELECT `addlog` FROM `System` WHERE 1");
 	$sysrow = $sysresult->fetch_array();
 	if (empty($sysrow['addlog']))
 		$sysrow['addlog'] = " Empty!";
 	echo "Current addlog:" . $sysrow['addlog'];
-	echo "</br>When you're done with your batch of items, please use the following form to publish the current addlog into a news post.</br>(Note: All fields are optional and will be filled with placeholders if left blank.)</br>";
-	echo '<form action="itemedit.php" method="post" id="publishaddlog"><input type="hidden" name="publishlog" value="yes">Title: <input type="text" name="publishtitle"></br>Body: <textarea name="publishbody" rows="6" cols="40" form="publishaddlog"></textarea></br><input type="submit" value="Publish addlog"></form>';
+	echo "<br/>When you're done with your batch of items, please use the following form to publish the current addlog into a news post.<br/>(Note: All fields are optional and will be filled with placeholders if left blank.)<br/>";
+	echo '<form action="itemedit.php" method="post" id="publishaddlog"><input type="hidden" name="publishlog" value="yes">Title: <input type="text" name="publishtitle"><br/>Body: <textarea name="publishbody" rows="6" cols="40" form="publishaddlog"></textarea><br/><input type="submit" value="Publish addlog"></form>';
 }
 
 require_once "footer.php";

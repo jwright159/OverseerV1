@@ -3,7 +3,7 @@ require_once "header.php";
 
 //require 'log.php';
 if (empty($_SESSION['username'])) {
-	echo "Log in to dingle your dangling dongle's danger.</br>";
+	echo "Log in to dingle your dangling dongle's danger.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 
@@ -14,7 +14,7 @@ if (empty($_SESSION['username'])) {
 	}
 
 	$result = "ERROR"; // in case something breaks, displays error 
-	echo "Echeladder Filler.</br>";
+	echo "Echeladder Filler.<br/>";
 
 	$class = "Maid";
 	$aspect = "Light";

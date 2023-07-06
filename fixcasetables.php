@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to do stuff.</br>";
+	echo "Log in to do stuff.<br/>";
 } else {
 	if ($userrow['session_name'] != "Developers") {
 		echo "Hey! This tool is for the developers only. Nice try, pal.";
@@ -15,7 +15,7 @@ if (empty($_SESSION['username'])) {
 				$foundmsg = true;
 			if (!$foundmsg) {
 				$mysqli->query("INSERT INTO `Messages` (`username`) VALUES ('$losername');"); //Create entry in message table.
-				echo $losername . " lacked message table</br>";
+				echo $losername . " lacked message table<br/>";
 			}
 			$foundmsg = false;
 			$msgresult = $mysqli->query("SELECT `username` FROM Echeladders WHERE `Echeladders`.`username` = '$losername'");
@@ -23,7 +23,7 @@ if (empty($_SESSION['username'])) {
 				$foundmsg = true;
 			if (!$foundmsg) {
 				$mysqli->query("INSERT INTO `Echeladders` (`username`) VALUES ('$losername');"); //Give the player an Echeladder. Players love echeladders.
-				echo $losername . " lacked echeladder table</br>";
+				echo $losername . " lacked echeladder table<br/>";
 			}
 			$foundmsg = false;
 			$msgresult = $mysqli->query("SELECT `username` FROM Ability_Patterns WHERE `Ability_Patterns`.`username` = '$losername'");
@@ -31,7 +31,7 @@ if (empty($_SESSION['username'])) {
 				$foundmsg = true;
 			if (!$foundmsg) {
 				$mysqli->query("INSERT INTO `Ability_Patterns` (`username`) VALUES ('$losername');"); //Create entry in pattern table.
-				echo $losername . " lacked ability pattern table</br>";
+				echo $losername . " lacked ability pattern table<br/>";
 			}
 		}
 	}

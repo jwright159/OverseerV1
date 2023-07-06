@@ -2,7 +2,7 @@
 require_once "header.php";
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to do stuff.</br>";
+	echo "Log in to do stuff.<br/>";
 } elseif ($userrow['session_name'] != "Developers") {
 	echo "You need to be a developer to do that!";
 } else {

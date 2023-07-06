@@ -48,6 +48,6 @@ if ($_POST['session'] != "" && $_POST['sessionpw'] == $_POST['confirmpw']) {
 	echo "Session creation failed: Session name empty or passwords do not match.";
 }
 $mysqli->close();
-echo '</br><a href="/">Home</a>';
+echo '<br/><a href="/">Home</a>';
 require_once "footer.php";
 ?>

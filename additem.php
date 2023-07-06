@@ -199,7 +199,7 @@ function storageSpace($storestring)
 		if ($irow['captchalogue_code'] == $args[0]) { //Item found.
 			$space += itemSize($irow['size']) * $args[1];
 		} else
-			echo "ERROR: Items with code $args[0] stored, but no matching item was found. Please inform a dev immediately.</br>";
+			echo "ERROR: Items with code $args[0] stored, but no matching item was found. Please inform a dev immediately.<br/>";
 		$i++;
 	}
 	return $space;
@@ -257,7 +257,7 @@ function compuRefresh($userrow)
 				if ($userrow['accessory'] == $invstr)
 					$complevel = 3;
 			}
-			//echo "complevel is $complevel</br>";
+			//echo "complevel is $complevel<br/>";
 		}
 	}
 	//echo "final compulevel: $complevel<br/>";

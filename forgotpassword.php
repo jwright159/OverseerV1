@@ -36,7 +36,7 @@ function genRecoveryCode()
 	return $reccode;
 }
 if (!empty($_SESSION['username'])) {
-	echo "If you're logged in already, why do you need to reset your password?</br>";
+	echo "If you're logged in already, why do you need to reset your password?<br/>";
 } else {
 	if (!empty($_POST['accountname'])) {
 		if (!empty($_POST['accountemail'])) {
@@ -55,22 +55,22 @@ if (!empty($_SESSION['username'])) {
 					$headers = "From:" . $from;
 					$sentsuccess = mail($to, $subject, $message, $headers);
 					if ($sentsuccess) {
-						echo "An email was sent with instructions on how to change your password. You should hopefully receive it sometime within the next 15 minutes. Be sure to check your spam folder if it doesn't appear in your inbox.</br>";
+						echo "An email was sent with instructions on how to change your password. You should hopefully receive it sometime within the next 15 minutes. Be sure to check your spam folder if it doesn't appear in your inbox.<br/>";
 						$mysqli->query("UPDATE `Players` SET `recovery_confirm` = '$newcode' WHERE `Players`.`username` = '" . $_POST['accountname'] . "' LIMIT 1;");
 					} else
-						echo 'Something went wrong while sending the email. Feel free to try again, but please contact <a href="https://babbyoverseer.tumblr.com">BabbyOverseer</a> if the problem persists.</br>';
+						echo 'Something went wrong while sending the email. Feel free to try again, but please contact <a href="https://babbyoverseer.tumblr.com">BabbyOverseer</a> if the problem persists.<br/>';
 				} else
-					echo "The email that you gave doesn't match the email in the database for that account. Please make sure you typed it correctly.</br>";
+					echo "The email that you gave doesn't match the email in the database for that account. Please make sure you typed it correctly.<br/>";
 			} else
-				echo "No account by that name exists. Please make sure you typed it correctly.</br>";
+				echo "No account by that name exists. Please make sure you typed it correctly.<br/>";
 		} else
-			echo "Please input an email address.</br>";
+			echo "Please input an email address.<br/>";
 	}
 
 	if (empty($_GET['user'])) {
-		echo "You can use this form if you forgot your password. As long as you set your email address, you can have a link sent to it that will prompt you for a new password.</br></br>";
-		echo '<form method="post" action="forgotpassword.php">Account username: <input type="text" name="accountname"></br>
-	Email address: <input type="text" name="accountemail"></br>
+		echo "You can use this form if you forgot your password. As long as you set your email address, you can have a link sent to it that will prompt you for a new password.<br/><br/>";
+		echo '<form method="post" action="forgotpassword.php">Account username: <input type="text" name="accountname"><br/>
+	Email address: <input type="text" name="accountemail"><br/>
 	<input type="submit" value="Send recovery email"></form>';
 		echo 'If your account doesn\'t have an email address assigned, or you have any other questions, please contact <a href="https://babbyoverseer.tumblr.com">BabbyOverseer</a>.';
 	} else {
@@ -83,22 +83,22 @@ if (!empty($_SESSION['username'])) {
 						if ($_POST['newpass'] == $_POST['cnewpass'] && !empty($_POST['newpass'])) {
 							$newpass = password_hash($mysqli->real_escape_string($_POST['newpass']), PASSWORD_BCRYPT);
 							$mysqli->query("UPDATE Players SET `password` = '$newpass' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;");
-							echo "Password changed successfully!</br>";
+							echo "Password changed successfully!<br/>";
 							$mysqli->query("UPDATE Players SET `recovery_confirm` = '' WHERE `Players`.`username` = '" . $_GET['user'] . "' LIMIT 1;"); //blank the recovery ID so that it can't be used again
 						} else
-							echo "Error changing password: Confirmation does not match new password, or the new password was left blank.</br>";
+							echo "Error changing password: Confirmation does not match new password, or the new password was left blank.<br/>";
 					} else {
-						echo '<form method="post" action="forgotpassword.php?user=' . $_GET['user'] . '&code=' . $_GET['code'] . '">Recovery confirmation code successfully validated. Input your new password below.</br>
-					New Password: <input type="password" name="newpass"></br>
-					Confirm New Password: <input type="password" name="cnewpass"></br>
-					<input type="submit" value="Change it!"></form></br>';
+						echo '<form method="post" action="forgotpassword.php?user=' . $_GET['user'] . '&code=' . $_GET['code'] . '">Recovery confirmation code successfully validated. Input your new password below.<br/>
+					New Password: <input type="password" name="newpass"><br/>
+					Confirm New Password: <input type="password" name="cnewpass"><br/>
+					<input type="submit" value="Change it!"></form><br/>';
 					}
 				} else
-					echo "Error: The recovery confirmation code is incorrect, or the account is not requesting password recovery.</br>";
+					echo "Error: The recovery confirmation code is incorrect, or the account is not requesting password recovery.<br/>";
 			} else
-				echo "Error: Username not found.</br>";
+				echo "Error: Username not found.<br/>";
 		} else
-			echo "Error: Please use the URL provided with the recovery email.</br>";
+			echo "Error: Please use the URL provided with the recovery email.<br/>";
 	}
 }
 require_once "footer.php";

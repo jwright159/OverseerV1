@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods") {
-	"You don't get to have a debug.</br>";
+	"You don't get to have a debug.<br/>";
 } else {
 	if (empty($_GET['user']))
 		$_GET['user'] = $username;
@@ -12,7 +12,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	while ($col = $youresult->fetch_field()) {
 		$accexists = true;
 		$feld = $col->name;
-		echo "$feld = " . $row[$feld] . " </br>";
+		echo "$feld = " . $row[$feld] . " <br/>";
 	}
 	if (!$accexists)
 		echo "Your player row doesn't exist! That can't be good.";
@@ -23,7 +23,7 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 	while ($col = $youresult->fetch_field()) {
 		$accexists = true;
 		$feld = $col->name;
-		echo "$feld = " . $row[$feld] . " </br>";
+		echo "$feld = " . $row[$feld] . " <br/>";
 	}
 }
 ?>

@@ -29,34 +29,34 @@ echo '</body><head><script src="jquery.min.js"></script><style type="text/css"><
 }</script></head><body>';
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if (empty($_SESSION['username'])) {
-	echo "Log in to engage in strife.</br>";
+	echo "Log in to engage in strife.<br/>";
 	include("loginer.php");
 } elseif ($userrow['sessionbossengaged'] == 1) {
-	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
+	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a><br/>";
 } else {
 	$userrow = parseEnemydata($userrow);
 	$userrow = parseLastfought($userrow);
 	if ($userrow['dreamingstatus'] == "Prospit") {
-		echo '<div style = "float: right;"><a href="combatbasics.php">The basics of "strife"</a></div></br>';
+		echo '<div style = "float: right;"><a href="combatbasics.php">The basics of "strife"</a></div><br/>';
 	} else {
 		echo '<div style = "float: right;"><a href="combatbasics.php">The basics of strife</a></div>';
 	}
 	if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") { //No enemies, not aiding
 		$up = 0;
 		if ($userrow['dreamingstatus'] == "Prospit") {
-			echo 'You are not currently engaged in "strife".</br>';
+			echo 'You are not currently engaged in "strife".<br/>';
 		} else {
-			echo "You are not currently engaged in strife.</br>";
+			echo "You are not currently engaged in strife.<br/>";
 		}
 		if ($userrow[$downstr] == 1 && $up != True) { //Player is not gaining a new encounter and IS down. Up is a variable in the header.
 			if ($userrow['dreamingstatus'] == "Prospit") {
-				echo "You're still exhausted from all that do-gooding! You will recover instead of earning your next encounter and you're far too tired to be helpful yet.</br>";
+				echo "You're still exhausted from all that do-gooding! You will recover instead of earning your next encounter and you're far too tired to be helpful yet.<br/>";
 			} else {
-				echo "You are still reeling from a recent defeat. You will recover instead of earning your next encounter and you cannot get into any more fights yet.</br>";
+				echo "You are still reeling from a recent defeat. You will recover instead of earning your next encounter and you cannot get into any more fights yet.<br/>";
 			}
 		}
-		echo "</br>Health Vial: " . strval(floor(($userrow[$healthvialstr] / $userrow['Gel_Viscosity']) * 100)) . "%";
-		echo "</br>Aspect Vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%";
+		echo "<br/>Health Vial: " . strval(floor(($userrow[$healthvialstr] / $userrow['Gel_Viscosity']) * 100)) . "%";
+		echo "<br/>Aspect Vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%";
 		if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreamingstatus'] == "Awake") || ($userrow['dreamdown'] != 1 && $userrow['dreamingstatus'] != "Awake"))) { //Not down.
 			if ($userrow['dreamingstatus'] == "Awake") { //Only do Land combat while awake.
 				$chain = chainArray($userrow);
@@ -75,10 +75,10 @@ if (empty($_SESSION['username'])) {
 				if ($userrow['battlefield_access'] != 0) { //Player has handled their denizen or gone god tier. The battlefield is available as a zone.
 					echo '<option value="Battlefield">The Battlefield</option>';
 				}
-				echo '</select></br><input type="submit" value="Fight on this Land" /> </form>';
+				echo '</select><br/><input type="submit" value="Fight on this Land" /> </form>';
 				echo '<form action="strifebegin.php" method="post">';
 				echo '<input type="hidden" name="gristtype" value="' . $userrow['lastgristtype'] . '">';
-				echo "Enemies fought last:</br>";
+				echo "Enemies fought last:<br/>";
 				for ($i = 1; $i <= $max_enemies; $i++) { //Fetch up the enemies the player last fought.
 					if (empty($userrow['oldenemy' . strval($i)])) break;
 					$oldgrist = $userrow['oldgrist' . strval($i)];
@@ -87,9 +87,9 @@ if (empty($_SESSION['username'])) {
 					$enemystr = "enemy" . strval($i);
 					if ($oldgrist != "" || $oldenemy != "") {
 						if ($oldgrist != "None") {
-							echo $oldgrist . " " . $oldenemy . "</br>";
+							echo $oldgrist . " " . $oldenemy . "<br/>";
 						} else {
-							echo $oldenemy . "</br>";
+							echo $oldenemy . "<br/>";
 						}
 					}
 					echo '<input type="hidden" name="' . $griststr . '" value="' . $oldgrist . '">';
@@ -107,14 +107,14 @@ if (empty($_SESSION['username'])) {
 				}
 				echo '<form action="strifebegin.php" method="post">';
 				echo '<input type="hidden" name="gristtype" value="None">';
-				echo "Enemies fought last:</br>";
+				echo "Enemies fought last:<br/>";
 				$i = 1;
 				while ($i <= $max_enemies) { //Fetch up the enemies the player last fought.
 					$oldenemy = $userrow['olddreamenemy' . strval($i)];
 					$griststr = "grist" . strval($i);
 					$enemystr = "enemy" . strval($i);
 					if ($oldenemy != "")
-						echo $oldenemy . "</br>";
+						echo $oldenemy . "<br/>";
 					echo '<input type="hidden" name="' . $griststr . '" value="None">';
 					echo '<input type="hidden" name="' . $enemystr . '" value="' . $oldenemy . '">';
 					$i++;
@@ -140,15 +140,15 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 			if ($aidneeded == True) {
-				echo '</select></br><input type="submit" value="Assist this ally" /> </form></br>';
+				echo '</select><br/><input type="submit" value="Assist this ally" /> </form><br/>';
 			}
 		}
 		//Begin auto-assist form.
 		$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
 		$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-		echo '<form action="strifeaid.php" method="post">Select an ally to auto-assist. You will be automatically made to assist this ally whenever they begin strifing and it is possible for you to aid them.</br>';
+		echo '<form action="strifeaid.php" method="post">Select an ally to auto-assist. You will be automatically made to assist this ally whenever they begin strifing and it is possible for you to aid them.<br/>';
 		if (!empty($userrow['autoassist']))
-			echo "You are currently auto-assisting: $userrow[autoassist]</br>";
+			echo "You are currently auto-assisting: $userrow[autoassist]<br/>";
 		echo 'Select a player to auto-assist: <select name="autoassist"> ';
 		echo '<option value="noautoassist">Nobody!</option>';
 		while ($row = $sessionmates->fetch_array()) {
@@ -156,14 +156,14 @@ if (empty($_SESSION['username'])) {
 				echo '<option value="' . $row['username'] . '">' . $row['username'] . '</option>'; //Add ally to list of aidable allies.
 			}
 		}
-		echo '</select></br><input type="submit" value="Auto-assist this ally" /> </form></br>';
+		echo '</select><br/><input type="submit" value="Auto-assist this ally" /> </form><br/>';
 		//End auto-assist form.
 		$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
 		$sessionrow = $sessionresult->fetch_array();
 		if ($sessionrow['sessionbossname'] == "") { //No current fight.
 			echo '<a href="sessionbossvote.php">Vote on whole session boss strifes.</a>';
 		} else {
-			echo "Your session has engaged $sessionrow[sessionbossname]!</br>";
+			echo "Your session has engaged $sessionrow[sessionbossname]!<br/>";
 			echo '<form action="sessionboss.php" method="post"><input type="hidden" id="newfighter" name="newfighter" value="' . $sessionrow['sessionbossname'] . '"><input type="submit" value="Join the fight"></form>';
 		}
 	} else { //Enemies currently engaged or currently aiding ally: Strife!
@@ -176,9 +176,9 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 			if ($aidrow['dreamingstatus'] == "Prospit") {
-				echo 'You are currently assisting ' . $aiding . ', who is engaged in "strife" against the following "opponents":</br>';
+				echo 'You are currently assisting ' . $aiding . ', who is engaged in "strife" against the following "opponents":<br/>';
 			} else {
-				echo "You are currently assisting $aiding, who is engaged in strife against the following opponents:</br>";
+				echo "You are currently assisting $aiding, who is engaged in strife against the following opponents:<br/>";
 			}
 			$aidrow = parseEnemydata($aidrow);
 			$i = 1;
@@ -197,8 +197,8 @@ if (empty($_SESSION['username'])) {
 					if ($healthvial == 0)
 						$healthvial = 1;
 					echo strval($healthvial);
-					echo "%</br>";
-					echo $aidrow[$descstr] . "</br></br>";
+					echo "%<br/>";
+					echo $aidrow[$descstr] . "<br/><br/>";
 				}
 				$i++;
 			}
@@ -210,12 +210,12 @@ if (empty($_SESSION['username'])) {
 			if ($userrow['cantabscond'] == 1) {
 				if (time() - $aidrow['bossbegintime'] > 86400) {
 					echo 'It has been over 24 hours since the main strifer began the boss fight. You can leave at any time.<br/>';
-					echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form></br>';
+					echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form><br/>';
 				} else {
 					echo 'You are aiding in a boss fight and cannot leave until 24 hours has passed since it began.<br/>';
 				}
 			} else
-				echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form></br>';
+				echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form><br/>';
 			echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a> <a href="portfolio.php">Check combat capabilities</a> <a href="consumables.php">Use a consumable item</a>';
 			if (!empty($_SESSION['adjective']))
 				echo " <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a>";
@@ -239,16 +239,16 @@ if (empty($_SESSION['username'])) {
 					if (!$threatremains) { //the day is saved!
 						echo "The threat has been completely neutralized! You should talk to the quest giver and claim your reward.<br/>";
 						$mysqli->query("UPDATE `Players` SET `enemydata` = '' WHERE `Players`.`username` = '$username'");
-						echo "<a href='consortquests.php'>==&gt;</a></br>";
+						echo "<a href='consortquests.php'>==&gt;</a><br/>";
 						$dontechostrife = true;
 					}
 				}
 			}
 			if (!$dontechostrife) {
 				if ($userrow['dreamingstatus'] == "Prospit") {
-					echo 'Current "opponents":</br>';
+					echo 'Current "opponents":<br/>';
 				} else {
-					echo 'Current opponents:</br>';
+					echo 'Current opponents:<br/>';
 				}
 				$i = 1;
 				while ($i <= $max_enemies) {
@@ -267,57 +267,57 @@ if (empty($_SESSION['username'])) {
 						if ($healthvial == 0)
 							$healthvial = 1;
 						echo strval($healthvial);
-						echo "%</br>";
-						echo $userrow[$descstr] . "</br>";
+						echo "%<br/>";
+						echo $userrow[$descstr] . "<br/>";
 						//This section stores the messages that appear when an enemy has a status effect. DATA SECTION: Status messages.
 						if (strpos($userrow['strifestatus'], ($statustr . "TIMESTOP|")) !== False) {
-							echo "Frozen in Time: This enemy will not act this round.</br>";
+							echo "Frozen in Time: This enemy will not act this round.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "WATERYGEL|")) !== False) {
-							echo "Watery Health Gel: This enemy's Health Vial is easier to dislodge with basic attacks</br>";
+							echo "Watery Health Gel: This enemy's Health Vial is easier to dislodge with basic attacks<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "POISON")) !== False) { // No "|": poison status has arguments after it
-							echo "Poisoned: This enemy's health is being slowly sapped</br>";
+							echo "Poisoned: This enemy's health is being slowly sapped<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "SHRUNK|")) !== False) {
-							echo "Shrunk: This enemy is at least twice as adorable as it was.</br>";
+							echo "Shrunk: This enemy is at least twice as adorable as it was.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "UNLUCKY|")) !== False) {
-							echo "Unlucky: Bad things keep happening!</br>";
+							echo "Unlucky: Bad things keep happening!<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "BLEEDING")) !== False) { // No "|": bleeding status has arguments after it
-							echo "Bleeding: This enemy is bleeding out, gradually losing health and power</br>";
+							echo "Bleeding: This enemy is bleeding out, gradually losing health and power<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "HOPELESS|")) !== False) {
-							echo "Hopeless: This enemy does not believe in itself.</br>";
+							echo "Hopeless: This enemy does not believe in itself.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "DISORIENTED")) !== False) {
-							echo "Disoriented: This enemy is unable to cooperate with allies effectively.</br>";
+							echo "Disoriented: This enemy is unable to cooperate with allies effectively.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "DISTRACTED|")) !== False) {
-							echo "Distracted: This enemy is distracted and will take more damage on your next attack.</br>";
+							echo "Distracted: This enemy is distracted and will take more damage on your next attack.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "ENRAGED|")) !== False) {
-							echo "Enraged: This enemy is not paying sufficient attention to defending itself.</br>";
+							echo "Enraged: This enemy is not paying sufficient attention to defending itself.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "MELLOW|")) !== False) {
-							echo "Mellowed Out: Whoa...this dude's, like...totally peaced out, man. He thinks attacking is, like, totally lame and won't hit as hard.</br>";
+							echo "Mellowed Out: Whoa...this dude's, like...totally peaced out, man. He thinks attacking is, like, totally lame and won't hit as hard.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "KNOCKDOWN|")) !== False) {
-							echo "Knocked Over: This enemy will need to spend a turn getting back up.</br>";
+							echo "Knocked Over: This enemy will need to spend a turn getting back up.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "GLITCHED|")) !== False) {
 							$glitchstr = generateStatusGlitchString();
-							echo "Glitched Out: $glitchstr</br>";
+							echo "Glitched Out: $glitchstr<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "BURNING")) !== False) {
-							echo "Burning: This enemy is on fire and is steadily taking damage.</br>";
+							echo "Burning: This enemy is on fire and is steadily taking damage.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "FROZEN|")) !== False) {
-							echo "Frozen: This enemy is frozen solid thanks to a layer of ice, and cannot act until it breaks out.</br>";
+							echo "Frozen: This enemy is frozen solid thanks to a layer of ice, and cannot act until it breaks out.<br/>";
 						}
 						if (strpos($userrow['strifestatus'], ($statustr . "LOCKDOWN")) !== False) {
-							echo "Locked Down: This enemy is unable to use any of its special abilities for the time being.</br>";
+							echo "Locked Down: This enemy is unable to use any of its special abilities for the time being.<br/>";
 						}
 					}
 					$i++;
@@ -325,69 +325,69 @@ if (empty($_SESSION['username'])) {
 				echo '<div id="health"></div>';
 				echo '<b>Health Vial: ' . strval($healthcurrent) . '%</b>';
 				echo '<div id="aspect"></div>';
-				echo '<b>Aspect Vial: ' . strval($aspectcurrent) . '%</b></br>';
+				echo '<b>Aspect Vial: ' . strval($aspectcurrent) . '%</b><br/>';
 				//echo "<img src='Images/vials/health" . $healthvialcolour . "/healthvial" . strval($healthcurrent) . $healthvialcolour . ".gif' alt='Health Vial: " . strval($healthcurrent) . "%'>";
-				//echo "<img src='Images/vials/aspect" . $aspectvialcolour . "/aspectvial" . strval($aspectcurrent) . $aspectvialcolour . ".gif' alt='Aspect Vial: " . strval($aspectcurrent) . "%'></br>";
+				//echo "<img src='Images/vials/aspect" . $aspectvialcolour . "/aspectvial" . strval($aspectcurrent) . $aspectvialcolour . ".gif' alt='Aspect Vial: " . strval($aspectcurrent) . "%'><br/>";
 				if ($userrow['invulnerability'] > 0)
-					echo "</br>Invulnerability: " . strval($userrow['invulnerability']) . " rounds.";
+					echo "<br/>Invulnerability: " . strval($userrow['invulnerability']) . " rounds.";
 				if ($userrow['powerboost'] > 0)
-					echo "</br>Power boost (entire battle): $userrow[powerboost]";
+					echo "<br/>Power boost (entire battle): $userrow[powerboost]";
 				if ($userrow['offenseboost'] > 0)
-					echo "</br>Offense boost (entire battle): $userrow[offenseboost]";
+					echo "<br/>Offense boost (entire battle): $userrow[offenseboost]";
 				if ($userrow['defenseboost'] > 0)
-					echo "</br>Defense boost (entire battle): $userrow[defenseboost]";
+					echo "<br/>Defense boost (entire battle): $userrow[defenseboost]";
 				if ($userrow['powerboost'] < 0)
-					echo "</br>Power penalty (entire battle): $userrow[powerboost]";
+					echo "<br/>Power penalty (entire battle): $userrow[powerboost]";
 				if ($userrow['offenseboost'] < 0)
-					echo "</br>Offense penalty (entire battle): $userrow[offenseboost]";
+					echo "<br/>Offense penalty (entire battle): $userrow[offenseboost]";
 				if ($userrow['defenseboost'] < 0)
-					echo "</br>Defense penalty (entire battle): $userrow[defenseboost]";
+					echo "<br/>Defense penalty (entire battle): $userrow[defenseboost]";
 				if ($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Time") { //Eternal boosts
 					if ($userrow['temppowerboost'] > 0)
-						echo "</br>Power boost of $userrow[temppowerboost]: INFINITY rounds.";
+						echo "<br/>Power boost of $userrow[temppowerboost]: INFINITY rounds.";
 					if ($userrow['tempoffenseboost'] > 0)
-						echo "</br>Offense boost of $userrow[tempoffenseboost]: INFINITY rounds.";
+						echo "<br/>Offense boost of $userrow[tempoffenseboost]: INFINITY rounds.";
 					if ($userrow['tempdefenseboost'] > 0)
-						echo "</br>Defense boost of $userrow[tempdefenseboost]: INFINITY rounds.";
+						echo "<br/>Defense boost of $userrow[tempdefenseboost]: INFINITY rounds.";
 					if ($userrow['temppowerboost'] < 0)
-						echo "</br>Power penalty of $userrow[temppowerboost]: INFINITY rounds.";
+						echo "<br/>Power penalty of $userrow[temppowerboost]: INFINITY rounds.";
 					if ($userrow['tempoffenseboost'] < 0)
-						echo "</br>Offense penalty of $userrow[tempoffenseboost]: INFINITY rounds.";
+						echo "<br/>Offense penalty of $userrow[tempoffenseboost]: INFINITY rounds.";
 					if ($userrow['tempdefenseboost'] < 0)
-						echo "</br>Defense penalty of $userrow[tempdefenseboost]: INFINITY rounds.";
+						echo "<br/>Defense penalty of $userrow[tempdefenseboost]: INFINITY rounds.";
 				} else {
 					if ($userrow['temppowerboost'] > 0)
-						echo "</br>Power boost of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
+						echo "<br/>Power boost of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
 					if ($userrow['tempoffenseboost'] > 0)
-						echo "</br>Offense boost of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
+						echo "<br/>Offense boost of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
 					if ($userrow['tempdefenseboost'] > 0)
-						echo "</br>Defense boost of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
+						echo "<br/>Defense boost of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
 					if ($userrow['temppowerboost'] < 0)
-						echo "</br>Power penalty of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
+						echo "<br/>Power penalty of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
 					if ($userrow['tempoffenseboost'] < 0)
-						echo "</br>Offense penalty of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
+						echo "<br/>Offense penalty of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
 					if ($userrow['tempdefenseboost'] < 0)
-						echo "</br>Defense penalty of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
+						echo "<br/>Defense penalty of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
 				}
 				//This is where we print messages for the player's more abnormal status effects.
 				if (strpos($userrow['strifestatus'], "PLAYER:NOCAP|") !== False) {
-					echo "No damage cap: The damage you take from a single enemy is not currently capped.</br>";
+					echo "No damage cap: The damage you take from a single enemy is not currently capped.<br/>";
 				}
 				if (strpos($userrow['strifestatus'], "PLAYER:POISON") !== False) {
-					echo "Poisoned: You are taking damage over time.</br>";
+					echo "Poisoned: You are taking damage over time.<br/>";
 				}
 				if (strpos($userrow['strifestatus'], "PLAYER:CONFUSE") !== False) {
-					echo "Confused: You may occasionally accidentally hurt yourself.</br>";
+					echo "Confused: You may occasionally accidentally hurt yourself.<br/>";
 				}
 				if (strpos($userrow['strifestatus'], "PLAYER:BLIND") !== False) {
-					echo "Blinded: You have a 50% chance of missing an enemy this turn.</br>";
+					echo "Blinded: You have a 50% chance of missing an enemy this turn.<br/>";
 				}
 				if (strpos($userrow['strifestatus'], "PLAYER:BONUSCONSUME") !== False) {
-					echo "Bonus action: You have at least one bonus consumable action!</br>";
+					echo "Bonus action: You have at least one bonus consumable action!<br/>";
 				}
 				if (strpos($userrow['strifestatus'], "HASABILITY") !== False) { //NOTE - The convention of prefixing with PLAYER: has been removed as of this point.
 					//Status effects with no prefix will be aassumed to belong to the player. PLAYER: prefix is still usable, however, if you wish.
-					echo "Temporary ability: You possess one or more abilities for this combat only. Check the roletech page for details.</br>";
+					echo "Temporary ability: You possess one or more abilities for this combat only. Check the roletech page for details.<br/>";
 				}
 				if ($userrow['equipped'] != "") {
 					$itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -501,7 +501,7 @@ if (empty($_SESSION['username'])) {
 				$abstain = $mainrow['abstain'] + ($offrow['abstain'] / 2) + $headrow['abstain'] + $facerow['abstain'] + $bodyrow['abstain'] + $accrow['abstain'];
 				if ($abstain >= 0)
 					$abstain = "+" . strval($abstain);
-				echo "</br>";
+				echo "<br/>";
 				if ($userrow['dreamingstatus'] == "Prospit") {
 					echo '<form action="striferesolve.php" method="post" style="display: inline;">Select an aggressive action: <select name="offense">';
 					if ($userrow['lastactive'] == "aggrieve")
@@ -520,7 +520,7 @@ if (empty($_SESSION['username'])) {
 						echo '<option value="assault" selected>"ASSAULT" (' . $assault . ')</option>';
 					else
 						echo '<option value="assault">"ASSAULT" (' . $assault . ')</option>';
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo 'Select a passive action: <select name="defense">';
 					if ($userrow['lastpassive'] == "abuse")
 						echo '<option value="abuse" selected>"ABUSE" (' . $abuse . ')</option>';
@@ -538,7 +538,7 @@ if (empty($_SESSION['username'])) {
 						echo '<option value="abstain" selected>"ABSTAIN" (' . $abstain . ')</option>';
 					else
 						echo '<option value="abstain">"ABSTAIN" (' . $abstain . ')</option>';
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo 'Enemy on which to focus: <select name="focusenemy">';
 					$i = 1;
 					$enstr = "enemy" . strval($i) . "name";
@@ -547,7 +547,7 @@ if (empty($_SESSION['username'])) {
 						$i++;
 						$enstr = "enemy" . strval($i) . "name";
 					}
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo '<input type="hidden" name="redirect" value="redirect">';
 					//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br/>';
 					//DO NOT RE-ENABLE THE ABOVE. It fucks everything up. I'll test it personally some time later.
@@ -570,7 +570,7 @@ if (empty($_SESSION['username'])) {
 						echo '<option value="assault" selected>ASSAULT (' . $assault . ')</option>';
 					else
 						echo '<option value="assault">ASSAULT (' . $assault . ')</option>';
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo 'Select a passive action: <select name="defense">';
 					if ($userrow['lastpassive'] == "abuse")
 						echo '<option value="abuse" selected>ABUSE (' . $abuse . ')</option>';
@@ -588,7 +588,7 @@ if (empty($_SESSION['username'])) {
 						echo '<option value="abstain" selected>ABSTAIN (' . $abstain . ')</option>';
 					else
 						echo '<option value="abstain">ABSTAIN (' . $abstain . ')</option>';
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo 'Enemy on which to focus: <select name="focusenemy">';
 					$i = 1;
 					$enstr = "enemy" . strval($i) . "name";
@@ -597,7 +597,7 @@ if (empty($_SESSION['username'])) {
 						$i++;
 						$enstr = "enemy" . strval($i) . "name";
 					}
-					echo '</select></br>';
+					echo '</select><br/>';
 					echo '<input type="hidden" name="redirect" value="redirect">';
 					//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br/>';
 					//DO NOT RE-ENABLE THE ABOVE. It fucks everything up. I'll test it personally some time later.
@@ -615,7 +615,7 @@ if (empty($_SESSION['username'])) {
 			  }
 				}*/
 				echo '<form action="striferesolve.php" method="post" style="display: inline;"><input type="hidden" id="abscond" name="abscond" value="abscond"><input type="submit" value="Abscond"></form>';
-				echo '</br>';
+				echo '<br/>';
 				$npcechoed = false;
 				if (!empty($userrow['allies'])) { //here, we'll explode the currentstatus to see if we have any NPC allies
 					$thisstatus = explode("|", $userrow['allies']);
@@ -654,18 +654,18 @@ if (empty($_SESSION['username'])) {
 				$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '$username'");
 				while ($row = $sessionmates->fetch_array()) {
 					if ($row['aiding'] == $username) { //Aiding character.
-						echo "$row[username] is assisting you!</br>";
+						echo "$row[username] is assisting you!<br/>";
 					}
 				}
 				echo '<a href="/">Home</a> | <a href="portfolio.php">Check combat capabilities</a> | <a href="consumables.php">Use a consumable item</a> | ';
 				echo '<a href="fraymotifs.php">Use a Fraymotif</a>';
 				if (!empty($_SESSION['adjective']))
-					echo " | <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a> | <a href='roletech.php'>Peruse and select roletechs</a></br>";
+					echo " | <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a> | <a href='roletech.php'>Peruse and select roletechs</a><br/>";
 				if (!empty($message)) { //Message just generated!
-					echo "Last round:</br>";
+					echo "Last round:<br/>";
 					echo $message;
 				} elseif (!empty($userrow['strifemessage'])) {
-					echo "Last round:</br>";
+					echo "Last round:<br/>";
 					echo $userrow['strifemessage'];
 				}
 			}

@@ -203,7 +203,7 @@ if ($dona == "Gold") {
 
 		<?php
 		if (empty($_SESSION['username'])) {
-			echo "Log in to purchase items from your consorts.</br>";
+			echo "Log in to purchase items from your consorts.<br/>";
 		} else {
 			$gateresult = $mysqli->query("SELECT * FROM Gates"); //we'll need this to determine the level of the shops
 			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
@@ -226,9 +226,9 @@ if ($dona == "Gold") {
 				}
 			}
 			if ($userrow['dreamingstatus'] != "Awake")
-				echo "The shops on your dream moon are useless to you as you'd have nowhere to put the purchased items - your sylladex is with your waking self!</br>";
+				echo "The shops on your dream moon are useless to you as you'd have nowhere to put the purchased items - your sylladex is with your waking self!<br/>";
 			elseif ($userrow['house_build_grist'] < $gaterow['gate1'])
-				echo "You won't be able to find any shops without having access to at least one Gate.</br>";
+				echo "You won't be able to find any shops without having access to at least one Gate.<br/>";
 			else {
 				$chain = chainArray($userrow);
 				$totalchain = count($chain);
@@ -250,7 +250,7 @@ if ($dona == "Gold") {
 					  $landrow = $landresult->fetch_array();
 					$debugprice = totalBooncost($debugitem, $landrow, $gristname, $totalgrists);
 					echo strval($debugprice);*/
-					echo '</br></br><a href="shtop.php">If you are having troubles with the shop for some reason, click here to use the simplified shop page.</a>';
+					echo '<br/><br/><a href="shtop.php">If you are having troubles with the shop for some reason, click here to use the simplified shop page.</a>';
 				} else {
 					$aok = false;
 					if ($_GET['land'] == $username)
@@ -264,12 +264,12 @@ if ($dona == "Gold") {
 						}
 					}
 					if (!$aok)
-						echo "You can't reach that player's land with your current gate setup!</br>";
+						echo "You can't reach that player's land with your current gate setup!<br/>";
 					else { //good to go!
 						$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
 						$currentrow = $currentresult->fetch_array();
 						$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
-						echo "Shopping on: $locationstr</br>";
+						echo "Shopping on: $locationstr<br/>";
 						if (!empty($currentrow['shopstock'])) { //shop is current and exists, so let's parse it.
 							//We have to parse first in case the user is purchasing something; wouldn't want the shop to refresh right before the purchase goes through!
 							$boom = explode("|", $currentrow['shopstock']);
@@ -294,10 +294,10 @@ if ($dona == "Gold") {
 								if ($newitem != "inv-1") { //player has room in their inventory
 									$newboons = $userrow['Boondollars'] - $shopprice[$pid]; //make them pay.
 									$mysqli->query("UPDATE `Players` SET `Boondollars` = $newboons WHERE `Players`.`username` = '$username' LIMIT 1;");
-									echo "You purchase " . $shopitem[$pid] . " x1 for " . $shopprice[$pid] . " Boondollars.</br>";
+									echo "You purchase " . $shopitem[$pid] . " x1 for " . $shopprice[$pid] . " Boondollars.<br/>";
 									$mysqli->query("UPDATE `Players` SET `econony` = " . strval($currentrow['econony'] + $shopprice[$pid]) . " WHERE `Players`.`username` = '" . $currentrow['username'] . "'");
 								} else
-									echo "You don't have room in your inventory for this item! You'll have to clear some space before you can buy it.</br>";
+									echo "You don't have room in your inventory for this item! You'll have to clear some space before you can buy it.<br/>";
 							}
 						}
 
@@ -344,7 +344,7 @@ if ($dona == "Gold") {
 						while (strlen($secondstr) < 2)
 							$secondstr = "0" . $secondstr;
 						$timestr = $hourstr . ":" . $minutestr . ":" . $secondstr;
-						echo "This shop's stock will refresh in <span class='shopthr'>$hourstr</span>:<span class='shoptmin'>$minutestr</span>:<span class='shoptsec'>$secondstr</span>.</br></br>";
+						echo "This shop's stock will refresh in <span class='shopthr'>$hourstr</span>:<span class='shoptmin'>$minutestr</span>:<span class='shoptsec'>$secondstr</span>.<br/><br/>";
 						//whether the shop was just created or parsed, we now have shop data so let's display it
 						$drow = getDialogue("shop", $userrow, $currentrow['land1'], $currentrow['land2']);
 						$shoptext = $drow['dialogue'];
@@ -423,7 +423,7 @@ if ($dona == "Gold") {
 						}
 						echo '<input type="submit" class="ratcha" value="Buy it!"></form>';
 					}
-					echo '</br></br><a href="shtop.php?land=' . $_GET['land'] . '">If you are having troubles with the shop for some reason, click here to use the simplified shop page.</a>';
+					echo '<br/><br/><a href="shtop.php?land=' . $_GET['land'] . '">If you are having troubles with the shop for some reason, click here to use the simplified shop page.</a>';
 				}
 			}
 		}

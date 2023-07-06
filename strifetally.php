@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 
-echo 'The following is a list of every "main" abstratus and the number of weapons present in each.</br>';
+echo 'The following is a list of every "main" abstratus and the number of weapons present in each.<br/>';
 $itemresult = $mysqli->query("SELECT * FROM Captchalogue ORDER BY abstratus");
 $currentabstratus = "";
 $k = 0;
@@ -40,7 +40,7 @@ while ($itemrow = $itemresult->fetch_array()) {
 		$abs[$k] = $mainabstratus;
 		$k++;
 		if ($_GET['sort'] != "yes")
-			echo $mainabstratus . ": $total</br>";
+			echo $mainabstratus . ": $total<br/>";
 	}
 }
 if ($_GET['sort'] == "yes") {

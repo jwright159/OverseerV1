@@ -4,19 +4,19 @@ function printEffects($currentarray)
 {
 	switch ($currentarray[0]) {
 		case 'TIMESTOP':
-			echo "Stops time: $currentarray[1]% probability on hit.</br>";
+			echo "Stops time: $currentarray[1]% probability on hit.<br/>";
 			break;
 		case 'AFFINITY':
-			echo "$currentarray[1] affinity: $currentarray[2]%</br>";
+			echo "$currentarray[1] affinity: $currentarray[2]%<br/>";
 			break;
 		case 'RESIST':
 			echo "This item has a $currentarray[3]% chance to modify an enemy's $currentarray[1] resistance to $currentarray[2]% on hit.<br/>";
 			break;
 		case 'WATERYGEL':
-			echo "Waters down enemy Health Gel: $currentarray[1]% probability on hit.</br>";
+			echo "Waters down enemy Health Gel: $currentarray[1]% probability on hit.<br/>";
 			break;
 		case 'POISON':
-			echo "Inflicts poisoning: $currentarray[1]% probability on hit, $currentarray[2]% severity.</br>";
+			echo "Inflicts poisoning: $currentarray[1]% probability on hit, $currentarray[2]% severity.<br/>";
 			break;
 		case 'STORAGE':
 			echo "When placed in storage, this device functions as:<br/>";
@@ -29,66 +29,66 @@ function printEffects($currentarray)
 			}
 			break;
 		case 'CODEHOLDER':
-			echo "Can contain a code.</br>";
+			echo "Can contain a code.<br/>";
 			break;
 		case 'DEPLOYABLE':
-			echo "Can be deployed by a server.</br>";
+			echo "Can be deployed by a server.<br/>";
 			break;
 		case 'OBSCURED':
-			echo "The colors and patterns on the back of the captcha card make this item's code unreadable!</br>";
+			echo "The colors and patterns on the back of the captcha card make this item's code unreadable!<br/>";
 			break;
 		case 'SHRUNK':
-			echo "Has a $currentarray[1]% chance to shrink enemies.</br>";
+			echo "Has a $currentarray[1]% chance to shrink enemies.<br/>";
 			break;
 		case 'LIFESTEAL':
-			echo "Has a $currentarray[1]% chance to restore $currentarray[2]% of the damage it deals as health on hit.</br>";
+			echo "Has a $currentarray[1]% chance to restore $currentarray[2]% of the damage it deals as health on hit.<br/>";
 			break;
 		case 'SOULSTEAL':
-			echo "Has a $currentarray[1]% chance to restore $currentarray[2]% of the damage it deals as Aspect Vial on hit.</br>";
+			echo "Has a $currentarray[1]% chance to restore $currentarray[2]% of the damage it deals as Aspect Vial on hit.<br/>";
 			break;
 		case 'LOCKDOWN':
-			echo "Has a $currentarray[1]% chance to inflict Lockdown for $currentarray[2] turns.</br>";
+			echo "Has a $currentarray[1]% chance to inflict Lockdown for $currentarray[2] turns.<br/>";
 			break;
 		case 'CHARMED':
-			echo "Has a $currentarray[1]% chance to charm an opponent, lulling them to your side temporarily.</br>";
+			echo "Has a $currentarray[1]% chance to charm an opponent, lulling them to your side temporarily.<br/>";
 			break;
 		case 'RANDAMAGE':
-			echo "Damage dealt will vary by +/- $currentarray[1]%.</br>";
+			echo "Damage dealt will vary by +/- $currentarray[1]%.<br/>";
 			break;
 		case 'MISFORTUNE':
-			echo "Has a $currentarray[1]% chance to inflict grave misfortune on enemies.</br>";
+			echo "Has a $currentarray[1]% chance to inflict grave misfortune on enemies.<br/>";
 			break;
 		case 'BLEEDING':
-			echo "Wounds inflicted by this weapon have a $currentarray[1]% chance to bleed for $currentarray[2] rounds.</br>";
+			echo "Wounds inflicted by this weapon have a $currentarray[1]% chance to bleed for $currentarray[2] rounds.<br/>";
 			break;
 		case 'HOPELESS':
-			echo "Attacks with this weapon cause enemies to lose hope with a $currentarray[1]% probability.</br>";
+			echo "Attacks with this weapon cause enemies to lose hope with a $currentarray[1]% probability.<br/>";
 			break;
 		case 'DISORIENTED':
-			echo "This weapon can disorient foes for $currentarray[2] rounds with a $currentarray[1]% chance.</br>";
+			echo "This weapon can disorient foes for $currentarray[2] rounds with a $currentarray[1]% chance.<br/>";
 			break;
 		case 'DISTRACTED':
-			echo "This weapon can distract enemies, increasing the damage they take that round if this effect triggers. $currentarray[1]% probability.</br>";
+			echo "This weapon can distract enemies, increasing the damage they take that round if this effect triggers. $currentarray[1]% probability.<br/>";
 			break;
 		case 'ENRAGED':
-			echo "Getting hit by this weapon has a $currentarray[1]% chance of making the target angry.</br>";
+			echo "Getting hit by this weapon has a $currentarray[1]% chance of making the target angry.<br/>";
 			break;
 		case 'MELLOW':
-			echo "This weapon has a calming effect $currentarray[1]% of the time.</br>";
+			echo "This weapon has a calming effect $currentarray[1]% of the time.<br/>";
 			break;
 		case 'KNOCKDOWN':
-			echo "This weapon can knock enemies over with powerful swings.</br>";
+			echo "This weapon can knock enemies over with powerful swings.<br/>";
 			break;
 		case 'GHOSTER':
-			echo "This item is capable of creating ghost images. You will use it to create a ghost image automatically if you encounter an item that you cannot captchalogue. Or, go to the SBURB Devices page to use it on an item in storage.</br>";
+			echo "This item is capable of creating ghost images. You will use it to create a ghost image automatically if you encounter an item that you cannot captchalogue. Or, go to the SBURB Devices page to use it on an item in storage.<br/>";
 			break;
 		case 'GLITCHED':
 			$glitchstr = horribleMess();
-			echo "This weapon can cause victims to experience software bugs, which $glitchstr</br>";
+			echo "This weapon can cause victims to experience software bugs, which $glitchstr<br/>";
 			break;
 		case 'GLITCHY':
 			$glitchstr = horribleMess() . horribleMess();
-			echo "This item has a $currentarray[1]% chance of $glitchstr during strife.</br>";
+			echo "This item has a $currentarray[1]% chance of $glitchstr during strife.<br/>";
 			break;
 		case 'RECOIL':
 			echo "This weapon has a $currentarray[1]% chance to inflict $currentarray[2]% recoil damage to the wielder when it hits an enemy.<br/>";
@@ -172,7 +172,7 @@ function printEffects($currentarray)
 		case 'FLAVORCOST':
 			break;
 		default:
-			echo "Property $currentarray[0] unrecognized. The devs have been notified.</br>";
+			echo "Property $currentarray[0] unrecognized. The devs have been notified.<br/>";
 			return false; //so that the debugger can send a message with the apropriate vars
 			break;
 	}
@@ -327,15 +327,15 @@ function npcEffects($npcstatus, $baseworth, $uniqueeffects)
 			if ($specialarg[0] == "SPECIAL") {
 				switch ($specialarg[1]) {
 					case 'NOCAP':
-						$lolreturn[0] .= "This ally can water down enemy Health Gel: $specialarg[2]% probability on hit.</br>";
+						$lolreturn[0] .= "This ally can water down enemy Health Gel: $specialarg[2]% probability on hit.<br/>";
 						$worth += intval($specialarg[2]) * 10;
 						break;
 					case 'POISON':
-						$lolreturn[0] .= "This ally can inflict poisoning: $specialarg[2]% probability on hit, $specialarg[3]% severity.</br>";
+						$lolreturn[0] .= "This ally can inflict poisoning: $specialarg[2]% probability on hit, $specialarg[3]% severity.<br/>";
 						$worth += intval($specialarg[2]) * intval($specialarg[3]) * 3;
 						break;
 					case 'CONFUSE':
-						$lolreturn[0] .= "This ally can disorient foes for $specialarg[3] rounds with a $specialarg[2]% chance.</br>";
+						$lolreturn[0] .= "This ally can disorient foes for $specialarg[3] rounds with a $specialarg[2]% chance.<br/>";
 						$worth += intval($specialarg[2]) * intval($specialarg[3]) * 2;
 						break;
 					case 'STUN':

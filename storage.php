@@ -4,7 +4,7 @@ require_once "header.php";
 require_once "includes/effectprinter.php";
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to view and manipulate your storage.</br>";
+	echo "Log in to view and manipulate your storage.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Your dream self can't access your house's storage!";
 } else {
@@ -114,7 +114,7 @@ if (empty($_SESSION['username'])) {
 				}
 				if ($actualget > 0) {
 					$itemget = true; //retrieved at least one item successfully
-					echo "Amount retrieved: $actualget</br>";
+					echo "Amount retrieved: $actualget<br/>";
 				}
 			}
 			$space += itemSize($irow['size']) * $args[1];
@@ -129,7 +129,7 @@ if (empty($_SESSION['username'])) {
 			if (strpos($itemcomp[$i], "CODE=") !== false)
 				$itemnamunique[$i] .= " (CODE:" . substr($itemcomp[$i], 5, 8) . ")";
 		} else {
-			echo "ERROR: Items with code " . $args[0] . " stored, but no matching item was found. This is probably a bug; please submit a report!</br>";
+			echo "ERROR: Items with code " . $args[0] . " stored, but no matching item was found. This is probably a bug; please submit a report!<br/>";
 			logDebugMessage($username . " - has item with code " . $args[0] . " stored, but code wasn't found in database");
 		}
 		$i++;
@@ -209,7 +209,7 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($actualstore > 0) {
 				$itemstored = true; //stored at least one item successfully
-				echo "Items stored: $actualstore</br>";
+				echo "Items stored: $actualstore<br/>";
 			}
 		}
 	}
@@ -225,23 +225,23 @@ if (empty($_SESSION['username'])) {
 		$userrow['storeditems'] = $newstring;
 		compuRefresh($userrow);
 	}
-	echo "Item Storage Service v some number.</br>";
-	echo "Items stored in your house:</br></br>";
+	echo "Item Storage Service v some number.<br/>";
+	echo "Items stored in your house:<br/><br/>";
 	echo '<form action="storage.php" method="post">To retrieve items, enter the quantity to retrieve in the box to the left of the desired item(s).<br/>';
 	$i = 0;
 	while ($i < $totalitems) {
 		if (!empty($itemcode[$i]) && $itemno[$i] != 0) {
 			if (strpos($itemnamunique[$i], "(CODE:") !== false) {
-				echo '<input type="text" name="' . $itemcode[$i] . ':' . substr($itemnamunique[$i], -9, 8) . '" />' . $itemnamunique[$i] . " x " . strval($itemno[$i]) . "</br>";
+				echo '<input type="text" name="' . $itemcode[$i] . ':' . substr($itemnamunique[$i], -9, 8) . '" />' . $itemnamunique[$i] . " x " . strval($itemno[$i]) . "<br/>";
 			} else {
-				echo '<input type="text" name="' . $itemcode[$i] . '" />' . $itemnamunique[$i] . " x " . strval($itemno[$i]) . "</br>";
+				echo '<input type="text" name="' . $itemcode[$i] . '" />' . $itemnamunique[$i] . " x " . strval($itemno[$i]) . "<br/>";
 			}
 		}
 		$i++;
 	}
-	echo '<input type="submit" value="Quickly retrieve items."></form></br>';
-	echo "</br>Storage space used: " . strval($space) . "/" . strval($maxstorage);
-	echo "</br>You can increase your maximum storage space by building up your house.</br></br>";
+	echo '<input type="submit" value="Quickly retrieve items."></form><br/>';
+	echo "<br/>Storage space used: " . strval($space) . "/" . strval($maxstorage);
+	echo "<br/>You can increase your maximum storage space by building up your house.<br/><br/>";
 	echo "You have the following items that provide an effect from storage:<br/>";
 	$nothing = true;
 	$i = 0;
@@ -260,7 +260,7 @@ if (empty($_SESSION['username'])) {
 	if ($nothing == true)
 		echo "Nothing! If you find an item that you think might help you from storage, try storing it.<br/>";
 	echo "<br/>";
-	echo '<form action="storage.php" method="post">Offload items from inventory:</br>';
+	echo '<form action="storage.php" method="post">Offload items from inventory:<br/>';
 	$i = 1;
 	while ($i <= $max_items) {
 		$inv = 'inv' . strval($i);

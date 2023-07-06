@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to view your Echeladder.</br>";
+	echo "Log in to view your Echeladder.<br/>";
 } else {
 
 	$echeresult = $mysqli->query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $username . "'");
@@ -14,7 +14,7 @@ if (empty($_SESSION['username'])) {
 			if ($echenum >= 1 && $echenum <= 612) {
 				$rungstr = "rung" . strval($_POST['echenum']);
 			} else {
-				echo "ERROR: Invalid echeladder rung number.</br>";
+				echo "ERROR: Invalid echeladder rung number.<br/>";
 			}
 		} else
 			$rungstr = $_POST['echestr'];
@@ -23,8 +23,8 @@ if (empty($_SESSION['username'])) {
 		$echerow[$rungstr] = $newrung; //Update array.;
 	}
 	//End rung naming code here.
-	echo "$username's Echeladder</br>";
-	echo '<form action="echeviewer.php" method="post">Quick rung [re]namer: Rung <input type="text" name="echenum">: <input id="echename" name="echename" type="text" /><input type="submit" value="Name it!" /></form></br>';
+	echo "$username's Echeladder<br/>";
+	echo '<form action="echeviewer.php" method="post">Quick rung [re]namer: Rung <input type="text" name="echenum">: <input id="echename" name="echename" type="text" /><input type="submit" value="Name it!" /></form><br/>';
 	//Magic number: Number of Echeladder rungs. I'M SO GOOD AT THIS WOW >_>
 	echo ' <link rel="stylesheet" type="text/css" href="includes/echeladder.css" media="screen" /> <div class = echewrapper />';
 	$i = 612;

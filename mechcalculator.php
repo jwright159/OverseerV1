@@ -39,7 +39,7 @@ if (!empty($_POST['functionweapon'])) {
 if (!empty($_POST['weaponpower'])) {
 }
 //End damage code here.
-echo "NOTE - Use the armor's defense rating against the type of attack used.</br>";
+echo "NOTE - Use the armor's defense rating against the type of attack used.<br/>";
 echo "Additionally, functionality ratings are a number between 0 and 100.";
 echo '<form action="mechcalculator.php" method="post">';
 echo 'Attack type: <select name="attackused"><option value="wholemech">Whole mech</option><option value="part">Single part</option><option value="component">Single component</option></select><br/>';
@@ -55,11 +55,11 @@ echo 'Functionality of interposed part\'s mounted part (defender, if parrying): 
 echo 'Defender\'s parry skill (if parrying): <input id="pilotdodge" name="pilotdodge" type="text" />';
 echo 'Parry rating of interposed item: <input id="mechparry" name="mechparry" type="text" />';
 echo 'Defender\'s mitigation skill (if soaking): <input id="pilotsoak" name="pilotsoak" type="text" />';
-echo '<input type="submit" value="Calculate hit" /></form></br>';
+echo '<input type="submit" value="Calculate hit" /></form><br/>';
 echo '<form action="mechcalculator.php" method="post">';
 echo 'Weapon power: <input id="weaponpower" name="weaponpower" type="text" /><br/>';
 echo 'Armor protection (struck part): <input id="armorprotection" name="armorprotection" type="text" /><br/>';
 echo 'Armor resilience (struck part): <input id="armorresilience" name="armorresilience" type="text" /><br/>';
 echo 'Armor toughness (struck part): <input id="armortoughness" name="armortoughness" type="text" /><br/>';
-echo '<input type="submit" value="Calculate damage" /></form></br>';
+echo '<input type="submit" value="Calculate damage" /></form><br/>';
 ?>

@@ -6,7 +6,7 @@ if (!empty($_POST['abstratus'])) {
 	while ($itemrow = $itemresult->fetch_array()) {
 		$total++;
 	}
-	echo "Weapons available for " . $_POST['abstratus'] . ": $total</br>";
+	echo "Weapons available for " . $_POST['abstratus'] . ": $total<br/>";
 }
 echo '<form action="howmanyweapons.php" method="post">Check weapon tally for abstratus:<input id="abstratus" name="abstratus" type="text" /><br/>';
 echo '<input type="submit" value="Check it!" /></form>';

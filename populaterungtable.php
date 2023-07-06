@@ -1,8 +1,8 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to use consumable items.</br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to use consumable items.<br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
 
 	$username = $_SESSION['username'];
@@ -18,7 +18,7 @@ if (empty($_SESSION['username'])) {
 		$players = $mysqli->query("SELECT * FROM Players");
 		while ($row = $players->fetch_array()) {
 			$mysqli->query("INSERT INTO `Echeladders` (`username`) VALUES ('" . $mysqli->real_escape_string($row['username']) . "');");
-			echo $row['username'] . " added.</br>";
+			echo $row['username'] . " added.<br/>";
 		}
 	}
 }

@@ -3,15 +3,15 @@
 $up = 0;
 echo '<div style = "margin-left:20px;">';
 if ($userrow['dreamingstatus'] == "Prospit") {
-	echo 'You are not currently engaged in "strife".</br></div>';
+	echo 'You are not currently engaged in "strife".<br/></div>';
 } else {
-	echo "You are not currently engaged in strife.</br></div>";
+	echo "You are not currently engaged in strife.<br/></div>";
 }
 if ($userrow[$downstr] == 1 && $up != True) { //Player is not gaining a new encounter and IS down. Up is a variable in the header.
 	if ($userrow['dreamingstatus'] == "Prospit") {
-		echo "You're still exhausted from all that do-gooding! You will recover instead of earning your next encounter and you're far too tired to be helpful yet.</br>";
+		echo "You're still exhausted from all that do-gooding! You will recover instead of earning your next encounter and you're far too tired to be helpful yet.<br/>";
 	} else {
-		echo "You are still reeling from a recent defeat. You will recover instead of earning your next encounter and you cannot get into any more fights yet.</br>";
+		echo "You are still reeling from a recent defeat. You will recover instead of earning your next encounter and you cannot get into any more fights yet.<br/>";
 	}
 }
 if ($userrow['dreamingstatus'] == "Awake") {
@@ -53,7 +53,7 @@ if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreaming
 		echo '</select></form></div>';
 		echo '<div class = landselect_wrapper> <form action="strifebegin.php" method="post"> <input type="submit" class =landselectbutton  value="Fight these enemies again!" /> ';
 		echo '<input type="hidden" name="gristtype" value="' . $userrow['lastgristtype'] . '">';
-		echo "Enemies fought last:</br>";
+		echo "Enemies fought last:<br/>";
 		$i = 1;
 		while ($i <= $max_enemies) { //Fetch up the enemies the player last fought.
 			$oldgrist = $userrow['oldgrist' . strval($i)];
@@ -62,9 +62,9 @@ if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreaming
 			$enemystr = "enemy" . strval($i);
 			if ($oldgrist != "" || $oldenemy != "") {
 				if ($oldgrist != "None") {
-					echo $oldgrist . " " . $oldenemy . "</br>";
+					echo $oldgrist . " " . $oldenemy . "<br/>";
 				} else {
-					echo $oldenemy . "</br>";
+					echo $oldenemy . "<br/>";
 				}
 			}
 			echo '<input type="hidden" name="' . $griststr . '" value="' . $oldgrist . '">';
@@ -82,14 +82,14 @@ if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreaming
 		}
 		echo '<form action="strifebegin.php" method="post">';
 		echo '<input type="hidden" name="gristtype" value="None">';
-		echo "Enemies fought last:</br>";
+		echo "Enemies fought last:<br/>";
 		$i = 1;
 		while ($i <= $max_enemies) { //Fetch up the enemies the player last fought.
 			$oldenemy = $userrow['olddreamenemy' . strval($i)];
 			$griststr = "grist" . strval($i);
 			$enemystr = "enemy" . strval($i);
 			if ($oldenemy != "")
-				echo $oldenemy . "</br>";
+				echo $oldenemy . "<br/>";
 			echo '<input type="hidden" name="' . $griststr . '" value="None">';
 			echo '<input type="hidden" name="' . $enemystr . '" value="' . $oldenemy . '">';
 			$i++;
@@ -114,15 +114,15 @@ if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreaming
 		}
 	}
 	if ($aidneeded == True) {
-		echo '</select></br><input type="submit" value="Assist this ally" /> </form></div></br>';
+		echo '</select><br/><input type="submit" value="Assist this ally" /> </form></div><br/>';
 	}
 }
 //Begin auto-assist form.
 $sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
 $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-echo '<form action="strifeaid.php" method="post">Select an ally to auto-assist. You will be automatically made to assist this ally whenever they begin strifing and it is possible for you to aid them.</br>';
+echo '<form action="strifeaid.php" method="post">Select an ally to auto-assist. You will be automatically made to assist this ally whenever they begin strifing and it is possible for you to aid them.<br/>';
 if (!empty($userrow['autoassist']))
-	echo "You are currently auto-assisting: $userrow[autoassist]</br>";
+	echo "You are currently auto-assisting: $userrow[autoassist]<br/>";
 echo 'Select a player to auto-assist: <select name="autoassist"> ';
 echo '<option value="noautoassist">Nobody!</option>';
 while ($row = $sessionmates->fetch_array()) {
@@ -130,7 +130,7 @@ while ($row = $sessionmates->fetch_array()) {
 		echo '<option value="' . $row['username'] . '">' . $row['username'] . '</option>'; //Add ally to list of aidable allies.
 	}
 }
-echo '</select></br><input type="submit" value="Auto-assist this ally" /> </form></br>';
+echo '</select><br/><input type="submit" value="Auto-assist this ally" /> </form><br/>';
 //End auto-assist form.
 $sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]'");
 $sessionrow = $sessionresult->fetch_array();
@@ -138,7 +138,7 @@ if ($sessionrow['sessionbossname'] == "") { //No current fight.
 	echo '<a href="combatbasics.php" style = "margin-right:30px;">The basics of strife</a>';
 	echo '<a href="sessionbossvote.php">Vote on whole session boss strifes.</a>';
 } else {
-	echo "Your session has engaged $sessionrow[sessionbossname]!</br>";
+	echo "Your session has engaged $sessionrow[sessionbossname]!<br/>";
 	echo '<form action="sessionboss.php" method="post"><input type="hidden" id="newfighter" name="newfighter" value="' . $sessionrow['sessionbossname'] . '"><input type="submit" value="Join the fight"></form>';
 }
 

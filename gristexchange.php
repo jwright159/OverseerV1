@@ -112,7 +112,7 @@ function getBasecost($gristname)
 if ($seisopen == false) {
 	echo "The Stock Exchange is currently closed due to balance issues. This is non-negotiable and it will re-open when these issues have been resolved. Please be patient.<br/>";
 } elseif (empty($_SESSION['username'])) {
-	echo "Log in to use the Grist Stock Exchange.</br>";
+	echo "Log in to use the Grist Stock Exchange.<br/>";
 } else {
 	echo "<!DOCTYPE html><html><head><style>defunct{color: #CC0000;}</style><style>clarify{color: #CCCC00;}</style><style>greenlit{color: #00AA00;}</style></head><body>";
 
@@ -323,17 +323,17 @@ if ($seisopen == false) {
 									$stockrow[$buystr] += $quantity;
 									$stockrow[$supplystr] -= $quantity;
 									$mysqli->query("UPDATE `Grist_Exchange` SET `$buystr` = $stockrow[$buystr], `$supplystr` = $stockrow[$supplystr] WHERE `Grist_Exchange`.`name` = '$xchangename'");
-									echo "You have purchased $quantity " . $_POST['buygrist'] . " for $totalcost.</br>";
+									echo "You have purchased $quantity " . $_POST['buygrist'] . " for $totalcost.<br/>";
 								} else
 									echo "The Exchange is out of " . $_POST['buygrist'] . "! You'll have to wait until the stock replenishes.<br/>";
 							} else
-								echo "It costs $totalcost boondollars to buy $quantity " . $_POST['buygrist'] . ". You don't have enough!</br>";
+								echo "It costs $totalcost boondollars to buy $quantity " . $_POST['buygrist'] . ". You don't have enough!<br/>";
 						} else
 							echo "The transaction could not be performed.<br/>";
 					} else
-						echo "You don't seem to have given a grist type that exists.</br>";
+						echo "You don't seem to have given a grist type that exists.<br/>";
 				} else
-					echo "You can't buy zero or a negative amount of grist!</br>";
+					echo "You can't buy zero or a negative amount of grist!<br/>";
 			}
 			if (!empty($_POST['sellgrist'])) {
 				$quantity = $_POST['sellamount'];
@@ -365,15 +365,15 @@ if ($seisopen == false) {
 								$stockrow[$sellstr] += $quantity;
 								$stockrow[$supplystr] += $quantity;
 								$mysqli->query("UPDATE `Grist_Exchange` SET `$sellstr` = $stockrow[$sellstr], `$supplystr` = $stockrow[$supplystr] WHERE `Grist_Exchange`.`name` = '$xchangename'");
-								echo "You have sold $quantity " . $_POST['sellgrist'] . " for $totalcost.</br>";
+								echo "You have sold $quantity " . $_POST['sellgrist'] . " for $totalcost.<br/>";
 							} else
-								echo "You don't have that much " . $_POST['sellgrist'] . ".</br>";
+								echo "You don't have that much " . $_POST['sellgrist'] . ".<br/>";
 						} else
 							echo "The transaction could not be performed.<br/>";
 					} else
-						echo "You don't seem to have given a grist type that exists.</br>";
+						echo "You don't seem to have given a grist type that exists.<br/>";
 				} else
-					echo "You can't sell zero or a negative amount of grist!</br>";
+					echo "You can't sell zero or a negative amount of grist!<br/>";
 			}
 
 			if ($timeenabled) {
@@ -480,29 +480,29 @@ if ($seisopen == false) {
 			}
 			echo '</table><br/><br/>';
 
-			echo '<form method="post" action="gristexchange.php">Buy Grist:</br>Type: <select name="buygrist">';
+			echo '<form method="post" action="gristexchange.php">Buy Grist:<br/>Type: <select name="buygrist">';
 			$i = 0;
 			while ($i < $totalgrists) {
 				$griststr = $gristname[$i] . "_price";
 				echo '<option value="' . $gristname[$i] . '">' . $gristname[$i] . ' (Cost: ' . strval($stockrow[$griststr]) . ' boondollars/unit)</option>';
 				$i++;
 			}
-			echo '</select></br>';
+			echo '</select><br/>';
 			if ($timeenabled)
 				echo '<input type="checkbox" name="oldprices" value="yes" /> Use prices from last update (cost: 1 encounter)<br/>';
-			echo 'Amount to buy: <input type="text" name="buyamount"><input type="submit" value="Buy!"></form></br></br>';
+			echo 'Amount to buy: <input type="text" name="buyamount"><input type="submit" value="Buy!"></form><br/><br/>';
 
-			echo '<form method="post" action="gristexchange.php">Sell Grist:</br>Type: <select name="sellgrist">';
+			echo '<form method="post" action="gristexchange.php">Sell Grist:<br/>Type: <select name="sellgrist">';
 			$i = 0;
 			while ($i < $totalgrists) {
 				$griststr = $gristname[$i] . "_price";
 				echo '<option value="' . $gristname[$i] . '">' . $gristname[$i] . ' (Value: ' . strval($stockrow[$griststr]) . ' boondollars/unit)</option>';
 				$i++;
 			}
-			echo '</select></br>';
+			echo '</select><br/>';
 			if ($timeenabled)
 				echo '<input type="checkbox" name="oldprices" value="yes" /> Use prices from last update (cost: 1 encounter)<br/>';
-			echo 'Amount to sell: <input type="text" name="sellamount"><input type="submit" value="Sell!"></form></br>';
+			echo 'Amount to sell: <input type="text" name="sellamount"><input type="submit" value="Sell!"></form><br/>';
 		}
 	}
 }

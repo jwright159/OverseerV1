@@ -32,7 +32,7 @@ function heaviestBonus($workrow)
 		return "assault";
 }
 
-echo 'The following is a list of every weapon of a given abstratus, sorted by power level.</br>When a strife command is listed, that is the command with the highest bonus on the item.<br/>';
+echo 'The following is a list of every weapon of a given abstratus, sorted by power level.<br/>When a strife command is listed, that is the command with the highest bonus on the item.<br/>';
 if (!empty($_GET['abs'])) { //I HAVE NEW WEAPON!
 	echo "<br/>";
 	$alltotalpower = 0;

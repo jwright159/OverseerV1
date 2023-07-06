@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to vote on or initiate boss fights.</br>";
+	echo "Log in to vote on or initiate boss fights.<br/>";
 } else {
 
 	//Process forms here
@@ -38,7 +38,7 @@ if (empty($_SESSION['username'])) {
 		}
 		if ($sessionrow['checkmate'] == 0) {
 			if ($sessionrow['battlefieldtotal'] >= $chumroll * $powerperplayer) {
-				echo "Black King votes: $kingvotes/$chumroll</br>";
+				echo "Black King votes: $kingvotes/$chumroll<br/>";
 				if ((($kingvotes / $chumroll) * 100) > 50 && $userrow['kingvote'] == 1 && $userrow[$downstr] == 0) { //Only users who have voted for the king may initiate the battle.
 					echo '<form action="sessionbosscreate.php" method="post"><input type="hidden" id="bossname" name="bossname" value="The Black King"><input type="submit" value="STRIFE!"> (NOTE: Whoever begins the strife will be designated the "leader" of the combat. They will be responsible for actually locking in and executing every strife round.</form>';
 				}
@@ -47,7 +47,7 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 		} else {
-			echo 'Your session has already defeated The Black King.</br>';
+			echo 'Your session has already defeated The Black King.<br/>';
 		}
 		if (!$boss)
 			echo "You cannot vote for any session bosses at present!";

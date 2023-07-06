@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Trying to waste your time whilst not logged in is... a waste of time?</br>";
+	echo "Trying to waste your time whilst not logged in is... a waste of time?<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	if ($userrow['encounters'] > 0) {
@@ -11,7 +11,7 @@ if (empty($_SESSION['username'])) {
 	} else {
 		echo "You haven't got any time to sit around wasting!";
 	}
-	echo '</br><a href="overview.php">==&gt;</a>';
+	echo '<br/><a href="overview.php">==&gt;</a>';
 	//header('location:/overview.php');
 	require_once "footer.php";
 }

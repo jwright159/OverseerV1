@@ -78,9 +78,9 @@ if (!empty($holoCode)) {
 		$itemname = $itemrow['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemrow['art'] != "")
-			echo '<img src="/Images/Items/' . $itemrow['art'] . '" title="Image by ' . $itemrow['credit'] . '"></br>';
+			echo '<img src="/Images/Items/' . $itemrow['art'] . '" title="Image by ' . $itemrow['credit'] . '"><br/>';
 		if (substr($itemname, 0, 2) == "A " || substr($itemname, 0, 3) == "An " || substr($itemname, 0, 4) == "The ")
-			echo "The holopad displays $itemname. It also prints out a short description:</br>";
+			echo "The holopad displays $itemname. It also prints out a short description:<br/>";
 		else
 			echo "<b>$itemname</b>:<br/>";
 		$desc = descvarConvert($userrow, $itemrow['description'], $itemrow['effects']);
@@ -124,39 +124,39 @@ if (!empty($holoCode)) {
 			echo '<img src="Images/Grist/Build_Grist.png" height="50" width="50" title="Build_Grist"></img>';
 			echo " <gristvalue2>0 </gristvalue2>";
 		}
-		echo "</br>";
-		echo "Abstratus: $itemrow[abstratus]</br>";
-		echo "Strength: $itemrow[power]</br>";
-		echo "Size: $itemrow[size]</br>";
+		echo "<br/>";
+		echo "Abstratus: $itemrow[abstratus]<br/>";
+		echo "Strength: $itemrow[power]<br/>";
+		echo "Size: $itemrow[size]<br/>";
 		if ($itemrow['aggrieve'] != 0)
-			echo "Aggrieve: $itemrow[aggrieve]</br>";
+			echo "Aggrieve: $itemrow[aggrieve]<br/>";
 		if ($itemrow['aggress'] != 0)
-			echo "Aggress: $itemrow[aggress]</br>";
+			echo "Aggress: $itemrow[aggress]<br/>";
 		if ($itemrow['assail'] != 0)
-			echo "Assail: $itemrow[assail]</br>";
+			echo "Assail: $itemrow[assail]<br/>";
 		if ($itemrow['assault'] != 0)
-			echo "Assault: $itemrow[assault]</br>";
+			echo "Assault: $itemrow[assault]<br/>";
 		if ($itemrow['abuse'] != 0)
-			echo "Abuse: $itemrow[abuse]</br>";
+			echo "Abuse: $itemrow[abuse]<br/>";
 		if ($itemrow['accuse'] != 0)
-			echo "Accuse: $itemrow[accuse]</br>";
+			echo "Accuse: $itemrow[accuse]<br/>";
 		if ($itemrow['abjure'] != 0)
-			echo "Abjure: $itemrow[abjure]</br>";
+			echo "Abjure: $itemrow[abjure]<br/>";
 		if ($itemrow['abstain'] != 0)
-			echo "Abstain: $itemrow[abstain]</br>";
+			echo "Abstain: $itemrow[abstain]<br/>";
 	}
 }
 if ($itemfound == False)
-	echo 'The code you have inputted refers to an item that does not exist.</br>';
+	echo 'The code you have inputted refers to an item that does not exist.<br/>';
 if ($itemfound == True)
-	echo "</br>";
+	echo "<br/>";
 //FORMS-----------------------------------------------------------------
 echo '<form action="tooly.php" method="post">First item :<input id="code1" name="code1" type="text" /><br/>';
 echo 'Second item:<input id="code2" name="code2" type="text" /><br/>';
-echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
-echo '<input type="submit" value="Design it!" /></form></br>';
+echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select><br/>';
+echo '<input type="submit" value="Design it!" /></form><br/>';
 echo '<form action="tooly.php" method="post">Item to preview: <input id="holocode" name="holocode" type="text" /><br/>';
-echo '<input type="submit" value="Observe it!" /></form></br>';
-echo '</br>';
+echo '<input type="submit" value="Observe it!" /></form><br/>';
+echo '<br/>';
 require_once "footer.php";
 ?>

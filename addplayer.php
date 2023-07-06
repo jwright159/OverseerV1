@@ -76,11 +76,11 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
 			$name = $mysqli->real_escape_string($_POST['username']);
 			$pw = password_hash($mysqli->real_escape_string($_POST['password']), PASSWORD_BCRYPT);
 			$session = $mysqli->real_escape_string($_POST['session']);
-			echo "Now entering session $session </br>"; //echo this so that randoms know what they're getting into
+			echo "Now entering session $session <br/>"; //echo this so that randoms know what they're getting into
 			if ($_POST['email'] == $_POST['cemail'])
 				$email = $mysqli->real_escape_string($_POST['email']);
 			else {
-				echo "The email and confirm email fields didn't match, so your email will be left blank for now. You can set it in Player Settings whenever you are ready.</br>";
+				echo "The email and confirm email fields didn't match, so your email will be left blank for now. You can set it in Player Settings whenever you are ready.<br/>";
 				$email = "";
 			}
 			$protostrength = intval($mysqli->real_escape_string($_POST['prototyping_strength']));
@@ -150,6 +150,6 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
 	echo "Player entry failed: Player name empty or passwords do not match.";
 }
 $mysqli->close();
-echo '</br><a href="/">Home</a>';
+echo '<br/><a href="/">Home</a>';
 require_once "footer.php";
 ?>

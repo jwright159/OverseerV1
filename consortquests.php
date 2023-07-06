@@ -41,11 +41,11 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 			if ($basecost <= 0) {
 				$basecost = 0;
 				$rewardnameex = $rewardname . " x1";
-				echo "$rewardnameex!</br>";
+				echo "$rewardnameex!<br/>";
 			} else {
 				if (!empty($rewardname))
 					$rewardnameex = $rewardname . " x1, and";
-				echo "$rewardnameex $basecost Boondollars!</br>";
+				echo "$rewardnameex $basecost Boondollars!<br/>";
 			}
 		}
 	} elseif ($reward < 10) { //10% chance normally of getting an item in return, 20% if max luck
@@ -57,15 +57,15 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 		$rewardname = str_replace("\\", "", $rewarditem['name']);
 		if ($basecost <= 0) {
 			$basecost = 0;
-			echo "$rewardname x1!</br>";
+			echo "$rewardname x1!<br/>";
 		} else
-			echo "$rewardname x1, and $basecost Boondollars!</br>";
+			echo "$rewardname x1, and $basecost Boondollars!<br/>";
 	} else {
 		if ($realbasecost <= 0) {
 			$realbasecost = rand(1, $gaterow['gate' . strval($landgate)]);
 		}
 		$basecost = ceil($realbasecost * (1 + ($inflation / 100)));
-		echo "$basecost Boondollars!</br>";
+		echo "$basecost Boondollars!<br/>";
 		$rewardname = "";
 	}
 	if (!empty($rewardname)) {
@@ -88,9 +88,9 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 }
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to go on consort quests.</br>";
+	echo "Log in to go on consort quests.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
-	echo "You won't find any quests on your dream moon.</br>";
+	echo "You won't find any quests on your dream moon.<br/>";
 } else {
 
 	if (!empty($_POST['questapproval'])) {
@@ -100,12 +100,12 @@ if (empty($_SESSION['username'])) {
 				$userrow['questland'] = $_GET['land'];
 				//$mysqli->query("UPDATE `Players` SET `questland` = '" . $_GET['land'] . "' WHERE `Players`.`username` = '$username' ");
 				//the quest was already "accepted" when it was received, this is just a formality
-				echo "Quest accepted!</br>";
+				echo "Quest accepted!<br/>";
 			} else
-				echo "You seem to be trying to start a quest that you were never given.</br>";
+				echo "You seem to be trying to start a quest that you were never given.<br/>";
 		} else {
 			$mysqli->query("UPDATE `Players` SET `currentquest` = 0, `questland` = '' WHERE `Players`.`username` = '$username' ");
-			echo "You turn the poor sap down and set off to find a different quest.</br>";
+			echo "You turn the poor sap down and set off to find a different quest.<br/>";
 			$userrow['currentquest'] = 0;
 			$userrow['questland'] = "";
 		}
@@ -132,7 +132,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	if ($userrow['house_build_grist'] < $gaterow['gate1'])
-		echo "You need to have access to the first gate in order to find a consort who will give you a quest.</br>";
+		echo "You need to have access to the first gate in order to find a consort who will give you a quest.<br/>";
 	else {
 		$chain = chainArray($userrow);
 		$totalchain = count($chain);
@@ -208,7 +208,7 @@ if (empty($_SESSION['username'])) {
 					$qirow = $questitemresult->fetch_array();
 					$truename = str_replace("\\", "", $qirow['name']);
 					if ($truename == $userrow[$_POST['questitem']]) {
-						echo "The $consort appraises your $truename.</br>";
+						echo "The $consort appraises your $truename.<br/>";
 						$victory = true; //innocent until proven guilty.
 						$failreason = "";
 						if (strpos($_POST['questitem'], "inv") === false) { //player is trying to consume from outside their inventory!
@@ -217,7 +217,7 @@ if (empty($_SESSION['username'])) {
 						}
 						if (!empty($qrow['req_keyword']) && $victory) {
 							$victory = false;
-							//echo "Searching for keyword(s) " . $qrow['req_keyword'] . "</br>";
+							//echo "Searching for keyword(s) " . $qrow['req_keyword'] . "<br/>";
 							$boom = explode("|", $qrow['req_keyword']);
 							$boomcount = count($boom);
 							$counter = 0;
@@ -231,7 +231,7 @@ if (empty($_SESSION['username'])) {
 						}
 						if (!empty($qrow['req_abstratus']) && $victory) {
 							$victory = false;
-							//echo "Searching for abstratus(i) " . $qrow['req_abstratus'] . "</br>";
+							//echo "Searching for abstratus(i) " . $qrow['req_abstratus'] . "<br/>";
 							$boom = explode("|", $qrow['req_abstratus']);
 							$boomcount = count($boom);
 							$counter = 0;
@@ -245,7 +245,7 @@ if (empty($_SESSION['username'])) {
 						}
 						if (!empty($qrow['req_grist']) && $victory) {
 							$victory = false;
-							//echo "Searching for grist(s) " . $qrow['req_grist'] . "</br>";
+							//echo "Searching for grist(s) " . $qrow['req_grist'] . "<br/>";
 							$boom = explode("|", $qrow['req_grist']);
 							$boomcount = count($boom);
 							$counter = 0;
@@ -260,7 +260,7 @@ if (empty($_SESSION['username'])) {
 								$failreason = "Something about the item's style is off.";
 						}
 						if (!empty($qrow['req_base']) && $victory) {
-							//echo "Item's base status is important</br>";
+							//echo "Item's base status is important<br/>";
 							if ($qrow['req_base'] == "yes" && $qirow['catalogue'] == 0) {
 								$victory = false;
 								$failreason = "Perhaps they're looking for something a bit more mundane.";
@@ -272,7 +272,7 @@ if (empty($_SESSION['username'])) {
 							//if (!$victory and empty($failreason)) $failreason = "It seems that this item isn't quite what they had in mind.";
 						}
 						if (!empty($qrow['req_consume']) && $victory) {
-							//echo "Item's consumable status is important</br>";
+							//echo "Item's consumable status is important<br/>";
 							if ($qrow['req_consume'] == "yes" && $qirow['consumable'] == 0) {
 								$victory = false;
 								$failreason = "Perhaps an item is required that can be used in a different way.";
@@ -281,10 +281,10 @@ if (empty($_SESSION['username'])) {
 								$victory = false;
 								$failreason = "Perhaps they're looking for something less expendable.";
 							}
-							//if (!$victory) echo "Failed</br>";
+							//if (!$victory) echo "Failed<br/>";
 						}
 						if ($qrow['req_power'] != 0 && $victory) {
-							//echo "Item's power is important</br>";
+							//echo "Item's power is important<br/>";
 							if ($qrow['req_power'] > 0 && $qrow['req_power'] > $qirow['power']) {
 								$victory = false;
 								$failreason = "This item is not strong enough for their purposes.";
@@ -293,15 +293,15 @@ if (empty($_SESSION['username'])) {
 								$victory = false;
 								$failreason = "This item is not shitty enough for their purposes, apparently.";
 							}
-							//if (!$victory) echo "Failed</br>";
+							//if (!$victory) echo "Failed<br/>";
 						}
 						if (!empty($qrow['req_size']) && $victory) {
-							//echo "Item's size is important</br>";
+							//echo "Item's size is important<br/>";
 							if ($qrow['req_size'] != $qirow['size']) {
 								$victory = false;
 								$failreason = "This item isn't the right size for their purposes.";
 							}
-							//if (!$victory) echo "Failed</br>";
+							//if (!$victory) echo "Failed<br/>";
 						}
 						if ($victory) { //moment of truth
 							$newquest = 0;
@@ -342,11 +342,11 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Players` SET `currentquest` = $newquest, `questland` = '$newquestland' WHERE `Players`.`username` = '$username'");
 								echo '<a href="consortquests.php">==&gt;</a>';
 							} else
-								echo 'Unfortunately, they don\'t seem to be capable of rewarding you with anything worth nearly as much as the offering. They insist that you keep it and try to find something more affordable.</br><a href="consortquests.php">==&gt;</a>';
+								echo 'Unfortunately, they don\'t seem to be capable of rewarding you with anything worth nearly as much as the offering. They insist that you keep it and try to find something more affordable.<br/><a href="consortquests.php">==&gt;</a>';
 						} else
-							echo 'The consort turns it away. ' . $failreason . '</br><a href="consortquests.php">==&gt;</a>';
+							echo 'The consort turns it away. ' . $failreason . '<br/><a href="consortquests.php">==&gt;</a>';
 					} else
-						echo 'The item you\'re trying to offer doesn\'t seem to exist!</br><a href="consortquests.php">==&gt;</a>';
+						echo 'The item you\'re trying to offer doesn\'t seem to exist!<br/><a href="consortquests.php">==&gt;</a>';
 				}
 			} elseif (!empty($_POST['gostrife'])) {
 				if ($qrow['context'] != "queststrife" && $qrow['context'] != "queststrife+" && $qrow['context'] != "questrescue" && $qrow['context'] != "questrescue+") {
@@ -419,18 +419,18 @@ if (empty($_SESSION['username'])) {
 				echo '<a href="consortquests.php">==&gt;</a>';
 			} else {
 				if (empty($qrow['dialogue']))
-					$questtext = "Can you get me an item please?</br>";
+					$questtext = "Can you get me an item please?<br/>";
 				else
 					$questtext = $qrow['dialogue'];
-				echo "You have an ongoing quest on the $locationstr.</br>";
+				echo "You have an ongoing quest on the $locationstr.<br/>";
 				if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods")
 					echo "This quest's ID is: $qrow[ID]<br/>";
-				echo "The $consort's request:</br>";
-				echo "<b>\"" . $qrow['dialogue'] . "\"</b></br></br>";
+				echo "The $consort's request:<br/>";
+				echo "<b>\"" . $qrow['dialogue'] . "\"</b><br/><br/>";
 				switch ($qrow['context']) {
 					case 'quest': //item fetch quest
 					case 'quest+': //the + marks quests that are linked to from other quests, prevents it from being selected as a starting quest
-						echo '<form action="consortquests.php" method="post">Offer the ' . $consort . ' an item?</br>';
+						echo '<form action="consortquests.php" method="post">Offer the ' . $consort . ' an item?<br/>';
 						echo '<select name="questitem">';
 						$itemcount = 1;
 						while ($itemcount <= $max_items) {
@@ -439,7 +439,7 @@ if (empty($_SESSION['username'])) {
 								echo '<option value="' . $itemstring . '">' . $userrow[$itemstring] . '</option>';
 							$itemcount++;
 						}
-						echo '</select></br><input type="submit" value="Offer this item"></form></br>';
+						echo '</select><br/><input type="submit" value="Offer this item"></form><br/>';
 						break;
 					case 'queststrife': //strife quest
 					case 'queststrife+':
@@ -525,15 +525,15 @@ if (empty($_SESSION['username'])) {
 						break;
 				}
 				echo '<form action="consortquests.php" method="post"><input type="hidden" name="questapproval" value="no"><input type="submit" value="Give up and abandon this quest"></form>';
-				echo "You have $userrow[availablequests] other quests available.</br>";
+				echo "You have $userrow[availablequests] other quests available.<br/>";
 			}
 		} else {
 			if (empty($_GET['land'])) {
-				echo "You have $userrow[availablequests] quests available.</br>";
-				echo "Like encounters, quests will accumulate over time. You will gain 1 quest every 30 minutes, and can acquire up to 50 at once.</br>";
-				echo "One quest is spent for every quest prompted to you, and the quest will be available until you complete it or decide to decline.</br>";
-				echo "Currently, possible quests can require either delivery of a type of item hinted at by the consort, a successful strife against certain enemies, or braving a special dungeon for that quest.</br></br>";
-				echo 'New quests are being added all the time, so if you have an idea <a href="feedback.php?type=quest">feel free to submit it</a>!</br></br>';
+				echo "You have $userrow[availablequests] quests available.<br/>";
+				echo "Like encounters, quests will accumulate over time. You will gain 1 quest every 30 minutes, and can acquire up to 50 at once.<br/>";
+				echo "One quest is spent for every quest prompted to you, and the quest will be available until you complete it or decide to decline.<br/>";
+				echo "Currently, possible quests can require either delivery of a type of item hinted at by the consort, a successful strife against certain enemies, or braving a special dungeon for that quest.<br/><br/>";
+				echo 'New quests are being added all the time, so if you have an idea <a href="feedback.php?type=quest">feel free to submit it</a>!<br/><br/>';
 				echo '<form action="consortquests.php" method="get">Select a Land on which to seek a quest:<select name="land"> ';
 				$locationstr = "Land of " . $userrow['land1'] . " and " . $userrow['land2'];
 				echo '<option value="' . $userrow['username'] . '">' . $locationstr . '</option>';
@@ -559,12 +559,12 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 				if (!$aok)
-					echo "You can't reach that player's land with your current gate setup!</br>";
+					echo "You can't reach that player's land with your current gate setup!<br/>";
 				else { //good to go!
 					$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_GET['land'] . "';");
 					$currentrow = $currentresult->fetch_array();
 					$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
-					//echo "Location: $locationstr</br>";
+					//echo "Location: $locationstr<br/>";
 					if (!empty($currentrow['consort_name']))
 						$consort = $currentrow['consort_name'];
 					else
@@ -572,7 +572,7 @@ if (empty($_SESSION['username'])) {
 					if ($userrow['availablequests'] > 0) {
 						$userrow['availablequests'] -= 1;
 						$mysqli->query("UPDATE Players SET `availablequests` = $userrow[availablequests] WHERE `Players`.`username` = '$username'");
-						echo "You have $userrow[availablequests] quests available.</br>";
+						echo "You have $userrow[availablequests] quests available.<br/>";
 						$i = 1;
 						$gate = 0;
 						while ($i <= 7) {
@@ -585,7 +585,7 @@ if (empty($_SESSION['username'])) {
 						}
 						if ($currentrow['house_build_grist'] >= $gaterow['gate7'])
 							$gate = 7;
-						echo "You search the $locationstr for a while, hoping to come across a consort village. Eventually, you are approached by a $consort with a request for you...</br>";
+						echo "You search the $locationstr for a while, hoping to come across a consort village. Eventually, you are approached by a $consort with a request for you...<br/>";
 						$rquest = rand(1, 100); //first, determine a random quest type so that each type has controlled weight, rather than basing it off of quantity of available quests
 						if ($rquest <= 33)
 							$thisquest = "quest"; //1/3 chance of fetch quest
@@ -598,17 +598,17 @@ if (empty($_SESSION['username'])) {
 						else
 							$thisquest = "quest"; //technically bugged, default to fetch quest
 						$qrow = getDialogue($thisquest, $userrow, $currentrow['land1'], $currentrow['land2'], $gate);
-						echo "<b>\"" . $qrow['dialogue'] . "\"</b></br></br>";
+						echo "<b>\"" . $qrow['dialogue'] . "\"</b><br/><br/>";
 						$questid = $qrow['ID'];
 						if ($userrow['session_name'] == "Developers" || $userrow['session_name'] == "Itemods")
 							echo "This quest's ID is: $questid<br/>";
-						echo "Will you accept this quest?</br>";
+						echo "Will you accept this quest?<br/>";
 						$mysqli->query("UPDATE `Players` SET `currentquest` = $questid, `questland` = '" . $_GET['land'] . "' WHERE `Players`.`username` = '$username' "); //set this here so the player can't do weird things
 						echo '<form action="consortquests.php?land=' . $_GET['land'] . '" method="post"><input type="hidden" name="questapproval" value="' . strval($questid) . '"><input type="submit" value="Accept it!"></form>';
-						echo '<form action="consortquests.php?land=' . $_GET['land'] . '" method="post"><input type="hidden" name="questapproval" value="no"><input type="submit" value="Find another quest (Cost: 1 available quest)"></form></br>';
+						echo '<form action="consortquests.php?land=' . $_GET['land'] . '" method="post"><input type="hidden" name="questapproval" value="no"><input type="submit" value="Find another quest (Cost: 1 available quest)"></form><br/>';
 						echo '<a href="consortquests.php">Return to land selection</a>';
 					} else
-						echo "You search the $locationstr for a while, but you can't seem to find anyone in need of assistance. Try checking back in half an hour.</br>";
+						echo "You search the $locationstr for a while, but you can't seem to find anyone in need of assistance. Try checking back in half an hour.<br/>";
 				}
 			}
 		}

@@ -1,7 +1,7 @@
  <?php
 if (empty($_SESSION['username'])) {
-  echo "Log in to upload art.</br>";
-  echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+  echo "Log in to upload art.<br/>";
+  echo '<br/><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
   $con = $mysqli->connect("localhost","theovers_DC","pi31415926535");
   if (!$con)
@@ -35,7 +35,7 @@ if (empty($_SESSION['username'])) {
 
          <form action="uploadart.php" method="post" enctype="multipart/form-data">
          <label for="file">Filename:</label>
-         <input type="file" name="file" id="file"></br>
+         <input type="file" name="file" id="file"><br/>
          <input type="submit" name="submit" value="Submit">
          </form>
 

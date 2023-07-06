@@ -28,7 +28,7 @@ require_once "header.php";
 $max_links = 5; //Both standard and random event.
 $max_enemies = 5;
 if (empty($_SESSION['username'])) {
-	echo "Log in to explore your dreams.</br>";
+	echo "Log in to explore your dreams.<br/>";
 } elseif ($userrow['dreamingstatus'] == "Awake" && $userrow['Godtier'] == 0 && $userrow['exploration'] != "7thgateout") { //Allow waking players exploring the Denizen palace in.
 	echo "You cannot explore dream locations with your waking self until you have ascended to the god tiers.";
 } else {
@@ -38,8 +38,8 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['newevent'])) {
 		$travel = True;
 		if (!empty($_POST['olddesc']))
-			echo "=" . $_POST['olddesc'] . "</br></br>";
-		echo '<p class="courier">' . $_POST['oldevent'] . "</p></br>";
+			echo "=" . $_POST['olddesc'] . "<br/><br/>";
+		echo '<p class="courier">' . $_POST['oldevent'] . "</p><br/>";
 		if (strpos($_POST['newevent'], "random_") !== false) { //new event should be randomly selected using a keyword
 			$keyword = str_replace("random_", "", $_POST['newevent']) . "_";
 			$randresult = $mysqli->query("SELECT `name` FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` LIKE '" . $keyword . "%';");
@@ -55,7 +55,7 @@ if (empty($_SESSION['username'])) {
 			}
 		}
 		$mysqli->query("UPDATE `Players` SET `exploration` = '" . $_POST['newevent'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-		echo "=" . $_POST['newdesc'] . "</br></br>";
+		echo "=" . $_POST['newdesc'] . "<br/><br/>";
 		$userrow['exploration'] = $_POST['newevent'];
 		//We begin random transforms before anything else so that the transformed into event takes place rather than the original.
 		//We do them here so that the random event can't be obtained by spam-refreshing the page.
@@ -84,7 +84,7 @@ if (empty($_SESSION['username'])) {
 		$exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
 		$explorow = $exploresult->fetch_array();
 	}
-	$oldevent = replacer($userrow, $explorow['description']) . "</br>";
+	$oldevent = replacer($userrow, $explorow['description']) . "<br/>";
 	echo '<p class="courier">' . $oldevent . "</p>";
 	if (!empty($explorow['transform']))
 		$mysqli->query("UPDATE `Players` SET `exploration` = '" . $explorow['transform'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Transform event.

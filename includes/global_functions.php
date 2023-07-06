@@ -108,18 +108,18 @@ function climbEcheladder(array $userrow, int $rungups)
 		$echerow = fetchOne("SELECT :echestr FROM Echeladders WHERE username = :username", ['echestr' => $echestr, 'username' => $userrow['username']]);
 		if (!empty($echerow[$echestr])) {
 			if ($rungs > 1)
-				echo "</br>You scramble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
+				echo "<br/>You scramble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
 			else
-				echo "</br>You ascend to rung: $echerow[$echestr]!";
+				echo "<br/>You ascend to rung: $echerow[$echestr]!";
 		}
 
 		foreach (fetchAll("SELECT * FROM Abilities WHERE Aspect IN (:aspect, 'All') AND Class IN (class,'All') AND Rungreq BETWEEN :rungReqLower AND :rungReqUpper AND Godtierreq = 0 ORDER BY Rungreq DESC;", ['aspect' => $userrow['Aspect'], 'class' => $userrow['Class'], 'rungReqLower' => $userrow['Echeladder'] + 1, 'rungReqUpper' => $userrow['Echeladder'] + $rungs,]) as $levelerability)
-			echo "</br>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
+			echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 
 		if ($userrow['Echeladder'] + $rungs == 612)
-			echo "</br>You have at long last reached the top of your Echeladder!";
+			echo "<br/>You have at long last reached the top of your Echeladder!";
 
-		echo "</br>";
+		echo "<br/>";
 		echo "Gel Viscosity: +$hpup!<br/>";
 		echo "Boondollars earned: $boondollars!<br/>";
 	}
@@ -310,35 +310,35 @@ function terminateStrife(array $userrow, int $result)
 				'exploration' => $userrow[$playerAbsconded ? 'strifeabscondexplore' : 'strifefailureexplore'],
 				'username' => $username,
 			]);
-			echo ' <a href="explore.php">Continue exploring</a></br>';
+			echo ' <a href="explore.php">Continue exploring</a><br/>';
 		}
 
 		if ($userrow['dungeonstrife'] == 2) //User strifing in a dungeon
 		{
 			query("UPDATE Players SET dungeonstrife = 1 WHERE username = :username LIMIT 1;", ['username' => $username]);
-			echo "You flee back the way you came.</br>";
-			echo "<a href='dungeons.php'>==&gt;</a></br>";
+			echo "You flee back the way you came.<br/>";
+			echo "<a href='dungeons.php'>==&gt;</a><br/>";
 		} elseif ($userrow['dungeonstrife'] == 4) //User fighting dungeon guardian
 		{
 			query("UPDATE Players SET dungeonstrife = 3 WHERE username = :username LIMIT 1;", ['username' => $username]);
-			echo "You flee from the guardian. Perhaps you should prepare a bit more before trying to enter the dungeon...</br>";
-			echo "<a href='dungeons.php#display'>==&gt;</a></br>";
+			echo "You flee from the guardian. Perhaps you should prepare a bit more before trying to enter the dungeon...<br/>";
+			echo "<a href='dungeons.php#display'>==&gt;</a><br/>";
 		} elseif ($userrow['dungeonstrife'] == 6) //User strifing for a quest
 		{
 			query("UPDATE Players SET dungeonstrife = 5 WHERE username = :username LIMIT 1;", ['username' => $username]);
 			$userrow['dungeonstrife'] = 5;
 
 			if ($playerAbsconded) {
-				echo "You abscond, but the quest is still on for you to try again when you are better prepared...</br>";
+				echo "You abscond, but the quest is still on for you to try again when you are better prepared...<br/>";
 			} else {
 				$qrow = fetchOne("SELECT context FROM Consort_Dialogue WHERE ID = :id", ['id' => $userrow['currentquest']]);
 				if (strpos($qrow['context'], "questrescue") !== false)
 					echo "This quest's challenge has gotten the better of you! It looks as though you will not have a second chance, unfortunately...<br/>";
 				else
-					echo "You have failed the quest! You should come back and try again after you're rested up and fully prepared.</br>";
+					echo "You have failed the quest! You should come back and try again after you're rested up and fully prepared.<br/>";
 			}
 
-			echo "<a href='consortquests.php'>==&gt;</a></br>";
+			echo "<a href='consortquests.php'>==&gt;</a><br/>";
 		}
 	} elseif ($result == 0) //player is victorious!
 	{
@@ -347,17 +347,17 @@ function terminateStrife(array $userrow, int $result)
 				'exploration' => $userrow['strifesuccessexplore'],
 				'username' => $username,
 			]);
-			echo ' <a href="explore.php">Continue exploring</a></br>';
+			echo ' <a href="explore.php">Continue exploring</a><br/>';
 		}
 
 		if ($userrow['dungeonstrife'] == 2) //User strifing in a dungeon
 		{
-			echo "</br>You have successfully defeated the dungeon foes!</br>";
-			echo "<a href='dungeons.php#display'>==&gt;</a></br>";
+			echo "<br/>You have successfully defeated the dungeon foes!<br/>";
+			echo "<a href='dungeons.php#display'>==&gt;</a><br/>";
 		} elseif ($userrow['dungeonstrife'] == 4) //User strifing against dungeon guardian
 		{
-			echo "</br>You have successfully defeated the dungeon guardian! The entrance lies before you...</br>";
-			echo "<a href='dungeons.php#display'>==&gt;</a></br>";
+			echo "<br/>You have successfully defeated the dungeon guardian! The entrance lies before you...<br/>";
+			echo "<a href='dungeons.php#display'>==&gt;</a><br/>";
 		} elseif ($userrow['dungeonstrife'] == 6) //User strifing for a quest
 		{
 			$qrow = fetchOne("SELECT context FROM Consort_Dialogue WHERE ID = :id", ['id' => $userrow['currentquest']]);
@@ -367,10 +367,10 @@ function terminateStrife(array $userrow, int $result)
 				query("UPDATE Players SET dungeonstrife = 5 WHERE username = :username LIMIT 1;", ['username' => $username]);
 				$userrow['dungeonstrife'] = 5;
 			} else
-				echo "</br>You have successfully cleared the quest! You should talk to the quest giver and claim your reward.</br>";
-			echo "<a href='consortquests.php'>==&gt;</a></br>";
+				echo "<br/>You have successfully cleared the quest! You should talk to the quest giver and claim your reward.<br/>";
+			echo "<a href='consortquests.php'>==&gt;</a><br/>";
 		} else {
-			echo '</br><a href="strife.php">Strife again</a></br>';
+			echo '<br/><a href="strife.php">Strife again</a><br/>';
 		}
 	} else //special case
 	{

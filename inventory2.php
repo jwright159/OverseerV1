@@ -4,7 +4,7 @@ require 'designix.php';
 require 'additem.php';
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to view and manipulate your inventory.</br>";
+	echo "Log in to view and manipulate your inventory.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Your dream self can't access your sylladex!";
 } else {
@@ -44,16 +44,16 @@ if (empty($_SESSION['username'])) {
 				$code = andcombine($_POST['code1'], $_POST['code2']);
 			}
 			if ($letthrough == true) {
-				echo "You expend four Build Grist creating two captchalogue cards which the designix punches holes into corresponding to the codes.</br>";
-				echo "After a brief delay, the designix finishes and sends you the code $code</br>";
+				echo "You expend four Build Grist creating two captchalogue cards which the designix punches holes into corresponding to the codes.<br/>";
+				echo "After a brief delay, the designix finishes and sends you the code $code<br/>";
 				$mysqli->query("UPDATE `Players` SET `Build_Grist` = " . strval($userrow['Build_Grist'] - 4) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 				if ($challenge == 1)
 					$_GET['holocode'] = $code; //go straight into the holopad operation if challenge mode
 				$combined = true; //so that you can't cheat to preview any code
 			} else
-				echo "You can't combine codes that aren't in your atheneum in Challenge Mode. If the code(s) you tried to combine is in your inventory, then it is bugged somehow. Use the populate atheneum page to fix it.</br>";
+				echo "You can't combine codes that aren't in your atheneum in Challenge Mode. If the code(s) you tried to combine is in your inventory, then it is bugged somehow. Use the populate atheneum page to fix it.<br/>";
 		} else {
-			echo "You need four Build Grist to produce the cards required to use the designix!</br>";
+			echo "You need four Build Grist to produce the cards required to use the designix!<br/>";
 		}
 	}
 
@@ -69,7 +69,7 @@ if (empty($_SESSION['username'])) {
 						$newatheneum = $sessionrow['atheneum'] . $_GET['holocode'] . "|";
 						$mysqli->query("UPDATE `Sessions` SET `atheneum` = '" . $newatheneum . "' WHERE `Sessions`.`name` = '$sessionname' LIMIT 1 ;");
 					} else {
-						echo "The code you are previewing has not yet been discovered by your session. You can view it, but you have to either combine the items to make it or physically acquire the item another way to add it to your atheneum.</br>";
+						echo "The code you are previewing has not yet been discovered by your session. You can view it, but you have to either combine the items to make it or physically acquire the item another way to add it to your atheneum.<br/>";
 					}
 				}
 				$itemfound = True;
@@ -77,10 +77,10 @@ if (empty($_SESSION['username'])) {
 				$itemname = $itemrow['name'];
 				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 				if ($itemrow['art'] != "")
-					echo '<img src="Images/Items/' . $itemrow['art'] . '" title="Image by ' . $itemrow['credit'] . '"></br>';
-				echo "The holopad displays the $itemname. It also prints out a short description:</br>";
+					echo '<img src="Images/Items/' . $itemrow['art'] . '" title="Image by ' . $itemrow['credit'] . '"><br/>';
+				echo "The holopad displays the $itemname. It also prints out a short description:<br/>";
 				echo $itemrow['description'];
-				echo "</br>";
+				echo "<br/>";
 				echo "It costs ";
 				$reachgrist = False;
 				$terminateloop = False; //time-saver
@@ -119,32 +119,32 @@ if (empty($_SESSION['username'])) {
 					echo " <gristvalue2>0 </gristvalue2>";
 				}
 				if ($userrow['session_name'] == "Itemods" || $userrow['session_name'] == "Developers") {
-					echo "</br>";
-					echo "Abstratus: $itemrow[abstratus]</br>";
-					echo "Strength: $itemrow[power]</br>";
+					echo "<br/>";
+					echo "Abstratus: $itemrow[abstratus]<br/>";
+					echo "Strength: $itemrow[power]<br/>";
 					if ($itemrow['aggrieve'] != 0)
-						echo "Aggrieve: $itemrow[aggrieve]</br>";
+						echo "Aggrieve: $itemrow[aggrieve]<br/>";
 					if ($itemrow['aggress'] != 0)
-						echo "Aggress: $itemrow[aggress]</br>";
+						echo "Aggress: $itemrow[aggress]<br/>";
 					if ($itemrow['assail'] != 0)
-						echo "Assail: $itemrow[assail]</br>";
+						echo "Assail: $itemrow[assail]<br/>";
 					if ($itemrow['assault'] != 0)
-						echo "Assault: $itemrow[assault]</br>";
+						echo "Assault: $itemrow[assault]<br/>";
 					if ($itemrow['abuse'] != 0)
-						echo "Abuse: $itemrow[abuse]</br>";
+						echo "Abuse: $itemrow[abuse]<br/>";
 					if ($itemrow['accuse'] != 0)
-						echo "Accuse: $itemrow[accuse]</br>";
+						echo "Accuse: $itemrow[accuse]<br/>";
 					if ($itemrow['abjure'] != 0)
-						echo "Abjure: $itemrow[abjure]</br>";
+						echo "Abjure: $itemrow[abjure]<br/>";
 					if ($itemrow['abstain'] != 0)
-						echo "Abstain: $itemrow[abstain]</br>";
+						echo "Abstain: $itemrow[abstain]<br/>";
 				}
 			}
 		}
 		if ($itemfound == False)
-			echo 'The holopad informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php">Suggest this item!</a></br>';
+			echo 'The holopad informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php">Suggest this item!</a><br/>';
 		if ($itemfound == True)
-			echo "</br>";
+			echo "<br/>";
 		if ($challenge == 1 && $combined) { //go ahead and add to the atheneum anyway so that the player can suggest the item if they want
 			if (!strrpos($sessionrow['atheneum'], $_GET['holocode'])) {
 				$newatheneum = $sessionrow['atheneum'] . $_GET['holocode'] . "|";
@@ -275,12 +275,12 @@ if (empty($_SESSION['username'])) {
 							$itemname = $itemrow['name'];
 							$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 							if ($numberalched == 1) {
-								echo "</br>You successfully create the $itemname!</br>";
+								echo "<br/>You successfully create the $itemname!<br/>";
 							} else {
 								if ($notenoughspots) {
-									echo "</br>You create $itemname x $numberalched before your Sylladex fills up completely.</br>";
+									echo "<br/>You create $itemname x $numberalched before your Sylladex fills up completely.<br/>";
 								} else {
-									echo "</br>You successfully create $itemname x $numberalched!</br>";
+									echo "<br/>You successfully create $itemname x $numberalched!<br/>";
 								}
 							}
 						} else {
@@ -290,22 +290,22 @@ if (empty($_SESSION['username'])) {
 								die('Could not connect: ' . $mysqli->error());
 							}
 							$mysqli->select_db("theovers_HS", $con);
-							echo "</br>You have no room in your Sylladex for this item!</br>"; //May change this to do weird things. But probably not.
+							echo "<br/>You have no room in your Sylladex for this item!<br/>"; //May change this to do weird things. But probably not.
 						}
 					}
 				}
 			}
 			if ($itemfound == True && $canafford == False) {
 				if ($numberalched == 1) {
-					echo "</br>You cannot afford to make this item, whatever it is.</br>";
+					echo "<br/>You cannot afford to make this item, whatever it is.<br/>";
 				} else {
-					echo "</br>You cannot afford to make that many copies of this item, whatever it is.</br>";
+					echo "<br/>You cannot afford to make that many copies of this item, whatever it is.<br/>";
 				}
 			}
 			if ($itemfound == False)
-				echo 'The alchemiter informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php">Suggest this item!</a></br>';
+				echo 'The alchemiter informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php">Suggest this item!</a><br/>';
 		} else
-			echo "The code you have inputted is not in your Atheneum yet. In Challenge Mode, you must acquire a code before an item can be made with it.</br>";
+			echo "The code you have inputted is not in your Atheneum yet. In Challenge Mode, you must acquire a code before an item can be made with it.<br/>";
 	}
 
 	//--End Alchemiter code here. Begin Grist Recycler code here.--
@@ -314,7 +314,7 @@ if (empty($_SESSION['username'])) {
 		if ($_POST['recycle'] != "multi") {
 			$_POST[$_POST['recycle']] = $_POST['recycle']; //a little hacky/convoluted but it should work
 		} else {
-			//echo "attempting to multicycle</br>";
+			//echo "attempting to multicycle<br/>";
 		}
 		$currentrecycle = 1;
 		while ($currentrecycle <= $invslots) {
@@ -409,7 +409,7 @@ if (empty($_SESSION['username'])) {
 					$mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					echo "It seems that the item you tried to recycle no longer exists, or never existed to begin with. You get no grist, but the item has been removed from your inventory, freeing the slot. If you alchemized that item legitimately, please submit a bug report and we'll return your grist ASAP!";
 				}
-				echo "</br>";
+				echo "<br/>";
 			}
 			$currentrecycle++;
 		}
@@ -426,8 +426,8 @@ if (empty($_SESSION['username'])) {
 	echo "Remote Punch Designix access v0.0.1a. Insert two codes and four Build Grist to continue.";
 	echo '<form action="inventory.php" method="post">First code: <input id="code1" name="code1" type="text" /><br/>';
 	echo 'Second code: <input id="code2" name="code2" type="text" /><br/>';
-	echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
-	echo '<input type="submit" value="Design it!" /></form></br>';
+	echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select><br/>';
+	echo '<input type="submit" value="Design it!" /></form><br/>';
 	echo "Remote Punch Designix access with Captchalogue Scanner v0.0.1a. Insert two captchalogue cards and four Build Grist to continue.";
 	echo '<form action="inventory.php" method="post">First item:<select name="code1">';
 	$reachinv = false;
@@ -498,18 +498,18 @@ if (empty($_SESSION['username'])) {
 		echo '<option value = "' . $captchaloguecode . '">' . $alchitem . '</option>';
 	}
 	echo '</select><br/>';
-	echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select></br>';
-	echo '<input type="submit" value="Design it!" /></form></br>';
-	echo '</br>';
+	echo 'Combination to use: <select name="combine"><option value="or">||</option><option value="and">&&</option></select><br/>';
+	echo '<input type="submit" value="Design it!" /></form><br/>';
+	echo '<br/>';
 	echo "Remote holopad access v0.0.1a. Insert code to preview.";
 	echo '<form action="inventory.php" method="get">Captchalogue code: <input id="holocode" name="holocode" type="text" /><br/>';
-	echo '<input type="submit" value="Observe it!" /></form></br>';
-	echo '</br>';
+	echo '<input type="submit" value="Observe it!" /></form><br/>';
+	echo '<br/>';
 	echo "Alchemiter v0.0.1a. Insert code to synthesize.";
 	echo '<form action="inventory.php" method="post">Captchalogue code: <input id="alchcode" name="alchcode" type="text" /><br/>Make this many (blank for 1): <input id="alchnum" name="alchnum" type="text" />';
-	echo '<input type="submit" value="Create it!" /></form></br>';
-	echo '</br>';
-	echo "Grist Recycler v0.0.1a. Please select a captchalogued item.</br>";
+	echo '<input type="submit" value="Create it!" /></form><br/>';
+	echo '<br/>';
+	echo "Grist Recycler v0.0.1a. Please select a captchalogued item.<br/>";
 	echo "Please refresh the interface before attempting to recycle newly alchemized items.";
 	echo '<form action="inventory.php" method="post"><select name="recycle">';
 	$reachinv = false;
@@ -532,12 +532,12 @@ if (empty($_SESSION['username'])) {
 		echo '<option value = "' . $itemslot . '">' . $alchitem . '</option>';
 	}
 	echo '</select> <input type="submit" value="Recycle it!" /> </form>';
-	echo '</br>Use the checkboxes below to choose items to mass-recycle.</br>';
+	echo '<br/>Use the checkboxes below to choose items to mass-recycle.<br/>';
 
 	//--Begin displaying user inventory here.--
 
 	echo $username;
-	echo "'s inventory:</br></br>";
+	echo "'s inventory:<br/><br/>";
 	echo '<form action="inventory.php" method="post">';
 	$reachinv = false;
 	$terminateloop = False;
@@ -552,7 +552,7 @@ if (empty($_SESSION['username'])) {
 			$terminateloop = True;
 		}
 		if ($reachinv == True && $userrow[$invslot] != "" && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
-			echo "Item: $userrow[$invslot]</br>";
+			echo "Item: $userrow[$invslot]<br/>";
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 			while ($row = $captchalogue->fetch_array()) {
@@ -560,17 +560,17 @@ if (empty($_SESSION['username'])) {
 				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 				if ($itemname == $userrow[$invslot]) { //Item found in captchalogue database. Print out details.
 					if ($row['art'] != "") {
-						echo '<img src="Images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"></br>';
+						echo '<img src="Images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"><br/>';
 					}
-					echo "Code: $row[captchalogue_code]</br>";
-					echo "Description: $row[description]</br>";
-					echo '<input type="checkbox" name="' . $invslot . '" value="' . $invslot . '"> Recycle this</br></br>';
+					echo "Code: $row[captchalogue_code]<br/>";
+					echo "Description: $row[description]<br/>";
+					echo '<input type="checkbox" name="' . $invslot . '" value="' . $invslot . '"> Recycle this<br/><br/>';
 				}
 			}
 		}
 	}
 	if ($itemslot != "inv-1" && !empty($itemslot)) { //Player alchemized an item.
-		echo "Item: $alchitem</br>";
+		echo "Item: $alchitem<br/>";
 		$itemname = str_replace("'", "\\\\''", $alchitem); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 		$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 		while ($row = $captchalogue->fetch_array()) {
@@ -578,17 +578,17 @@ if (empty($_SESSION['username'])) {
 			while ($n <= $numberalched) {
 				if ($row['name'] == $alchitem) { //Item found in captchalogue database. Print out details.
 					if ($row['art'] != "") {
-						echo '<img src="images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"></br>';
+						echo '<img src="images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"><br/>';
 					}
-					echo "Code: $row[captchalogue_code]</br>";
-					echo "Description: $row[description]</br>";
-					echo '<input type="checkbox" name="' . $itemslot . '" value="' . $itemslot . '"> Recycle this</br></br>';
+					echo "Code: $row[captchalogue_code]<br/>";
+					echo "Description: $row[description]<br/>";
+					echo '<input type="checkbox" name="' . $itemslot . '" value="' . $itemslot . '"> Recycle this<br/><br/>';
 				}
 				$n++;
 			}
 		}
 	}
-	echo '</br><input type="hidden" name="recycle" value="multi"><input type="submit" value="Recycle selected items" /></form>';
+	echo '<br/><input type="hidden" name="recycle" value="multi"><input type="submit" value="Recycle selected items" /></form>';
 }
 require_once "footer.php";
 ?>

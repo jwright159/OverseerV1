@@ -17,9 +17,9 @@ AND `enemydata` != '';";
 	while ($row = $sessionmates->fetch_array()) {
 
 		if ($row['username'] != $username) {
-			echo "$row[username] is strifing right now!</br>";
+			echo "$row[username] is strifing right now!<br/>";
 		} else {
-			echo "You are strifing right now!</br>";
+			echo "You are strifing right now!<br/>";
 		}
 	}
 	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
@@ -27,10 +27,10 @@ AND `enemydata` != '';";
 	if ($sessionrow['admin'] == $username && $userrow['admin'] == 0) {
 		$userrow['admin'] = 1;
 		$mysqli->query("UPDATE `Players` SET `admin` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
-		echo "You were set as the session's head admin, but you were not marked as an admin yourself. We have just attempted to fix this, but if you have gotten this message more than once, Blahdev/Babby Overseer would appreciate it if you reported it to him.</br>";
+		echo "You were set as the session's head admin, but you were not marked as an admin yourself. We have just attempted to fix this, but if you have gotten this message more than once, Blahdev/Babby Overseer would appreciate it if you reported it to him.<br/>";
 	}
 
-	//echo '<a href="events.php">Event Log</a></br>'; -- Will work on event log later.
+	//echo '<a href="events.php">Event Log</a><br/>'; -- Will work on event log later.
 }
 require_once "footer.php";
 ?>

@@ -1,14 +1,14 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to view your player overview.</br>";
-	echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to view your player overview.<br/>";
+	echo '<br/><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } elseif ($userrow['session_name'] != "Developers") {
 	echo "This is a developer tool, I'm sorry to say.";
 } else {
 	require_once "includes/SQLconnect.php";
 	if (!empty($_POST['username'])) {
-		echo "Operating on user: $_POST[username]</br>";
+		echo "Operating on user: $_POST[username]<br/>";
 		if (!empty($_POST['class']) && !empty($_POST['aspect'])) {
 			$newclass = $mysqli->real_escape_string($_POST['class']);
 			$newclass = str_replace("<", "&lt;", $newclass);
@@ -19,7 +19,7 @@ if (empty($_SESSION['username'])) {
 			$_SESSION['adjective'] = $titlerow[$row[$newaspect]];
 			$mysqli->query("UPDATE `Players` SET `Class` = '$newclass' WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
 			$mysqli->query("UPDATE `Players` SET `Aspect` = '$newaspect' WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
-			echo "Classpect changed.</br>";
+			echo "Classpect changed.<br/>";
 		}
 		if (!empty($_POST['newrung'])) {
 			$mysqli->query("UPDATE `Players` SET `Echeladder` = $_POST[newrung] WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
@@ -30,14 +30,14 @@ if (empty($_SESSION['username'])) {
 			} else {
 				$mysqli->query("UPDATE `Players` SET `Gel_Viscosity` = 10 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
 			}
-			echo "Echeladder rung changed.</br>";
+			echo "Echeladder rung changed.<br/>";
 		}
 		$mysqli->query("UPDATE `Players` SET `down` = 0 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
 		$mysqli->query("UPDATE `Players` SET `dreamdown` = 0 WHERE `Players`.`username` = '" . $_POST['username'] . "' LIMIT 1 ;");
 	}
 
 	//Begin input forms here.
-	echo '<form action="playereditor.php" method="post">User to modify: <input id="username" name="username" type="text" /></br>';
+	echo '<form action="playereditor.php" method="post">User to modify: <input id="username" name="username" type="text" /><br/>';
 	echo '<form action="playereditor.php" method="post">Select class:<select name="class"> '; //Select a class
 	echo '<option value=""></option>';
 	$classes = $mysqli->query("SELECT * FROM Titles");
@@ -55,7 +55,7 @@ if (empty($_SESSION['username'])) {
 		if ($reachclass == True)
 			echo '<option value="' . $row['Class'] . '">' . $row['Class'] . ' ' . $activepassivestr . '</option>';
 	}
-	echo '</select></br>';
+	echo '</select><br/>';
 	echo 'Select aspect:<select name="aspect"> '; //Select an aspect
 	echo '<option value=""></option>';
 	$aspects = $mysqli->query("SELECT * FROM Titles");
@@ -69,8 +69,8 @@ if (empty($_SESSION['username'])) {
 		if ($reachaspect == True)
 			echo '<option value="' . $aspect . '">' . $aspect . '</option>';
 	}
-	echo '</select></br><form action="playereditor.php" method="post">New echeladder rung: <input id="newrung" name="newrung" type="text" /></br>';
-	echo '<input type="submit" value="Grant it." /> </form></br>';
+	echo '</select><br/><form action="playereditor.php" method="post">New echeladder rung: <input id="newrung" name="newrung" type="text" /><br/>';
+	echo '<input type="submit" value="Grant it." /> </form><br/>';
 }
 require_once "footer.php";
 ?>

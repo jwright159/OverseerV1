@@ -27,9 +27,9 @@ require_once "header.php";
 require_once "includes/fieldparser.php";
 require_once "includes/glitches.php"; //for witch of void
 if (empty($_SESSION['username'])) {
-	echo "Log in to manipulate your aspect.</br>";
+	echo "Log in to manipulate your aspect.<br/>";
 } elseif (empty($_SESSION['adjective'])) {
-	echo "You have not accepted your title yet!</br>";
+	echo "You have not accepted your title yet!<br/>";
 } else {
 	if (ini_get('register_globals')) { //Turn off global referencing because it is dumb
 		foreach ($_SESSION as $key => $value) {
@@ -56,10 +56,10 @@ if (empty($_SESSION['username'])) {
 	$abilities = loadAbilities($userrow);
 	if (!empty($abilities[24])) { //Aspect Obliteration triggers. Substitute the highest item in the aspect row for damage.
 		$aspectrow['damage'] = max($aspectrow);
-		echo "Aspect Obliteration converts your Aspect's best quality into damage.</br>";
+		echo "Aspect Obliteration converts your Aspect's best quality into damage.<br/>";
 	}
 	if (!empty($abilities[26])) { //Capriciousness triggers. WHOOP WHOOP WHOOP
-		echo "WARNING: Capriciousness means the effects of your patterns vary wildly!</br>";
+		echo "WARNING: Capriciousness means the effects of your patterns vary wildly!<br/>";
 		$modifiernames = array(0 => "Damage", "Power_down", "Offense_up", "Defense_up", "Power_up", "Invulnerability", "Heal", "Multitarget");
 		$thingy = 0;
 		while (!empty($modifiernames[$thingy])) {
@@ -74,7 +74,7 @@ if (empty($_SESSION['username'])) {
 	}
 	if (!empty($abilities[29])) { //Lifebringer triggers. Substitute the highest item in the aspect row for healing.
 		$aspectrow['Heal'] = max($aspectrow);
-		echo "Lifebringer converts your Aspect's best quality into restoration.</br>";
+		echo "Lifebringer converts your Aspect's best quality into restoration.<br/>";
 	}
 	if (!empty($_POST['name'])) { //User creating a pattern.
 		if ((intval($_POST['damage']) + intval($_POST['powerdown']) + intval($_POST['offenseup']) + intval($_POST['defenseup']) + intval($_POST['invuln']) + intval($_POST['heal']) + intval($_POST['aspectvial'])) == 100) { //Percentage checks out
@@ -99,7 +99,7 @@ if (empty($_SESSION['username'])) {
 				$_POST['heal'] = intval($_POST['heal']);
 				$_POST['aspectvial'] = intval($_POST['aspectvial']);
 				if ($_POST['damage'] < 0 || $_POST['powerdown'] < 0 || $_POST['offenseup'] < 0 || $_POST['defenseup'] < 0 || $_POST['invuln'] < 0 || $_POST['heal'] < 0 || $_POST['aspectvial'] < 0) {
-					echo "You may not set any values below 0%.</br>";
+					echo "You may not set any values below 0%.<br/>";
 				} else {
 					if (intval($_POST['maxtargets']) < 1)
 						$_POST['maxtargets'] = "1"; //Assume one target if this is derpy.
@@ -115,13 +115,13 @@ if (empty($_SESSION['username'])) {
 					$mysqli->query("UPDATE `Ability_Patterns` SET `$healstr` = " . strval($_POST['heal']) . " WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1 ;");
 					$mysqli->query("UPDATE `Ability_Patterns` SET `$maxtargetstr` = " . strval($_POST['maxtargets']) . " WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1 ;");
 					$mysqli->query("UPDATE `Ability_Patterns` SET `$aspectvialstr` = " . strval($_POST['aspectvial']) . " WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1 ;");
-					echo "Pattern $_POST[name] has been saved.</br>";
+					echo "Pattern $_POST[name] has been saved.<br/>";
 				}
 			} else {
-				echo "You must select a slot from 1 to 4 to save this pattern in!</br>";
+				echo "You must select a slot from 1 to 4 to save this pattern in!<br/>";
 			}
 		} else {
-			echo "The percentages must add to 100%!</br>";
+			echo "The percentages must add to 100%!<br/>";
 		}
 	}
 	if (!empty($_POST['usepattern'])) { //User accessing a pattern.
@@ -134,13 +134,13 @@ if (empty($_SESSION['username'])) {
 		$invulndivider = 2000000;
 		$slot = intval($_POST['usepattern']);
 		if ($slot < 1 || $slot > 4) { //Out of bounds.
-			echo "That is not a valid ability.</br>";
+			echo "That is not a valid ability.<br/>";
 		} else {
 			$patternresult = $mysqli->query("SELECT * FROM `Ability_Patterns` WHERE `Ability_Patterns`.`username` = '$username'");
 			$patternrow = $patternresult->fetch_array();
 			$namestr = "pattern" . strval($slot) . "name";
 			if (empty($patternrow[$namestr])) {
-				echo "That ability slot is not currently in use.</br>";
+				echo "That ability slot is not currently in use.<br/>";
 			} else {
 				//echo "DEBUG: pattern recognized<br/>";
 				$damagestr = "pattern" . strval($slot) . "damage";
@@ -164,7 +164,7 @@ if (empty($_SESSION['username'])) {
 						$unarmedpower = floor($unarmedpower * ($classrow['activefactor'] / 100)); //User is targeting themselves and not currently assisting with a damage ability: active ability use
 					}
 					if (!empty($abilities[10]) && $target != $username) { //Hey! Listen! Multiply ability effectiveness by 1.2 (ID 10)
-						echo "$abilities[10]</br>";
+						echo "$abilities[10]<br/>";
 						$unarmedpower = ceil($unarmedpower * 1.2);
 					}
 					$targetresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '$target';");
@@ -185,18 +185,18 @@ if (empty($_SESSION['username'])) {
 						}
 					}
 					if ($targetrow['session_name'] != $userrow['session_name']) {
-						echo "You may not use abilities on players not in your session.</br>";
+						echo "You may not use abilities on players not in your session.<br/>";
 					} elseif ($targetrow['dreamingstatus'] != $userrow['dreamingstatus'] && $userrow['Godtier'] == 0) { //God tiers can buff ALL the things
-						echo "You cannot currently reach that player to use an ability on them!</br>";
+						echo "You cannot currently reach that player to use an ability on them!<br/>";
 					} elseif ($targetrow['aiding'] != $username && $userrow['aiding'] != $targetrow['username'] && ($userrow['aiding'] != $targetrow['aiding'] || empty($userrow['aiding'])) && $targetrow['username'] != $username && $userrow['sessionbossengaged'] != 1) {
 						//User and target not in the same strife (either user aids target, target aids user, or user and target both aid the same person, or user targets themselves).
-						echo "While strifing, you may not use abilities on those not participating in your strife.</br>";
+						echo "While strifing, you may not use abilities on those not participating in your strife.<br/>";
 					} elseif ($userrow['sessionbossengaged'] != $targetrow['sessionbossengaged']) { //Handle session boss case. Note that the user is guaranteed to be strifing.
-						echo "While strifing, you may not use abilities on those not participating in your strife.</br>";
+						echo "While strifing, you may not use abilities on those not participating in your strife.<br/>";
 					} elseif ($userrow['combatconsume'] == 1 && !$bonusconsumable) { //Already used a consumable or ability this round.
-						echo "You have already used a consumable or aspect ability during this round of strife!</br>";
+						echo "You have already used a consumable or aspect ability during this round of strife!<br/>";
 					} elseif ($cost > $userrow['Aspect_Vial']) {
-						echo "You do not have enough Aspect Vial remaining to use that ability!</br>";
+						echo "You do not have enough Aspect Vial remaining to use that ability!<br/>";
 						$cost = 0;
 					} else {
 						if ($bonusconsumable) {
@@ -222,7 +222,7 @@ if (empty($_SESSION['username'])) {
 							echo "!";
 						if ($target != $username)
 							echo " on $target.";
-						echo "</br>";
+						echo "<br/>";
 						if ($target == $username && !empty($abilities[25])) { //Check to see if Siphon triggers
 							$bonusdamage = 0;
 							$bonusheal = 0;
@@ -250,7 +250,7 @@ if (empty($_SESSION['username'])) {
 							$patternrow[$offenseupstr] += $bonuspowerup;
 							$patternrow[$defenseupstr] += $bonuspowerup;
 							if ($bonusdamage > 0 || $bonusheal > 0 || $bonuspowerdown > 0 || $bonuspowerup > 0) {
-								echo ($abilities[25] . "</br>");
+								echo ($abilities[25] . "<br/>");
 							}
 						}
 						if ($userrow['firstaspectuse'] == 0) {
@@ -290,20 +290,20 @@ if (empty($_SESSION['username'])) {
 								$echerow = $echeresult->fetch_array();
 								$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
 								if ($echerow[$echestr] != "")
-									echo "</br>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
+									echo "<br/>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
 								$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
 AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
 								while ($levelerability = $levelerabilities->fetch_array()) {
-									echo "</br>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
+									echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 								}
 								if ($rungs < 10)
-									echo "</br>You have at long last reached the top of your Echeladder!";
-								echo "</br>";
+									echo "<br/>You have at long last reached the top of your Echeladder!";
+								echo "<br/>";
 								echo "Gel Viscosity: +$hpup";
-								echo "!</br>Boondollars earned: $boondollars";
+								echo "!<br/>Boondollars earned: $boondollars";
 							} else {
 								$mysqli->query("UPDATE `Players` SET `firstaspectuse` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-								echo "Your first use of THE $_SESSION[adjective] THING would provide you with Echeladder rungs, but you have already reached the top of yours.</br>";
+								echo "Your first use of THE $_SESSION[adjective] THING would provide you with Echeladder rungs, but you have already reached the top of yours.<br/>";
 							}
 						}
 						//Damage and power reduction first.
@@ -359,7 +359,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 										$maxhealthstr = "enemy" . strval($i) . "maxhealth";
 										if (!empty($enemyrow)) { //Not a grist enemy. (NOTE: Grist enemies don't get to apply their resistances to aspect patterns. Poor guys!)
 											if ($enemyrow['massiveresist'] != 100 && $patternrow[$damagestr] > (floor($striferow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
-												echo $striferow[$enemystr] . " resists the massive damage!</br>";
+												echo $striferow[$enemystr] . " resists the massive damage!<br/>";
 												$patternrow[$damagestr] = floor($striferow[$maxhealthstr] / 100) * $enemyrow['massiveresist'];
 											}
 											$resistance = $enemyrow['resist_' . $userrow['Aspect']];
@@ -383,7 +383,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 										$powerstr = "enemy" . strval($i) . "power";
 										if (!empty($enemyrow)) { //Not a grist enemy.
 											if ($enemyrow['reductionresist'] != 0 && $patternrow[$powerdownstr] > $enemyrow['reductionresist']) { //Enemy resists power reduction.
-												echo $striferow[$enemystr] . " resists the power reduction!</br>";
+												echo $striferow[$enemystr] . " resists the power reduction!<br/>";
 												$patternrow[$powerdownstr] = $enemyrow['reductionresist'];
 											}
 											$resistance = $enemyrow['resist_' . $userrow['Aspect']];
@@ -535,12 +535,12 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 								$patternrow[$healstr] = $targetrow['Gel_Viscosity'] - $targetrow[$vial];
 							$mysqli->query("UPDATE `Players` SET `$vial` = " . strval($targetrow[$vial] + $patternrow[$healstr]) . " WHERE `Players`.`username` = '$target' LIMIT 1 ;");
 						}
-						echo "</br>";
+						echo "<br/>";
 						$mysqli->query("UPDATE `Players` SET `Aspect_Vial` = " . strval($userrow['Aspect_Vial'] - $cost) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					}
 				} else { //Player not strifing.
 					if ($patternrow[$damagestr] != 0 || $patternrow[$powerdownstr] != 0 || $patternrow[$temporarystr] != 0 || $patternrow[$invulnstr] != 0) { //Ability only usable during combat.
-						echo "You may not use that pattern while not engaged in strife.</br>";
+						echo "You may not use that pattern while not engaged in strife.<br/>";
 					} else {
 						if (!empty($_POST['target'])) {
 							$target = $_POST['target'];
@@ -550,7 +550,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$unarmedpower = ($unarmedpower * ($classrow['activefactor'] / 100)); //Buffing self counts as active
 						}
 						if (!empty($abilities[10]) && $target != $username) { //Hey! Listen! Multiply ability effectiveness by 1.2 (ID 10)
-							echo "$abilities[10]</br>";
+							echo "$abilities[10]<br/>";
 							$unarmedpower = ceil($unarmedpower * 1.2);
 						}
 						$targetresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '$target';");
@@ -564,13 +564,13 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$cost = 20; //No ability may cost less than 20% of the aspect vial.
 						$cost = floor(($cost / 100) * $userrow['Gel_Viscosity']);
 						if ($targetrow['session_name'] != $userrow['session_name']) {
-							echo "You may not use abilities on players not in your session.</br>";
+							echo "You may not use abilities on players not in your session.<br/>";
 						} elseif ($targetrow['dreamingstatus'] != $userrow['dreamingstatus'] && $userrow['Godtier'] == 0) {
-							echo "You cannot currently reach that player to use an ability on them!</br>";
+							echo "You cannot currently reach that player to use an ability on them!<br/>";
 						} elseif ($targetrow['noassist'] == 1) {
-							echo "That player cannot currently be assisted.</br>";
+							echo "That player cannot currently be assisted.<br/>";
 						} elseif ($cost > $userrow['Aspect_Vial']) {
-							echo "You do not have enough Aspect Vial remaining to use that ability!</br>";
+							echo "You do not have enough Aspect Vial remaining to use that ability!<br/>";
 							$cost = 0;
 						} else {
 							if ($patternrow[$aspectvialstr] != 0)
@@ -618,7 +618,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 								echo "yourself";
 							if ($target != $username)
 								echo "$target";
-							echo ".</br>";
+							echo ".<br/>";
 							if ($userrow['firstaspectuse'] == 0) {
 								if ($userrow['Echeladder'] < 612) {
 									$result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $username . "' LIMIT 1;"); //Recalculate userrow so that we add to right values.
@@ -656,20 +656,20 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 									$echerow = $echeresult->fetch_array();
 									$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
 									if ($echerow[$echestr] != "")
-										echo "</br>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
+										echo "<br/>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
 									$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
 AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
 									while ($levelerability = $levelerabilities->fetch_array()) {
-										echo "</br>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
+										echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 									}
 									if ($rungs < 10)
-										echo "</br>You have at long last reached the top of your Echeladder!";
-									echo "</br>";
+										echo "<br/>You have at long last reached the top of your Echeladder!";
+									echo "<br/>";
 									echo "Gel Viscosity: +$hpup";
-									echo "!</br>Boondollars earned: $boondollars</br>";
+									echo "!<br/>Boondollars earned: $boondollars<br/>";
 								} else {
 									$mysqli->query("UPDATE `Players` SET `firstaspectuse` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-									echo "Your first use of THE $_SESSION[adjective] THING would provide you with Echeladder rungs, but you have already reached the top of yours.</br>";
+									echo "Your first use of THE $_SESSION[adjective] THING would provide you with Echeladder rungs, but you have already reached the top of yours.<br/>";
 								}
 							}
 							$mysqli->query("UPDATE `Players` SET `Aspect_Vial` = " . strval($userrow['Aspect_Vial'] - $cost) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -684,9 +684,9 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 	$userrow['Aspect_Vial'] = $userrow['Aspect_Vial'] - $cost;
 	$patternresult = $mysqli->query("SELECT * FROM `Ability_Patterns` WHERE `Ability_Patterns`.`username` = '$username'");
 	$patternrow = $patternresult->fetch_array();
-	echo '<a href="aspecthelp.php">Information on aspect patterns and powers</a> | <a href="strife.php">Strife</a></br>';
-	echo "Aspect vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%</br>";
-	echo "Your currently defined patterns:</br>";
+	echo '<a href="aspecthelp.php">Information on aspect patterns and powers</a> | <a href="strife.php">Strife</a><br/>';
+	echo "Aspect vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%<br/>";
+	echo "Your currently defined patterns:<br/>";
 	$slot = 1;
 	$max_patterns = 4; //LOL
 	while ($slot <= $max_patterns) {
@@ -701,11 +701,11 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 			$healstr = "pattern" . strval($slot) . "heal";
 			$maxtargetstr = "pattern" . strval($slot) . "maxtargets";
 			$aspectvialstr = "pattern" . strval($slot) . "aspectvial";
-			echo "Pattern $slot: $patternrow[$namestr]</br>";
+			echo "Pattern $slot: $patternrow[$namestr]<br/>";
 			if ($patternrow[$damagestr] != 0)
-				echo "Damage: $patternrow[$damagestr]%</br>";
+				echo "Damage: $patternrow[$damagestr]%<br/>";
 			if ($patternrow[$powerdownstr] != 0)
-				echo "Power reduction: $patternrow[$powerdownstr]%</br>";
+				echo "Power reduction: $patternrow[$powerdownstr]%<br/>";
 			if (!empty($abilities[28])) {
 				$statuschance = $patternrow[$damagestr] + $patternrow[$powerdownstr];
 				if ($statuschance == 100)
@@ -753,113 +753,113 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 				}
 			}
 			if ($patternrow[$offenseupstr] != 0)
-				echo "Offense boost: $patternrow[$offenseupstr]%</br>";
+				echo "Offense boost: $patternrow[$offenseupstr]%<br/>";
 			if ($patternrow[$defenseupstr] != 0)
-				echo "Defense boost: $patternrow[$defenseupstr]%</br>";
+				echo "Defense boost: $patternrow[$defenseupstr]%<br/>";
 			if ($patternrow[$temporarystr] != 0)
-				echo "Temporary boost: $patternrow[$temporarystr] rounds</br>";
+				echo "Temporary boost: $patternrow[$temporarystr] rounds<br/>";
 			if ($patternrow[$invulnstr] != 0)
-				echo "Invulnerability: $patternrow[$invulnstr]%</br>";
+				echo "Invulnerability: $patternrow[$invulnstr]%<br/>";
 			if ($patternrow[$healstr] != 0)
-				echo "Healing: $patternrow[$healstr]%</br>";
+				echo "Healing: $patternrow[$healstr]%<br/>";
 			if ($patternrow[$maxtargetstr] != 0)
-				echo "Maximum number of targets: $patternrow[$maxtargetstr]</br>";
+				echo "Maximum number of targets: $patternrow[$maxtargetstr]<br/>";
 			if ($patternrow[$aspectvialstr] != 0)
-				echo "Points allocated to reduce cost: $patternrow[$aspectvialstr]%</br>";
+				echo "Points allocated to reduce cost: $patternrow[$aspectvialstr]%<br/>";
 			$cost = 100 - floor(pow(($patternrow[$aspectvialstr] * ($aspectrow['Aspect_vial'] / 100) * ($classrow['Aspect_vial'] / 100)), (1 / 3)) * 20);
 			if (!empty($abilities[14])) { //Strength of Spirit active. 85% cost.
 				$cost = floor($cost * 0.85);
 			}
 			if ($cost < 20)
 				$cost = 20; //No ability may cost less than 10% of the aspect vial.
-			echo "Cost: $cost%</br>";
+			echo "Cost: $cost%<br/>";
 			echo '<form action="aspectpowers.php" method="post"><input type="hidden" name="usepattern" value="' . strval($slot) . '">';
 			if ($patternrow[$damagestr] == 0 && $patternrow[$powerdownstr] == 0)
-				echo 'Target a player (defaults to self): <input type="text" id="target" name="target"></br>'; //Strictly buffing ability.
+				echo 'Target a player (defaults to self): <input type="text" id="target" name="target"><br/>'; //Strictly buffing ability.
 			echo '<input type="submit" value="Use this pattern"></form>';
-			echo "</br>";
+			echo "<br/>";
 		}
 		$slot++;
 	}
-	echo 'Aspect pattern editor v0.0.1a. Enter percentages to allocate to each possible effect you can perform with basic aspect manipulation.</br>';
-	echo 'You may have up to four patterns and they may be edited at any time.</br>';
+	echo 'Aspect pattern editor v0.0.1a. Enter percentages to allocate to each possible effect you can perform with basic aspect manipulation.<br/>';
+	echo 'You may have up to four patterns and they may be edited at any time.<br/>';
 	echo '<form action="aspectpowers.php" method="post">';
-	echo 'Name of ability: <input id="name" name="name" type="text" /></br>';
-	echo 'Slot for this ability: <select name="slot"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></br>';
-	echo 'Percentage of ability allocated to:</br>';
-	echo 'Damage: <input id="damage" name="damage" type="text" />%</br>';
-	echo 'Power reduction: <input id="powerdown" name="powerdown" type="text" />%</br>';
-	echo 'Offense boosting: <input id="offenseup" name="offenseup" type="text" />%</br>';
-	echo 'Defense boosting: <input id="defenseup" name="defenseup" type="text" />%</br>';
-	echo 'Invulnerability: <input id="invuln" name="invuln" type="text" />%</br>';
-	echo 'Healing: <input id="heal" name="heal" type="text" />%</br>';
-	echo 'Reducing cost: <input id="aspectvial" name="aspectvial" type="text" />%</br></br>';
-	echo 'Maximum number of targets: <input id="maxtargets" name="maxtargets" type="text" /></br>';
-	echo 'Temporary boost (leave empty to make boost entire battle rather than a number of turns): <input id="temporary" name="temporary" type="text" /></br>';
+	echo 'Name of ability: <input id="name" name="name" type="text" /><br/>';
+	echo 'Slot for this ability: <select name="slot"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select><br/>';
+	echo 'Percentage of ability allocated to:<br/>';
+	echo 'Damage: <input id="damage" name="damage" type="text" />%<br/>';
+	echo 'Power reduction: <input id="powerdown" name="powerdown" type="text" />%<br/>';
+	echo 'Offense boosting: <input id="offenseup" name="offenseup" type="text" />%<br/>';
+	echo 'Defense boosting: <input id="defenseup" name="defenseup" type="text" />%<br/>';
+	echo 'Invulnerability: <input id="invuln" name="invuln" type="text" />%<br/>';
+	echo 'Healing: <input id="heal" name="heal" type="text" />%<br/>';
+	echo 'Reducing cost: <input id="aspectvial" name="aspectvial" type="text" />%<br/><br/>';
+	echo 'Maximum number of targets: <input id="maxtargets" name="maxtargets" type="text" /><br/>';
+	echo 'Temporary boost (leave empty to make boost entire battle rather than a number of turns): <input id="temporary" name="temporary" type="text" /><br/>';
 	echo '<input type="submit" value="Create it!">';
 	//Code for pattern hints will go here.
-	echo "</br>";
+	echo "<br/>";
 	$hint = False;
 	if ($patternrow['damageuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Damage'] * $classrow['Damage']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for direct damage is $hintstr</br>";
+		echo "Your classpect combination's potential for direct damage is $hintstr<br/>";
 	}
 	if ($patternrow['powerdownuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Power_down'] * $classrow['Power_down']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for power reduction is $hintstr</br>";
+		echo "Your classpect combination's potential for power reduction is $hintstr<br/>";
 	}
 	if ($patternrow['offenseupuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Offense_up'] * $classrow['Offense_up']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for purely offensive boosts is $hintstr</br>";
+		echo "Your classpect combination's potential for purely offensive boosts is $hintstr<br/>";
 	}
 	if ($patternrow['defenseupuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Defense_up'] * $classrow['Defense_up']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for purely defensive boosts is $hintstr</br>";
+		echo "Your classpect combination's potential for purely defensive boosts is $hintstr<br/>";
 	}
 	if ($patternrow['powerupuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Power_up'] * $classrow['Power_up']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for balanced power boosts is $hintstr</br>";
+		echo "Your classpect combination's potential for balanced power boosts is $hintstr<br/>";
 	}
 	if ($patternrow['invulnuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Invulnerability'] * $classrow['Invulnerability']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for granting invulnerability is $hintstr</br>";
+		echo "Your classpect combination's potential for granting invulnerability is $hintstr<br/>";
 	}
 	if ($patternrow['healuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Heal'] * $classrow['Heal']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for healing is $hintstr</br>";
+		echo "Your classpect combination's potential for healing is $hintstr<br/>";
 	}
 	if ($patternrow['multitargetuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Multitarget'] * $classrow['Multitarget']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		//echo strval($effectiveness);
-		echo "Your classpect combination's potential for targeting multiple enemies is $hintstr</br>";
+		echo "Your classpect combination's potential for targeting multiple enemies is $hintstr<br/>";
 	}
 	if ($patternrow['aspectvialuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Aspect_vial'] * $classrow['Aspect_vial']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for Aspect Vial conservation is $hintstr</br>";
+		echo "Your classpect combination's potential for Aspect Vial conservation is $hintstr<br/>";
 	}
 	if ($patternrow['temporaryuses'] >= 5) {
 		$hint = True;
 		$effectiveness = $aspectrow['Temporary'] * $aspectrow['Temporary'] * 625; //This sets a temporary boosting value of 4 as average (12500)
 		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for performing temporary boosts is $hintstr</br>";
+		echo "Your classpect combination's potential for performing temporary boosts is $hintstr<br/>";
 	}
 	if (!$hint)
 		echo "Once you've used your aspect powers a bit more, you'll get hints here.";

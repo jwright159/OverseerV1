@@ -6,11 +6,11 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Typheus":
 			$roll = rand(1, 100);
 			if ($roll >= 90) {
-				$message = $message . "Typheus engulfs the chamber in fire!</br>";
+				$message = $message . "Typheus engulfs the chamber in fire!<br/>";
 				if ($userrow['invulnerability'] == 0)
 					$damage += aspectDamage($resistances, "Breath", $userrow[$powerstr] / 10, 2);
 			} elseif ($roll >= 70) {
-				$message = $message . "Typheus dazes you with a powerful gust of wind.</br>";
+				$message = $message . "Typheus dazes you with a powerful gust of wind.<br/>";
 				$debuff = aspectDamage($resistances, "Breath", 500, 4);
 				$userrow['temppowerboost'] = $userrow['temppowerboost'] - $debuff;
 				if ($userrow['temppowerboost'] < 0 && $userrow['temppowerduration'] < 4)
@@ -21,26 +21,26 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			}
 			break;
 		case "Sophia":
-			$message = $message . "Sophia focuses inward and gathers herself.</br>";
+			$message = $message . "Sophia focuses inward and gathers herself.<br/>";
 			$userrow[$powerstr] += 500;
 			$userrow[$maxpowerstr] += 500;
 			break;
 		case "Hemera":
 			$roll = rand(1, 100);
 			if ($roll >= 85) {
-				$message = $message . "Hemera draws Life from the surroundings to knit her wounds.</br>";
+				$message = $message . "Hemera draws Life from the surroundings to knit her wounds.<br/>";
 				$userrow[$healthstr] += 2000;
 				if ($userrow[$healthstr] > $userrow[$maxhealthstr])
 					$userrow[$healthstr] = $userrow[$maxhealthstr];
 			} elseif ($roll >= 50) {
-				$message = $message . "Hemera reaches above you and gives your Health Vial a good flick.</br>";
+				$message = $message . "Hemera reaches above you and gives your Health Vial a good flick.<br/>";
 				$damage += aspectDamage($resistances, "Life", floor($userrow['Gel_Viscosity'] / 8), 4);
 			}
 			break;
 		case "Abraxas":
 			$roll = rand(1, 100);
 			if ($roll <= (($userrow[$healthstr] / $userrow[$maxhealthstr]) * 100)) { //More likely to trigger the less wounded Abraxas is.
-				$message = $message . "Abraxas strikes out at you with the shining light of Hope.</br>";
+				$message = $message . "Abraxas strikes out at you with the shining light of Hope.<br/>";
 				if ($userrow['invulnerability'] == 0)
 					$damage += aspectDamage($resistances, "Hope", floor(($userrow[$healthstr] / $userrow[$maxhealthstr]) * 3000), 3);
 			}
@@ -48,40 +48,40 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Cetus":
 			$roll = rand(1, 100);
 			if ($roll == 100) {
-				$message = $message . "Cetus emits a massive shining laser from her gaping maw, almost completely obliterating you.</br>";
+				$message = $message . "Cetus emits a massive shining laser from her gaping maw, almost completely obliterating you.<br/>";
 				$damage = $userrow['Health_Vial'] - 1;
 			} elseif ($roll >= 80) {
-				$message = $message . "Cetus calls down ancient spirits of Light to inflict heavy damage.</br>";
+				$message = $message . "Cetus calls down ancient spirits of Light to inflict heavy damage.<br/>";
 				if ($userrow['invulnerability'] == 0)
 					$damage += aspectDamage($resistances, "Light", rand(1500, 2500), 4);
 			} elseif ($roll >= 60) {
-				$message = $message . "Cetus invokes a blinding, searing flare.</br>";
+				$message = $message . "Cetus invokes a blinding, searing flare.<br/>";
 				if ($userrow['invulnerability'] == 0)
 					$damage += aspectDamage($resistances, "Light", rand(400, 600), 2);
 				$userrow['temppowerboost'] = $userrow['temppowerboost'] - aspectDamage($resistances, "Light", 413, 4);
 				if ($userrow['temppowerboost'] < 0 && $userrow['temppowerduration'] < 6)
 					$userrow['temppowerduration'] = 6; //One round will be subtracted off later.
 			} elseif ($roll >= 40) {
-				$message = $message . "Cetus invokes the power of fortune to make this round's wounds more grievous.</br>";
+				$message = $message . "Cetus invokes the power of fortune to make this round's wounds more grievous.<br/>";
 				if ($damage > 0)
 					$damage = floor($damage * 1.3);
 			} elseif ($roll >= 20) {
-				$message = $message . "Cetus emits a massive shining laser from her gaping maw, but it mostly misses.</br>";
+				$message = $message . "Cetus emits a massive shining laser from her gaping maw, but it mostly misses.<br/>";
 				$damage += aspectDamage($resistances, "Light", rand(100, 300), 1);
 			}
 			break;
 		case "Metis":
 			$roll = rand(1, 100);
 			if ($roll >= 90) {
-				$message = $message . "Metis predicts your strikes perfectly, flowing around them at the speed of thought.</br>"; //Undo damage player dealt.
+				$message = $message . "Metis predicts your strikes perfectly, flowing around them at the speed of thought.<br/>"; //Undo damage player dealt.
 				$userrow[$healthstr] = $newenemyhealth + $enemydamage; //Update for repetition and checking end-of-turn effects.
 			} elseif ($roll >= 75) {
-				$message = $message . "Metis reaches out to you telepathically, clouding your thoughts.</br>";
+				$message = $message . "Metis reaches out to you telepathically, clouding your thoughts.<br/>";
 				$userrow['temppowerboost'] = $userrow['temppowerboost'] - aspectDamage($resistances, "Mind", 800, 2);
 				if ($userrow['temppowerboost'] < 0 && $userrow['temppowerduration'] < 3)
 					$userrow['temppowerduration'] = 3; //One round will be subtracted off later.
 			} elseif ($roll >= 50) {
-				$message = $message . "Metis focuses her mind, enhancing her awareness.</br>";
+				$message = $message . "Metis focuses her mind, enhancing her awareness.<br/>";
 				$userrow[$powerstr] += 250;
 				$userrow[$maxpowerstr] += 250;
 			}
@@ -105,15 +105,15 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Nyx":
 			$roll = rand(1, 100);
 			if ($roll >= 50 && $userrow['equipped'] == "" && $userrow['offhand'] == "") { //One with Nothing is active. Nyx's special abilities do not apply.
-				$message = $message . "Nyx's attempt to interfere with your weapon proficiency fails, since you fight with naught but your fists.</br>";
+				$message = $message . "Nyx's attempt to interfere with your weapon proficiency fails, since you fight with naught but your fists.<br/>";
 			} else {
 				if ($roll >= 75) {
-					$message = $message . "A black...mist? floats out from Nyx, making her harder to strike with your weapon.</br>";
+					$message = $message . "A black...mist? floats out from Nyx, making her harder to strike with your weapon.<br/>";
 					$userrow['tempoffenseboost'] = $userrow['tempoffenseboost'] - aspectDamage($resistances, "Void", 1200, 2);
 					if ($userrow['tempoffenseboost'] < 0 && $userrow['tempoffenseduration'] < 4)
 						$userrow['tempoffenseduration'] = 4; //One round will be subtracted off later.
 				} elseif ($roll >= 50) {
-					$message = $message . "Nyx taps you briefly on the head. You suddenly feel less proficient with your weapon...</br>";
+					$message = $message . "Nyx taps you briefly on the head. You suddenly feel less proficient with your weapon...<br/>";
 					$userrow['temppowerboost'] = $userrow['temppowerboost'] - aspectDamage($resistances, "Void", 400, 2);
 					if ($userrow['temppowerboost'] < 0 && $userrow['temppowerduration'] < 11)
 						$userrow['temppowerduration'] = 11; //One round will be subtracted off later.
@@ -124,7 +124,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Hephaestus":
 			$roll = rand(1, 100);
 			if ($roll >= 75) {
-				$message = $message . "Hephaestus strikes you with his mighty hammer from everywhere and everywhen at once!</br>";
+				$message = $message . "Hephaestus strikes you with his mighty hammer from everywhere and everywhen at once!<br/>";
 				if ($userrow['invulnerability'] == 0)
 					$damage += aspectDamage($resistances, "Time", floor($userrow[$powerstr] / 12), 2);
 			}
@@ -132,7 +132,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Kraken":
 			$roll = rand(1, 100);
 			if ($roll >= 66) {
-				$message = $message . "The Kraken unleashes Lv. 27 Battle Technique: Tendrilfondle! It is beyond embarrassing.</br>";
+				$message = $message . "The Kraken unleashes Lv. 27 Battle Technique: Tendrilfondle! It is beyond embarrassing.<br/>";
 				if ($userrow['invulnerability'] == 0)
 					$damage = $damage + 127;
 			}
@@ -141,9 +141,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			$roll = ceil(rand(0, 3) / 3);
 			if ($roll > 0) {
 				if ($roll == 1) {
-					$message = $message . "The Hekatonchire lashes out at you with 1 additional arm!</br>";
+					$message = $message . "The Hekatonchire lashes out at you with 1 additional arm!<br/>";
 				} else {
-					$message = $message . "The Hekatonchire lashes out at you with " . strval($roll) . " additional arms!</br>";
+					$message = $message . "The Hekatonchire lashes out at you with " . strval($roll) . " additional arms!<br/>";
 				}
 				if ($userrow['invulnerability'] == 0)
 					$damage = $damage + (350 * $roll);
@@ -166,9 +166,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			if ($roll > 0) {
 				if ($userrow['invulnerability'] == 0) {
 					if ($roll == 1) {
-						$message = $message . "The True Hekatonchire lashes out at you with 1 additional arm!</br>";
+						$message = $message . "The True Hekatonchire lashes out at you with 1 additional arm!<br/>";
 					} else {
-						$message = $message . "The True Hekatonchire lashes out at you with " . strval($roll) . " additional arms!</br>";
+						$message = $message . "The True Hekatonchire lashes out at you with " . strval($roll) . " additional arms!<br/>";
 					}
 					$damage = $damage + (35 * $roll); //this can add up quickly
 				} else {
@@ -177,7 +177,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$userrow = terminateStrife($userrow, 2);
 					if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
 						$userrow['dungeonstrife'] = 1;
-						echo "You land rather violently outside of the room, taking no damage thanks to your invulnerability. However, it quickly wears off before you can re-enter the boss battle.</br>";
+						echo "You land rather violently outside of the room, taking no damage thanks to your invulnerability. However, it quickly wears off before you can re-enter the boss battle.<br/>";
 					}
 					$dontcheckvictory = true;
 				}
@@ -324,14 +324,14 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "Lich Queen":
 			$roll = rand(1, 100);
 			if ($roll >= 90) { //Some sort of blast
-				$message = $message . "The Lich Queen assaults you with terrible majyyks!</br>";
+				$message = $message . "The Lich Queen assaults you with terrible majyyks!<br/>";
 				$damage = $damage + 666 + 666; //Hits through invuln. Fun! Yes, it's coded as two 666's. That's just how I roll.
 			} elseif ($roll >= 65) { //Summon Liches
 				$quantity = floor(rand(3, 6) / 3); //Mostly 1, sometimes 2
 				if ($quantity == 1)
-					$message = $message . "The Lich Queen summons a minion to her side!</br>";
+					$message = $message . "The Lich Queen summons a minion to her side!<br/>";
 				if ($quantity != 1)
-					$message = $message . "The Lich Queen summons minions to her side!</br>";
+					$message = $message . "The Lich Queen summons minions to her side!<br/>";
 				$dungeonresult = $mysqli->query("SELECT `dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
 				$dungeonrow = $dungeonresult->fetch_array();
 				$landresult = $mysqli->query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;");
@@ -359,7 +359,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				}
 			} elseif ($roll >= 50) { //Reprieve! Nothing happens.
 			} elseif ($roll >= 40) { //Heal self and minions.
-				$message = $message . "The Lich Queen strengthens unlife within the room, increasing the health of basically everything except you.</br>";
+				$message = $message . "The Lich Queen strengthens unlife within the room, increasing the health of basically everything except you.<br/>";
 				$counter = 1;
 				while ($counter <= $max_enemies) {
 					$healthstr = "enemy" . strval($counter) . "health";
@@ -367,7 +367,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$counter++;
 				}
 			} else { //Small power buff to all surviving minions
-				$message = $message . "The Lich Queen attempts to empower any minions she might have accrued, regardless of whether she has actually accrued any.</br>";
+				$message = $message . "The Lich Queen attempts to empower any minions she might have accrued, regardless of whether she has actually accrued any.<br/>";
 				$slot = 2; //Does not self-empower
 				while ($slot <= $max_enemies) {
 					$powerstr = "enemy" . strval($slot) . "power";
@@ -385,9 +385,9 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				$chance = rand(1, 100);
 				if ($chance < 75) {
 					$currentstatus .= "PLAYER:STUN|";
-					$message = $message . " The electricity hinders your movements!</br>";
+					$message = $message . " The electricity hinders your movements!<br/>";
 				} else {
-					$message = $message . " You manage to resist becoming paralyzed!</br>";
+					$message = $message . " You manage to resist becoming paralyzed!<br/>";
 				}
 			} elseif ($roll >= 70) { //Build a machine
 				$robotype = rand(1, 3);
@@ -397,7 +397,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$roboname = "Autoturret";
 				if ($robotype == 3)
 					$roboname = "Metamorpher";
-				$message = $message . "Progenitor dashes around the room, gathering up spare parts and assembling another $roboname before your eyes!</br>";
+				$message = $message . "Progenitor dashes around the room, gathering up spare parts and assembling another $roboname before your eyes!<br/>";
 				$dungeonresult = $mysqli->query("SELECT `dungeonland` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
 				$dungeonrow = $dungeonresult->fetch_array();
 				$landresult = $mysqli->query("SELECT `grist_type` FROM `Players` WHERE `Players`.`username` = '$dungeonrow[dungeonland]' LIMIT 1;");
@@ -429,7 +429,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					echo "Error spawning Progenitor minion!<br/>";
 			} elseif ($roll >= 30) { //Reprieve! Nothing happens.
 			} else { //Small power buff to all surviving minions
-				$message = $message . "Progenitor grabs a hammer and wrench and begins to modify itself and any other still-functioning machines in the room, repairing and strengthening them!</br>";
+				$message = $message . "Progenitor grabs a hammer and wrench and begins to modify itself and any other still-functioning machines in the room, repairing and strengthening them!<br/>";
 				$slot = 1; //DOES self-empower
 				while ($slot <= $max_enemies) {
 					$healthstr = "enemy" . strval($slot) . "health";
@@ -443,7 +443,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 		case "The Bug":
 			$roll = rand(1, 100);
 			if ($roll >= 75) {
-				$message = $message . "The Bug wails a glitchy battle cry, shuffling a lot of variables around!</br>";
+				$message = $message . "The Bug wails a glitchy battle cry, shuffling a lot of variables around!<br/>";
 				$damage = rand(0, $damage * 2);
 				$buggedluck = rand(-100, 100);
 				$buggedbluck = rand(-100, 100);
@@ -481,7 +481,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					if ($slot != -1) {
 						$userrow = refreshSingular($slot, $slot, $userrow);
 						$currentstatus = $userrow['strifestatus']; //necessary because of spawnstatus
-						$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!</br>";
+						$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!<br/>";
 					}
 				}
 			}
@@ -563,7 +563,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				if ($slot != -1) {
 					$userrow = refreshSingular($slot, $slot, $userrow);
 					$currentstatus = $userrow['strifestatus']; //necessary because of spawnstatus
-					$message = $message . "The fire spreads to another nearby building!</br>";
+					$message = $message . "The fire spreads to another nearby building!<br/>";
 				}
 			} elseif ($roll <= 30) {
 				$message = $message . "The fire rages higher. The smoke is almost too much to bear!<br/>";

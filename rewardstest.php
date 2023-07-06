@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to access this developer tool.</br>";
+	echo "Log in to access this developer tool.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	$allowall = true;
@@ -20,18 +20,18 @@ if (empty($_SESSION['username'])) {
 				$targetresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 				$targetrow = $targetresult->fetch_array();
 				if ($targetrow['username'] == $_POST['user']) {
-					echo 'Username: ' . $targetrow['username'] . '</br>';
-					echo 'Session: ' . $targetrow['session_name'] . '</br>';
-					echo 'Echeladder: ' . $targetrow['Echeladder'] . '</br>';
+					echo 'Username: ' . $targetrow['username'] . '<br/>';
+					echo 'Session: ' . $targetrow['session_name'] . '<br/>';
+					echo 'Echeladder: ' . $targetrow['Echeladder'] . '<br/>';
 					echo 'Equipped Weapon(s): ' . $targetrow[$targetrow['equipped']];
 					if ($targetrow['offhand'] != "2HAND" && $targetrow['offhand'] != "")
 						echo ', ' . $targetrow[$targetrow['offhand']];
-					echo '</br>';
-					echo 'Solo Fraymotif I: ' . $targetrow['solo1'] . '</br>';
-					echo 'Solo Fraymotif II: ' . $targetrow['solo2'] . '</br>';
-					echo 'Solo Fraymotif III: ' . $targetrow['solo3'] . '</br>';
-					echo 'Boondollars: ' . $targetrow['Boondollars'] . '</br>';
-					echo 'Encounters: ' . $targetrow['encounters'] . '</br>';
+					echo '<br/>';
+					echo 'Solo Fraymotif I: ' . $targetrow['solo1'] . '<br/>';
+					echo 'Solo Fraymotif II: ' . $targetrow['solo2'] . '<br/>';
+					echo 'Solo Fraymotif III: ' . $targetrow['solo3'] . '<br/>';
+					echo 'Boondollars: ' . $targetrow['Boondollars'] . '<br/>';
+					echo 'Encounters: ' . $targetrow['encounters'] . '<br/>';
 					$reachgrist = False;
 					$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 					while ($col = $result2->fetch_field()) {
@@ -43,11 +43,11 @@ if (empty($_SESSION['username'])) {
 							$reachgrist = False;
 						}
 						if ($reachgrist == True) {
-							echo $gristtype . ': ' . $targetrow[$gristtype] . '</br>';
+							echo $gristtype . ': ' . $targetrow[$gristtype] . '<br/>';
 						}
 					}
 				} else
-					echo 'No player by the username of ' . $_POST['user'] . ' found.</br>';
+					echo 'No player by the username of ' . $_POST['user'] . ' found.<br/>';
 			} else {
 				$targetresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 				$targetrow = $targetresult->fetch_array();
@@ -81,10 +81,10 @@ if (empty($_SESSION['username'])) {
 									$k++;
 								}
 							}
-							echo $_POST['user'] . " was given " . $itemrow['name'] . " x" . $itemsgiven . "!</br>";
+							echo $_POST['user'] . " was given " . $itemrow['name'] . " x" . $itemsgiven . "!<br/>";
 							$giftstring = $itemrow['name'] . " x" . $itemsgiven;
 						} else
-							echo "That captcha code doesn't appear to belong to any item.</br>";
+							echo "That captcha code doesn't appear to belong to any item.<br/>";
 					} else {
 						$amount = $quantity;
 						$field = $_POST['gift'];
@@ -109,7 +109,7 @@ if (empty($_SESSION['username'])) {
 									$mysqli->query("UPDATE Players SET `$gristtype` = " . strval($targetrow[$gristtype] + $amount) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 								}
 							}
-							echo $_POST['user'] . " was given " . strval($amount) . " of all grist types!</br>";
+							echo $_POST['user'] . " was given " . strval($amount) . " of all grist types!<br/>";
 							$giftstring = strval($amount) . " of all grist types";
 						} else {
 							$mysqli->query("UPDATE Players SET `$field` = " . strval($targetrow[$field] + $amount) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
@@ -123,10 +123,10 @@ if (empty($_SESSION['username'])) {
 								} else {
 									$mysqli->query("UPDATE Players SET `Gel_Viscosity` = " . strval($targetrow['Echeladder'] * 15 - 25) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 								}
-								echo $_POST['user'] . " was given " . strval($amount) . " Echeladder rungs!</br>";
+								echo $_POST['user'] . " was given " . strval($amount) . " Echeladder rungs!<br/>";
 								$giftstring = strval($amount) . " Echeladder rungs";
 							} else {
-								echo $_POST['user'] . " was given " . strval($amount) . " " . $field . "!</br>";
+								echo $_POST['user'] . " was given " . strval($amount) . " " . $field . "!<br/>";
 								$giftstring = strval($amount) . " " . $field;
 							}
 						}
@@ -149,15 +149,15 @@ if (empty($_SESSION['username'])) {
 							$mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
 							$mysqli->query("UPDATE `Players` SET `Players`.`newmessage` = 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
 						} else
-							echo "Attempted to send a message, but the user's inbox was full.</br>";
+							echo "Attempted to send a message, but the user's inbox was full.<br/>";
 					}
 				} else
-					echo 'No player by the username of ' . $_POST['user'] . ' found.</br>';
+					echo 'No player by the username of ' . $_POST['user'] . ' found.<br/>';
 			}
 		}
 		echo '<form action="rewards.php" method="post" id="reward">';
 		if ($userrow['modlevel'] >= 10) {
-			echo 'Name of recipient: <input id="user" name="user" type="text" /></br>';
+			echo 'Name of recipient: <input id="user" name="user" type="text" /><br/>';
 		}
 		echo 'What to gift: <select name="gift">';
 		echo '<option value="lookup">No reward, just look up info</option>';
@@ -181,10 +181,10 @@ if (empty($_SESSION['username'])) {
 		}
 		echo '<option value="allgrists">All grists</option>';
 		echo '<option value="item">Item</option>';
-		echo '</select></br>';
-		echo '<form action="rewards.php" method="post">Quantity of reward: <input id="quantity" name="quantity" type="text" /></br>';
-		echo '<form action="rewards.php" method="post">Captcha code of item (leave blank if other reward type): <input id="captcha" name="captcha" type="text" /></br>';
-		echo 'Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="reward"></textarea></br>';
+		echo '</select><br/>';
+		echo '<form action="rewards.php" method="post">Quantity of reward: <input id="quantity" name="quantity" type="text" /><br/>';
+		echo '<form action="rewards.php" method="post">Captcha code of item (leave blank if other reward type): <input id="captcha" name="captcha" type="text" /><br/>';
+		echo 'Attach a message (optional):<br/><textarea name="body" rows="6" cols="40" form="reward"></textarea><br/>';
 		echo '<input type="submit" value="Give reward!" /></form>';
 	}
 }

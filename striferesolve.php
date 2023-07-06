@@ -30,22 +30,22 @@ function refreshSingular($slot, $target, $userrow)
 $userrow = parseEnemydata($userrow);
 $max_enemies = 50;
 if (empty($_SESSION['username'])) {
-	echo "Log in to engage in strife.</br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to engage in strife.<br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } elseif (empty($_POST['offense']) && empty($_POST['abscond'])) { //No attack command
-	echo "What are you still doing here? Off with you!</br>";
-	echo '<a href="strife.php">Continue</a><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "What are you still doing here? Off with you!<br/>";
+	echo '<a href="strife.php">Continue</a><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } elseif ($userrow['sessionbossengaged'] == 1) {
-	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
+	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a><br/>";
 } elseif (!empty($_POST['abscond']) && $userrow['cantabscond'] == 1) {
 	$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
 	$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string("CAN'T ABSCOND, BRO!") . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
 	include("strife.php");
 } elseif (!empty($_POST['abscond'])) {
 	if ($userrow['dreamingstatus'] == "Prospit") {
-		echo 'You abscond from "strife".</br>';
+		echo 'You abscond from "strife".<br/>';
 	} else {
-		echo "You abscond from strife.</br>";
+		echo "You abscond from strife.<br/>";
 	}
 	$luck = ceil($userrow['Luck'] + $userrow['Brief_Luck']); //Calculate the player's luck total. Paranoia: Make sure we don't somehow have a non-integer.
 	if ($luck > 100)
@@ -98,9 +98,9 @@ if (empty($_SESSION['username'])) {
 	$unarmedpower = ceil($unarmedpower * ((($classrow['level1factor'] / 100) * $factor) + (($classrow['level612factor'] / 100) * (1 - $factor))));
 	if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") { //User not actually strifing, get rid of them.
 		if ($userrow['dreamingstatus'] == "Prospit") {
-			echo "You are not currently engaged in &quot;strife&quot;.</br>";
+			echo "You are not currently engaged in &quot;strife&quot;.<br/>";
 		} else {
-			echo "You are not currently engaged in strife.</br>";
+			echo "You are not currently engaged in strife.<br/>";
 		}
 		echo '<a href="strife.php">Continue</a> <a href="/">Home</a>';
 	} else {
@@ -128,7 +128,7 @@ if (empty($_SESSION['username'])) {
 		$luck = ceil($userrow['Luck'] + $userrow['Brief_Luck']); //Calculate the player's luck total. Paranoia: Make sure we don't somehow have a non-integer.
 		if (!empty($abilities[19])) { //Light's Favour activates. Increase luck.
 			$luck += floor($userrow['Echeladder'] / 30);
-			$message = $message . "$abilities[19]</br>";
+			$message = $message . "$abilities[19]<br/>";
 		}
 		if ($luck > 100)
 			$luck = 100; //We work with luck as a percentage generally. This may be changed later.
@@ -374,17 +374,17 @@ if (empty($_SESSION['username'])) {
 					$aidaccrow = $blankrow;
 				}
 				if (!empty($aidabilities[15]) && $aidblanks > 0 && $aidvoidvalid == 2) { //One with Nothing activates. Increase unarmed power for the purposes of power level.
-					$message = $message . "$row[username]'s $aidabilities[15]</br>";
+					$message = $message . "$row[username]'s $aidabilities[15]<br/>";
 					if ($row['dreamingstatus'] == "Awake") {
 						$aidvoidpower = 5 * $aidblanks * $row['Echeladder'];
 					} else {
 						$aidvoidpower = floor($row['Echeladder'] / 2);
 					}
-					$message = $message . "Void power boost: " . strval($aidvoidpower) . "</br>";
+					$message = $message . "Void power boost: " . strval($aidvoidpower) . "<br/>";
 					$aidpower += $aidvoidpower;
 				}
 				if (!empty($aidabilities[17])) { //Blood Bonds activates. Increase power. We know it activated because this is an assister!
-					$message = $message . "$row[username]'s $aidabilities[17]</br>";
+					$message = $message . "$row[username]'s $aidabilities[17]<br/>";
 					$aidbloodbond = 0;
 					$testuserescape = $mysqli->real_escape_string($row['aiding']); //Add escape characters so we can find session correctly in database.
 					$testsessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $testuserescape . "'");
@@ -392,7 +392,7 @@ if (empty($_SESSION['username'])) {
 						if ($testrow['aiding'] == $row['aiding'])
 							$aidbloodbond += $unarmedaidpower; //Grab everyone assisting. Grabs this player but NOT main strifer, so number comes out the same.
 					}
-					$message = $message . "Blood bond strength:" . strval($aidbloodbond) . "</br>";
+					$message = $message . "Blood bond strength:" . strval($aidbloodbond) . "<br/>";
 					$aidpower += $aidbloodbond;
 				}
 				$aidaggrieve += ($aidmainrow['aggrieve'] + floor($aidoffrow['aggrieve'] / 2) + $aidheadrow['aggrieve'] + $aidfacerow['aggrieve'] + $aidbodyrow['aggrieve'] + $aidaccrow['aggrieve']);
@@ -518,20 +518,20 @@ if (empty($_SESSION['username'])) {
 			$turncounter += 1;
 			$nodamage = False;
 			if (!empty($abilities[1]) && $offense == "aggress") { //Activate passive aggression: apply passive modifier. (ID 1)
-				$message = $message . "$abilities[1]</br>";
+				$message = $message . "$abilities[1]<br/>";
 				$unarmedpower = floor($unarmedpower * ($classrow['passivefactor'] / 100));
 			} else {
 				$unarmedpower = floor($unarmedpower * ($classrow['activefactor'] / 100)); //User is main strifer, apply active modifier.
 			}
 			$powerlevel = $unarmedpower + $userrow['powerboost'] + $userrow['temppowerboost'] + $mainpower + $offpower + $aidpower; //Sprite power added later.
 			if (!empty($abilities[15]) && $blanks > 0 && $voidvalid == 2) { //One with Nothing activates. Increase unarmed power for the purposes of power level.
-				$message = $message . "$abilities[15]</br>";
+				$message = $message . "$abilities[15]<br/>";
 				if ($userrow['dreamingstatus'] == "Awake") {
 					$voidpower = 5 * $blanks * $userrow['Echeladder'];
 				} else {
 					$voidpower = floor($userrow['Echeladder'] / 2);
 				}
-				$message = $message . "Void power boost: " . strval($voidpower) . "</br>";
+				$message = $message . "Void power boost: " . strval($voidpower) . "<br/>";
 				$powerlevel += $voidpower;
 			}
 			if (!empty($abilities[17])) { //Blood Bonds activates. Increase power. Note that it doesn't ACTUALLY trigger unless someone is found.
@@ -543,15 +543,15 @@ if (empty($_SESSION['username'])) {
 						$bloodbond += $unarmedpower; //Grab everyone assisting.
 				}
 				if ($bloodbond > 0) { //Ability actually triggers. Print message etc.
-					$message = $message . "$abilities[17]</br>";
-					$message = $message . "Blood bond strength:" . strval($bloodbond) . "</br>";
+					$message = $message . "$abilities[17]<br/>";
+					$message = $message . "Blood bond strength:" . strval($bloodbond) . "<br/>";
 					$powerlevel += $bloodbond;
 				}
 			}
 			$offensepower = $powerlevel + $userrow['offenseboost'] + $userrow['tempoffenseboost'];
 			$defensepower = $powerlevel + $userrow['defenseboost'] + $userrow['tempdefenseboost'] + $totaldef + $aiddef;
 			if (!empty($abilities[7])) { //Aspect Fighter (ID 7)
-				$message = $message . "$abilities[7]</br>";
+				$message = $message . "$abilities[7]<br/>";
 				$aspectrow = $_SESSION['aspectrow'];
 				$offensebonus = floor($aspectrow['Damage'] + $aspectrow['Power_down'] + $aspectrow['Offense_up'] + floor($aspectrow['Power_up'] / 2) * ($unarmedpower / 612));
 				$defensebonus = floor($aspectrow['Invulnerability'] + $aspectrow['Heal'] + $aspectrow['Defense_up'] + floor($aspectrow['Power_up'] / 2) * ($unarmedpower / 612));
@@ -561,10 +561,10 @@ if (empty($_SESSION['username'])) {
 					$defensebonus = 0;
 				$offensepower += $offensebonus;
 				$defensepower += $defensebonus;
-				$message = $message . "Offense bonus: $offensebonus</br>Defense bonus: $defensebonus</br>"; //Special string: Print boost values.
+				$message = $message . "Offense bonus: $offensebonus<br/>Defense bonus: $defensebonus<br/>"; //Special string: Print boost values.
 			}
 			if (!empty($abilities[3]) && $offense == "assault") { //Activate chaotic assault: randomize between -100 and 350 bonus power with a luck factor. (ID 3)
-				$message = $message . "$abilities[3]</br>";
+				$message = $message . "$abilities[3]<br/>";
 				$offensepower = ceil($offensepower + (rand((-100 + $luck), 350) * ($userrow['Echeladder'] / 300)));
 			}
 			//Nullification of weapons occurs by blanking the weapon rows.
@@ -613,16 +613,16 @@ if (empty($_SESSION['username'])) {
 				$defensepower = $defensepower + $spritepower + $aidsprite;
 			}
 			if ($userrow['dreamingstatus'] == "Prospit") {
-				echo 'You and your "opponents" trade a series of "blows".</br>';
+				echo 'You and your "opponents" trade a series of "blows".<br/>';
 			} else {
-				echo "You and your opponents trade a series of blows.</br>";
+				echo "You and your opponents trade a series of blows.<br/>";
 			}
 			$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
 			$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '" . $username . "'");
 			$aides = 0;
 			while ($row = $sessionmates->fetch_array()) {
 				if ($row['aiding'] == $username) { //Aiding character.
-					$message = $message . "$row[username] contributes to the fight!</br>";
+					$message = $message . "$row[username] contributes to the fight!<br/>";
 					$aides += 1;
 				}
 			}
@@ -678,14 +678,14 @@ if (empty($_SESSION['username'])) {
 					}
 					$disorientedstr = ($statustr . "DISORIENTED");
 					if (strpos($currentstatus, $disorientedstr) !== False) { //This enemy is disoriented. It is treated as not existing for the purposes of volume bonuses.
-						$message = $message . $userrow[$enemystr] . "is disoriented and cannot fight effectively with allies</br>";
+						$message = $message . $userrow[$enemystr] . "is disoriented and cannot fight effectively with allies<br/>";
 						$numbersfactor = 1;
 					} else {
 						$numbersfactor = 1 + ($enemiesfought * 0.125);
 						$enemiesfought++;
 					}
 					if ($i <= $targetedenemies) { //don't inflict damage/etc on an enemy that was spawned during this loop
-						//echo "DEBUG: Targeting enemy in slot " . strval($i) . "</br>";
+						//echo "DEBUG: Targeting enemy in slot " . strval($i) . "<br/>";
 						//Calculate damage with a random element thrown in. 100 luck forces a max roll.
 						$enemydamage = rand(floor($offensepower * (0.85 + ($luck * 0.003))), ceil($offensepower * 1.15)) - floor($userrow[$powerstr] * $numbersfactor);
 						$mainoff = 1;
@@ -713,7 +713,7 @@ if (empty($_SESSION['username'])) {
 										$minpower = ceil($minpower * (intval($currentarray[1]) / 100));
 										if ($roll > $resistfactor && $enemydamage < $minpower) { //piercing has 100% base chance, reduced by enemy's breath resistance
 											$enemydamage = $minpower;
-											$message = $message . "You manage to pierce $userrow[$enemystr]'s defenses!</br>";
+											$message = $message . "You manage to pierce $userrow[$enemystr]'s defenses!<br/>";
 										}
 										break;
 									case 'AMMO': //Format is AMMO:<type of ammo>:<amount>:<enemy/round>|. Amount can be negative.
@@ -766,7 +766,7 @@ if (empty($_SESSION['username'])) {
 							$bonusdamage = floor(2.5 * (1 - ($userrow[$healthstr] / $userrow[$maxhealthstr])) * $unarmedpower);
 							//Bonus damage is 2.5 times the unarmed power divided by the ratio (i.e. if all HP was missing, it would deal 2x unarmed power)
 							if ($bonusdamage > 0) {
-								$message = $message . $abilities[21] . "</br>";
+								$message = $message . $abilities[21] . "<br/>";
 								$enemydamage += $bonusdamage;
 							}
 						}
@@ -780,14 +780,14 @@ if (empty($_SESSION['username'])) {
 								$crit = 100; //Every fifty rungs, increase the chance by 1%
 						}
 						if ($crit >= (55 - floor($luck * 0.455))) {
-							$message = $message . "You land a critical hit on $userrow[$enemystr]!</br>";
+							$message = $message . "You land a critical hit on $userrow[$enemystr]!<br/>";
 							$enemydamage += rand(floor($offensepower * (0.85 + ($luck * 0.003))), ceil($offensepower * 1.15)); //Double the base damage before subtraction by adding it on again.
 						} else { //if you were lucky enough to crit while blinded, let you have your moment
 							$blindstr = "PLAYER:BLIND|";
 							if (strpos($currentstatus, $blindstr) !== False) { //Player is blinded.
 								$roll = rand(1, 100);
 								if ($roll > 50 - floor($luck / 2)) { //max luck negates blindness entirely
-									$message = $message . "Your blindness causes you to miss $userrow[$enemystr] completely!</br>";
+									$message = $message . "Your blindness causes you to miss $userrow[$enemystr] completely!<br/>";
 									$enemydamage = 0;
 								}
 							}
@@ -798,8 +798,8 @@ if (empty($_SESSION['username'])) {
 							if ($proc < $chance) { //40% chance of triggering at max rank. Godtier increases it by 4% per tier. Luck has a low influence.
 								$strikes = 2 + floor(rand($luck, 100) / 85) + floor(rand($userrow['Echeladder'], 1111) / 666) + ceil($userrow['Godtier'] / 3);
 								//Two strikes guaranteed. One is luck dependent, one is Echeladder dependent, and extras appear at god tiers 1, 4, 7, etc.
-								$message = $message . $abilities[22] . "</br>";
-								$message = $message . "Attacks performed: $strikes</br>";
+								$message = $message . $abilities[22] . "<br/>";
+								$message = $message . "Attacks performed: $strikes<br/>";
 								$enemydamage *= $strikes;
 							}
 						}
@@ -819,7 +819,7 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = ($enemyrow['resist_Rage'] / 2); //Enemy's Rage resistance improves the save.
 									if ($savingthrow > (80 - $resistfactor)) {
 										$currentstatus = str_replace($mellowstr, "", $currentstatus);
-										$message = $message . "$userrow[$enemystr] manages to get riled up about the battle again</br>";
+										$message = $message . "$userrow[$enemystr] manages to get riled up about the battle again<br/>";
 									}
 								}
 							}
@@ -830,7 +830,7 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = ($enemyrow['resist_Heart'] / 2); //Enemy's Heart resistance improves the save.
 									if ($savingthrow > (50 - $resistfactor)) { //increased chance if struck
 										$currentstatus = str_replace($charmstr, "", $currentstatus);
-										$message = $message . "$userrow[$enemystr] snaps out of its trance and is once again your enemy</br>";
+										$message = $message . "$userrow[$enemystr] snaps out of its trance and is once again your enemy<br/>";
 										$charmed[$i] = false; //power is still contributed, but the enemy gets to attack
 									}
 								}
@@ -842,7 +842,7 @@ if (empty($_SESSION['username'])) {
 								$resistfactor = ($enemyrow['resist_Rage'] / 2); //Enemy's Rage resistance improves the save.
 								if ($savingthrow > (80 - $resistfactor)) {
 									$currentstatus = str_replace($enragedstr, "", $currentstatus);
-									$message = $message . "$userrow[$enemystr] manages to calm down</br>";
+									$message = $message . "$userrow[$enemystr] manages to calm down<br/>";
 								}
 							}
 							$charmstr = ($statustr . "CHARMED|");
@@ -851,7 +851,7 @@ if (empty($_SESSION['username'])) {
 								$resistfactor = ($enemyrow['resist_Heart'] / 2); //Enemy's Heart resistance improves the save.
 								if ($savingthrow > (80 - $resistfactor)) {
 									$currentstatus = str_replace($charmstr, "", $currentstatus);
-									$message = $message . "$userrow[$enemystr] snaps out of its trance and is once again your enemy</br>";
+									$message = $message . "$userrow[$enemystr] snaps out of its trance and is once again your enemy<br/>";
 									$charmed[$i] = false; //power is still contributed, but the enemy gets to attack
 								}
 							}
@@ -859,7 +859,7 @@ if (empty($_SESSION['username'])) {
 						$newenemyhealth = $userrow[$healthstr] - $enemydamage; //Subtract off the damage.
 						$distractedstr = ($statustr . "DISTRACTED|");
 						if (strpos($currentstatus, $distractedstr) !== False) { //This enemy is distracted. Double damage!
-							$message = $message . $userrow[$enemystr] . "is distracted and takes double damage from the blow!</br>";
+							$message = $message . $userrow[$enemystr] . "is distracted and takes double damage from the blow!<br/>";
 							$newenemyhealth = $newenemyhealth - $enemydamage;
 							$currentstatus = str_replace($distractedstr, "", $currentstatus); //Distraction lasts one turn.
 						}
@@ -901,17 +901,17 @@ if (empty($_SESSION['username'])) {
 								$userrow['Aspect_Vial'] = $refreshrow['Aspect_Vial'];
 								$userrow['Boondollars'] = $refreshrow['Boondollars'];
 							} else {
-								echo "Your defeat of the dungeon's boss would provide you with Echeladder rungs, but you have already reached the top of yours.</br>";
+								echo "Your defeat of the dungeon's boss would provide you with Echeladder rungs, but you have already reached the top of yours.<br/>";
 							}
-							echo "</br>";
+							echo "<br/>";
 						}
 						$healthplus = floor((rand(1, 5) * $userrow[$powerstr]) / 5) * floor((rand(0, 4) + floor($luck / 25)) / 4);
 						$damage -= $healthplus;
 						if ($healthplus > 0) {
 							if ($userrow['dreamingstatus'] == "Prospit") { //No enemies on Prospit.
-								echo "</br>A prospitian kindly offers you a refreshing glass of home-made lemonade for a job well done!</br>";
+								echo "<br/>A prospitian kindly offers you a refreshing glass of home-made lemonade for a job well done!<br/>";
 							} else {
-								echo "</br>You retrieve some health gel from the enemy.</br>";
+								echo "<br/>You retrieve some health gel from the enemy.<br/>";
 							}
 						}
 						$userrow[$enemystr] = ""; //Make them disappear for EOT reasons.
@@ -934,13 +934,13 @@ if (empty($_SESSION['username'])) {
 							//weakened enemies have less chance of breaking out; on the flip side, empowered enemies have a greater chance of breaking out
 							$frozenroll = rand(1, 100);
 							if ($frozenroll < $breakchance) { //enemy breaks out of the ice
-								$message = $message . $userrow[$enemystr] . " breaks out of the ice and attacks!</br>";
+								$message = $message . $userrow[$enemystr] . " breaks out of the ice and attacks!<br/>";
 								$currentstatus = str_replace($frozenstr, "", $currentstatus);
 							} else
 								$frozed = true;
 						}
 						if (strpos($currentstatus, $timestopstr) !== False) { //This enemy is frozen in time.
-							$message = $message . $userrow[$enemystr] . " is frozen in time!</br>";
+							$message = $message . $userrow[$enemystr] . " is frozen in time!<br/>";
 							if ($timestopped == False) { //Enemy was not stopped by a weapon strike this round
 								$currentstatus = str_replace($timestopstr, "", $currentstatus);
 							} else {
@@ -954,11 +954,11 @@ if (empty($_SESSION['username'])) {
 							$message = $message . $userrow[$enemystr] . " remains frozen in ice and cannot move!<br/>";
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} elseif (strpos($currentstatus, $knockdownstr) !== False) { //Time stopped/frozen enemies can't get up from knockdown.
-							$message = $message . $userrow[$enemystr] . " picks itself back up.</br>";
+							$message = $message . $userrow[$enemystr] . " picks itself back up.<br/>";
 							$currentstatus = str_replace($knockdownstr, "", $currentstatus);
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} elseif ((strpos($currentstatus, $hopelessstr) !== False) && $hopelessroll < 50) { //If enemy unable to attack, don't bother with this.
-							$message = $message . $userrow[$enemystr] . " doesn't bother attacking this round, it wouldn't do anything anyway.</br>";
+							$message = $message . $userrow[$enemystr] . " doesn't bother attacking this round, it wouldn't do anything anyway.<br/>";
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} else {
 							$playerdamage = floor($userrow[$powerstr] * $numbersfactor);
@@ -971,7 +971,7 @@ if (empty($_SESSION['username'])) {
 							if (!empty($abilities[23])) { //Check for Fortune's Protection (ID 23)
 								$guidance = rand(floor(1 + ($luck / 10)), 100);
 								if ($guidance > (100 - floor($userrow['Echeladder'] / 40))) { //Every forty rungs, increase the chance by 1%. More likely to kick in than the autocrit (15% at max level)
-									$message = $message . $abilities[23] . "</br>";
+									$message = $message . $abilities[23] . "<br/>";
 									$playerdamage = floor($playerdamage / 2); //Activate anticrit: halve the damage.
 								}
 							}
@@ -985,20 +985,20 @@ if (empty($_SESSION['username'])) {
 							$shrunkstr = ($statustr . "SHRUNK|");
 							if (strpos($currentstatus, $shrunkstr) !== False) { //This enemy is shrunk
 								$playerdamage = floor($playerdamage / 1.5);
-								$message = $message . "The $userrow[$enemystr] tries to hit you, but it's tiny so it doesn't do as much damage. Isn't that just precious?</br>";
+								$message = $message . "The $userrow[$enemystr] tries to hit you, but it's tiny so it doesn't do as much damage. Isn't that just precious?<br/>";
 							}
 							if (!empty($abilities[13]) && $playerdamage > 0) { //Spatial Warp activates. Cause some recoil. (ID 13)
 								$recoil = floor($userrow[$powerstr] / 5);
 								$recoil = min(($newenemyhealth - 1), $recoil);
 								$newenemyhealth -= $recoil;
-								$message = $message . "$abilities[13]</br>Recoil damage on $userrow[$enemystr]: $recoil</br>";
+								$message = $message . "$abilities[13]<br/>Recoil damage on $userrow[$enemystr]: $recoil<br/>";
 							}
 							$userrow[$healthstr] = $newenemyhealth; //Update for repetition and checking end-of-turn effects.
 							//Enemy isn't dead, so they can retaliate. 100 player luck forces a minimum roll.
 							//Begin tracking special effects on standard damage (such as role abilities) here:
 							if (!empty($abilities[2]) && $playerdamage > 0) { //Life's Bounty activates. Reduce damage. (ID 2)
 								$playerdamage = floor($playerdamage * 0.85);
-								$message = $message . "$abilities[2]</br>";
+								$message = $message . "$abilities[2]<br/>";
 							}
 							if (!empty($abilities[4]) && $playerdamage > 0) { //Roll for Dissipate. (ID 4)
 								echo "DEBUG: rolling for Dissipate<br/>";
@@ -1011,7 +1011,7 @@ if (empty($_SESSION['username'])) {
 										$userrow['dissipatefocus'] = 0;
 										$dissipating = True; //we want to avoid every hit.
 									}
-									$message = $message . "$abilities[4]</br>";
+									$message = $message . "$abilities[4]<br/>";
 									$playerdamage = 0; //Dissipate is NOT invulnerability. Specials will strike through it.
 								}
 							}
@@ -1019,7 +1019,7 @@ if (empty($_SESSION['username'])) {
 							if (strpos($currentstatus, $nocapstr) !== False) { //Player's massive damage cap is gone.
 								$savingthrow = rand((1 + ceil($luck / 5)), 100); //Player gets a save every time they are struck.
 								if ($savingthrow > 66) {
-									$message = $message . "Your massive damage protection has returned.</br>";
+									$message = $message . "Your massive damage protection has returned.<br/>";
 									$currentstatus = str_replace($nocapstr, "", $currentstatus);
 								}
 							} else {
@@ -1030,8 +1030,8 @@ if (empty($_SESSION['username'])) {
 								$offenseplus = ceil(ceil($playerdamage / 8) - min(ceil($userrow['offenseboost'] / (ceil($userrow['Echeladder'] / 75))), ceil($playerdamage / 10)));
 								$offenseplus = $offenseplus * ($userrow['Godtier'] + 1); //Multiply by the "standard" non class affected godtier modifier.
 								$userrow['offenseboost'] += $offenseplus;
-								$message = $message . "$abilities[12]</br>";
-								$message = $message . "Offense boost: $offenseplus</br>";
+								$message = $message . "$abilities[12]<br/>";
+								$message = $message . "Offense boost: $offenseplus<br/>";
 							}
 							if ($playerdamage != 0) {
 								$nodamage = False;
@@ -1039,21 +1039,21 @@ if (empty($_SESSION['username'])) {
 									$savingthrow = rand(1, 100);
 									$percent = ceil(($playerdamage / $userrow['Gel_Viscosity']) * 200);
 									if ($savingthrow <= $percent) { //Higher chance the more of the player's HP they deal. Capped hits are 2/3 chance
-										$message = $message . $userrow[$enemystr] . " is inspired by their latest attack and shakes off the feeling of hopelessness!</br>";
+										$message = $message . $userrow[$enemystr] . " is inspired by their latest attack and shakes off the feeling of hopelessness!<br/>";
 										$currentstatus = str_replace($hopelessstr, "", $currentstatus);
 									}
 								}
 							}
 							$blindstr = "PLAYER:BLIND|";
 							if (strpos($currentstatus, $blindstr) !== False) { //Player is blinded.
-								$message = $message . "Your vision has returned.</br>";
+								$message = $message . "Your vision has returned.<br/>";
 								$currentstatus = str_replace($blindstr, "", $currentstatus); //wears off after one turn
 							}
 							$confusestr = "PLAYER:CONFUSE|";
 							if (strpos($currentstatus, $confusestr) !== False) { //Player is confused.
 								$savingthrow = rand(1, 100);
 								if ($savingthrow + floor($luck / 2) > 75) {
-									$message = $message . "You have come back to your senses.</br>";
+									$message = $message . "You have come back to your senses.<br/>";
 									$currentstatus = str_replace($confusestr, "", $currentstatus);
 								}
 							}
@@ -1094,7 +1094,7 @@ if (empty($_SESSION['username'])) {
 				if ($chancething < 1)
 					$chancething = 1;
 				if ($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Hope") { //But not really.
-					$message = $message . "You are felled by your opponent's attack! As your exhausted body falls to the ground, a shining white light fills it. Moments later, you spring back to your feet.</br>";
+					$message = $message . "You are felled by your opponent's attack! As your exhausted body falls to the ground, a shining white light fills it. Moments later, you spring back to your feet.<br/>";
 					$damage = 0;
 					$userrow[$healthvialstr] = $userrow['motifcounter'] * 500;
 					if ($userrow[$healthvialstr] > $userrow['Gel_Viscosity'])
@@ -1107,7 +1107,7 @@ if (empty($_SESSION['username'])) {
 					$userrow['motifcounter'] = 0;
 				} elseif (!empty($abilities[20]) && ($chancething <= ceil(($userrow['Aspect_Vial'] * 100) / $userrow['Gel_Viscosity']))) { //Hope Endures activated (ID 20)
 					$endured = True;
-					$message = $message . $abilities[20] . "</br>";
+					$message = $message . $abilities[20] . "<br/>";
 					$damage = ($userrow[$healthvialstr] - 1); //So their health goes to one.
 					$aspectcost = floor($userrow['Aspect_Vial'] / 2);
 					$mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $userrow[Aspect_Vial]-$aspectcost WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -1118,9 +1118,9 @@ if (empty($_SESSION['username'])) {
 					$damage = ($userrow[$healthvialstr] - 1); //So their health goes to one.
 					$repeat = False; //Don't do it again.
 					if ($userrow['dreamingstatus'] == "Prospit") {
-						echo "All that civic-minded work you've been doing has really tired you out!</br>";
+						echo "All that civic-minded work you've been doing has really tired you out!<br/>";
 					} else {
-						echo "You are felled by your opponent's attack! You slink, crawl, and generally abscond from the fight before you are killed off.</br>";
+						echo "You are felled by your opponent's attack! You slink, crawl, and generally abscond from the fight before you are killed off.<br/>";
 					}
 					$userrow = terminateStrife($userrow, 1);
 					$i = $max_enemies; //Combat is over, player loses.
@@ -1140,10 +1140,10 @@ if (empty($_SESSION['username'])) {
 						if ($savingthrow + $luck > 80) { //Player throws off this instance of poisoning.
 							$removethis = $statusarray[$p] . "|";
 							$currentstatus = preg_replace('/' . $removethis . '/', '', $currentstatus, 1);
-							$message = $message . "You manage to fight off some of the poison!</br>";
+							$message = $message . "You manage to fight off some of the poison!<br/>";
 						} else {
 							$severity += floatval($currentpoison[2]);
-							$message = $message . "You lose some health to poison!</br>";
+							$message = $message . "You lose some health to poison!<br/>";
 						}
 					}
 					$p++;
@@ -1218,7 +1218,7 @@ if (empty($_SESSION['username'])) {
 			$stunstr = "PLAYER:STUN|";
 			if (strpos($currentstatus, $stunstr) !== False) { //Player is stunned.
 				$currentstatus = str_replace($stunstr, "", $currentstatus); //wears off after one turn
-				$message = $message . "You are stunned and cannot use a consumable or aspect power next round!</br>";
+				$message = $message . "You are stunned and cannot use a consumable or aspect power next round!<br/>";
 				$userrow['combatconsume'] = 1;
 			} else
 				$userrow['combatconsume'] = 0;
@@ -1233,7 +1233,7 @@ if (empty($_SESSION['username'])) {
 			}
 			//Begin checking passive abilities that trigger at end of turn here.
 			if (!empty($abilities[11]) && ($userrow['powerboost'] < 0 || $userrow['offenseboost'] < 0 || $userrow['defenseboost'] < 0 || $userrow['temppowerboost'] < 0 || $userrow['tempoffenseboost'] < 0 || $userrow['tempdefenseboost'] < 0)) { //There's a boost below zero. Trigger Blockhead (ID 11)
-				$message = $message . "$abilities[11]</br>";
+				$message = $message . "$abilities[11]<br/>";
 				$boosttypes = array(0 => "powerboost", "offenseboost", "defenseboost", "temppowerboost", "tempoffenseboost", "tempdefenseboost");
 				$type = 0;
 				while ($type < count($boosttypes)) {
@@ -1299,10 +1299,10 @@ if (empty($_SESSION['username'])) {
 									if ($savingthrow + $enemyrow['resist_Doom'] > 100) { //Enemy throws off this instance of poisoning
 										$removethis = $statusarray[$p] . "|";
 										$currentstatus = preg_replace('/' . $removethis . '/', '', $currentstatus, 1);
-										$message = $message . $userrow[$enemystr] . " fights off some of the poison!</br>";
+										$message = $message . $userrow[$enemystr] . " fights off some of the poison!<br/>";
 									} else {
 										$severity += floatval($currentpoison[2]);
-										$message = $message . $userrow[$enemystr] . " loses some health to poison!</br>";
+										$message = $message . $userrow[$enemystr] . " loses some health to poison!<br/>";
 									}
 								}
 								$p++;
@@ -1323,10 +1323,10 @@ if (empty($_SESSION['username'])) {
 									if ($savingthrow + ceil($enemyrow['resist_Rage'] / 2) > 75) { //Enemy throws off this instance of burning
 										$removethis = $statusarray[$p] . "|";
 										$currentstatus = preg_replace('/' . $removethis . '/', '', $currentstatus, 1);
-										$message = $message . $userrow[$enemystr] . " manages to put out some of the fire!</br>";
+										$message = $message . $userrow[$enemystr] . " manages to put out some of the fire!<br/>";
 									} else {
 										$firedamage += intval($currentburn[2]);
-										$message = $message . $userrow[$enemystr] . " is hurt by the fire!</br>";
+										$message = $message . $userrow[$enemystr] . " is hurt by the fire!<br/>";
 									}
 								}
 								$p++;
@@ -1334,7 +1334,7 @@ if (empty($_SESSION['username'])) {
 							$distractroll = rand(1, 100);
 							if ($distractroll + $enemyrow['resist_Mind'] < ($firedamage / $userrow[$maxhealthstr])) {
 								//chance to distract increases with the percentage of max health the fire is doing in damage, decreases with mind resistance
-								$message = $message . "The fire sends " . $userrow[$enemystr] . " into a brief moment of panic!</br>";
+								$message = $message . "The fire sends " . $userrow[$enemystr] . " into a brief moment of panic!<br/>";
 								$currentstatus .= $statustr . "DISTRACTED|";
 							}
 							$newhealth = $userrow[$healthstr] - $firedamage;
@@ -1349,11 +1349,11 @@ if (empty($_SESSION['username'])) {
 							while (!empty($statusarray[$p])) {
 								if (strpos($statusarray[$p], $bleedingstr) !== False) { //This is a bleed instance. Yes, they stack.
 									$currentbleed = explode(":", $statusarray[$p]);
-									$message = $message . $userrow[$enemystr] . " loses some blood or blood analogue!</br>";
+									$message = $message . $userrow[$enemystr] . " loses some blood or blood analogue!<br/>";
 									if (intval($currentbleed[2]) <= 0) { //Bleeding has expired.
 										$removethis = $statusarray[$p] . "|";
 										$currentstatus = preg_replace('/' . $removethis . '/', '', $currentstatus, 1);
-										$message = $message . "One of " . $userrow[$enemystr] . "'s wounds is no longer bleeding!</br>";
+										$message = $message . "One of " . $userrow[$enemystr] . "'s wounds is no longer bleeding!<br/>";
 									} else {
 										$instances++;
 										$replacethis = $statusarray[$p] . "|";
@@ -1387,7 +1387,7 @@ if (empty($_SESSION['username'])) {
 										$stilldisoriented = True;
 									}
 									if (!$stilldisoriented) {
-										$message = $message . $userrow[$enemystr] . " appears to focus on the battle again!</br>";
+										$message = $message . $userrow[$enemystr] . " appears to focus on the battle again!<br/>";
 									}
 								}
 								$p++;
@@ -1402,31 +1402,31 @@ if (empty($_SESSION['username'])) {
 							if ($misfortune < 1)
 								$misfortune = 2; //Only a NATURAL 1 can cause the pinata effect. Note that a nonzero luck value does give a second "natural 1" number
 							if ($misfortune == 1) { //Natural 1. Enemy turns into a pinata, no resistances. Whee!
-								$message = $message . "The " . $userrow[$enemystr] . " spontaneously winks out of existence. How unfortunate!</br>";
+								$message = $message . "The " . $userrow[$enemystr] . " spontaneously winks out of existence. How unfortunate!<br/>";
 								$newdesc = 'It is a small paper replica of a ' . $userrow[$enemystr] . ' with a note pinned to it that says "Pinata. Enjoy! -The Management"';
 								$newhealth = 1;
 								$newpower = 0;
 								$userrow[$descstr] = $newdesc;
 							} elseif ($misfortune <= 2) { //Two. Chance of this goes up greatly with more luck.
-								$message = $message . "The $userrow[$enemystr] is struck by lightning!</br>";
+								$message = $message . "The $userrow[$enemystr] is struck by lightning!<br/>";
 								$damage = $userrow['Echeladder'] * 250;
 								$newhealth = floor($userrow[$healthstr] - $damage);
 								if ($newhealth < 1)
 									$newhealth = 1;
 							} elseif ($misfortune <= 10) {
-								$message = $message . "The ground gives way beneath $userrow[$enemystr] and it plummets, shaking it up pretty bad when it lands.</br>";
+								$message = $message . "The ground gives way beneath $userrow[$enemystr] and it plummets, shaking it up pretty bad when it lands.<br/>";
 								$damage = $userrow['Echeladder'] * 100;
 								$newhealth = floor($userrow[$healthstr] - $damage);
 								if ($newhealth < 1)
 									$newhealth = 1;
 							} elseif ($misfortune <= 25) {
-								$message = $message . "A meteor hits $userrow[$enemystr]. What are the chances?</br>";
+								$message = $message . "A meteor hits $userrow[$enemystr]. What are the chances?<br/>";
 								$damage = 30000;
 								$newhealth = floor($userrow[$healthstr] - $damage);
 								if ($newhealth < 1)
 									$newhealth = 1;
 							} elseif ($misfortune <= 50) {
-								$message = $message . "$userrow[$enemystr] trips over and falls. Hilarious!</br>";
+								$message = $message . "$userrow[$enemystr] trips over and falls. Hilarious!<br/>";
 								$damage = floor($userrow[$healthstr] / 100);
 								$powerdown = 2200;
 								$newhealth = floor($userrow[$healthstr] - $damage);
@@ -1446,19 +1446,19 @@ if (empty($_SESSION['username'])) {
 							if ($savingthrow > floor(81 + ($luck / 10))) { //Enemy throws off the debuff (Note that resistance doesn't factor here, but the player's luck does!)
 								$removethis = $unluckystr . "|";
 								$currentstatus = str_replace($removethis, '', $currentstatus); //Throws off all instances. We can't stack this debuff.
-								$message = $message . $userrow[$enemystr] . " appears less unlucky. This concept is just as visually nebulous as the idea that it appeared unlucky in the first place.</br>";
+								$message = $message . $userrow[$enemystr] . " appears less unlucky. This concept is just as visually nebulous as the idea that it appeared unlucky in the first place.<br/>";
 							}
 						}
 						if ($userrow['motifcounter'] == 0 || $userrow['Aspect'] != "Void") { //Void III stops positive effects the enemy generates.
 							if ($enemyrow['powerrecover'] > 0 && $userrow[$powerstr] < $userrow[$maxpowerstr]) { //Enemy recovers from some power loss every turn and has lost some.
-								$message = $message . $userrow[$enemystr] . " recovers " . $enemyrow['powerrecover'] . " lost power!</br>";
+								$message = $message . $userrow[$enemystr] . " recovers " . $enemyrow['powerrecover'] . " lost power!<br/>";
 								$newpower = $userrow[$powerstr] + $enemyrow['powerrecover'];
 								if ($newpower > $userrow[$maxpowerstr])
 									$newpower = $userrow[$maxpowerstr];
 								$userrow[$powerstr] = $newpower;
 							}
 							if ($enemyrow['healthrecover'] > 0 && $userrow[$healthstr] < $userrow[$maxhealthstr]) { //Enemy has health regeneration.
-								$message = $message . $userrow[$enemystr] . " recovers " . $enemyrow['healthrecover'] . " health!</br>";
+								$message = $message . $userrow[$enemystr] . " recovers " . $enemyrow['healthrecover'] . " health!<br/>";
 								$newhealth = $userrow[$healthstr] + $enemyrow['healthrecover'];
 								if ($newhealth > $userrow[$maxhealthstr])
 									$newhealth = $userrow[$maxhealthstr];
@@ -1468,7 +1468,7 @@ if (empty($_SESSION['username'])) {
 								$enemyrow['boostdrain'] > 0 && ($userrow['powerboost'] > 0 || $userrow['offenseboost'] > 0 || $userrow['defenseboost'] > 0 || $userrow['temppowerboost'] > 0
 									|| $userrow['tempoffenseboost'] > 0 || $userrow['tempdefenseboost'] > 0)
 							) { //Enemy drains a certain amount of boost per turn.
-								$message = $message . $userrow[$enemystr] . " causes your power boost to dwindle!</br>";
+								$message = $message . $userrow[$enemystr] . " causes your power boost to dwindle!<br/>";
 								if ($userrow['powerboost'] > 0) {
 									$newboost = $userrow['powerboost'] - $enemyrow['boostdrain'];
 									if ($newboost < 0)
@@ -1507,7 +1507,7 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 							if ($enemyrow['invulndrain'] != 0 && $userrow['invulnerability'] > 0) { //Paranoia: Negate even if 1. (In case changes occur later)
-								$message = $message . $userrow[$enemystr] . " negates your invulnerability!</br>";
+								$message = $message . $userrow[$enemystr] . " negates your invulnerability!<br/>";
 								$userrow['invulnerability'] = 0;
 							}
 						}
@@ -1579,7 +1579,7 @@ if (empty($_SESSION['username'])) {
 				while ($row = $sessionmates->fetch_array()) {
 					if ($row['aiding'] == $username) { //Aiding character.
 						$aidrow = $row;
-						echo "</br>Victory! $aidrow[username] gains another Echeladder rung.";
+						echo "<br/>Victory! $aidrow[username] gains another Echeladder rung.";
 						$rungs = climbEcheladder($aidrow, 1);
 						if ($rungs == 0) {
 							echo " Or at least they would, if they weren't already maxed out.";
@@ -1587,12 +1587,12 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $row['username'] . "' LIMIT 1 ;"); //Player no longer assisting.
 					}
 				}
-				echo "</br>Victory! You climb another rung on your Echeladder.";
+				echo "<br/>Victory! You climb another rung on your Echeladder.";
 				$rungs = climbEcheladder($userrow, 1);
 				if ($rungs == 0) {
 					echo " Or at least you would, if you weren't already at the top of it!";
 					if (!empty($abilities[19]) && $userrow['Luck'] < 20) { //Light's Favour catchup activates. This is to set the luck of players at 612 who have insufficient quantities.
-						echo "</br>Your Luck catches up with you!";
+						echo "<br/>Your Luck catches up with you!";
 						$mysqli->query("UPDATE `Players` SET `Luck` = 20 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					}
 				}
@@ -1606,7 +1606,7 @@ if (empty($_SESSION['username'])) {
 				} else {
 					$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
 					$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string($message) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
-					echo "</br>" . $message;
+					echo "<br/>" . $message;
 				}
 			}
 		}

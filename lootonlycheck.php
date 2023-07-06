@@ -26,7 +26,7 @@ function initGrists()
 }
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to do stuff.</br>";
+	echo "Log in to do stuff.<br/>";
 } else {
 	if ($userrow['session_name'] != "Developers") {
 		echo "Hey! This tool is for the developers only. Nice try, pal.";
@@ -43,7 +43,7 @@ if (empty($_SESSION['username'])) {
 		$gateitems[3] = 0;
 		$gateitems[5] = 0;
 		$result = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`lootonly` = 1");
-		echo "running through lootonlies</br>";
+		echo "running through lootonlies<br/>";
 		while ($row = $result->fetch_array()) {
 			$maxgaint = $maxgain;
 			echo $row['name'] . " acknowledged";
@@ -77,16 +77,16 @@ if (empty($_SESSION['username'])) {
 				echo ", but it can't be looted";
 			} else
 				$maxgain = $maxgaint;
-			echo "</br>";
+			echo "<br/>";
 		}
-		echo "ANALYSIS:</br>";
-		echo strval($gateitems[1]) . " gate 1 items</br>";
-		echo strval($gateitems[3]) . " gate 3 items</br>";
-		echo strval($gateitems[5]) . " gate 5 items</br>";
-		echo strval($defunctitems) . " gate x items</br>";
+		echo "ANALYSIS:<br/>";
+		echo strval($gateitems[1]) . " gate 1 items<br/>";
+		echo strval($gateitems[3]) . " gate 3 items<br/>";
+		echo strval($gateitems[5]) . " gate 5 items<br/>";
+		echo strval($defunctitems) . " gate x items<br/>";
 		$i = 0;
 		while ($i < $totalgrists) {
-			echo $gristname[$i] . " has " . strval($items[$gristname[$i] . '_Cost']) . " items and " . strval($maxgain[$gristname[$i] . '_Cost']) . " max gain</br>";
+			echo $gristname[$i] . " has " . strval($items[$gristname[$i] . '_Cost']) . " items and " . strval($maxgain[$gristname[$i] . '_Cost']) . " max gain<br/>";
 			$i++;
 		}
 	}

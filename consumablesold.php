@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to use consumable items.</br>";
+	echo "Log in to use consumable items.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Your dream self can't access your sylladex!";
 } else {
@@ -82,7 +82,7 @@ if (empty($_SESSION['username'])) {
 					break;
 				case "Pan Galactic Gargle Blaster":
 					if ($userrow['enemy1name'] != "" || $userrow['enemy2name'] != "" || $userrow['enemy3name'] != "" || $userrow['enemy4name'] != "" && $userrow['enemy5name'] != "" || $userrow['aiding'] != "") { //User strifing
-						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a spaceship, and collapse on the spot.</br>";
+						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a spaceship, and collapse on the spot.<br/>";
 						echo "You slowly and painfully come to an unknown amount of time later. The enemies you were fighting have all left, probably out of pity. You crawl back to your dwelling and spend some time recovering from that hellish drink.";
 						$k = 1;
 						while ($k <= $max_enemies) {
@@ -101,7 +101,7 @@ if (empty($_SESSION['username'])) {
 						}
 						$mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					} else {
-						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a spaceship, and collapse on the spot.</br>";
+						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a spaceship, and collapse on the spot.<br/>";
 						echo "You slowly and painfully come to an unknown amount of time later. It's a good thing you weren't out and about when you drank this, because you'll need as much time as you can get to overcome your monumental headache.";
 					}
 					$boost = $userrow['powerboost'];
@@ -125,7 +125,7 @@ if (empty($_SESSION['username'])) {
 			   //This will put you to sleep, giving your dream self a huge power boost.
 				   break;*/
 				case "Faygo - Neurotic Nebula flavour":
-					echo "You drink the celestially-themed Faygo. It totally blows your mind, and you feel like an insignificant speck on the face of the cosmos.</br>";
+					echo "You drink the celestially-themed Faygo. It totally blows your mind, and you feel like an insignificant speck on the face of the cosmos.<br/>";
 					echo "Then you remember that you're playing a game where you create a new universe upon winning, and you suddenly feel much better!";
 					$heal = 150;
 					$boost = 20;
@@ -266,17 +266,17 @@ if (empty($_SESSION['username'])) {
 					break;
 				case "Lucky Charms":
 					if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") {
-						echo "You pour yourself a sizable bowl of the cereal, letting the marshmallows accumulate before you sit down to have a nice, quiet breakfast.</br>";
+						echo "You pour yourself a sizable bowl of the cereal, letting the marshmallows accumulate before you sit down to have a nice, quiet breakfast.<br/>";
 						echo "That was delicious! You should really take breaks like this more often.";
 					} else {
-						echo "You pour the contents of the cereal box into your mouth. Bowls? You don't have time for that, you're in the middle of strife!</br>";
+						echo "You pour the contents of the cereal box into your mouth. Bowls? You don't have time for that, you're in the middle of strife!<br/>";
 						echo "The cereal is delicious even without milk, but the chewiness of the marshmallows will leave your teeth feeling awkward the whole battle.";
 					}
 					break;
 				case "Titan's Medicinal Applicator":
 					$donotconsume = true;
 					if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") {
-						echo "You raise the spoon to your mouth, and it fills with medicine, anticipating usage. You apprehensively give it a taste-test...</br>";
+						echo "You raise the spoon to your mouth, and it fills with medicine, anticipating usage. You apprehensively give it a taste-test...<br/>";
 						echo "Eeee-yuck! This spoon's medicine tastes so terrible you're not sure if you could stomach it unless it was an emergency.";
 					} else {
 						echo "You feed yourself some medicine from the end of the spoon. It tastes absolutely horrible, but you do feel a little better.";
@@ -750,7 +750,7 @@ if (empty($_SESSION['username'])) {
 					break;
 			}
 		}
-		echo "</br>";
+		echo "<br/>";
 		if (!$fail && !$donotconsume) {
 			$consumed = $_POST['consume'];
 			$mysqli->query("UPDATE `Players` SET `" . $_POST['consume'] . "` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -786,6 +786,6 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	echo '</select> <input type="submit" value="Consume it!" /> </form>';
-	echo '<a href="strife.php">Strife</a></br>';
+	echo '<a href="strife.php">Strife</a><br/>';
 }
 ?>

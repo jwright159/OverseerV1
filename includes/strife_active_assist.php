@@ -7,9 +7,9 @@ while ($row = $sessionmates->fetch_array()) { //Look for whoever we're aiding.
 	}
 }
 if ($aidrow['dreamingstatus'] == "Prospit") {
-	echo 'You are currently assisting ' . $aiding . ', who is engaged in "strife" against the following "opponents":</br>';
+	echo 'You are currently assisting ' . $aiding . ', who is engaged in "strife" against the following "opponents":<br/>';
 } else {
-	echo "You are currently assisting $aiding, who is engaged in strife against the following opponents:</br>";
+	echo "You are currently assisting $aiding, who is engaged in strife against the following opponents:<br/>";
 }
 $i = 1;
 while ($i <= $max_enemies) {
@@ -27,8 +27,8 @@ while ($i <= $max_enemies) {
 		if ($healthvial == 0)
 			$healthvial = 1;
 		echo strval($healthvial);
-		echo "%</br>";
-		echo $aidrow[$descstr] . "</br></br>";
+		echo "%<br/>";
+		echo $aidrow[$descstr] . "<br/><br/>";
 	}
 	$i++;
 }
@@ -37,7 +37,7 @@ if ($aidrow['dreamingstatus'] == "Prospit") {
 } else {
 	echo 'Your power is being contributed to the combat.';
 }
-echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form></br>';
+echo '<form action="strifeabandon.php" method="post"><input type="hidden" name="abandon" value="abandon" /><input type="submit" value="Stop assisting" /></form><br/>';
 echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a> <a href="portfolio.php">Check combat capabilities</a> <a href="consumables.php">Use a consumable item</a>';
 if (!empty($_SESSION['adjective']))
 	echo " <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a>";

@@ -23,7 +23,7 @@ function insertFromPost(string $table)
 
 	$query = substr($query, 0, -2) . ");";
 	
-	echo $query . "</br>";
+	echo $query . "<br/>";
 	query($query, $params);
 }
 
@@ -41,7 +41,7 @@ function updateFromPost(string $table, string $key, string $keyValue)
 	$query = substr($query, 0, -2) . " WHERE `$key` = ?;";
 	$params[] = $keyValue;
 	
-	echo $query . "</br>";
+	echo $query . "<br/>";
 	query($query, $params);
 }
 
@@ -78,13 +78,13 @@ else
 
 		if ($_POST['boonreward'] != 0 && empty($_POST['transform']))
 		{
-			echo "When giving a boon reward, 'transform' must be set or else refreshing = infinite boondollars.</br>";
+			echo "When giving a boon reward, 'transform' must be set or else refreshing = infinite boondollars.<br/>";
 			$blocked = true;
 		}
 
 		if ($_POST['cansleep'] == 1 && empty($_POST['sleepevent']))
 		{
-			echo "Please provide a sleepevent if a player can sleep at this event. 'wakeup' is default.</br>";
+			echo "Please provide a sleepevent if a player can sleep at this event. 'wakeup' is default.<br/>";
 			$blocked = true;
 		}
 		
@@ -128,7 +128,7 @@ else
 	if ($populate && ($row = fetchOne("SELECT * FROM :area WHERE :area.`name` = :editevent LIMIT 1;", ['area' => $areastr, 'editevent' => $editevent])))
 	{
 		$founditem = true;
-		echo "{$row['name']} loaded</br>";
+		echo "{$row['name']} loaded<br/>";
 		$erow = $row;
 	}
 
@@ -161,7 +161,7 @@ else
 			echo '></td></tr>';
 		}
 	}
-	echo '</table><input type="submit" value="Edit/Create"></form></br>';
+	echo '</table><input type="submit" value="Edit/Create"></form><br/>';
 }
 
 require_once "footer.php";

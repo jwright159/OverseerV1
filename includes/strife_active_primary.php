@@ -1,8 +1,8 @@
 <?php
 if ($userrow['dreamingstatus'] == "Prospit") {
-	echo 'Current "opponents":</br>';
+	echo 'Current "opponents":<br/>';
 } else {
-	echo 'Current opponents:</br>';
+	echo 'Current opponents:<br/>';
 }
 $i = 1;
 while ($i <= $max_enemies) {
@@ -20,8 +20,8 @@ while ($i <= $max_enemies) {
 		if ($healthvial == 0)
 			$healthvial = 1;
 		echo strval($healthvial);
-		echo "%</br>";
-		echo $userrow[$descstr] . "</br>";
+		echo "%<br/>";
+		echo $userrow[$descstr] . "<br/>";
 	}
 	$i++;
 }
@@ -33,47 +33,47 @@ if ($userrow['dreamingstatus'] == "Awake") {
 $aspectcurrent = strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100));
 
 echo "<img style = 'float:left;' src='Images/vials/health" . $healthvialcolour . "/healthvial" . strval($healthcurrent) . $healthvialcolour . ".gif' alt='Health Vial: " . strval($healthcurrent) . "%'>";
-echo "<img style = 'float:left;' src='Images/vials/aspect" . $aspectvialcolour . "/aspectvial" . strval($aspectcurrent) . $aspectvialcolour . ".gif' alt='Aspect Vial: " . strval($aspectcurrent) . "%'></br><br/><br/><br/>";
+echo "<img style = 'float:left;' src='Images/vials/aspect" . $aspectvialcolour . "/aspectvial" . strval($aspectcurrent) . $aspectvialcolour . ".gif' alt='Aspect Vial: " . strval($aspectcurrent) . "%'><br/><br/><br/><br/>";
 if ($userrow['invulnerability'] > 0)
-	echo "</br>Invulnerability: " . strval($userrow['invulnerability']) . " rounds.";
+	echo "<br/>Invulnerability: " . strval($userrow['invulnerability']) . " rounds.";
 if ($userrow['powerboost'] > 0)
-	echo "</br>Power boost (entire battle): $userrow[powerboost]";
+	echo "<br/>Power boost (entire battle): $userrow[powerboost]";
 if ($userrow['offenseboost'] > 0)
-	echo "</br>Offense boost (entire battle): $userrow[offenseboost]";
+	echo "<br/>Offense boost (entire battle): $userrow[offenseboost]";
 if ($userrow['defenseboost'] > 0)
-	echo "</br>Defense boost (entire battle): $userrow[defenseboost]";
+	echo "<br/>Defense boost (entire battle): $userrow[defenseboost]";
 if ($userrow['powerboost'] < 0)
-	echo "</br>Power penalty (entire battle): $userrow[powerboost]";
+	echo "<br/>Power penalty (entire battle): $userrow[powerboost]";
 if ($userrow['offenseboost'] < 0)
-	echo "</br>Offense penalty (entire battle): $userrow[offenseboost]";
+	echo "<br/>Offense penalty (entire battle): $userrow[offenseboost]";
 if ($userrow['defenseboost'] < 0)
-	echo "</br>Defense penalty (entire battle): $userrow[defenseboost]";
+	echo "<br/>Defense penalty (entire battle): $userrow[defenseboost]";
 if ($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Time") { //Eternal boosts
 	if ($userrow['temppowerboost'] > 0)
-		echo "</br>Power boost of $userrow[temppowerboost]: INFINITY rounds.";
+		echo "<br/>Power boost of $userrow[temppowerboost]: INFINITY rounds.";
 	if ($userrow['tempoffenseboost'] > 0)
-		echo "</br>Offense boost of $userrow[tempoffenseboost]: INFINITY rounds.";
+		echo "<br/>Offense boost of $userrow[tempoffenseboost]: INFINITY rounds.";
 	if ($userrow['tempdefenseboost'] > 0)
-		echo "</br>Defense boost of $userrow[tempdefenseboost]: INFINITY rounds.";
+		echo "<br/>Defense boost of $userrow[tempdefenseboost]: INFINITY rounds.";
 	if ($userrow['temppowerboost'] < 0)
-		echo "</br>Power penalty of $userrow[temppowerboost]: INFINITY rounds.";
+		echo "<br/>Power penalty of $userrow[temppowerboost]: INFINITY rounds.";
 	if ($userrow['tempoffenseboost'] < 0)
-		echo "</br>Offense penalty of $userrow[tempoffenseboost]: INFINITY rounds.";
+		echo "<br/>Offense penalty of $userrow[tempoffenseboost]: INFINITY rounds.";
 	if ($userrow['tempdefenseboost'] < 0)
-		echo "</br>Defense penalty of $userrow[tempdefenseboost]: INFINITY rounds.";
+		echo "<br/>Defense penalty of $userrow[tempdefenseboost]: INFINITY rounds.";
 } else {
 	if ($userrow['temppowerboost'] > 0)
-		echo "</br>Power boost of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
+		echo "<br/>Power boost of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
 	if ($userrow['tempoffenseboost'] > 0)
-		echo "</br>Offense boost of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
+		echo "<br/>Offense boost of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
 	if ($userrow['tempdefenseboost'] > 0)
-		echo "</br>Defense boost of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
+		echo "<br/>Defense boost of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
 	if ($userrow['temppowerboost'] < 0)
-		echo "</br>Power penalty of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
+		echo "<br/>Power penalty of $userrow[temppowerboost]: $userrow[temppowerduration] rounds.";
 	if ($userrow['tempoffenseboost'] < 0)
-		echo "</br>Offense penalty of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
+		echo "<br/>Offense penalty of $userrow[tempoffenseboost]: $userrow[tempoffenseduration] rounds.";
 	if ($userrow['tempdefenseboost'] < 0)
-		echo "</br>Defense penalty of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
+		echo "<br/>Defense penalty of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
 }
 if ($userrow['equipped'] != "") {
 	$itemname = str_replace("'", "\\\\''", $userrow[$userrow['equipped']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -183,21 +183,21 @@ if ($userrow['dreamingstatus'] == "Prospit") {
 	echo '<form action="striferesolve.php" method="post">Select an aggressive action: <select name="offense">';
 	echo '<option value="aggrieve">"AGGRIEVE" (' . $aggrieve . ')</option><option value="aggress">"AGGRESS" (' . $aggress . ')</option>';
 	echo '<option value="assail">"ASSAIL" (' . $assail . ')</option><option value="assault">"ASSAULT" (' . $assault . ')</option>';
-	echo '</select></br>';
+	echo '</select><br/>';
 	echo 'Select a passive action: <select name="defense">';
 	echo '<option value="abuse">"ABUSE" (' . $abuse . ')</option><option value="accuse">"ACCUSE" (' . $accuse . ')</option>';
 	echo '<option value="abjure">"ABJURE" (' . $abjure . ')</option><option value="abstain">"ABSTAIN" (' . $abstain . ')</option>';
-	echo '</select></br>';
+	echo '</select><br/>';
 	echo '<input type="submit" value="&quot;Attack&quot;" /></form>';
 } else {
 	echo '<form action="striferesolve.php" method="post">Select an aggressive action: <select name="offense">';
 	echo '<option value="aggrieve">AGGRIEVE (' . $aggrieve . ')</option><option value="aggress">AGGRESS (' . $aggress . ')</option>';
 	echo '<option value="assail">ASSAIL (' . $assail . ')</option><option value="assault">ASSAULT (' . $assault . ')</option>';
-	echo '</select></br>';
+	echo '</select><br/>';
 	echo 'Select a passive action: <select name="defense">';
 	echo '<option value="abuse">ABUSE (' . $abuse . ')</option><option value="accuse">ACCUSE (' . $accuse . ')</option>';
 	echo '<option value="abjure">ABJURE (' . $abjure . ')</option><option value="abstain">ABSTAIN (' . $abstain . ')</option>';
-	echo '</select></br>';
+	echo '</select><br/>';
 	echo '<input type="hidden" name="redirect" value="redirect">';
 	//echo '<input type="checkbox" name="repeat" value="repeat">AUTO-STRIFE! (Keep performing this action until you or an enemy dies, a turn passes with no damage, or 20 turns pass.)<br/>';
 	//DO NOT RE-ENABLE THE ABOVE. It fucks everything up. I'll test it personally some time later.
@@ -215,19 +215,19 @@ if ($userrow['lastactive'] != "" && $userrow['lastpassive'] != "") {
 	}
 }
 echo '<form action="striferesolve.php" method="post"><input type="hidden" id="abscond" name="abscond" value="abscond"><input type="submit" value="Abscond"></form>';
-echo '</br>';
+echo '<br/>';
 $sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`aiding` = '$username'");
 while ($row = $sessionmates->fetch_array()) {
 	if ($row['aiding'] == $username) { //Aiding character.
-		echo "$row[username] is assisting you!</br>";
+		echo "$row[username] is assisting you!<br/>";
 	}
 }
 echo '<a href="/">Home</a> | <a href="portfolio.php">Check combat capabilities</a> | <a href="consumables.php">Use a consumable item</a> | ';
 echo '<a href="fraymotifs.php">Use a Fraymotif</a>';
 if (!empty($_SESSION['adjective']))
-	echo " | <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a> | <a href='roletech.php'>Peruse and select roletechs</a></br>";
+	echo " | <a href='aspectpowers.php'>DO THE $_SESSION[adjective] THING</a> | <a href='roletech.php'>Peruse and select roletechs</a><br/>";
 if (!empty($userrow['strifemessage'])) {
-	echo "Last round:</br>";
+	echo "Last round:<br/>";
 	echo $userrow['strifemessage'];
 }
 

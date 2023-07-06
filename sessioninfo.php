@@ -15,9 +15,9 @@ if (!empty($_SESSION['username']))
 	$session = $userrow['session_name']; //automatically look up the user's session if logged in
 if (!empty($_GET['session']))
 	$session = $_GET['session'];
-echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 echo '<form action="sessioninfo.php" method="post">';
-echo 'Session to retrieve info about: <input id="session" name="session" type="text" /><input type="submit" value="Examine it!" /> </form></br>';
+echo 'Session to retrieve info about: <input id="session" name="session" type="text" /><input type="submit" value="Examine it!" /> </form><br/>';
 if (!empty($_POST['session']))
 	$session = $_POST['session'];
 if (!empty($session)) { //Session to examine
@@ -31,7 +31,7 @@ if (!empty($session)) { //Session to examine
 		}
 	}
 	if ($sessionexists != True) {
-		echo "ERROR - Session does not exist.</br>";
+		echo "ERROR - Session does not exist.<br/>";
 	} else {
 		$gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
 		$gaterow = $gateresult->fetch_array(); //Gates only has one row.
@@ -41,35 +41,35 @@ if (!empty($session)) { //Session to examine
 			$adv = true;
 		$sessionurl = str_replace("#", "%23", $session);
 		$sessionurl = str_replace(" ", "%20", $sessionurl);
-		echo '<a href="https://www.overseerreboot.xyz/sessioninfo.php?session=' . $sessionurl . '">Permanent link to this page.</a></br>';
+		echo '<a href="https://www.overseerreboot.xyz/sessioninfo.php?session=' . $sessionurl . '">Permanent link to this page.</a><br/>';
 		echo "This session's head admin: " . $sessionrow['admin'] . "<br/>";
 		if (!empty($sessionrow['exchangeland']))
 			echo "Player whose land hosts the Stock Exchange: " . $sessionrow['exchangeland'] . "<br/>";
 		else
 			echo "This session's Stock Exchange is not yet available.<br/>";
-		echo "Dersite army power destroyed by this session: $sessionrow[battlefieldtotal]</br></br>";
+		echo "Dersite army power destroyed by this session: $sessionrow[battlefieldtotal]<br/><br/>";
 		if ($sessionrow['checkmate'] == 1)
-			echo "This session has successfully defeated The Black King!</br></br>";
+			echo "This session has successfully defeated The Black King!<br/><br/>";
 		$sessionplayers = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$sessionesc'");
 		while ($row = $sessionplayers->fetch_array()) {
 			if ($row['session_name'] == $session) { //Paranoia: Player is a participant in this session.
 				echo "Player: $row[username]";
 				if (!empty($row['Class']) && !empty($row['Aspect']))
 					echo ", $row[Class] of $row[Aspect]";
-				echo "</br>Dream status: $row[dreamer]</br>";
+				echo "<br/>Dream status: $row[dreamer]<br/>";
 				$status = str_replace("\'", "'", $row['status']);
-				echo "Currently: $status</br>";
+				echo "Currently: $status<br/>";
 				$echeresult = $mysqli->query("SELECT * FROM Echeladders WHERE `Echeladders`.`username` = '" . $row['username'] . "'");
 				$echerow = $echeresult->fetch_array();
 				$echestr = "rung" . strval($row['Echeladder']);
 				$echename = $echerow[$echestr];
-				echo "Echeladder height: $row[Echeladder] ($echename)</br>";
+				echo "Echeladder height: $row[Echeladder] ($echename)<br/>";
 				echo "Currently equipped weapons: ";
 				if ($row['equipped'] != "")
 					echo $row[$row['equipped']];
 				if ($row['offhand'] != "" && $row['offhand'] != "2HAND")
 					echo ", " . $row[$row['offhand']];
-				echo "</br>";
+				echo "<br/>";
 				echo "Currently wearing: ";
 				$addcomma = False;
 				if ($row['headgear'] != "") {
@@ -98,25 +98,25 @@ if (!empty($session)) { //Session to examine
 						echo ", ";
 					echo $row[$row['accessory']];
 				}
-				echo "</br>";
-				echo "Sprite: $row[sprite_name]</br>";
-				echo "$row[sprite_name]'s power: $row[sprite_strength]</br>";
-				echo "Power bonus for enemies who receive this player's prototypings: $row[prototyping_strength]</br>";
+				echo "<br/>";
+				echo "Sprite: $row[sprite_name]<br/>";
+				echo "$row[sprite_name]'s power: $row[sprite_strength]<br/>";
+				echo "Power bonus for enemies who receive this player's prototypings: $row[prototyping_strength]<br/>";
 				echo "Server player: ";
 				if ($row['server_player'] != "") {
 					echo $row['server_player'];
 				} else {
 					echo "None.";
 				}
-				echo "</br>";
+				echo "<br/>";
 				echo "Client player: ";
 				if ($row['client_player'] != "") {
 					echo $row['client_player'];
 				} else {
 					echo "None.";
 				}
-				echo "</br>";
-				echo "Land: Land of $row[land1] and $row[land2]</br>";
+				echo "<br/>";
+				echo "Land: Land of $row[land1] and $row[land2]<br/>";
 				echo "Grist types available on this player's Land: ";
 				$gristresult = $mysqli->query("SELECT * FROM Grist_Types");
 				while ($gristrow = $gristresult->fetch_array()) {
@@ -130,7 +130,7 @@ if (!empty($session)) { //Session to examine
 					if ($i != 9) {
 						echo ", ";
 					} else {
-						echo ".</br>";
+						echo ".<br/>";
 					}
 					$i++;
 				}
@@ -163,7 +163,7 @@ if (!empty($session)) { //Session to examine
 					echo "Land wealth: " . strval($row['econony']) . "<br/>";
 					echo "Consorts: " . $row['consort_name'] . "<br/>";
 				}
-				echo "</br>";
+				echo "<br/>";
 			}
 		}
 	}

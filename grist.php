@@ -2,34 +2,34 @@
 require_once "header.php";
 //require 'log.php';
 if (empty($_SESSION['username'])) {
-	echo "Log in to view your grist cache.</br>";
+	echo "Log in to view your grist cache.<br/>";
 } else {
 
 
 	$reachgrist = False;
 
-	echo "Gristwire client v0.0.1a.</br>";
+	echo "Gristwire client v0.0.1a.<br/>";
 
 	$compugood = true;
 	if (strpos($userrow['storeditems'], "GRISTWIRE") === false) { //player has the gristtorrent CD or an equivalent in their storage
-		echo "You'd better ask your server player to deploy the Gristtorrent CD</br>";
+		echo "You'd better ask your server player to deploy the Gristtorrent CD<br/>";
 		$compugood = false;
 	}
 	if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 		if ($userrow['hascomputer'] < 3) {
 			if ($compugood == true)
-				echo "You don't have a hands-free computer equipped, so you can't wire grist during strife.</br>";
+				echo "You don't have a hands-free computer equipped, so you can't wire grist during strife.<br/>";
 			$compugood = false;
 		}
 	}
 	if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
 		if ($compugood == true)
-			echo "You don't have a portable computer in your inventory, so you can't wire grist while away from home.</br>";
+			echo "You don't have a portable computer in your inventory, so you can't wire grist while away from home.<br/>";
 		$compugood = false;
 	}
 	if ($userrow['hascomputer'] == 0) {
 		if ($compugood == true)
-			echo "You need a computer in storage or your inventory to wire grist to other players.</br>";
+			echo "You need a computer in storage or your inventory to wire grist to other players.<br/>";
 		$compugood = false;
 	}
 
@@ -40,7 +40,7 @@ if (empty($_SESSION['username'])) {
 			if ($_POST['intarget'] != "")
 				$_POST['target'] = $_POST['intarget'];
 			if ($_POST['target'] == $username) { //Player is trying to mail themselves grist!
-				echo "You can't send grist to yourself!</br>";
+				echo "You can't send grist to yourself!<br/>";
 			} elseif (empty($_POST['target'])) {
 				echo "You did not specify a recipient player.<br/>";
 			} else {
@@ -85,7 +85,7 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
 								$mysqli->query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
 							} else
-								echo "Attempted to send a message, but the user's inbox was full.</br>";
+								echo "Attempted to send a message, but the user's inbox was full.<br/>";
 						}
 					}
 				} else {
@@ -98,7 +98,7 @@ if (empty($_SESSION['username'])) {
 				} else if ($poor == False) {
 					echo "Transaction failed: Target $_POST[target] does not exist.";
 				}
-				echo "</br>";
+				echo "<br/>";
 			}
 		}
 		if (empty($type))
@@ -112,7 +112,7 @@ if (empty($_SESSION['username'])) {
 			if ($ysessionrow['username'] != $username)
 				echo '<option value="' . $ysessionrow['username'] . '">' . $ysessionrow['username'] . '</option>';
 		}
-		echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br/> Type of grist: <select name="grist_type"> ';
+		echo '</select><br/>Target username (other): <input id="target" name="target" type="text" /><br/> Type of grist: <select name="grist_type"> ';
 		$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;");
 		$reachgrist = False;
 		$terminateloop = False;
@@ -130,7 +130,7 @@ if (empty($_SESSION['username'])) {
 			}
 		}
 		$reachgrist = False; //Paranoia: Reset this just in case
-		echo '</select></br>Amount to transfer: <input id="amount" name="amount" type="text" /><br/>Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /> </form>';
+		echo '</select><br/>Amount to transfer: <input id="amount" name="amount" type="text" /><br/>Attach a message (optional):<br/><textarea name="body" rows="6" cols="40" form="wire"></textarea><br/><input type="submit" value="Wire it!" /> </form>';
 	}
 
 	$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1 ;");
@@ -151,16 +151,16 @@ if (empty($_SESSION['username'])) {
 			if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
 				echo '<center><img src="Images/Grist/' . $gristtype . '.gif " height="50" width="50"></img></center>' . $gristtype . ' - ';
 				if (!empty($type) && $gristtype == $type) { //This is the grist we wired from this time. Horrible fix gogogo!
-					echo number_format($quantity) . "</br>";
+					echo number_format($quantity) . "<br/>";
 				} else {
-					echo "$userrow[$gristtype]</br>";
+					echo "$userrow[$gristtype]<br/>";
 				}
 			} else {
 				echo '<center><img src="Images/Grist/' . $gristtype . '.png " height="50" width="50"></img></center>' . $gristtype . ' - ';
 				if (!empty($type) && $gristtype == $type) { //This is the grist we wired from this time.
-					echo number_format($quantity) . "</br>";
+					echo number_format($quantity) . "<br/>";
 				} else {
-					echo "$userrow[$gristtype]</br>";
+					echo "$userrow[$gristtype]<br/>";
 				}
 			}
 			echo "</div>";

@@ -6,16 +6,16 @@ require_once "header.php";
 require_once 'includes/fieldparser.php';
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if (empty($_SESSION['username'])) {
-	echo "Log in to engage in strife.</br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to engage in strife.<br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } elseif ($userrow['enemydata'] != "" || $userrow['aiding'] != "") { //an awesome side-effect of condensing the strife data is that the "is player strifing?" code can be considerably shortened, yay!
 	//User already strifing
-	echo "You are already engaged in strife!</br>";
+	echo "You are already engaged in strife!<br/>";
 	include("strife.php");
 } elseif ($userrow['correctgristtype'] != $_POST['gristtype'] && $_POST['gristtype'] != "None") {
-	echo "Okay, I'm sorry about the last message being all abrasive. Here, how about this: ERROR - Grist type mismatch - $userrow[correctgristtype] expected, $_POST[gristtype] found.</br>";
+	echo "Okay, I'm sorry about the last message being all abrasive. Here, how about this: ERROR - Grist type mismatch - $userrow[correctgristtype] expected, $_POST[gristtype] found.<br/>";
 } elseif ($userrow['sessionbossengaged'] == 1) {
-	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
+	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a><br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	$userrow = parseEnemydata($userrow);
@@ -70,7 +70,7 @@ if (empty($_SESSION['username'])) {
 						$userrow[$oldenemystr] = $_POST[$enemystr];
 					}
 				} else {
-					echo "The $_POST[$enemystr] fails to be generated because you are attempting to generate one in a place where it shouldn't be.</br>";
+					echo "The $_POST[$enemystr] fails to be generated because you are attempting to generate one in a place where it shouldn't be.<br/>";
 					$userrow[$oldenemystr] = "";
 					if ($userrow['dreamingstatus'] == "Awake") {
 						$userrow[$oldgriststr] = "";
@@ -97,11 +97,11 @@ if (empty($_SESSION['username'])) {
 				$mysqli->query("UPDATE `Players` SET `strifeabscondexplore` = '" . $_POST['absconded'] . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			}
 			if (!empty($_POST['noassist'])) {
-				echo "You will be unable to receive assistance in this fight.</br>";
+				echo "You will be unable to receive assistance in this fight.<br/>";
 				$mysqli->query("UPDATE `Players` SET `noassist` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			}
 			if (!empty($_POST['stripbuffs'])) {
-				echo "As the battle begins, you are mysteriously stripped of all ongoing power boosts.</br>";
+				echo "As the battle begins, you are mysteriously stripped of all ongoing power boosts.<br/>";
 				$mysqli->query("UPDATE `Players` SET `buffstrip` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Power boosts wear off.
 				$mysqli->query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -138,17 +138,17 @@ if (empty($_SESSION['username'])) {
 						$assistrow['encounters'] = $encounters;
 					}
 					if (($assistrow['down'] == 1 && $assistrow['dreamingstatus'] == "Awake") || ($assistrow['dreamdown'] == 1 && $assistrow['dreamingstatus'] != "Awake")) {
-						echo "$assistrow[username] is down and cannot assist you at this time.</br>";
+						echo "$assistrow[username] is down and cannot assist you at this time.<br/>";
 					} elseif ($assistrow['encounters'] <= 0) {
-						echo "$assistrow[username] is unable to assist you as they are out of encounters!</br>";
+						echo "$assistrow[username] is unable to assist you as they are out of encounters!<br/>";
 					} elseif ($assistrow['dreamingstatus'] != $userrow['dreamingstatus'] && $assistrow['Godtier'] == 0) {
-						echo "$assistrow[username] is currently unable to reach you to assist you!</br>";
+						echo "$assistrow[username] is currently unable to reach you to assist you!<br/>";
 					} elseif ($assistrow['indungeon'] == 1) {
-						echo "$assistrow[username] is unable to assist you as they are in a dungeon!</br>";
+						echo "$assistrow[username] is unable to assist you as they are in a dungeon!<br/>";
 					} elseif (!empty($assistrow['enemydata']) || !empty($assistrow['aiding'])) { //should also check aiding here in case the person is aiding someone else manually
-						echo "$assistrow[username] is unable to assist you as they are currently strifing!</br>";
+						echo "$assistrow[username] is unable to assist you as they are currently strifing!<br/>";
 					} else {
-						echo "$assistrow[username] has automatically begun assisting you.</br>";
+						echo "$assistrow[username] has automatically begun assisting you.<br/>";
 						$mysqli->query("UPDATE `Players` SET `aiding` = '$username' WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `encounters` = $assistrow[encounters]-1 WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;");
 					}
@@ -156,30 +156,30 @@ if (empty($_SESSION['username'])) {
 			}
 			writeLastfought($userrow);
 			if ($userrow['dreamingstatus'] == "Prospit") {
-				echo '<a href="strife.php">&quot;Strife&quot; initiated.</a></br>';
+				echo '<a href="strife.php">&quot;Strife&quot; initiated.</a><br/>';
 				$userrow = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;")->fetch_array() or die($mysqli->error());
 				include("strife.php");
 			} else {
-				echo '<a href="strife.php">Strife initiated.</a></br>';
+				echo '<a href="strife.php">Strife initiated.</a><br/>';
 				$userrow = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_SESSION['username'] . "' LIMIT 1;")->fetch_array();
 				include("strife.php");
 			}
 		} else {
 			if ($userrow['dreamingstatus'] == "Prospit") {
-				echo "You must select an &quot;enemy&quot; to fight!</br>";
+				echo "You must select an &quot;enemy&quot; to fight!<br/>";
 			} else {
-				echo "You must select an enemy to fight!</br>";
+				echo "You must select an enemy to fight!<br/>";
 			}
-			echo '<a href="strife.php">Try again.</a></br>';
+			echo '<a href="strife.php">Try again.</a><br/>';
 		}
 	} else {
 		if ($userrow['dreamingstatus'] == "Prospit") {
-			echo "You have no encounters remaining or you're down! Either way, you can't &quot;strife&quot; right now.</br>";
+			echo "You have no encounters remaining or you're down! Either way, you can't &quot;strife&quot; right now.<br/>";
 		} else {
 			if ($aok) {
-				echo "You have no encounters remaining or you're down! Either way, you can't strife right now.</br>";
+				echo "You have no encounters remaining or you're down! Either way, you can't strife right now.<br/>";
 			} else {
-				echo "Fool me once, shame on you. Fool me twice...</br>";
+				echo "Fool me once, shame on you. Fool me twice...<br/>";
 			}
 		}
 		if (!empty($_POST['success']) && !empty($_POST['failure'])) { //User exploring!

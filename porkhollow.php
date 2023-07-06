@@ -3,28 +3,28 @@
 require_once "header.php";
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to view your virtual porkhollow.</br>";
+	echo "Log in to view your virtual porkhollow.<br/>";
 } else {
 
 	$boon = "Boondollars";
-	echo "Virtual Porkhollow v0.0.1a.</br>";
+	echo "Virtual Porkhollow v0.0.1a.<br/>";
 
 	$compugood = true;
 	if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 		if ($userrow['hascomputer'] < 3) {
 			if ($compugood == true)
-				echo "You don't have a hands-free computer equipped, so you can't wire boondollars during strife.</br>";
+				echo "You don't have a hands-free computer equipped, so you can't wire boondollars during strife.<br/>";
 			$compugood = false;
 		}
 	}
 	if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
 		if ($compugood == true)
-			echo "You don't have a portable computer in your inventory, so you can't wire boondollars while away from home.</br>";
+			echo "You don't have a portable computer in your inventory, so you can't wire boondollars while away from home.<br/>";
 		$compugood = false;
 	}
 	if ($userrow['hascomputer'] == 0) {
 		if ($compugood == true)
-			echo "You need a computer in storage or your inventory to wire boondollars to other players.</br>";
+			echo "You need a computer in storage or your inventory to wire boondollars to other players.<br/>";
 		$compugood = false;
 	}
 
@@ -35,7 +35,7 @@ if (empty($_SESSION['username'])) {
 			if ($_POST['intarget'] != "")
 				$_POST['target'] = $_POST['intarget'];
 			if ($_POST['target'] == $username) { //Player is trying to wire themselves boondollars!
-				echo "You can't wire boondollars to yourself!</br>";
+				echo "You can't wire boondollars to yourself!<br/>";
 			} elseif (empty($_POST['target'])) {
 				echo "You didn't specify a recipient!<br/>";
 			} else {
@@ -78,7 +78,7 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '" . $sendstring . "' WHERE `username` = '" . $sendrow['username'] . "' LIMIT 1;");
 								$mysqli->query("UPDATE `Players` SET `Players`.`newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $sendrow['username'] . "' LIMIT 1;");
 							} else
-								echo "Attempted to send a message, but the user's inbox was full.</br>";
+								echo "Attempted to send a message, but the user's inbox was full.<br/>";
 						}
 					}
 				} else {
@@ -88,9 +88,9 @@ if (empty($_SESSION['username'])) {
 				if ($targetfound == True) {
 					echo "Transaction successful. Boondollars: $quantity";
 				} else if ($poor == False) {
-					echo "Transaction failed: Target does not exist.</br>Boondollars: $userrow[$boon]";
+					echo "Transaction failed: Target does not exist.<br/>Boondollars: $userrow[$boon]";
 				}
-				echo "</br>";
+				echo "<br/>";
 			}
 		} else {
 			echo "Boondollars: $userrow[$boon]";
@@ -104,8 +104,8 @@ if (empty($_SESSION['username'])) {
 			if ($ysessionrow['username'] != $username)
 				echo '<option value="' . $ysessionrow['username'] . '">' . $ysessionrow['username'] . '</option>';
 		}
-		echo '</select></br>Target username (other): <input id="target" name="target" type="text" /><br/>';
-		echo 'Amount of boondollars to transfer: <input id="amount" name="amount" type="text" /><br/>Attach a message (optional):</br><textarea name="body" rows="6" cols="40" form="wire"></textarea></br><input type="submit" value="Wire it!" /></form>';
+		echo '</select><br/>Target username (other): <input id="target" name="target" type="text" /><br/>';
+		echo 'Amount of boondollars to transfer: <input id="amount" name="amount" type="text" /><br/>Attach a message (optional):<br/><textarea name="body" rows="6" cols="40" form="wire"></textarea><br/><input type="submit" value="Wire it!" /></form>';
 	} else
 		echo "Boondollars: " . strval($userrow[$boon]);
 	$mysqli->close();

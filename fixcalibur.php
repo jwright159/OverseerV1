@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to do stuff.</br>";
+	echo "Log in to do stuff.<br/>";
 } else {
 	if ($userrow['session_name'] != "Developers") {
 		echo "Hey! This tool is for the developers only. Nice try, pal.";
@@ -21,7 +21,7 @@ if (empty($_SESSION['username'])) {
 					$counter++;
 				}
 				$mysqli->query("UPDATE `Players` SET `newmessage` = $unreads WHERE `Players`.`username` = '$losername' LIMIT 1;");
-				echo $losername . " has " . strval($unreads) . " unreads</br>";
+				echo $losername . " has " . strval($unreads) . " unreads<br/>";
 			}
 		}
 	}

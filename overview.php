@@ -22,11 +22,11 @@ function canFly($checkrow)
 }
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to view your player overview.</br>";
-	echo '</br><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to view your player overview.<br/>";
+	echo '<br/><a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
 	require_once "includes/SQLconnect.php";
-	//echo "Confirmed: the page I'm editing is indeed the page on the live build</br>";
+	//echo "Confirmed: the page I'm editing is indeed the page on the live build<br/>";
 	$fly = canFly($userrow);
 	//--Begin naming/prototyping code here.--
 
@@ -41,7 +41,7 @@ if (empty($_SESSION['username'])) {
 				$newstrength = ($strengthone * 2) + $userrow['sprite_strength']; //Sprite receives double the item's native prototyping strength.
 				$itemone = $mysqli->real_escape_string($_POST['item1']);
 				if ($newstrength > ($userrow['sprite_strength'] * 2) || $newstrength > 2050) {
-					echo "The sprite dodges the prototyping item! Looks like it was too powerful for the sprite to sustain.</br>";
+					echo "The sprite dodges the prototyping item! Looks like it was too powerful for the sprite to sustain.<br/>";
 				} else {
 					$mysqli->query("UPDATE `Players` SET `prototype_item_1` = '$itemone' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					$mysqli->query("UPDATE `Players` SET `sprite_strength` = '$newstrength' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -58,7 +58,7 @@ if (empty($_SESSION['username'])) {
 				$strengthtwo = intval($_POST['strength2']);
 				$newstrength = ($strengthtwo * 2) + $userrow['sprite_strength']; //Sprite receives double the item's native prototyping strength.
 				if ($newstrength > ($userrow['sprite_strength'] * 2) || $newstrength > 2050) {
-					echo "The sprite dodges the prototyping item! Looks like it was too powerful for the sprite to sustain.</br>";
+					echo "The sprite dodges the prototyping item! Looks like it was too powerful for the sprite to sustain.<br/>";
 				} else {
 					$mysqli->query("UPDATE `Players` SET `prototype_item_2` = '$itemtwo' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					$mysqli->query("UPDATE `Players` SET `sprite_strength` = '$newstrength' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -144,9 +144,9 @@ if (empty($_SESSION['username'])) {
 					$mysqli->query("UPDATE `Players` SET `Aspect` = '$newaspect' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					$_SESSION['adjective'] = $titlerow[$newaspect];
 				} else
-					echo "Class/aspect failed to set: Unique classpects is on, and $failreason already belongs to a player in this session</br>";
+					echo "Class/aspect failed to set: Unique classpects is on, and $failreason already belongs to a player in this session<br/>";
 			} else
-				echo "pfft what are you smoking that's not even a real title</br>";
+				echo "pfft what are you smoking that's not even a real title<br/>";
 		} else {
 			echo "NICE TRY, WIGGLER.";
 		}
@@ -175,7 +175,7 @@ if (empty($_SESSION['username'])) {
 				$dreamstatus = $mysqli->real_escape_string($_POST['dreamer']);
 				$mysqli->query("UPDATE `Players` SET `dreamer` = '" . $dreamstatus . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			} else
-				echo "suddenly, WEED DREAMS.</br>";
+				echo "suddenly, WEED DREAMS.<br/>";
 		} else {
 			echo "WHAT THE FUCK. YOU CAN'T JUST CHANGE DREAMING MOONS, YOU MORON.";
 		}
@@ -196,7 +196,7 @@ if (empty($_SESSION['username'])) {
 			$mysqli->query("UPDATE `Players` SET `consort_name` = '" . $mysqli->real_escape_string($newconsortname) . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			$userrow['consort_name'] = $mysqli->real_escape_string($newconsortname);
 		} else
-			echo "Two kinds of consorts on the same land?! You're not entirely sure they'll be able to get along...</br>";
+			echo "Two kinds of consorts on the same land?! You're not entirely sure they'll be able to get along...<br/>";
 	}
 
 	//End consort code here.
@@ -204,7 +204,7 @@ if (empty($_SESSION['username'])) {
 		echo "<!DOCTYPE html><html><head><style>favcolour{color: $userrow[colour];}</style></head><body>";
 	if (empty($client))
 		$client = "";
-	echo "Username: $username </br>";
+	echo "Username: $username <br/>";
 	if (!empty($userrow['Class']) && !empty($userrow['Aspect'])) {
 		$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
 		$classrow = $classresult->fetch_array();
@@ -213,7 +213,7 @@ if (empty($_SESSION['username'])) {
 		} else {
 			$activepassivestr = "(Passive, $classrow[passivefactor]%)";
 		}
-		echo "Title: $userrow[Class] of $userrow[Aspect] $activepassivestr</br>";
+		echo "Title: $userrow[Class] of $userrow[Aspect] $activepassivestr<br/>";
 	} elseif (!empty($newclass) && !empty($newaspect)) {
 		$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$newclass';");
 		$classrow = $classresult->fetch_array();
@@ -222,7 +222,7 @@ if (empty($_SESSION['username'])) {
 		} else {
 			$activepassivestr = "(Passive, $classrow[passivefactor]%)";
 		}
-		echo "Title: $newclass of $newaspect $activepassivestr</br>";
+		echo "Title: $newclass of $newaspect $activepassivestr<br/>";
 	} else {
 		echo "Both your class and aspect must be accepted simultaneously.";
 		echo '<form action="overview.php" method="post">Select class:<select name="class"> '; //Select a class
@@ -241,7 +241,7 @@ if (empty($_SESSION['username'])) {
 			if ($reachclass == True)
 				echo '<option value="' . $row['Class'] . '">' . $row['Class'] . ' ' . $activepassivestr . '</option>';
 		}
-		echo '</select></br>';
+		echo '</select><br/>';
 		echo 'Select aspect:<select name="aspect"> '; //Select an aspect
 		$aspects = $mysqli->query("SELECT * FROM Titles LIMIT 1;");
 		$reachaspect = False;
@@ -254,7 +254,7 @@ if (empty($_SESSION['username'])) {
 			if ($reachaspect == True)
 				echo '<option value="' . $aspect . '">' . $aspect . '</option>';
 		}
-		echo '</select></br><input type="submit" value="Accept it." /> </form>';
+		echo '</select><br/><input type="submit" value="Accept it." /> </form>';
 	}
 	if (!empty($dreamstatus)) {
 		echo "Moon: $dreamstatus";
@@ -265,15 +265,15 @@ if (empty($_SESSION['username'])) {
 		echo '<form action="overview.php" method="post"><select name="dreamer"><option value="Prospit">Prospit</option><option value="Derse">Derse</option></select>';
 		echo '<input type="submit" value="Awaken." /></form>';
 	} else {
-		echo "</br>";
+		echo "<br/>";
 	}
 	$exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
 	$explorow = $exploresult->fetch_array();
 	if ((!empty($explorow['canleave']) && $explorow['canleave'] == 1) || $userrow['dreamingstatus'] == "Awake") {
-		echo '<form action="dreamtransition.php" method="post"><input type="hidden" name="sleep" value="sleep" /><input type="submit" value="Sleep?" /></form></br>';
-		echo '<form action="wasteoftime.php" method="post"><input type="hidden" name="timewaster" value="timewaster" /><input type="submit" value="Sit around wasting time" /></form></br>';
+		echo '<form action="dreamtransition.php" method="post"><input type="hidden" name="sleep" value="sleep" /><input type="submit" value="Sleep?" /></form><br/>';
+		echo '<form action="wasteoftime.php" method="post"><input type="hidden" name="timewaster" value="timewaster" /><input type="submit" value="Sit around wasting time" /></form><br/>';
 	} else {
-		echo '<form action="explore.php" method="post"><input type="submit" value="Go exploring!" /></form></br>';
+		echo '<form action="explore.php" method="post"><input type="submit" value="Go exploring!" /></form><br/>';
 	}
 	if (!empty($userrow['colour']))
 		echo "Color: <favcolour>$userrow[colour]</favcolour>";
@@ -282,8 +282,8 @@ if (empty($_SESSION['username'])) {
 	while ($colourow = $colouresult->fetch_array()) {
 		echo '<option value="' . $colourow['Name'] . '">' . $colourow['Name'] . '</option>';
 	}
-	echo "</select></br>";
-	echo '<input type="submit" value="Select it!" /></form></br>';
+	echo "</select><br/>";
+	echo '<input type="submit" value="Select it!" /></form><br/>';
 	echo 'Symbol:<br/><img src="/Images/symbols/' . $userrow['symbol'] . '"><br/><form action="overview.php" method="post">Choose an image: <select name="newimage">';
 	$dir = "./Images/symbols";
 	if (is_dir($dir)) {
@@ -310,7 +310,7 @@ if (empty($_SESSION['username'])) {
 	if ($symbols == false)
 		echo "I'm working on this right now dw<br/>";
 	if (empty($userrow['consort_name'])) {
-		echo 'Consorts: Your consorts are currently undefined. Define them below by choosing a color and species.</br>';
+		echo 'Consorts: Your consorts are currently undefined. Define them below by choosing a color and species.<br/>';
 		echo '<form action="overview.php" method="post"><select name="consortcolor">';
 		$colouresult = $mysqli->query("SELECT * FROM Colours");
 		while ($colourow = $colouresult->fetch_array()) {
@@ -318,32 +318,32 @@ if (empty($_SESSION['username'])) {
 		}
 		echo '</select><select name="consorttype">';
 		echo '<option value="Salamander">Salamander</option><option value="Turtle">Turtle</option><option value="Crocodile">Crocodile</option><option value="Iguana">Iguana</option>'; //consorts are hardcoded for now since there's only 4
-		echo '</select></br>';
+		echo '</select><br/>';
 		echo '<input type="submit" value="Populate my land!" /></form>';
 	} else
-		echo "Consorts: Your land is home to the " . $userrow['consort_name'] . ".</br>";
+		echo "Consorts: Your land is home to the " . $userrow['consort_name'] . ".<br/>";
 	echo "Health Vial: ";
 	if ($userrow['dreamingstatus'] == "Awake") {
 		echo strval(floor(($userrow['Health_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max HP remaining.
-		echo "%</br>";
+		echo "%<br/>";
 	} else {
 		echo strval(floor(($userrow['Dream_Health_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max HP remaining.
-		echo "%</br>";
+		echo "%<br/>";
 	}
 	echo "Aspect Vial: ";
 	echo strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max Aspect remaining.
-	echo "%</br>";
+	echo "%<br/>";
 	if (!empty($newstatus)) {
 		$newstatus = str_replace("\'", "'", $newstatus);
-		echo "Currently: $newstatus </br>";
+		echo "Currently: $newstatus <br/>";
 	} else {
-		echo "Currently: $userrow[status] </br>";
+		echo "Currently: $userrow[status] <br/>";
 	}
 	echo '<form action="overview.php" method="post">What are you doing? <input id="status" name="status" type="text" /> <input type="submit" value="Do it!" /></form>';
-	echo "Session designation: $userrow[session_name] </br>";
+	echo "Session designation: $userrow[session_name] <br/>";
 	$sessionpwresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "';");
 	$sessionpwrow = $sessionpwresult->fetch_array();
-	echo "Session password: $sessionpwrow[password]</br>";
+	echo "Session password: $sessionpwrow[password]<br/>";
 	if ($userrow['dreamingstatus'] == "Awake") { //Only deal with sprite while awake.
 		if (!empty($spritename)) {
 			echo "Sprite name: $spritename";
@@ -353,42 +353,42 @@ if (empty($_SESSION['username'])) {
 		echo '<form action="overview.php" method="post"><input id="spritename" name="spritename" type="text" />sprite <input type="submit" value="Rename it!" /></form>';
 		if ($userrow['prototype_item_1'] == "") {
 			if (!empty($itemone)) {
-				echo "First prototyped item: $itemone </br>";
+				echo "First prototyped item: $itemone <br/>";
 			} else {
-				echo '<form action="overview.php" method="post">First item: <input id="item1" name="item1" type="text" /></br>';
-				echo 'Prototyping strength: <input id="strength1" name="strength1" type="text" /></br><input type="submit" value="Prototype it!" /></form>';
+				echo '<form action="overview.php" method="post">First item: <input id="item1" name="item1" type="text" /><br/>';
+				echo 'Prototyping strength: <input id="strength1" name="strength1" type="text" /><br/><input type="submit" value="Prototype it!" /></form>';
 			}
 		} else {
 			echo "First prototyped item: $userrow[prototype_item_1]";
 		}
 		if ($userrow['prototype_item_2'] == "") {
 			if (!empty($itemtwo)) {
-				echo "</br>Second prototyped item: $itemtwo </br>";
+				echo "<br/>Second prototyped item: $itemtwo <br/>";
 			} else {
 				if (!empty($itemone) || $userrow['prototype_item_1'] != "") { //Only allow second prototyping if first is done.
-					echo '<form action="overview.php" method="post">Second item: <input id="item2" name="item2" type="text" /></br>';
-					echo 'Prototyping strength: <input id="strength2" name="strength2" type="text" /></br><input type="submit" value="Prototype it!" /></form></br>';
+					echo '<form action="overview.php" method="post">Second item: <input id="item2" name="item2" type="text" /><br/>';
+					echo 'Prototyping strength: <input id="strength2" name="strength2" type="text" /><br/><input type="submit" value="Prototype it!" /></form><br/>';
 				}
 			}
 		} else {
-			echo "</br>Second prototyped item: $userrow[prototype_item_2] </br>";
+			echo "<br/>Second prototyped item: $userrow[prototype_item_2] <br/>";
 		}
-		echo "NOTE - All prototyping strengths must be between -999 and 999 or they will fail!</br>";
+		echo "NOTE - All prototyping strengths must be between -999 and 999 or they will fail!<br/>";
 	}
 
 	//begin chain-displaying code (replaces current player listing as it achieves the same effect)
-	echo "Players in your session, organized by client ==&gt; server (if a connection exists):</br>";
+	echo "Players in your session, organized by client ==&gt; server (if a connection exists):<br/>";
 	$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' ;");
 	$buddies = 0;
 	while ($row = $sessionmates->fetch_array()) {
 		if ($row['session_name'] == $userrow['session_name']) {
-			//echo "$row[username] </br>";
+			//echo "$row[username] <br/>";
 			$buddyname[$buddies] = $row['username'];
 			$printed[$buddyname[$buddies]] = False;
 			$buddies++;
 		}
 	}
-	echo "Known server/client chains in your session:</br>";
+	echo "Known server/client chains in your session:<br/>";
 	$clientless = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`client_player` = '' ;");
 	while ($currentrow = $clientless->fetch_array()) { //first show the chains of those without clients to ensure that chains aren't repeated
 		$done = False;
@@ -404,7 +404,7 @@ if (empty($_SESSION['username'])) {
 				$printed[$currentrow['username']] = True;
 			} else {
 				$done = True;
-				echo "</br>";
+				echo "<br/>";
 			}
 		}
 	}
@@ -432,7 +432,7 @@ if (empty($_SESSION['username'])) {
 				$printed[$currentrow['username']] = True;
 			} else {
 				$done = True;
-				echo "</br>";
+				echo "<br/>";
 			}
 		}
 		while ($check < $buddies && $done) {
@@ -455,34 +455,34 @@ if (empty($_SESSION['username'])) {
 	if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 		if ($userrow['hascomputer'] < 3) {
 			if ($compugood == true)
-				echo "You don't have a hands-free computer equipped, so you can't check in on your client/server during strife.</br>";
+				echo "You don't have a hands-free computer equipped, so you can't check in on your client/server during strife.<br/>";
 			$compugood = false;
 		}
 	}
 	if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
 		if ($compugood == true)
-			echo "You don't have a portable computer in your inventory, so you can't check in on your client/server while away from home.</br>";
+			echo "You don't have a portable computer in your inventory, so you can't check in on your client/server while away from home.<br/>";
 		$compugood = false;
 	}
 	if ($userrow['hascomputer'] == 0) {
 		if ($compugood == true)
-			echo "You need a computer in storage or your inventory to check in on your client and server.</br>";
+			echo "You need a computer in storage or your inventory to check in on your client and server.<br/>";
 		$compugood = false;
 	}
 
 	if ($compugood) {
 		if ($userrow['client_player'] != "")
-			echo "</br>Client player: $userrow[client_player]</br>";
+			echo "<br/>Client player: $userrow[client_player]<br/>";
 		if (!empty($client))
-			echo "</br>Client player: $client</br>";
+			echo "<br/>Client player: $client<br/>";
 		//house-building and client connection are done from sburbserver.php now
 		if ($userrow['server_player'] == "") {
-			echo "Server player has not entered the Medium yet or has not registered their connection. Your status report is unable to track them.</br>";
+			echo "Server player has not entered the Medium yet or has not registered their connection. Your status report is unable to track them.<br/>";
 		} else {
-			echo "Server player: $userrow[server_player] </br>";
+			echo "Server player: $userrow[server_player] <br/>";
 		}
 
-		echo "Grist expended expanding your dwelling: $userrow[house_build_grist] </br>";
+		echo "Grist expended expanding your dwelling: $userrow[house_build_grist] <br/>";
 	}
 	echo "House gates accessible on your Land: ";
 	$gates = 0;
@@ -498,7 +498,7 @@ if (empty($_SESSION['username'])) {
 		}
 		$i++;
 	}
-	echo strval($gates) . "</br>";
+	echo strval($gates) . "<br/>";
 	if (($gates == 7 && $userrow['dreamingstatus'] == "Awake" && $userrow['denizendown'] == 0 && !empty($userrow['Aspect'])) || $fly) {
 		if ($userrow['enemydata'] == "" && $userrow['aiding'] == "") {
 			$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
@@ -516,7 +516,7 @@ if (empty($_SESSION['username'])) {
 			echo '<input type="submit" value="Face ' . $denizenrow[$userrow['Aspect']] . '" /></form>';
 		}
 	}
-	echo "</br>The more players in your client/server chain have built up to their gates, the more Lands you can access.";
+	echo "<br/>The more players in your client/server chain have built up to their gates, the more Lands you can access.";
 }
 require_once "footer.php";
 ?>

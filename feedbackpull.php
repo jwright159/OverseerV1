@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to access the captchalogue list.</br>";
+	echo "Log in to access the captchalogue list.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Itemods") {
@@ -12,34 +12,34 @@ if (empty($_SESSION['username'])) {
 			if ($_POST['ftype'] == "item") {
 				$feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
 				while ($feedrow = $feedbackresult->fetch_array()) {
-					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
-					echo $feedback . "</br>";
+					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; <br/>";
+					echo $feedback . "<br/>";
 					$feedbackfound = True;
 				}
 				if ($feedbackfound == False)
-					echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
+					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
 			} elseif ($_POST['ftype'] == "bitem") {
 				$feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 AND `Feedback`.`urgent` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
 				while ($feedrow = $feedbackresult->fetch_array()) {
-					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
-					echo $feedback . "</br>";
+					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; <br/>";
+					echo $feedback . "<br/>";
 					$feedbackfound = True;
 				}
 				if ($feedbackfound == False)
-					echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
+					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 AND `Feedback`.`urgent` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
 			} elseif ($_POST['ftype'] == "ritem") {
 				$feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`defunct` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
 				while ($feedrow = $feedbackresult->fetch_array()) {
-					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
-					echo $feedback . "</br>";
+					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; <br/>";
+					echo $feedback . "<br/>";
 					$feedbackfound = True;
 				}
 				if ($feedbackfound == False)
-					echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
+					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`defunct` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
 			} else {
@@ -57,11 +57,11 @@ if (empty($_SESSION['username'])) {
 					} else {
 						$feedback = $feedbackrow['ID'] . ": " . $feedbackrow['user'] . " - " . $feedbackrow['comments'];
 					}
-					echo $feedback . "</br></br>";
+					echo $feedback . "<br/><br/>";
 					$feedbackfound = True;
 				}
 				if ($feedbackfound == False)
-					echo "There is currently no feedback of type " . $_POST['ftype'] . "</br>";
+					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = '" . $_POST['ftype'] . "'  LIMIT $amount");
 			}
@@ -96,20 +96,20 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 		}
-		echo "There are currently " . $usercount . " feedback entries in total.</br>";
-		echo "Item suggestions: " . $count['item'] . "</br>";
-		echo "- Greenlit items: $greenlight (Challenge: $gchallenge)</br>";
-		echo "- Yellow items: $yellowlight (Inactive: $inactive)</br>";
-		echo "- Red items: $redlight</br>";
-		echo "- Suspended items: $graylight</br>";
-		echo "- Unmarked items: $unmarked</br>";
-		echo "Art submissions: " . $count['art'] . "</br>";
-		echo "Bug reports: " . $count['bug'] . "</br>";
-		echo "Misc feedback: " . $count['misc'] . "</br>";
-		echo "Quest ideas: " . $count['ques'] . "</br></br>";
-		echo '<form action="feedbackpull.php" method="post">Type of feedback: <select id="ftype" name="ftype"><option value="item">Greenlit Items</option><option value="bitem">Greenlit Challenge Items</option><option value="ritem">Redlit Items (just delete)</option><option value="art">Art Submissions</option><option value="bug">Bug Reports</option><option value="misc">Misc Feedback</option><option value="ques">Quest Ideas</option></select></br>';
-		echo 'Maximum amount of entries to grab/delete: <input type="text" name="amount"></br>';
-		echo '<input type="checkbox" name="delete" value="delete">Delete feedback after loading</br><input type="submit" value="Pull feedback" /></form>';
+		echo "There are currently " . $usercount . " feedback entries in total.<br/>";
+		echo "Item suggestions: " . $count['item'] . "<br/>";
+		echo "- Greenlit items: $greenlight (Challenge: $gchallenge)<br/>";
+		echo "- Yellow items: $yellowlight (Inactive: $inactive)<br/>";
+		echo "- Red items: $redlight<br/>";
+		echo "- Suspended items: $graylight<br/>";
+		echo "- Unmarked items: $unmarked<br/>";
+		echo "Art submissions: " . $count['art'] . "<br/>";
+		echo "Bug reports: " . $count['bug'] . "<br/>";
+		echo "Misc feedback: " . $count['misc'] . "<br/>";
+		echo "Quest ideas: " . $count['ques'] . "<br/><br/>";
+		echo '<form action="feedbackpull.php" method="post">Type of feedback: <select id="ftype" name="ftype"><option value="item">Greenlit Items</option><option value="bitem">Greenlit Challenge Items</option><option value="ritem">Redlit Items (just delete)</option><option value="art">Art Submissions</option><option value="bug">Bug Reports</option><option value="misc">Misc Feedback</option><option value="ques">Quest Ideas</option></select><br/>';
+		echo 'Maximum amount of entries to grab/delete: <input type="text" name="amount"><br/>';
+		echo '<input type="checkbox" name="delete" value="delete">Delete feedback after loading<br/><input type="submit" value="Pull feedback" /></form>';
 	}
 }
 require_once "footer.php";

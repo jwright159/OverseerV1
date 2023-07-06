@@ -6,7 +6,7 @@ require_once "includes/fieldparser.php";
 $max_items = 50;
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to view and manipulate your strife portfolio and options.</br>";
+	echo "Log in to view and manipulate your strife portfolio and options.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 
 	$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
@@ -22,7 +22,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
 		//as pulling the correct element out of the abilities array via the ID. Note that an ability with an empty usage message will be unusable since the empty function will spit empty at you.
 	}
-	echo "As your dream self, you have only yourself with which to strife.</br>";
+	echo "As your dream self, you have only yourself with which to strife.<br/>";
 
 	//Begin Echerung naming code here.
 
@@ -39,43 +39,43 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	$echerow = $echeresult->fetch_array();
 	echo "Current Echeladder height: $userrow[Echeladder]";
 	if (!empty($newrung)) {
-		echo "</br>Current Echeladder rung: $newrung </br>";
+		echo "<br/>Current Echeladder rung: $newrung <br/>";
 	} else {
 		$echestr = "rung" . strval($userrow['Echeladder']);
 		if ($echerow[$echestr] != "") {
-			echo "</br>Current Echeladder rung: $echerow[$echestr]</br>";
+			echo "<br/>Current Echeladder rung: $echerow[$echestr]<br/>";
 		} else {
 			echo '<form action="portfolio.php" method="post">';
 			echo 'Current Echeladder rung: <input id="echename" name="echename" type="text" /><input type="submit" value="Name it!" /> </form>';
 		}
 	}
 	if ($userrow['powerboost'] != 0)
-		echo "Current temporary power modifier: $userrow[powerboost]</br>";
+		echo "Current temporary power modifier: $userrow[powerboost]<br/>";
 	if ($userrow['offenseboost'] != 0)
-		echo "Current temporary offense modifier: $userrow[offenseboost]</br>";
+		echo "Current temporary offense modifier: $userrow[offenseboost]<br/>";
 	if ($userrow['defenseboost'] != 0)
-		echo "Current temporary defense modifier: $userrow[defenseboost]</br>";
+		echo "Current temporary defense modifier: $userrow[defenseboost]<br/>";
 	$powerlevel = $unarmedpower + $userrow['powerboost'];
-	echo "Current power level: $powerlevel </br>";
+	echo "Current power level: $powerlevel <br/>";
 	if ($powerlevel == 9001)
-		echo "(Yes, yes, very funny.)</br>";
+		echo "(Yes, yes, very funny.)<br/>";
 	echo "Health Vial: ";
 	echo strval(floor(($userrow['Dream_Health_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max HP remaining.
-	echo "%</br>";
-	echo "Aspect vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%</br>";
+	echo "%<br/>";
+	echo "Aspect vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 
 	//if assigning abstratus, do so first so that equip selection can reflect change
 	if (!empty($_POST['new_abstratus'])) {
 		if ($_POST['new_abstratus'] == "notaweapon" || $_POST['new_abstratus'] == "headgear" || $_POST['new_abstratus'] == "facegear" || $_POST['new_abstratus'] == "headgear" || $_POST['new_abstratus'] == "bodygear" || $_POST['new_abstratus'] == "accessory" || $_POST['new_abstratus'] == "computer") { //somehow, the player tried to assign a non-abstratus
-			echo "ahahaha how HIGH do you even have to BE just to DO something like that..........</br>";
+			echo "ahahaha how HIGH do you even have to BE just to DO something like that..........<br/>";
 		} else {
 			if (freeSpecibi($userrow['abstratus1'], $userrow['abstrati'], false) > 0) {
 				$userrow = addSpecibus($userrow, $_POST['new_abstratus']);
-				echo "A kind abstratus has been instantiated to " . $_POST['new_abstratus'] . "</br>";
+				echo "A kind abstratus has been instantiated to " . $_POST['new_abstratus'] . "<br/>";
 			} else
-				echo "You have no abstrati remaining to assign!</br>";
+				echo "You have no abstrati remaining to assign!<br/>";
 		}
 	}
 
@@ -121,7 +121,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		$inum = intval(str_replace("inv", "", $_POST['equipmain']));
 		if ($_POST['equipmain'] == "Remove Equipment") {
 			$equippedmain = $_POST['equipmain']; //For use later.
-			echo "You remove your main weapon.</br>"; //NOTE - Unauthorized equipping prevented by menu options not being there.
+			echo "You remove your main weapon.<br/>"; //NOTE - Unauthorized equipping prevented by menu options not being there.
 			autoUnequip($userrow, "none", $userrow['equipped']); //will also remove any granted effects, if any exist
 			$mysqli->query("UPDATE `Players` SET `equipped` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			unset($_SESSION['mainrow']);
@@ -134,7 +134,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				if ($itemname == $userrow[$_POST['equipmain']]) {
 					if (itemSize($itemrow['size']) < itemSize("huge")) { //No putting two-handed weapons in the offhand.
 						$equippedmain = $_POST['equipmain']; //For use later.
-						echo "You equip your $itemname as your main weapon.</br>"; //NOTE - Unauthorized equipping prevented by menu options not being there.
+						echo "You equip your $itemname as your main weapon.<br/>"; //NOTE - Unauthorized equipping prevented by menu options not being there.
 						$_SESSION['mainrow'] = $itemrow;
 						$mysqli->query("UPDATE `Players` SET `equipped` = '" . $_POST['equipmain'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 						autoUnequip($userrow, "equipped", $equippedmain);
@@ -149,7 +149,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 							$mysqli->query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Move offhand weapon.
 						}
 					} else
-						echo "That weapon is too big to be wielded!</br>";
+						echo "That weapon is too big to be wielded!<br/>";
 				}
 			}
 		} else
@@ -159,7 +159,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		$inum = intval(str_replace("inv", "", $_POST['equipoff']));
 		if ($_POST['equipoff'] == "Remove Equipment") {
 			$equippedoff = $_POST['equipoff']; //For use later.
-			echo "You remove your offhand weapon.</br>"; //NOTE - Unauthorized equipping prevented by menu options not being there.
+			echo "You remove your offhand weapon.<br/>"; //NOTE - Unauthorized equipping prevented by menu options not being there.
 			autoUnequip($userrow, "none", $userrow['offhand']); //will also remove any granted effects, if any exist
 			$mysqli->query("UPDATE `Players` SET `offhand` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			unset($_SESSION['offrow']);
@@ -172,7 +172,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				if ($itemname == $userrow[$_POST['equipoff']]) {
 					if (itemSize($itemrow['size']) < itemSize("large")) { //No putting two-handed weapons in the offhand.
 						$equippedoff = $_POST['equipoff']; //For use later.
-						echo "You equip your $itemname as your offhand weapon.</br>";
+						echo "You equip your $itemname as your offhand weapon.<br/>";
 						$_SESSION['offrow'] = $itemrow;
 						if ($userrow['offhand'] == "2HAND") {
 							$userrow['equipped'] = ""; //Remove two-handed weapon if we equip to the offhand.
@@ -184,7 +184,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 						compuRefresh($userrow);
 						grantEffects($userrow, $itemrow['effects'], "offhand");
 					} else {
-						echo "That weapon is too big to be wielded in your offhand!</br>";
+						echo "That weapon is too big to be wielded in your offhand!<br/>";
 					}
 				}
 			}
@@ -208,13 +208,13 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		$equippedmain = "";
 	if (empty($equippedoff))
 		$equippedoff = "";
-	echo "Strife Portfolio Manager v0.0.1a. Please select a captchalogued weapon.</br>";
-	echo "Abstrati available:</br>";
+	echo "Strife Portfolio Manager v0.0.1a. Please select a captchalogued weapon.<br/>";
+	echo "Abstrati available:<br/>";
 	$free = freeSpecibi($userrow['abstratus1'], $userrow['abstrati'], true);
 	if (!empty($abilities[15]))
-		echo "fistkind</br>"; //ID 15 "One with Nothing" is possessed by the player. Give them the fistkind abstratus!
+		echo "fistkind<br/>"; //ID 15 "One with Nothing" is possessed by the player. Give them the fistkind abstratus!
 	if (!empty($newabstratus)) {
-		echo "$newabstratus </br>";
+		echo "$newabstratus <br/>";
 		if ($free > 0) {
 			$free--; //The new abstratus wasn't counted.
 		}
@@ -315,11 +315,11 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	$echerow = $echeresult->fetch_array();
 	echo "Current Echeladder height: $userrow[Echeladder]";
 	if (!empty($newrung)) {
-		echo "</br>Current Echeladder rung: $newrung </br>";
+		echo "<br/>Current Echeladder rung: $newrung <br/>";
 	} else {
 		$echestr = "rung" . strval($userrow['Echeladder']);
 		if ($echerow[$echestr] != "") {
-			echo "</br>Current Echeladder rung: $echerow[$echestr]</br>";
+			echo "<br/>Current Echeladder rung: $echerow[$echestr]<br/>";
 		} else {
 			echo '<form action="portfolio.php" method="post">';
 			echo 'Current Echeladder rung: <input id="echename" name="echename" type="text" /><input type="submit" value="Name it!" /> </form>';
@@ -327,33 +327,33 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	}
 
 	if ($userrow['powerboost'] != 0)
-		echo "Current temporary power modifier: $userrow[powerboost]</br>";
+		echo "Current temporary power modifier: $userrow[powerboost]<br/>";
 	if ($userrow['offenseboost'] != 0)
-		echo "Current temporary offense modifier: $userrow[offenseboost]</br>";
+		echo "Current temporary offense modifier: $userrow[offenseboost]<br/>";
 	if ($userrow['defenseboost'] != 0)
-		echo "Current temporary defense modifier: $userrow[defenseboost]</br>";
+		echo "Current temporary defense modifier: $userrow[defenseboost]<br/>";
 	
-	echo "Sprite's power level: $spritePower</br>";
+	echo "Sprite's power level: $spritePower<br/>";
 	if ($spritePower < 0) {
-		echo "Your sprite is useless in combat! You decide to leave it behind.</br>";
+		echo "Your sprite is useless in combat! You decide to leave it behind.<br/>";
 		$spritePower = 0;
 	}
 
-	echo "Current power level: $powerLevel </br>";
+	echo "Current power level: $powerLevel <br/>";
 	if ($powerLevel == 9001)
-		echo "(Yes, yes, very funny.)</br>";
+		echo "(Yes, yes, very funny.)<br/>";
 	echo "Health Vial: ";
 	if ($userrow['dreamingstatus'] == "Awake") {
 		echo strval(floor(($userrow['Health_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max HP remaining.
-		echo "%</br>";
+		echo "%<br/>";
 	} else {
 		echo strval(floor(($userrow['Dream_Health_Vial'] / $userrow['Gel_Viscosity']) * 100)); //Computes % of max HP remaining.
-		echo "%</br>";
+		echo "%<br/>";
 	}
-	echo "Aspect vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%</br>";
+	echo "Aspect vial: " . strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100)) . "%<br/>";
 	$invresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$username'");
 	echo $username;
-	echo "'s captchalogued weapons:</br></br>";
+	echo "'s captchalogued weapons:<br/><br/>";
 	$reachinv = False;
 	$terminateloop = False;
 	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
@@ -389,73 +389,73 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 					}
 				}
 				if ($itemname == $userrow[$invslot] && $firstabstratus != "notaweapon") { //Item found in captchalogue database, and it is a weapon. Print out details.
-					echo "Weapon: $itemname</br>";
+					echo "Weapon: $itemname<br/>";
 					if ($row['art'] != "") {
-						echo '<img src="/Images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"></br>';
+						echo '<img src="/Images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"><br/>';
 					}
 					if (($invslot == $userrow['equipped'] || $invslot == $equippedmain) && $invslot != $equippedoff) { //Item is equipped in the main hand.
 						if ($invslot == $equippedmain || $equippedmain == "") { //Most recently equipped item is either this or nothing.
 							if ($row['size'] == "large") {
-								echo "Equipped in: both hands.</br>";
+								echo "Equipped in: both hands.<br/>";
 							} else {
-								echo "Equipped in: main hand.</br>";
+								echo "Equipped in: main hand.<br/>";
 							}
 						}
 					}
 					if (($invslot == $userrow['offhand'] || $invslot == $equippedoff) && $invslot != $equippedmain) { //Item is equipped in the offhand.
 						if ($invslot == $equippedoff || $equippedoff == "") { //Most recently equipped item is either this or nothing.
-							echo "Equipped in: offhand.</br>";
+							echo "Equipped in: offhand.<br/>";
 						}
 					}
-					echo "Abstratus: $row[abstratus]</br>";
-					echo "Strength: $row[power]</br>";
+					echo "Abstratus: $row[abstratus]<br/>";
+					echo "Strength: $row[power]<br/>";
 					if ($row['aggrieve'] > 0) {
-						echo "Aggrieve bonus: $row[aggrieve] </br>";
+						echo "Aggrieve bonus: $row[aggrieve] <br/>";
 					}
 					if ($row['aggrieve'] < 0) {
-						echo "Aggrieve penalty: $row[aggrieve] </br>";
+						echo "Aggrieve penalty: $row[aggrieve] <br/>";
 					}
 					if ($row['aggress'] > 0) {
-						echo "Aggress bonus: $row[aggress] </br>";
+						echo "Aggress bonus: $row[aggress] <br/>";
 					}
 					if ($row['aggress'] < 0) {
-						echo "Aggress penalty: $row[aggress] </br>";
+						echo "Aggress penalty: $row[aggress] <br/>";
 					}
 					if ($row['assail'] > 0) {
-						echo "Assail bonus: $row[assail] </br>";
+						echo "Assail bonus: $row[assail] <br/>";
 					}
 					if ($row['assail'] < 0) {
-						echo "Assail penalty: $row[assail] </br>";
+						echo "Assail penalty: $row[assail] <br/>";
 					}
 					if ($row['assault'] > 0) {
-						echo "Assault bonus: $row[assault] </br>";
+						echo "Assault bonus: $row[assault] <br/>";
 					}
 					if ($row['assault'] < 0) {
-						echo "Assault penalty: $row[assault] </br>";
+						echo "Assault penalty: $row[assault] <br/>";
 					}
 					if ($row['abuse'] > 0) {
-						echo "Abuse bonus: $row[abuse] </br>";
+						echo "Abuse bonus: $row[abuse] <br/>";
 					}
 					if ($row['abuse'] < 0) {
-						echo "Abuse penalty: $row[abuse] </br>";
+						echo "Abuse penalty: $row[abuse] <br/>";
 					}
 					if ($row['accuse'] > 0) {
-						echo "Accuse bonus: $row[accuse] </br>";
+						echo "Accuse bonus: $row[accuse] <br/>";
 					}
 					if ($row['accuse'] < 0) {
-						echo "Accuse penalty: $row[accuse] </br>";
+						echo "Accuse penalty: $row[accuse] <br/>";
 					}
 					if ($row['abjure'] > 0) {
-						echo "Abjure bonus: $row[abjure] </br>";
+						echo "Abjure bonus: $row[abjure] <br/>";
 					}
 					if ($row['abjure'] < 0) {
-						echo "Abjure penalty: $row[abjure] </br>";
+						echo "Abjure penalty: $row[abjure] <br/>";
 					}
 					if ($row['abstain'] > 0) {
-						echo "Abstain bonus: $row[abstain] </br>";
+						echo "Abstain bonus: $row[abstain] <br/>";
 					}
 					if ($row['abstain'] < 0) {
-						echo "Abstain penalty: $row[abstain] </br>";
+						echo "Abstain penalty: $row[abstain] <br/>";
 					}
 					if (!empty($row['effects'])) { //Item has effects. Print those here.
 						$effectarray = explode('|', $row['effects']);
@@ -470,7 +470,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 						}
 					}
 					$desc = descvarConvert($userrow, $row['description'], $row['effects']);
-					echo "Description: $desc</br></br>";
+					echo "Description: $desc<br/><br/>";
 				}
 			}
 		}

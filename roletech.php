@@ -2,9 +2,9 @@
 require_once "header.php";
 require_once "includes/fieldparser.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to access roletech.</br>";
+	echo "Log in to access roletech.<br/>";
 } elseif (empty($_SESSION['adjective'])) {
-	echo "You have not accepted your title yet!</br>";
+	echo "You have not accepted your title yet!<br/>";
 } else {
 
 
@@ -24,16 +24,16 @@ if (empty($_SESSION['username'])) {
 	} else {
 		if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 			if ($userrow['hascomputer'] < 3) {
-				//if ($compugood == true) echo "You don't have a hands-free computer equipped, so you can't use the SBURB server program during strife.</br>";
+				//if ($compugood == true) echo "You don't have a hands-free computer equipped, so you can't use the SBURB server program during strife.<br/>";
 				$compugood = false;
 			}
 		}
 		if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
-			//if ($compugood == true) echo "You don't have a portable computer in your inventory, so you can't use the SBURB server program while away from home.</br>";
+			//if ($compugood == true) echo "You don't have a portable computer in your inventory, so you can't use the SBURB server program while away from home.<br/>";
 			$compugood = false;
 		}
 		if ($userrow['hascomputer'] == 0) {
-			//if ($compugood == true) echo "You need a computer in storage or your inventory to use the SBURB server program.</br>";
+			//if ($compugood == true) echo "You need a computer in storage or your inventory to use the SBURB server program.<br/>";
 			$compugood = false;
 		}
 	}
@@ -82,20 +82,20 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 								$targetresult = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`username` = '$target' AND `Players`.`session_name` = '$userrow[session_name]' LIMIT 1;");
 								if ($targetrow = $targetresult->fetch_array()) { //Player found.
 									if ($targetrow['noassist'] == 1) {
-										echo "That player cannot currently be assisted.</br>";
+										echo "That player cannot currently be assisted.<br/>";
 									} elseif ($targetrow['dreamingstatus'] != $userrow['dreamingstatus'] && $userrow['Godtier'] == 0) { //God tiers can buff ALL the things
-										echo "You cannot currently reach that player to use an ability on them!</br>";
+										echo "You cannot currently reach that player to use an ability on them!<br/>";
 									} elseif ($strifing && $targetrow['aiding'] != $username && $userrow['aiding'] != $targetrow['username'] && ($userrow['aiding'] != $targetrow['aiding'] || empty($userrow['aiding'])) && $userrow['sessionbossengaged'] != 1) {
 										//User and target not in the same strife (either user aids target, target aids user, or user and target both aid the same person).
-										echo "While strifing, you may not use abilities on those not participating in your strife.</br>";
+										echo "While strifing, you may not use abilities on those not participating in your strife.<br/>";
 									} elseif ($userrow['sessionbossengaged'] == 1 && $userrow['sessionbossengaged'] != $targetrow['sessionbossengaged']) { //Handle session boss case.
-										echo "While strifing, you may not use abilities on those not participating in your strife.</br>";
+										echo "While strifing, you may not use abilities on those not participating in your strife.<br/>";
 									} else { //Success.
 										$targetfound = True;
 									}
 									$targetrow = parseEnemydata($targetrow);
 								} else {
-									echo "Player $target was not found in your session.</br>";
+									echo "Player $target was not found in your session.<br/>";
 								}
 							} else {
 								$target = $username;
@@ -158,15 +158,15 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 						switch ($id) { //Data for what abilities do contained here. This switch statement performs the abilities; slap the code in here. COMMENT EACH CASE WITH THE NAME OF THE ABILITY.
 							case 5: //Dissipate (focus)
 								if ($strifing) {
-									echo "$abilityrow[Usagestr]</br>";
+									echo "$abilityrow[Usagestr]<br/>";
 									$mysqli->query("UPDATE `Players` SET `dissipatefocus` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 								} else {
-									echo "You may only use that ability while strifing.</br>";
+									echo "You may only use that ability while strifing.<br/>";
 								}
 								break;
 							case 6: //Esauna
 								if ($targetfound) {
-									echo "$abilityrow[Usagestr]</br>";
+									echo "$abilityrow[Usagestr]<br/>";
 									if ($targetrow['powerboost'] < 0)
 										$mysqli->query("UPDATE `Players` SET `powerboost` = 0 WHERE `Players`.`username` = '$target' LIMIT 1 ;");
 									if ($targetrow['offenseboost'] < 0)
@@ -195,27 +195,27 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 										if ($focus < 20)
 											$focus = 20;
 										if ($userrow['sessionbossfocus'] <= $focus) {
-											echo "$abilityrow[Usagestr]</br>";
+											echo "$abilityrow[Usagestr]<br/>";
 											$sessionmates = $mysqli->query("SELECT `username`,`Brief_Luck` FROM `Players` WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`sessionbossengaged` = 1;");
 											while ($chumrow = $sessionmates->fetch_array()) {
 												$mysqli->query("UPDATE `Players` SET `Brief_Luck` = $chumrow[Brief_Luck]+10 WHERE `Players`.`username` = '$chumrow[username]' LIMIT 1;");
-												echo "$chumrow[username] has been fortuitously advised.</br>";
+												echo "$chumrow[username] has been fortuitously advised.<br/>";
 											}
 										} else {
-											echo "You attempt to divine fortuitously, but are interrupted by having to stop $userrow[sessionbossname] from killing you. There's just too much attention on you right now for you to direct the battle flow.</br>";
+											echo "You attempt to divine fortuitously, but are interrupted by having to stop $userrow[sessionbossname] from killing you. There's just too much attention on you right now for you to direct the battle flow.<br/>";
 											/*} else {
-											 echo "You attempt to divine fortuitously, but are interrupted by having to stop things from killing you.</br>";*/
+											 echo "You attempt to divine fortuitously, but are interrupted by having to stop things from killing you.<br/>";*/
 										}
 									} elseif (!$compugood) {
-										echo "Without a computer, you can only advise yourself!</br>";
+										echo "Without a computer, you can only advise yourself!<br/>";
 										$mysqli->query("UPDATE `Players` SET `Brief_Luck` = $userrow[Brief_Luck]+10 WHERE `Players`.`username` = '$username' LIMIT 1;");
-										echo "$username has been fortuitously advised.</br>";
+										echo "$username has been fortuitously advised.<br/>";
 									} else {
-										echo "$abilityrow[Usagestr]</br>";
+										echo "$abilityrow[Usagestr]<br/>";
 										$sessionmates = $mysqli->query("SELECT `username`,`Brief_Luck` FROM `Players` WHERE `Players`.`session_name` = '$userrow[session_name]' AND `Players`.`hascomputer` = 1;");
 										while ($chumrow = $sessionmates->fetch_array()) {
 											$mysqli->query("UPDATE `Players` SET `Brief_Luck` = $chumrow[Brief_Luck]+10 WHERE `Players`.`username` = '$chumrow[username]' LIMIT 1;");
-											echo "$chumrow[username] has been fortuitously advised.</br>";
+											echo "$chumrow[username] has been fortuitously advised.<br/>";
 										}
 									}
 								}
@@ -223,7 +223,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 							case 18: //Temporal Doppelgänger
 								if ($userrow['encounters'] > 0) {
 									if ($strifing) {
-										echo "$abilityrow[Usagestr]</br>";
+										echo "$abilityrow[Usagestr]<br/>";
 										$i = 1;
 										while ($i <= $max_enemies) {
 											$enemystr = "enemy" . strval($i) . "name";
@@ -240,11 +240,11 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 											$i++;
 										}
 									} else {
-										echo "A version of you with slight temporal displacement appears. You ask how the future/past/alternate timeline is going. You say it's going pretty well, thank you. You ask how things are in the present. You say they're doing okay. It's pretty chill.</br>";
+										echo "A version of you with slight temporal displacement appears. You ask how the future/past/alternate timeline is going. You say it's going pretty well, thank you. You ask how things are in the present. You say they're doing okay. It's pretty chill.<br/>";
 									}
 									$mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '$username' LIMIT 1;");
 								} else {
-									echo "Unfortunately, nothing happens. You just don't have any time left to abuse.</br>";
+									echo "Unfortunately, nothing happens. You just don't have any time left to abuse.<br/>";
 								}
 								break;
 							default:
@@ -258,23 +258,23 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 							writeEnemydata($targetrow);
 						}
 					} else {
-						echo "You have already used your action for this round of strife!</br>";
+						echo "You have already used your action for this round of strife!<br/>";
 					}
 				} else {
-					echo "You do not have the required Aspect Vial to use this ability!</br>";
+					echo "You do not have the required Aspect Vial to use this ability!<br/>";
 				}
 			} else {
-				echo "That ability is not an active ability!</br>";
+				echo "That ability is not an active ability!<br/>";
 			}
 		} else {
-			echo "You do not have that ability!</br>";
+			echo "You do not have that ability!<br/>";
 		}
 	}
 	$abilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` 
 BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
 	//Note that other special restrictions may be checked at some stage.
 	$aspectvial = floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100);
-	echo "Aspect Vial: $aspectvial%</br>";
+	echo "Aspect Vial: $aspectvial%<br/>";
 	$tempfound = false;
 	$currentstatus = $userrow['strifestatus'];
 	if (!empty($currentstatus)) { //Check for any instances of HASABILITY
@@ -284,58 +284,58 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 			$statusarg = explode(":", $thisstatus[$st]);
 			if ($statusarg[0] == "HASABILITY") { //This is an ability the player possesses.
 				if ($tempfound == false) {
-					echo "You have temporary roletechs:</br></br>";
+					echo "You have temporary roletechs:<br/><br/>";
 					$tempfound = true;
 				}
 				$abilityid = intval($statusarg[1]);
 				$abilityresult = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`ID` = $abilityid LIMIT 1;");
 				$ability = $abilityresult->fetch_array();
-				echo "$ability[Name]:</br>";
-				echo "$ability[Description]</br>";
-				echo "Class: $ability[Class]</br>";
-				echo "Aspect: $ability[Aspect]</br>";
+				echo "$ability[Name]:<br/>";
+				echo "$ability[Description]<br/>";
+				echo "Class: $ability[Class]<br/>";
+				echo "Aspect: $ability[Aspect]<br/>";
 				if ($ability['Rungreq'] > 0)
-					echo "Rung (not) required: $ability[Rungreq]</br>";
+					echo "Rung (not) required: $ability[Rungreq]<br/>";
 				//Will need code to print out the god tier requirement here.
 				if ($ability['Aspect_Cost'] != 0) {
 					$aspectcost = ceil(($ability['Aspect_Cost'] / $userrow['Gel_Viscosity']) * 100);
-					echo "Aspect Vial expended to use this ability: $aspectcost%</br>";
+					echo "Aspect Vial expended to use this ability: $aspectcost%<br/>";
 				}
 				if ($ability['Active'] == 1) {
 					echo '<form action="roletech.php" method="post">';
 					if ($ability['targets'] == 1)
-						echo 'Target (default to self if blank): <input type="text" id="target" name="target"></br>';
+						echo 'Target (default to self if blank): <input type="text" id="target" name="target"><br/>';
 					echo '<input type="hidden" name="ability" id="ability" value="' . strval($ability['ID']) . '">'; //Send the ability's ID off for processing.
-					echo '<input type="submit" value="Use it!"></form></br>';
+					echo '<input type="submit" value="Use it!"></form><br/>';
 				}
-				echo "</br>";
+				echo "<br/>";
 			}
 			$st++;
 		}
 	}
-	echo "Your available roletech:</br></br>";
+	echo "Your available roletech:<br/><br/>";
 	$tech = False;
 	while ($ability = $abilities->fetch_array()) {
 		$tech = True;
-		echo "$ability[Name]:</br>";
-		echo "$ability[Description]</br>";
-		echo "Class: $ability[Class]</br>";
-		echo "Aspect: $ability[Aspect]</br>";
+		echo "$ability[Name]:<br/>";
+		echo "$ability[Description]<br/>";
+		echo "Class: $ability[Class]<br/>";
+		echo "Aspect: $ability[Aspect]<br/>";
 		if ($ability['Rungreq'] > 0)
-			echo "Rung required: $ability[Rungreq]</br>";
+			echo "Rung required: $ability[Rungreq]<br/>";
 		//Will need code to print out the god tier requirement here.
 		if ($ability['Aspect_Cost'] != 0) {
 			$aspectcost = ceil(($ability['Aspect_Cost'] / $userrow['Gel_Viscosity']) * 100);
-			echo "Aspect Vial expended to use this ability: $aspectcost%</br>";
+			echo "Aspect Vial expended to use this ability: $aspectcost%<br/>";
 		}
 		if ($ability['Active'] == 1) {
 			echo '<form action="roletech.php" method="post">';
 			if ($ability['targets'] == 1)
-				echo 'Target (default to self if blank): <input type="text" id="target" name="target"></br>';
+				echo 'Target (default to self if blank): <input type="text" id="target" name="target"><br/>';
 			echo '<input type="hidden" name="ability" id="ability" value="' . strval($ability['ID']) . '">'; //Send the ability's ID off for processing.
-			echo '<input type="submit" value="Use it!"></form></br>';
+			echo '<input type="submit" value="Use it!"></form><br/>';
 		}
-		echo "</br>";
+		echo "<br/>";
 	}
 	if ($tech == False)
 		echo "None!";

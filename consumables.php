@@ -5,7 +5,7 @@ require_once "includes/glitches.php";
 require 'additem.php';
 $alreadywritten = false; //lol.
 if (empty($_SESSION['username'])) {
-	echo "Log in to use consumable items.</br>";
+	echo "Log in to use consumable items.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Your dream self can't access your sylladex!";
 } else {
@@ -155,17 +155,17 @@ if (empty($_SESSION['username'])) {
 						$userrow = terminateStrife($userrow, -1);
 						if (!empty($userrow['strifesuccessexplore']) && !empty($userrow['strifefailureexplore'])) { //User exploring!
 							$mysqli->query("UPDATE `Players` SET `exploration` = '" . $userrow['strifeabscondexplore'] . "', `strifesuccessexplore` = '', `strifefailureexplore` = '', `strifeabscondexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-							echo ' <a href="explore.php">Continue exploring</a></br>';
+							echo ' <a href="explore.php">Continue exploring</a><br/>';
 						}
 						if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
 							$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 1 WHERE `Players`.`username` = '$username' LIMIT 1;");
-							echo "The portal dumps everyone back into the other room.</br>";
-							echo "<a href='dungeons.php'>==&gt;</a></br>";
+							echo "The portal dumps everyone back into the other room.<br/>";
+							echo "<a href='dungeons.php'>==&gt;</a><br/>";
 						}
 						if ($userrow['dungeonstrife'] == 4) { //User fighting dungeon guardian
 							$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 3 WHERE `Players`.`username` = '$username' LIMIT 1;");
-							echo "In escaping the dungeon guardian, you're unsure if you will ever be able to find that same dungeon again.</br>";
-							echo "<a href='dungeons.php#display'>==&gt;</a></br>";
+							echo "In escaping the dungeon guardian, you're unsure if you will ever be able to find that same dungeon again.<br/>";
+							echo "<a href='dungeons.php#display'>==&gt;</a><br/>";
 						}
 					} elseif ($userrow['indungeon'] == 1) {
 						echo "You place the escape key against a wall and press it in. Moments later, a portal opens in the wall and you jump through it, landing outside of the dungeon.<br/>";
@@ -222,7 +222,7 @@ if (empty($_SESSION['username'])) {
 				case "? Block":
 					$content = rand(0, 1);
 					if ($content == 0) { //just a coin (one boondollar)
-						echo "You punch the ? Block. A single coin pops out. Lucky you...?</br>";
+						echo "You punch the ? Block. A single coin pops out. Lucky you...?<br/>";
 						$mysqli->query("UPDATE `Players` SET `Boondollars` = " . strval($userrow['Boondollars'] + 1) . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					} else {
 						$totalconsumes = 0;
@@ -258,7 +258,7 @@ if (empty($_SESSION['username'])) {
 					}
 					break;
 				case "Barrelfull of Water":
-					echo "You drink all the water in the barrel. All of it. You begin to suspect that there may be a camel somewhere in your ancestry.</br>";
+					echo "You drink all the water in the barrel. All of it. You begin to suspect that there may be a camel somewhere in your ancestry.<br/>";
 					$blockloot = addItem("Empty Barrel", $userrow);
 					if ($blockloot == "inv-1") { //no inventory space, so we'll replace the item that was just used with the new item. Not ideal, but it's better than being all "you can't hold it lol" when you JUST used up an item.
 						$mysqli->query("UPDATE `Players` SET `" . $_POST['consume'] . "` = 'Empty Barrel' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -269,7 +269,7 @@ if (empty($_SESSION['username'])) {
 				case "Lens of Truth":
 					$donotconsume = 1;
 					if ($userrow['indungeon'] != 0) {
-						echo "You hold up the Lens of Truth, examining each junction from your current position and revealing what's inside the rooms!</br>";
+						echo "You hold up the Lens of Truth, examining each junction from your current position and revealing what's inside the rooms!<br/>";
 						$dungeonresult = $mysqli->query("SELECT * FROM `Dungeons` WHERE `Dungeons`.`username` = '$username'");
 						$drow = $dungeonresult->fetch_array();
 						$dquery = "UPDATE `Dungeons` SET ";
@@ -311,9 +311,9 @@ if (empty($_SESSION['username'])) {
 							$dquery .= " WHERE `Dungeons`.`username` = '$username' LIMIT 1;";
 							$mysqli->query($dquery);
 						} else
-							echo "...but you already explored all those rooms yourself, so you wonder what even was the point.</br>";
+							echo "...but you already explored all those rooms yourself, so you wonder what even was the point.<br/>";
 					} else
-						echo "You hold up the Lens of Truth for a moment, but aside from a neat tinted filter, you don't see anything interesting.</br>";
+						echo "You hold up the Lens of Truth for a moment, but aside from a neat tinted filter, you don't see anything interesting.<br/>";
 					break;
 				case "Kero-Kero Cola":
 					if ($userrow['sessionbossengaged'] == 1) {
@@ -368,7 +368,7 @@ if (empty($_SESSION['username'])) {
 					break;
 				case "Pan Galactic Gargle Blaster":
 					if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") { //User strifing
-						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a slice of lemon wrapped around a solid gold brick, and collapse on the spot.</br>";
+						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a slice of lemon wrapped around a solid gold brick, and collapse on the spot.<br/>";
 						echo "You slowly and painfully come to an unknown amount of time later. The enemies you were fighting have all left, probably out of pity. You crawl back to your dwelling and spend some time recovering from that hellish drink.";
 						$k = 1;
 						while ($k <= $max_enemies) {
@@ -389,7 +389,7 @@ if (empty($_SESSION['username'])) {
 						}
 						$mysqli->query("UPDATE `Players` SET `aiding` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					} else {
-						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a spaceship, and collapse on the spot.</br>";
+						echo "Against your better judgement, you take a sip of the Pan Galactic Gargle Blaster. The effect is almost immediate: you feel like you got hit by a spaceship, and collapse on the spot.<br/>";
 						echo "You slowly and painfully come to an unknown amount of time later. It's a good thing you weren't out and about when you drank this, because you'll need as much time as you can get to overcome your monumental headache.";
 					}
 					$boost = $userrow['powerboost'];
@@ -417,14 +417,14 @@ if (empty($_SESSION['username'])) {
 					break;
 				case "Candy Corn Liquor":
 					if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
-						echo "You consider drinking the potent sugary brew, but your opponents won't give you the opportunity to construct a fort. Everyone knows you can't drink alcohol of this caliber without a proper fort!</br>";
+						echo "You consider drinking the potent sugary brew, but your opponents won't give you the opportunity to construct a fort. Everyone knows you can't drink alcohol of this caliber without a proper fort!<br/>";
 						$donotconsume = true;
 					} else {
-						echo "You chug the potent sugary brew. Fortunately you had the foresight to construct a fort beforehand, so you hide safely in there as the alcohol takes effect. You feel exceptionally drowsy...</br>";
+						echo "You chug the potent sugary brew. Fortunately you had the foresight to construct a fort beforehand, so you hide safely in there as the alcohol takes effect. You feel exceptionally drowsy...<br/>";
 						if ($userrow['dreamer'] == "Unawakened")
-							echo "...and then you wake up a few hours later with a mild headache. Perhaps you lack the IMAGINATION to use this liquor to its fullest effect.</br>";
+							echo "...and then you wake up a few hours later with a mild headache. Perhaps you lack the IMAGINATION to use this liquor to its fullest effect.<br/>";
 						else {
-							echo "You drift off to sleep, awakening as your dream self moments later. Your IMAGINATION stat soars thanks to the candy corn liquor!</br>";
+							echo "You drift off to sleep, awakening as your dream self moments later. Your IMAGINATION stat soars thanks to the candy corn liquor!<br/>";
 							$mysqli->query("UPDATE `Players` SET `dreamingstatus` = '$userrow[dreamer]', `powerboost` = $userrow[Echeladder], `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `strifesuceessexplore` = '', `strifefailureexlpore` = '', `correctgristtype` = 'None' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							if ($userrow['encountersspent'] > 0) { //Player spent encounters while awake.
 								$newhp = $userrow['Dream_Health_Vial'] + ceil(($userrow['Gel_Viscosity'] / 5) * $userrow['encountersspent']);
@@ -438,8 +438,8 @@ if (empty($_SESSION['username'])) {
 									$newaspect = $userrow['Gel_Viscosity'];
 								$mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $newaspect WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$mysqli->query("UPDATE `Players` SET `encountersspent` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-								echo "Spending time as your waking self has let your dream self rest, allowing them to recover health.</br>";
-								echo "Resting in one state has strengthened your connection to your Aspect.</br>";
+								echo "Spending time as your waking self has let your dream self rest, allowing them to recover health.<br/>";
+								echo "Resting in one state has strengthened your connection to your Aspect.<br/>";
 								if (!empty($abilities[9]))
 									echo $abilities[9]; //Aspect Connection occurrence message.
 							}
@@ -450,14 +450,14 @@ if (empty($_SESSION['username'])) {
 					break;
 				case "Pushing-Potion":
 					if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
-						echo "You consider drinking the Pushing-Potion, but your enemies won't give you the chance.</br>";
+						echo "You consider drinking the Pushing-Potion, but your enemies won't give you the chance.<br/>";
 						$donotconsume = true;
 					} else {
-						echo "You drink the potion, and immediately feel as if a great weight is making you sink through the floor. You collapse on the spot.</br>";
+						echo "You drink the potion, and immediately feel as if a great weight is making you sink through the floor. You collapse on the spot.<br/>";
 						if ($userrow['dreamer'] == "Unawakened")
-							echo "...and then you wake up a few hours later, reeling from the bizarre images you saw in your sleep. If only you could dream of a better place...</br>";
+							echo "...and then you wake up a few hours later, reeling from the bizarre images you saw in your sleep. If only you could dream of a better place...<br/>";
 						else {
-							echo "You drift off to sleep, awakening as your dream self moments later.</br>";
+							echo "You drift off to sleep, awakening as your dream self moments later.<br/>";
 							$mysqli->query("UPDATE `Players` SET `dreamingstatus` = '$userrow[dreamer]', `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `strifesuceessexplore` = '', `strifefailureexlpore` = '', `correctgristtype` = 'None' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							if ($userrow['encountersspent'] > 0) { //Player spent encounters while awake.
 								$newhp = $userrow['Gel_Viscosity']; //the item gives a full heal of the dreamself
@@ -469,8 +469,8 @@ if (empty($_SESSION['username'])) {
 									$newaspect = $userrow['Gel_Viscosity'];
 								$mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $newaspect WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$mysqli->query("UPDATE `Players` SET `encountersspent` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-								echo "You feel totally rejuvenated somehow, regardless of how much time you spent as your waking self!</br>";
-								echo "Resting in one state has strengthened your connection to your Aspect.</br>";
+								echo "You feel totally rejuvenated somehow, regardless of how much time you spent as your waking self!<br/>";
+								echo "Resting in one state has strengthened your connection to your Aspect.<br/>";
 								if (!empty($abilities[9]))
 									echo $abilities[9]; //Aspect Connection occurrence message.
 							}
@@ -764,7 +764,7 @@ if (empty($_SESSION['username'])) {
 										$tempdamage = $affectrow[$healthstr] - 1;
 									if (!empty($enemyrow)) { //Not a grist enemy.
 										if ($enemyrow['massiveresist'] != 100 && $tempdamage > (floor($affectrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
-											echo $affectrow[$enemystr] . " resists the massive damage!</br>";
+											echo $affectrow[$enemystr] . " resists the massive damage!<br/>";
 											$tempdamage = floor($userrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'];
 										}
 									}
@@ -891,7 +891,7 @@ if (empty($_SESSION['username'])) {
 					break;
 			}
 		}
-		echo "</br>";
+		echo "<br/>";
 		if (!$fail) {
 			if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 				$mysqli->query("UPDATE `Players` SET `combatconsume` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -933,7 +933,7 @@ if (empty($_SESSION['username'])) {
 		}
 		echo '</select>';
 		if ($userrow['sessionbossengaged'] == 1) {
-			echo '</br>Player to use this on: <select name="target">';
+			echo '<br/>Player to use this on: <select name="target">';
 			echo '<option value = "' . $username . '">' . $username . '</option>';
 			$allyresult = $mysqli->query("SELECT `username`,`sessionbossengaged` FROM `Players` WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' ;");
 			while ($allyrow = $allyresult->fetch_array()) {
@@ -943,7 +943,7 @@ if (empty($_SESSION['username'])) {
 			echo '</select>';
 		}
 		echo '<input type="submit" value="Consume it!" /> </form>';
-		echo '<a href="strife.php">Strife</a></br>';
+		echo '<a href="strife.php">Strife</a><br/>';
 	}
 }
 require_once "footer.php";

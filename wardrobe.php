@@ -88,10 +88,10 @@ function refreshLuck($userrow)
 	}
 }
 if (empty($_SESSION['username'])) {
-	echo "Log in to view and manipulate your strife portfolio and options.</br>";
+	echo "Log in to view and manipulate your strife portfolio and options.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	require_once "includes/SQLconnect.php";
-	echo "As your dream self, your only wearables are your dream pajamas and whatever basic eyewear you happen to use.</br>";
+	echo "As your dream self, your only wearables are your dream pajamas and whatever basic eyewear you happen to use.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	//--Begin equipping code here.--
@@ -106,7 +106,7 @@ if (empty($_SESSION['username'])) {
 				$mysqli->query("UPDATE `Players` SET `facegear` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			autoUnequip($userrow, "none", $userrow['headgear']); //will also remove any granted effects, if any exist
 			$mysqli->query("UPDATE `Players` SET `headgear` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-			echo "You remove your headgear.</br>";
+			echo "You remove your headgear.<br/>";
 			unset($_SESSION['headrow']);
 			$headname = "Nothing";
 		} else {
@@ -120,12 +120,12 @@ if (empty($_SESSION['username'])) {
 				$headname = $itemname;
 				if ($itemname == $userrow[$_POST['equiphead']]) {
 					if (!strrpos($itemrow['abstratus'], "headgear")) {
-						echo "Stop trying to be Sollux.</br>";
+						echo "Stop trying to be Sollux.<br/>";
 					} else {
 						if (itemSize($itemrow['size']) < itemSize("huge")) {
 							$equippedhead = $_POST['equiphead'];
 							//For use later.
-							echo "You wear your $itemname on your head.</br>";
+							echo "You wear your $itemname on your head.<br/>";
 							//NOTE - Unauthorized equipping prevented by menu options not being there.
 							$_SESSION['headrow'] = $itemrow;
 							$mysqli->query("UPDATE `Players` SET `headgear` = '" . $_POST['equiphead'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -142,7 +142,7 @@ if (empty($_SESSION['username'])) {
 								$equippedface = "2HAND";
 							}
 						} else
-							echo "That item is too big to be worn on the head!</br>";
+							echo "That item is too big to be worn on the head!<br/>";
 					}
 				}
 			}
@@ -157,7 +157,7 @@ if (empty($_SESSION['username'])) {
 		if ($_POST['equipface'] == "none") {
 			autoUnequip($userrow, "none", $userrow['facegear']); //will also remove any granted effects, if any exist
 			$mysqli->query("UPDATE `Players` SET `facegear` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-			echo "You remove your facegear.</br>";
+			echo "You remove your facegear.<br/>";
 			$facename = "Nothing";
 			unset($_SESSION['facerow']);
 		} else {
@@ -171,13 +171,13 @@ if (empty($_SESSION['username'])) {
 				$facename = $itemname;
 				if ($itemname == $userrow[$_POST['equipface']]) {
 					if (!strrpos($itemrow['abstratus'], "facegear")) {
-						echo "Stop trying to be Sollux.</br>";
+						echo "Stop trying to be Sollux.<br/>";
 					} else {
 						if (itemSize($itemrow['size']) < itemSize("large")) {
 							//No putting large. Might need to be removed later
 							$equippedface = $_POST['equipface'];
 							//For use later.
-							echo "You wear your $itemname on your face.</br>";
+							echo "You wear your $itemname on your face.<br/>";
 							$_SESSION['facerow'] = $itemrow;
 							if ($userrow['facegear'] == "2HAND") {
 								$userrow['headgear'] = "";
@@ -191,7 +191,7 @@ if (empty($_SESSION['username'])) {
 							refreshLuck($userrow);
 							grantEffects($userrow, $itemrow['effects'], "facegear");
 						} else {
-							echo "That item is too big to be worn on the face!</br>";
+							echo "That item is too big to be worn on the face!<br/>";
 						}
 					}
 				}
@@ -207,7 +207,7 @@ if (empty($_SESSION['username'])) {
 		if ($_POST['equipbody'] == "none") {
 			autoUnequip($userrow, "none", $userrow['bodygear']); //will also remove any granted effects, if any exist
 			$mysqli->query("UPDATE `Players` SET `bodygear` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-			echo "You remove your bodygear and are now wearing your regular clothes.</br>";
+			echo "You remove your bodygear and are now wearing your regular clothes.<br/>";
 			$bodyname = "Basic clothes";
 			unset($_SESSION['bodyrow']);
 		} else {
@@ -221,12 +221,12 @@ if (empty($_SESSION['username'])) {
 				$bodyname = $itemname;
 				if ($itemname == $userrow[$_POST['equipbody']]) {
 					if (!strrpos($itemrow['abstratus'], "bodygear")) {
-						echo "Stop trying to be Sollux.</br>";
+						echo "Stop trying to be Sollux.<br/>";
 					} else {
 						if (itemSize($itemrow['size']) < itemSize("huge")) {
 							$equippedbody = $_POST['equipbody'];
 							//For use later.
-							echo "You wear your $itemname on your body.</br>";
+							echo "You wear your $itemname on your body.<br/>";
 							//NOTE - Unauthorized equipping prevented by menu options not being there.
 							$_SESSION['bodyrow'] = $itemrow;
 							$mysqli->query("UPDATE `Players` SET `bodygear` = '" . $_POST['equipbody'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -236,7 +236,7 @@ if (empty($_SESSION['username'])) {
 							refreshLuck($userrow);
 							grantEffects($userrow, $itemrow['effects'], "bodygear");
 						} else
-							echo "That item is too big to be worn on the body!</br>";
+							echo "That item is too big to be worn on the body!<br/>";
 					}
 				}
 			}
@@ -251,7 +251,7 @@ if (empty($_SESSION['username'])) {
 		if ($_POST['equipacc'] == "none") {
 			autoUnequip($userrow, "none", $userrow['accessory']); //will also remove any granted effects, if any exist
 			$mysqli->query("UPDATE `Players` SET `accessory` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-			echo "You remove your accessory.</br>";
+			echo "You remove your accessory.<br/>";
 			unset($_SESSION['accrow']);
 			$accname = "Nothing";
 		} else {
@@ -265,12 +265,12 @@ if (empty($_SESSION['username'])) {
 				$accname = $itemname;
 				if ($itemname == $userrow[$_POST['equipacc']]) {
 					if (!strrpos($itemrow['abstratus'], "accessory")) {
-						echo "Stop trying to be Sollux.</br>";
+						echo "Stop trying to be Sollux.<br/>";
 					} else {
 						if (itemSize($itemrow['size']) < itemSize("huge")) {
 							$equippedacc = $_POST['equipacc'];
 							//For use later.
-							echo "You wear your $itemname as an accessory.</br>";
+							echo "You wear your $itemname as an accessory.<br/>";
 							//NOTE - Unauthorized equipping prevented by menu options not being there.
 							$_SESSION['accrow'] = $itemrow;
 							$mysqli->query("UPDATE `Players` SET `accessory` = '" . $_POST['equipacc'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -280,7 +280,7 @@ if (empty($_SESSION['username'])) {
 							refreshLuck($userrow);
 							grantEffects($userrow, $itemrow['effects'], "accessory");
 						} else
-							echo "That item is too big to be worn as an accessory!</br>";
+							echo "That item is too big to be worn as an accessory!<br/>";
 					}
 				}
 			}
@@ -327,7 +327,7 @@ if (empty($_SESSION['username'])) {
 			$accname = "Nothing";
 		}
 	}
-	echo "Virtual Wardrobifier v0.0.1w. Please select a captchalogued wearable.</br>";
+	echo "Virtual Wardrobifier v0.0.1w. Please select a captchalogued wearable.<br/>";
 	echo '<form action="wardrobe.php" method="post"><select name="equiphead">';
 	if ($headname != "Nothing")
 		echo '<option value="none">Remove</option>';
@@ -713,7 +713,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 
-	echo "Currently wearing:</br>";
+	echo "Currently wearing:<br/>";
 	echo "Headgear: $headname" . checkvalues($headname) . "<br/>";
 	echo "Facegear: $facename" . checkvalues($facename) . "<br/>";
 	echo "Bodygear: $bodyname" . checkvalues($bodyname) . "<br/>";
@@ -852,10 +852,10 @@ if (empty($_SESSION['username'])) {
 	}
 }
 $totaldef = $headdef + $facedef + $bodydef + $accdef;
-echo "Current defense bonus from wearables: $totaldef </br>";
+echo "Current defense bonus from wearables: $totaldef <br/>";
 $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 echo $username;
-echo "'s captchalogued wearables:</br></br>";
+echo "'s captchalogued wearables:<br/><br/>";
 $reachinv = False;
 $terminateloop = False;
 while (($col = $invresult->fetch_field()) && $terminateloop == False) {
@@ -883,11 +883,11 @@ while (($col = $invresult->fetch_field()) && $terminateloop == False) {
 				//Item found in captchalogue database
 				if (strrpos($row['abstratus'], "headgear") || strrpos($row['abstratus'], "facegear") || strrpos($row['abstratus'], "bodygear") || strrpos($row['abstratus'], "accessory")) {
 					//Item is wearable
-					echo "Item: $itemname</br>";
+					echo "Item: $itemname<br/>";
 					if ($row['art'] != "") {
-						echo '<img src="Images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"></br>';
+						echo '<img src="Images/Items/' . $row['art'] . '" title="Image by ' . $row['credit'] . '"><br/>';
 					}
-					echo "Type: " . $row['abstratus'] . "</br>";
+					echo "Type: " . $row['abstratus'] . "<br/>";
 					$mypower = strval($row['power']);
 					$mybpower = "0";
 					$theonebonus = "none";
@@ -924,78 +924,78 @@ while (($col = $invresult->fetch_field()) && $terminateloop == False) {
 						else
 							$mybpower = "0";
 					}
-					echo "Defense: $mypower</br>";
+					echo "Defense: $mypower<br/>";
 					if ($row['aggrieve'] > 0 && ($theonebonus == "none" || $theonebonus == "aggrieve")) {
 						if ($mybpower == "0")
-							echo "Aggrieve bonus: $row[aggrieve] </br>";
+							echo "Aggrieve bonus: $row[aggrieve] <br/>";
 						else
-							echo "Aggrieve bonus: $mybpower </br>";
+							echo "Aggrieve bonus: $mybpower <br/>";
 					}
 					if ($row['aggrieve'] < 0 && $theonebonus == "none") {
-						echo "Aggrieve penalty: $row[aggrieve] </br>";
+						echo "Aggrieve penalty: $row[aggrieve] <br/>";
 					}
 					if ($row['aggress'] > 0 && ($theonebonus == "none" || $theonebonus == "aggress")) {
 						if ($mybpower == "0")
-							echo "Aggress bonus: $row[aggress] </br>";
+							echo "Aggress bonus: $row[aggress] <br/>";
 						else
-							echo "Aggress bonus: $mybpower </br>";
+							echo "Aggress bonus: $mybpower <br/>";
 					}
 					if ($row['aggress'] < 0 && $theonebonus == "none") {
-						echo "Aggress penalty: $row[aggress] </br>";
+						echo "Aggress penalty: $row[aggress] <br/>";
 					}
 					if ($row['assail'] > 0 && ($theonebonus == "none" || $theonebonus == "assail")) {
 						if ($mybpower == "0")
-							echo "Assail bonus: $row[assail] </br>";
+							echo "Assail bonus: $row[assail] <br/>";
 						else
-							echo "Assail bonus: $mybpower </br>";
+							echo "Assail bonus: $mybpower <br/>";
 					}
 					if ($row['assail'] < 0 && $theonebonus == "none") {
-						echo "Assail penalty: $row[assail] </br>";
+						echo "Assail penalty: $row[assail] <br/>";
 					}
 					if ($row['assault'] > 0 && ($theonebonus == "none" || $theonebonus == "assault")) {
 						if ($mybpower == "0")
-							echo "Assault bonus: $row[assault] </br>";
+							echo "Assault bonus: $row[assault] <br/>";
 						else
-							echo "Assault bonus: $mybpower </br>";
+							echo "Assault bonus: $mybpower <br/>";
 					}
 					if ($row['assault'] < 0 && $theonebonus == "none") {
-						echo "Assault penalty: $row[assault] </br>";
+						echo "Assault penalty: $row[assault] <br/>";
 					}
 					if ($row['abuse'] > 0 && ($theonebonus == "none" || $theonebonus == "abuse")) {
 						if ($mybpower == "0")
-							echo "Abuse bonus: $row[abuse] </br>";
+							echo "Abuse bonus: $row[abuse] <br/>";
 						else
-							echo "Abuse bonus: $mybpower </br>";
+							echo "Abuse bonus: $mybpower <br/>";
 					}
 					if ($row['abuse'] < 0 && $theonebonus == "none") {
-						echo "Abuse penalty: $row[abuse] </br>";
+						echo "Abuse penalty: $row[abuse] <br/>";
 					}
 					if ($row['accuse'] > 0 && ($theonebonus == "none" || $theonebonus == "accuse")) {
 						if ($mybpower == "0")
-							echo "Accuse bonus: $row[accuse] </br>";
+							echo "Accuse bonus: $row[accuse] <br/>";
 						else
-							echo "Accuse bonus: $mybpower </br>";
+							echo "Accuse bonus: $mybpower <br/>";
 					}
 					if ($row['accuse'] < 0 && $theonebonus == "none") {
-						echo "Accuse penalty: $row[accuse] </br>";
+						echo "Accuse penalty: $row[accuse] <br/>";
 					}
 					if ($row['abjure'] > 0 && ($theonebonus == "none" || $theonebonus == "abjure")) {
 						if ($mybpower == "0")
-							echo "Abjure bonus: $row[abjure] </br>";
+							echo "Abjure bonus: $row[abjure] <br/>";
 						else
-							echo "Abjure bonus: $mybpower </br>";
+							echo "Abjure bonus: $mybpower <br/>";
 					}
 					if ($row['abjure'] < 0 && $theonebonus == "none") {
-						echo "Abjure penalty: $row[abjure] </br>";
+						echo "Abjure penalty: $row[abjure] <br/>";
 					}
 					if ($row['abstain'] > 0 && ($theonebonus == "none" || $theonebonus == "abstain")) {
 						if ($mybpower == "0")
-							echo "Abstain bonus: $row[abstain] </br>";
+							echo "Abstain bonus: $row[abstain] <br/>";
 						else
-							echo "Abstain bonus: $mybpower </br>";
+							echo "Abstain bonus: $mybpower <br/>";
 					}
 					if ($row['abstain'] < 0 && $theonebonus == "none") {
-						echo "Abstain penalty: $row[abstain] </br>";
+						echo "Abstain penalty: $row[abstain] <br/>";
 					}
 					if (!empty($row['effects'])) { //Item has effects. Print those here.
 						$effectarray = explode('|', $row['effects']);
@@ -1010,7 +1010,7 @@ while (($col = $invresult->fetch_field()) && $terminateloop == False) {
 						}
 					}
 					$desc = descvarConvert($userrow, $row['description'], $row['effects']);
-					echo "Description: $desc</br></br>";
+					echo "Description: $desc<br/><br/>";
 				}
 			}
 		}

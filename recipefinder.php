@@ -56,18 +56,18 @@ if ($userrow['session_name'] != "Developers" && $userrow['session_name'] != "Ite
 			else
 				$op = " || ";
 			echo $name1 . $op . $name2 . $arrow . $namer;
-			echo "</br>";
+			echo "<br/>";
 		}
 		if ($totalfound == 0)
-			echo "No results were found.</br>";
+			echo "No results were found.<br/>";
 		else
-			echo "Total results: $totalfound </br>";
-		echo "</br>";
+			echo "Total results: $totalfound <br/>";
+		echo "<br/>";
 	}
 
 
-	echo 'Recipe finder v0.1124 Alpha. Enter search terms below.</br>
-The page will return every recipe it can find in the database.</br></br>
+	echo 'Recipe finder v0.1124 Alpha. Enter search terms below.<br/>
+The page will return every recipe it can find in the database.<br/><br/>
 <form action="recipefinder.php" method="post">Component search:<br/>
 Name: <input type="text" name="compname"> / Code: <input type="text" name="compcode"><br/>
 <input type="submit" value="Search"></form><br/>

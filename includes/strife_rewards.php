@@ -23,7 +23,7 @@ while ($gristrow[$typestr] != $grist && $rarity < 10) { //Nine types of grist.
 }
 switch ($userrow[$enemystr]) { //Catches specical case enemies with special interactions that aren't "gristed"
 	case "The Mother of All Hangovers":
-		echo "Wow. You manage to somehow bludgeon your hangover into submission. Because that makes so much sense.</br>";
+		echo "Wow. You manage to somehow bludgeon your hangover into submission. Because that makes so much sense.<br/>";
 		break;
 	case "Kraken":
 		$bossdead = True;
@@ -53,7 +53,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			}
 			$gristlevel++;
 		}
-		echo ".</br>";
+		echo ".<br/>";
 		break;
 	case "Hekatonchire":
 		$bossdead = True;
@@ -83,7 +83,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			}
 			$gristlevel++;
 		}
-		echo ".</br>";
+		echo ".<br/>";
 		break;
 	case "True Hekatonchire":
 		$bossdead = True;
@@ -113,13 +113,13 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			}
 			$gristlevel++;
 		}
-		echo ".</br>";
+		echo ".<br/>";
 		break;
 	case "Lich Queen":
 		$bossdead = True;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Lich Queen to clear a gate 5 dungeon!");
-		echo "CONGRATULATIONS! You have slain the Queen, thus- oh, hang on. Wrong Queen. Er, here, have some grist or something.</br>";
+		echo "CONGRATULATIONS! You have slain the Queen, thus- oh, hang on. Wrong Queen. Er, here, have some grist or something.<br/>";
 		$buildgrist = 66666 + (rand(0, 1) * 6666) + (rand(0, 1) * 26666) + (floor(rand(0, 2) / 2) * 66666) + (rand(0, $luck) * 666);
 		echo "<img src='Images/Grist/" . gristNameToImagePath("Build_Grist") . "' height='15' width='15' alt = 'xcx'/> $buildgrist";
 		$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
@@ -148,7 +148,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		$bossdead = True;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Progenitor to clear the Automaton Factory!");
-		echo "Finally having taken more damage than it can handle, Progenitor falls to pieces in front of you. As it collapses into piles of grist, you hear a soft, synthetic voice: \"I don't hate you.\"</br>";
+		echo "Finally having taken more damage than it can handle, Progenitor falls to pieces in front of you. As it collapses into piles of grist, you hear a soft, synthetic voice: \"I don't hate you.\"<br/>";
 		$gristlevel = 1;
 		while ($gristlevel <= 3) {
 			$gristtyperesult = $mysqli->query("SELECT `name` FROM `Grist_Types`");
@@ -174,7 +174,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		$bossdead = True;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Hydra to clear a 3-floor gate 3 dungeon!");
-		echo "The Hydra's body has taken enough damage that it can no longer support the heads! The entire thing collapses, leaving behind a treasure trove of grist.</br>";
+		echo "The Hydra's body has taken enough damage that it can no longer support the heads! The entire thing collapses, leaving behind a treasure trove of grist.<br/>";
 		$buildgrist = 49000 + (rand(0, 1) * 7777) + (rand(0, 1) * 27777) + (floor(rand(0, 2) / 2) * 77777) + (rand(0, $luck) * 777);
 		echo "<img src='Images/Grist/" . gristNameToImagePath("Build_Grist") . "' height='15' width='15' alt = 'xcx'/> $buildgrist";
 		$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
@@ -310,8 +310,8 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 					$userrow = refreshSingular($slot, $slot, $userrow);
 					$currentstatus = $userrow['strifestatus'];
 					$alldead = false; //newly-spawned head won't be targeted this turn
-					//echo "DEBUG: Spawned head into slot " . strval($slot) . "</br>";
-					//$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!</br>";
+					//echo "DEBUG: Spawned head into slot " . strval($slot) . "<br/>";
+					//$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!<br/>";
 				}
 			} else
 				echo "DEBUGNOTE: Tried to spawn hydra head with ID of $whodat, returned empty.<br/>";
@@ -325,8 +325,8 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 				if ($slot != -1) {
 					$userrow = refreshSingular($slot, $slot, $userrow);
 					$alldead = false;
-					//echo "DEBUG: Spawned head into slot " . strval($slot) . "</br>";
-					//$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!</br>";
+					//echo "DEBUG: Spawned head into slot " . strval($slot) . "<br/>";
+					//$message = $message . "A rip in time and space opens, summoning a $randenemy to the battle!<br/>";
 				}
 			} else
 				echo "DEBUGNOTE: Tried to spawn hydra head with ID of $whodat, returned empty.<br/>";
@@ -353,7 +353,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 					$alldead = true; //it's a long story
 				if (!empty($userrow['pesternoteUsername']))
 					sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Hydra to clear a 3-floor gate 3 dungeon!");
-				echo "Rendered headless, the Hydra briefly runs around like a chicken before stopping dead. The entire thing collapses, leaving behind a treasure trove of grist.</br>";
+				echo "Rendered headless, the Hydra briefly runs around like a chicken before stopping dead. The entire thing collapses, leaving behind a treasure trove of grist.<br/>";
 				$buildgrist = 49000 + (rand(0, 1) * 7777) + (rand(0, 1) * 27777) + (floor(rand(0, 2) / 2) * 77777) + (rand(0, $luck) * 777);
 				echo "<img src='Images/Grist/" . gristNameToImagePath("Build_Grist") . "' height='15' width='15' alt = 'xcx'/> $buildgrist";
 				$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
@@ -384,7 +384,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		$bossdead = True;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated The Bug to clear a gate " . horribleMess() . " dungeon!");
-		echo "After a harrowing b" . horribleMess() . ", The Bug finally expl" . horribleMess() . " into a pile of artifa" . horribleMess() . " and various grist. You're not sure if you just helped " . horribleMess() . "bugfix the game, or destroyed " . horribleMess() . " vital bit of code, but at least you g" . horribleMess() . horribleMess() . "</br>";
+		echo "After a harrowing b" . horribleMess() . ", The Bug finally expl" . horribleMess() . " into a pile of artifa" . horribleMess() . " and various grist. You're not sure if you just helped " . horribleMess() . "bugfix the game, or destroyed " . horribleMess() . " vital bit of code, but at least you g" . horribleMess() . horribleMess() . "<br/>";
 		$buildgrist = rand(1000000, 9999999);
 		echo "<img src='Images/Grist/" . gristNameToImagePath("Artifact_Grist") . "' height='15' width='15' alt = 'xcx'/> $buildgrist";
 		$userrow['Artifact_Grist'] = $userrow['Artifact_Grist'] + $buildgrist;
@@ -441,7 +441,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
 		$denizenrow = $denizenresult->fetch_array();
 		if ($userrow[$enemystr] == $denizenrow[$userrow['Aspect']]) { //Denizen defeated.
-			echo "You have defeated your denizen. You may now access the Battlefield, and you have contributed the Hoard to the session's victory requirement.</br>";
+			echo "You have defeated your denizen. You may now access the Battlefield, and you have contributed the Hoard to the session's victory requirement.<br/>";
 			if (!empty($userrow['pesternoteUsername']))
 				sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Defeated $userrow[$enemystr], my Denizen.");
 			$gateresult = $mysqli->query("SELECT * FROM Gates");
@@ -455,19 +455,19 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		} else {
 			if (!empty($enemyrow)) {
 				if ($enemyrow['appearson'] == "Prospit") {
-					echo '</br>The ' . $userrow[$enemystr] . ' is "defeated"!';
+					echo '<br/>The ' . $userrow[$enemystr] . ' is "defeated"!';
 				} elseif ($enemyrow['appearson'] == "Battlefield") {
 					if ($userrow['battlefield_access'] == 1 || $userrow['dreamingstatus'] != "Awake") {
-						echo '</br>The ' . $userrow[$enemystr] . " is defeated! Derse's war machine grows weaker.</br>";
+						echo '<br/>The ' . $userrow[$enemystr] . " is defeated! Derse's war machine grows weaker.<br/>";
 						$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$userrow[session_name]';");
 						$sessionrow = $sessionresult->fetch_array();
 						$sessionrow['battlefieldtotal'] = $sessionrow['battlefieldtotal'] + $userrow[$maxpowerstr];
 						$mysqli->query("UPDATE `Sessions` SET `battlefieldtotal` = $sessionrow[battlefieldtotal] WHERE `Sessions`.`name` = '$userrow[session_name]' LIMIT 1 ;");
 					} else {
-						echo "You're not supposed to be fighting battlefield enemies.</br>";
+						echo "You're not supposed to be fighting battlefield enemies.<br/>";
 					}
 				} else {
-					echo '</br>The ' . $userrow[$enemystr] . ' is defeated!';
+					echo '<br/>The ' . $userrow[$enemystr] . ' is defeated!';
 				}
 				if ($enemyrow['maxboons'] > 0) { //Enemy drops Boondollars
 					$boondollars = rand($enemyrow['minboons'], $enemyrow['maxboons']);
@@ -477,11 +477,11 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 					} else {
 						echo " You collect the spoils: ";
 					}
-					echo "$boondollars Boondollars.</br>";
+					echo "$boondollars Boondollars.<br/>";
 					$userrow['Boondollars'] = $userrow['Boondollars'] + $boondollars;
 				}
 			} else {
-				echo 'Enemy type "' . $enemytype . '" unrecognized. This is probably a bug, please submit a report!</br>';
+				echo 'Enemy type "' . $enemytype . '" unrecognized. This is probably a bug, please submit a report!<br/>';
 				logDebugMessage($username . " - defeated unrecognized enemy called $enemytype");
 			}
 		}
@@ -557,14 +557,14 @@ switch ($enemytype) { //Legacy: doesn't actually do anything.
 			$mysqli->query("UPDATE `Players` SET `abstrati` = " . strval($userrow['abstrati']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
 			//OVERSEER: I'm just grabbing the first item from the abstratus listing. That should be the kind if it has more than one, right?
 			if ($newabs != "abstratus-1") {
-				echo "It dropped a strife card, which contained " . $abstratus[0] . "! You waste no time putting it in your strife portfolio.</br>";
+				echo "It dropped a strife card, which contained " . $abstratus[0] . "! You waste no time putting it in your strife portfolio.<br/>";
 			} else {
-				echo "It dropped a strife card, but your strife portfolio is too full to equip it!</br>";
+				echo "It dropped a strife card, but your strife portfolio is too full to equip it!<br/>";
 			}
 			if ($newitem != "inv-1") {
-				echo "It dropped its " . $itemname . "! You captchalogue it posthaste.</br>";
+				echo "It dropped its " . $itemname . "! You captchalogue it posthaste.<br/>";
 			} else {
-				echo "It dropped its " . $itemname . "! But your inventory is full, so you leave it behind.</br>";
+				echo "It dropped its " . $itemname . "! But your inventory is full, so you leave it behind.<br/>";
 			}
 		}
 }

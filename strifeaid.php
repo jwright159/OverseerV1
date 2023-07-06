@@ -6,9 +6,9 @@ require_once 'includes/fieldparser.php';
 require_once "header.php";
 $max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
 if (empty($_SESSION['username'])) {
-	echo "Log in to assist in strife.</br>";
+	echo "Log in to assist in strife.<br/>";
 } elseif ($userrow['sessionbossengaged'] == 1) {
-	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a></br>";
+	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a><br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	if (!empty($_POST['aid'])) {
@@ -62,15 +62,15 @@ if (empty($_SESSION['username'])) {
 			if ($aok) {
 				$mysqli->query("UPDATE `Players` SET `aiding` = '$aid' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters]-1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-				echo '<a href="strife.php">You have begun aiding your ally.</a></br>';
+				echo '<a href="strife.php">You have begun aiding your ally.</a><br/>';
 			} else {
 				if ($onbattlefield)
 					echo "Your ally is fighting on the battlefield right now. You have other business to attend to before you can go there!";
 				else
-					echo "You can't reach the land your ally is fighting on from your available gates!</br>";
+					echo "You can't reach the land your ally is fighting on from your available gates!<br/>";
 			}
 		} else {
-			echo '<a href="strife.php">Your ally is no longer strifing.</a></br>';
+			echo '<a href="strife.php">Your ally is no longer strifing.</a><br/>';
 		}
 	} elseif (!empty($_POST['autoassist'])) {
 		$aid = $_POST['autoassist'];
@@ -108,9 +108,9 @@ if (empty($_SESSION['username'])) {
 				}
 				if ($aok) {
 					$mysqli->query("UPDATE `Players` SET `autoassist` = '$aid' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-					echo '<a href="strife.php">You will now automatically aid ' . $aid . ' if you have a spare encounter and are able to when they begin strifing.</a></br>';
+					echo '<a href="strife.php">You will now automatically aid ' . $aid . ' if you have a spare encounter and are able to when they begin strifing.</a><br/>';
 				} else {
-					echo "You won't be able to reach that ally with your current gate setup.</br>";
+					echo "You won't be able to reach that ally with your current gate setup.<br/>";
 				}
 			}
 		}

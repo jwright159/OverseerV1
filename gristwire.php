@@ -39,5 +39,5 @@ if (empty($_SESSION['username'])) {
 	}
 	$mysqli->close();
 }
-echo '</br><a href="/">Home</a>';
+echo '<br/><a href="/">Home</a>';
 ?>

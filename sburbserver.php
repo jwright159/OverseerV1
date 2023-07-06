@@ -35,7 +35,7 @@ if (strpos($userrow['storeditems'], "DREAMBOT.") !== false && $userrow['dreaming
 }
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to mess with the server program.</br>";
+	echo "Log in to mess with the server program.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake" && !$dreambot) {
 	echo "Your dream self can't access your computer!";
 } else {
@@ -50,18 +50,18 @@ if (empty($_SESSION['username'])) {
 		if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 			if ($userrow['hascomputer'] < 3) {
 				if ($compugood == true)
-					echo "You don't have a hands-free computer equipped, so you can't use the SBURB server program during strife.</br>";
+					echo "You don't have a hands-free computer equipped, so you can't use the SBURB server program during strife.<br/>";
 				$compugood = false;
 			}
 		}
 		if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
 			if ($compugood == true)
-				echo "You don't have a portable computer in your inventory, so you can't use the SBURB server program while away from home.</br>";
+				echo "You don't have a portable computer in your inventory, so you can't use the SBURB server program while away from home.<br/>";
 			$compugood = false;
 		}
 		if ($userrow['hascomputer'] == 0) {
 			if ($compugood == true)
-				echo "You need a computer in storage or your inventory to use the SBURB server program.</br>";
+				echo "You need a computer in storage or your inventory to use the SBURB server program.<br/>";
 			$compugood = false;
 		}
 	}
@@ -79,25 +79,25 @@ if (empty($_SESSION['username'])) {
 						$client = $mysqli->real_escape_string($_POST['client']);
 						$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '$client' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `client_player` = '$client' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-						echo "Client registered.</br>";
+						echo "Client registered.<br/>";
 						$userrow['client_player'] = $client;
 					} else {
 						if ($row['server_player'] != "" && $playerfound != True) {
 							$playerfound = True;
-							echo "Client already possesses a server player: " . $row['server_player'] . "</br>";
+							echo "Client already possesses a server player: " . $row['server_player'] . "<br/>";
 						}
 					}
 				}
 			}
 			if ($playerfound == False) {
-				echo "Target player was not found in your session.</br>";
+				echo "Target player was not found in your session.<br/>";
 			}
 		}
 
 		if (empty($userrow['client_player'])) {
-			echo "You haven't registered a player as your client yet.</br>";
+			echo "You haven't registered a player as your client yet.<br/>";
 			echo '<form action="sburbserver.php" method="post">Register client player: <input id="client" name="client" type="text" /><br/>';
-			echo '<input type="submit" value="Connect it!" /></form></br>';
+			echo '<input type="submit" value="Connect it!" /></form><br/>';
 		} else {
 			$clientresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['client_player'] . "'");
 			$clientrow = $clientresult->fetch_array();
@@ -116,11 +116,11 @@ if (empty($_SESSION['username'])) {
 						$newtotal = $build + $clientrow['house_build_grist'];
 						$newgrist = $clientrow['Build_Grist'] - $build;
 						$mysqli->query("UPDATE `Players` SET `house_build_grist` = '$newtotal', `Build_Grist` = '$newgrist' WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1 ;");
-						echo "Build successful!</br>";
+						echo "Build successful!<br/>";
 						$clientrow['house_build_grist'] = $newtotal;
 						$clientrow['Build_Grist'] = $newgrist;
 					} else {
-						echo "Build failed: Client lacks required Build Grist.</br>";
+						echo "Build failed: Client lacks required Build Grist.<br/>";
 					}
 				}
 			}
@@ -164,15 +164,15 @@ if (empty($_SESSION['username'])) {
 								if ($space + itemSize($drow['size']) <= $maxspace) { //let's finally deploy this thing
 									storeItem($drow['name'], 1, $clientrow);
 									$mysqli->query("UPDATE `Players` SET `$coststring` = $newgrist WHERE `Players`.`username` = '" . $clientrow['username'] . "' LIMIT 1;");
-									echo $drow['name'] . " successfully deployed!</br>";
+									echo $drow['name'] . " successfully deployed!<br/>";
 								} else
-									echo "Deploy failed: you can't find enough room in the client's house to put down the item! You'll have to make some room first.</br>";
+									echo "Deploy failed: you can't find enough room in the client's house to put down the item! You'll have to make some room first.<br/>";
 							} else
-								echo "Deploy failed: client lacks the required $coststring.</br>";
+								echo "Deploy failed: client lacks the required $coststring.<br/>";
 						} else
-							echo "Deploy failed: Your client already has as many of those items as they'll need.</br>";
+							echo "Deploy failed: Your client already has as many of those items as they'll need.<br/>";
 					} else
-						echo "Deploy failed: you can't deploy that item!</br>";
+						echo "Deploy failed: you can't deploy that item!<br/>";
 				}
 			}
 
@@ -254,12 +254,12 @@ if (empty($_SESSION['username'])) {
 			$clientrow = $clientresult->fetch_array();
 			//refresh clientrow so that things like grist and storage are up-to-date. yeah it's inefficient but I'm lazy so
 
-			echo "SBURB Server Menu</br>";
-			echo "Client player: " . $clientrow['username'] . "</br>";
-			echo "Client's build grist: " . strval($clientrow['Build_Grist']) . "</br></br>";
+			echo "SBURB Server Menu<br/>";
+			echo "Client player: " . $clientrow['username'] . "<br/>";
+			echo "Client's build grist: " . strval($clientrow['Build_Grist']) . "<br/><br/>";
 
-			echo "&gt;Revise</br>";
-			echo "Client's house investment: " . strval($clientrow['house_build_grist']) . "</br>";
+			echo "&gt;Revise<br/>";
+			echo "Client's house investment: " . strval($clientrow['house_build_grist']) . "<br/>";
 			echo "House gates accessible on your client's Land: ";
 			$gates = 0;
 			$i = 1;
@@ -274,13 +274,13 @@ if (empty($_SESSION['username'])) {
 				}
 				$i++;
 			}
-			echo strval($gates) . "</br>";
-			echo "Building up your client's house will increase their item storage space, as well as help them reach higher gates.</br>";
+			echo strval($gates) . "<br/>";
+			echo "Building up your client's house will increase their item storage space, as well as help them reach higher gates.<br/>";
 			echo '<form action="sburbserver.php" method="post">Amount of build grist to spend on client\'s housing: <input id="build" name="build" type="text" /><br/>';
-			echo '<input type="submit" value="Build it!" /></form></br>';
+			echo '<input type="submit" value="Build it!" /></form><br/>';
 
-			echo "&gt;Deploy</br>";
-			echo '<form method="post" action="sburbserver.php">Select a machine to deploy:</br><select name="deployitem">';
+			echo "&gt;Deploy<br/>";
+			echo '<form method="post" action="sburbserver.php">Select a machine to deploy:<br/><select name="deployitem">';
 			$deployresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`effects` LIKE '%DEPLOYABLE%' ORDER BY `Build_Grist_Cost` ASC");
 			while ($drow = $deployresult->fetch_array()) {
 				$deploytag = specialArray($drow['effects'], "DEPLOYABLE"); //should always return an array because of the search query above
@@ -292,7 +292,7 @@ if (empty($_SESSION['username'])) {
 					$coststring = strval($drow['Build_Grist_Cost']) . " Build Grist";
 				echo '<option value="' . $drow['captchalogue_code'] . '">' . $drow['name'] . ' (Cost: ' . $coststring . ')</option>';
 			}
-			echo '</select></br><input type="submit" value="Deploy it!"></form><br/>';
+			echo '</select><br/><input type="submit" value="Deploy it!"></form><br/>';
 
 			echo "&gt;Recycle<br/>";
 			echo "Your client may be unable to recycle items directly from their storage, but you sure can!<br/>";

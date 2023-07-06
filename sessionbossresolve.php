@@ -15,8 +15,8 @@ function refreshSingular($slot, $buddyrow)
 	return $buddyrow;
 }
 if (empty($_SESSION['username'])) {
-	echo "Log in to engage in strife.</br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to engage in strife.<br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
 	$max_enemies = 5;
 	$downarray = array();
@@ -47,14 +47,14 @@ if (empty($_SESSION['username'])) {
 	} elseif (strpos($currentstatus, $knockdownstr) !== False) { //Time stopped enemies can't get up from knockdown.
 		//Not here!
 	} elseif ((strpos($currentstatus, $hopelessstr) !== False) && $hopelessroll < 50) { //If enemy unable to attack, don't bother with this.
-		$bosslog = $bosslog . $userrow['enemy1name'] . " can't be bothered with special attacks this round.</br>"; //lol glitchy text all over the log
+		$bosslog = $bosslog . $userrow['enemy1name'] . " can't be bothered with special attacks this round.<br/>"; //lol glitchy text all over the log
 	} else {
 		switch ($sessionrow['sessionbossname']) { //DATA SECTION: Select any specials that may apply this round
 			case 'The Black King':
 				$sceptreselector = rand(1, 100);
 				if ($sceptreselector <= ($userrow[$healthvialstr] * 15 / $userrow['Gel_Viscosity'])) { //More likely the less wounded the leader is, 15% at best
 					$sceptrearc = true;
-					$bosslog = $bosslog . "The Black King sweeps his massive sceptre in a devastating arc!</br>";
+					$bosslog = $bosslog . "The Black King sweeps his massive sceptre in a devastating arc!<br/>";
 				}
 				if (!$sceptrearc) { //Only one special per round, and he prefers the big swing.
 					$earthquakeselector = rand(1, 100);
@@ -62,7 +62,7 @@ if (empty($_SESSION['username'])) {
 						$earthquakeselector -= 15;
 					if ($earthquakeselector > 85) {
 						$earthquake = true;
-						$bosslog = $bosslog . "The Black King slams the ground, creating a violent quake that throws everyone off-balance!</br>";
+						$bosslog = $bosslog . "The Black King slams the ground, creating a violent quake that throws everyone off-balance!<br/>";
 					}
 				}
 				if (!$sceptrearc && !$earthquake) {
@@ -70,7 +70,7 @@ if (empty($_SESSION['username'])) {
 					if ($meteorselector > 90) { //Meteor!
 						$batterup = true;
 						$meteorstrike = false; //false means miss, true means hit, empty means nonexistent
-						$bosslog = $bosslog . "The Black King uses his sceptre to swat a giant meteor at you like a baseball.</br>";
+						$bosslog = $bosslog . "The Black King uses his sceptre to swat a giant meteor at you like a baseball.<br/>";
 					}
 				}
 				break;
@@ -109,7 +109,7 @@ if (empty($_SESSION['username'])) {
 			$luck = ceil($buddyrow['Luck'] + $buddyrow['Brief_Luck']); //Calculate the player's luck total. Paranoia: Make sure we don't somehow have a non-integer.
 			if (!empty($abilities[19])) { //Light's Favour activates. Increase luck.
 				$luck += floor($buddyrow['Echeladder'] / 30);
-				$message = $message . "$abilities[19]</br>";
+				$message = $message . "$abilities[19]<br/>";
 			}
 			if ($luck > 100)
 				$luck = 100; //We work with luck as a percentage generally. This may be changed later.
@@ -253,20 +253,20 @@ if (empty($_SESSION['username'])) {
 			}
 			$nodamage = False;
 			if (!empty($abilities[1]) && $offense == "aggress") { //Activate passive aggression: apply passive modifier. (ID 1)
-				$message = $message . "$abilities[1]</br>";
+				$message = $message . "$abilities[1]<br/>";
 				$unarmedpower = floor($unarmedpower * ($classrow['passivefactor'] / 100));
 			} else {
 				$unarmedpower = floor($unarmedpower * ($classrow['activefactor'] / 100)); //User is main strifer, apply active modifier.
 			}
 			$powerlevel = $unarmedpower + $buddyrow['powerboost'] + $buddyrow['temppowerboost'] + $mainpower + $offpower + $aidpower; //Sprite power added later.
 			if (!empty($abilities[15]) && $blanks > 0 && $voidvalid == 2) { //One with Nothing activates. Increase unarmed power for the purposes of power level.
-				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[15]</br>";
+				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[15]<br/>";
 				if ($buddyrow['dreamingstatus'] == "Awake") {
 					$voidpower = 5 * $blanks * $buddyrow['Echeladder'];
 				} else {
 					$voidpower = floor($buddyrow['Echeladder'] / 2);
 				}
-				$bosslog = $bosslog . $buddyrow['username'] . "'s Void power boost: " . strval($voidpower) . "</br>";
+				$bosslog = $bosslog . $buddyrow['username'] . "'s Void power boost: " . strval($voidpower) . "<br/>";
 				$powerlevel += $voidpower;
 			}
 			if (!empty($abilities[17])) { //Blood Bonds activates. Increase power according to the number of players fighting.
@@ -278,15 +278,15 @@ if (empty($_SESSION['username'])) {
 						$bloodbond += $unarmedpower; //Grab everyone assisting.
 				}
 				if ($bloodbond > 0) { //Ability actually triggers. Print message etc.
-					$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[17]</br>";
-					$bosslog = $bosslog . $buddyrow['username'] . "'s Blood bond strength:" . strval($bloodbond) . "</br>";
+					$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[17]<br/>";
+					$bosslog = $bosslog . $buddyrow['username'] . "'s Blood bond strength:" . strval($bloodbond) . "<br/>";
 					$powerlevel += $bloodbond;
 				}
 			}
 			$offensepower = $powerlevel + $buddyrow['offenseboost'] + $buddyrow['tempoffenseboost'];
 			$defensepower = $powerlevel + $buddyrow['defenseboost'] + $buddyrow['tempdefenseboost'] + $totaldef + $aiddef;
 			if (!empty($abilities[7])) { //Aspect Fighter (ID 7)
-				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[7]</br>";
+				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[7]<br/>";
 				$offensebonus = floor($aspectrow['Damage'] + $aspectrow['Power_down'] + $aspectrow['Offense_up'] + floor($aspectrow['Power_up'] / 2) * ($unarmedpower / 612));
 				$defensebonus = floor($aspectrow['Invulnerability'] + $aspectrow['Heal'] + $aspectrow['Defense_up'] + floor($aspectrow['Power_up'] / 2) * ($unarmedpower / 612));
 				if ($offensebonus < 0)
@@ -295,10 +295,10 @@ if (empty($_SESSION['username'])) {
 					$defensebonus = 0;
 				$offensepower += $offensebonus;
 				$defensepower += $defensebonus;
-				$bosslog = $bosslog . $buddyrow['username'] . "'s Offense bonus: $offensebonus, Defense bonus: $defensebonus</br>"; //Special string: Print boost values.
+				$bosslog = $bosslog . $buddyrow['username'] . "'s Offense bonus: $offensebonus, Defense bonus: $defensebonus<br/>"; //Special string: Print boost values.
 			}
 			if (!empty($abilities[3]) && $offense == "assault") { //Activate chaotic assault: randomize between -100 and 350 bonus power with a luck factor. (ID 3)
-				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[3]</br>";
+				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[3]<br/>";
 				$offensepower = ceil($offensepower + (rand((-100 + $luck), 350) * ($buddyrow['Echeladder'] / 300)));
 			}
 			//Nullification of weapons occurs by blanking the weapon rows.
@@ -396,7 +396,7 @@ if (empty($_SESSION['username'])) {
 					$bonusdamage = floor(2.5 * (1 - ($sessionrow['sessionbosshealth'] / $sessionrow['sessionbossmaxhealth'])) * $unarmedpower);
 					//Bonus damage is 2.5 times the unarmed power divided by the ratio (i.e. if all HP was missing, it would deal 2x unarmed power)
 					if ($bonusdamage > 0) {
-						$bosslog = $bosslog . $buddyrow['username'] . "'s " . $abilities[21] . "</br>";
+						$bosslog = $bosslog . $buddyrow['username'] . "'s " . $abilities[21] . "<br/>";
 						$enemydamage += $bonusdamage;
 					}
 				}
@@ -410,7 +410,7 @@ if (empty($_SESSION['username'])) {
 						$crit = 100; //Every fifty rungs, increase the chance by 1%
 				}
 				if ($crit >= (55 - floor($luck * 0.455))) {
-					$bosslog = $bosslog . $buddyrow['username'] . " lands a critical hit on $buddyrow[$enemystr]!</br>";
+					$bosslog = $bosslog . $buddyrow['username'] . " lands a critical hit on $buddyrow[$enemystr]!<br/>";
 					$enemydamage += rand(floor($offensepower * (0.85 + ($luck * 0.003))), ceil($offensepower * 1.15)); //Double the base damage before subtraction by adding it on again.
 				}
 				if (!empty($abilities[22])) { //Broken Record, I'm pretty sure.
@@ -419,8 +419,8 @@ if (empty($_SESSION['username'])) {
 					if ($proc < $chance) { //40% chance of triggering at max rank. Godtier increases it by 4% per tier. Luck has a low influence.
 						$strikes = 2 + floor(rand($luck, 100) / 85) + floor(rand($buddyrow['Echeladder'], 1111) / 666) + ceil($buddyrow['Godtier'] / 3);
 						//Two strikes guaranteed. One is luck dependent, one is Echeladder dependent, and extras appear at god tiers 1, 4, 7, etc.
-						$bosslog = $bosslog . $buddyrow['username'] . "'s " . $abilities[22] . "</br>";
-						$bosslog = $bosslog . "Attacks performed: $strikes</br>";
+						$bosslog = $bosslog . $buddyrow['username'] . "'s " . $abilities[22] . "<br/>";
+						$bosslog = $bosslog . "Attacks performed: $strikes<br/>";
 						$enemydamage *= $strikes;
 					}
 				}
@@ -439,7 +439,7 @@ if (empty($_SESSION['username'])) {
 						if (!empty($abilities[7])) { //Aspect Fighter activates, granting affinity.
 							$effectarray[] = "AFFINITY:" . $buddyrow['Aspect'] . ":5";
 							if ($echoaspectfighter == false) { //because there's no need to repeat this five times
-								$bosslog = $bosslog . $buddyrow['username'] . "'s Lv. 83 Knightskill Aspect Fighter activates! $buddyrow[username]'s strikes are imbued with " . $buddyrow['Aspect'] . " affinity.</br>";
+								$bosslog = $bosslog . $buddyrow['username'] . "'s Lv. 83 Knightskill Aspect Fighter activates! $buddyrow[username]'s strikes are imbued with " . $buddyrow['Aspect'] . " affinity.<br/>";
 								$echoaspectfighter = true;
 							}
 						}
@@ -454,7 +454,7 @@ if (empty($_SESSION['username'])) {
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) { //TIMESTOP has one argument: The chance of it working.
 										$timestopped = True;
 										$individualstatus = $individualstatus . $statustr . "TIMESTOP|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s attack causes $buddyrow[$enemystr] to stop for a second, but it quickly recovers.</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s attack causes $buddyrow[$enemystr] to stop for a second, but it quickly recovers.<br/>";
 									}
 									break;
 								case AFFINITY: //Format is AFFINITY:<affinity type>:<percentage>|
@@ -477,7 +477,7 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = 1 - ($enemyrow['resist_Life'] / 100); //Enemy's Life resistance reduces success chance.
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) { //WATERYGEL has one argument: The chance of it working.
 										$individualstatus = $individualstatus . $statustr . "WATERYGEL|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s attack seems to affect $buddyrow[$enemystr]'s Health Vial slightly.</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s attack seems to affect $buddyrow[$enemystr]'s Health Vial slightly.<br/>";
 									}
 									break;
 								case POISON: //Format is POISON:<%chance>:<%severity>|
@@ -486,7 +486,7 @@ if (empty($_SESSION['username'])) {
 									if ($roll > (100 - intval($currentarray[1]))) { //Check to see if poison applies. Note that Doom resistance doesn't decrease this
 										$severity = (ceil($currentarray[2] * $resistfactor * 100)) / 100; //Round to two decimal places.
 										$individualstatus = $individualstatus . $statustr . "POISON:" . $severity . "|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s blow poisons $buddyrow[$enemystr]!</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s blow poisons $buddyrow[$enemystr]!<br/>";
 									}
 									break;
 								case SHRUNK: //Format is SIZECHANGE:<%chance>|
@@ -494,7 +494,7 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = 1 - ($enemyrow['resist_Space'] / 100); //Space resistance reduces the chance of shrinking working
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$individualstatus = $individualstatus . $statustr . "SHRUNK|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s strike makes $buddyrow[$enemystr]'s outline waver a little.</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s strike makes $buddyrow[$enemystr]'s outline waver a little.<br/>";
 									}
 									break;
 								case LIFESTEAL: //Format is LIFESTEAL:<%chance>:<%absorbed>|. A lifesteal weapon, er, steals life.
@@ -502,9 +502,9 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = 1 - ($enemyrow['resist_Blood'] / 100); //Blood resistance reduces the successful absorption
 									if ($roll > (100 - intval($currentarray[1]))) {
 										if ($resistfactor >= 0) {
-											$bosslog = $bosslog . $buddyrow['username'] . "'s attack siphons health gel from $buddyrow[$enemystr]!</br>";
+											$bosslog = $bosslog . $buddyrow['username'] . "'s attack siphons health gel from $buddyrow[$enemystr]!<br/>";
 										} else {
-											$bosslog = $bosslog . $buddyrow['username'] . "'s attack siphons health gel from $buddyrow[$enemystr]! Unfortunately, the gel harms instead of healing.</br>";
+											$bosslog = $bosslog . $buddyrow['username'] . "'s attack siphons health gel from $buddyrow[$enemystr]! Unfortunately, the gel harms instead of healing.<br/>";
 										}
 										$healthgain = ceil(($enemydamage * ($currentarray[2] / 100)) * $resistfactor);
 										//NOTE: We need to calculate this after all weapon effects that amplify damage.
@@ -523,7 +523,7 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = 1 - ($enemyrow['resist_Light'] / 100); //Light resistance reduces the chance of misfortune working
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$individualstatus = $individualstatus . $statustr . "UNLUCKY|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s blow makes $buddyrow[$enemystr] seem a little ill at ease...</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s blow makes $buddyrow[$enemystr] seem a little ill at ease...<br/>";
 									}
 									break;
 								case RANDAMAGE: //format is RANDAMAGE:<%variance>|
@@ -537,7 +537,7 @@ if (empty($_SESSION['username'])) {
 									//NOTE - May change this to modify duration instead of or as well as resisting application.
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) { //Check to see if wound bleeds.
 										$individualstatus = $individualstatus . $statustr . "BLEEDING:" . $currentarray[2] . "|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s weapon inflicts a weeping wound on $buddyrow[$enemystr]!</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s weapon inflicts a weeping wound on $buddyrow[$enemystr]!<br/>";
 									}
 									break;
 								case HOPELESS: //Format is HOPELESS:<%chance>|
@@ -545,7 +545,7 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = 1 - ($enemyrow['resist_Hope'] / 100); //Enemy's Hope resistance reduces chance of application.
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$individualstatus = $individualstatus . $statustr . "HOPELESS|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s attack seems to have rattled $buddyrow[$enemystr]</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s attack seems to have rattled $buddyrow[$enemystr]<br/>";
 									}
 									break;
 								case DISORIENTED: //Format is DISORIENTED:<%chance>:<duration>|
@@ -553,14 +553,14 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = 1 - ($enemyrow['resist_Mind'] / 100); //Enemy's Mind resistance reduces chance of application.
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$individualstatus = $individualstatus . $statustr . "DISORIENTED:" . $currentarray[2] . "|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s strike momentarily stuns $buddyrow[$enemystr]</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s strike momentarily stuns $buddyrow[$enemystr]<br/>";
 									}
 								case DISTRACTED: //Format is DISTRACTED:<%chance>|
 									$roll = rand((1 + floor($luck / 10)), 100);
 									$resistfactor = 1 - ($enemyrow['resist_Mind'] / 100); //Enemy's Mind resistance reduces chance of application.
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$individualstatus = $individualstatus . $statustr . "DISTRACTED|";
-										$bosslog = $bosslog . $buddyrow['username'] . " distracts $buddyrow[$enemystr] just a little bit</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . " distracts $buddyrow[$enemystr] just a little bit<br/>";
 									}
 									break;
 								case ENRAGED: //Format is ENRAGED:<%chance>|
@@ -568,7 +568,7 @@ if (empty($_SESSION['username'])) {
 									$resistfactor = 1 - ($enemyrow['resist_Rage'] / 100); //Enemy's Rage resistance reduces chance of application.
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$individualstatus = $individualstatus . $statustr . "ENRAGED|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s hit is unusually aggravating!</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s hit is unusually aggravating!<br/>";
 									}
 									break;
 								case MELLOW: //Format is MELLOW:<%chance>|
@@ -577,7 +577,7 @@ if (empty($_SESSION['username'])) {
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$justmellowed = True;
 										$individualstatus = $individualstatus . $statustr . "MELLOW|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s hit is unusually calming!</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s hit is unusually calming!<br/>";
 									}
 									break;
 								case KNOCKDOWN: //Format is KNOCKDOWN:<%multiplier>|. Knockdown chance depends on damage dealt.
@@ -588,7 +588,7 @@ if (empty($_SESSION['username'])) {
 									$target = 100 - ((($enemydamage * (intval($currentarray[1]) / 100) * $resistfactor) / $buddyrow[$healthstr]) * 300); //33% effective damage = 100% chance
 									if ($roll > $target) {
 										$individualstatus = $individualstatus . $statustr . "KNOCKDOWN|";
-										$bosslog = $bosslog . $buddyrow['username'] . "'s attack staggers $buddyrow[$enemystr] slightly</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s attack staggers $buddyrow[$enemystr] slightly<br/>";
 									}
 									break;
 								case GLITCHED: //Format is GLITCHED:<%chance>|. NOTE - Glitching is a permanent status ailment. Please balance accordingly.
@@ -597,7 +597,7 @@ if (empty($_SESSION['username'])) {
 									if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 										$individualstatus = $individualstatus . $statustr . "GLITCHED|";
 										$glitchstr = horribleMess();
-										$bosslog = $bosslog . $buddyrow['username'] . "'s hit looks kinda $glitchstr</br>";
+										$bosslog = $bosslog . $buddyrow['username'] . "'s hit looks kinda $glitchstr<br/>";
 									}
 									break;
 								case RECOIL: //format is RECOIL:<%chance>:<%damage>|.
@@ -626,12 +626,12 @@ if (empty($_SESSION['username'])) {
 					$newenemyhealth = $newenemyhealth - $enemydamage;
 				}
 				if (!empty($noonecares)) { //NOTE - this always fails. Just easier than reformatting.
-					echo "what did you doooooooo</br>";
+					echo "what did you doooooooo<br/>";
 				} else {
 					if ($newenemyhealth <= 0) { //Forced back.
 						$forcedback = true;
 						$newenemyhealth = 0; //Player has knocked off their entire health allotment for the round!
-						$bosslog = $bosslog . $buddyrow['username'] . " deals enough damage this round to force $buddyrow[enemy1name] back!</br>";
+						$bosslog = $bosslog . $buddyrow['username'] . " deals enough damage this round to force $buddyrow[enemy1name] back!<br/>";
 					}
 					$timestopstr = ($statustr . "TIMESTOP|");
 					$hopelessstr = ($statustr . "HOPELESS|");
@@ -661,7 +661,7 @@ if (empty($_SESSION['username'])) {
 						if (!empty($abilities[23])) { //Check for Fortune's Protection (ID 23)
 							$guidance = rand(floor(1 + ($luck / 10)), 100);
 							if ($guidance > (100 - floor($buddyrow['Echeladder'] / 40))) { //Every forty rungs, increase the chance by 1%. More likely to kick in than the autocrit (15% at max level)
-								$bosslog = $bosslog . $buddyrow['username'] . "'s" . $abilities[23] . "</br>";
+								$bosslog = $bosslog . $buddyrow['username'] . "'s" . $abilities[23] . "<br/>";
 								$playerdamage = floor($playerdamage / 2); //Activate anticrit: halve the damage.
 							}
 						}
@@ -673,9 +673,9 @@ if (empty($_SESSION['username'])) {
 								$meteordamage = rand(3000, 4000);
 								if (($playerdamage + $meteordamage) <= 0) { //If the player still didn't take any damage, it's dodged!
 									$meteordodged = true;
-									$bosslog = $bosslog . $buddyrow['username'] . " manages to dodge the meteor!</br>";
+									$bosslog = $bosslog . $buddyrow['username'] . " manages to dodge the meteor!<br/>";
 								} else {
-									$bosslog = $bosslog . $buddyrow['username'] . " is struck by the meteor!</br>";
+									$bosslog = $bosslog . $buddyrow['username'] . " is struck by the meteor!<br/>";
 								}
 							}
 						}
@@ -694,7 +694,7 @@ if (empty($_SESSION['username'])) {
 							$recoil = floor($buddyrow[$powerstr] / 5);
 							$recoil = min(($newenemyhealth - 1), $recoil);
 							$newenemyhealth -= $recoil;
-							$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[13]</br>Recoil damage on $buddyrow[$enemystr]: $recoil</br>";
+							$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[13]<br/>Recoil damage on $buddyrow[$enemystr]: $recoil<br/>";
 						}
 						//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = '" . strval($newenemyhealth) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Update HP
 						$buddyrow[$healthstr] = $newenemyhealth; //Update for repetition and checking end-of-turn effects.
@@ -702,7 +702,7 @@ if (empty($_SESSION['username'])) {
 						//Begin tracking special effects on standard damage (such as role abilities) here:
 						if (!empty($abilities[2]) && $playerdamage > 0) { //Life's Bounty activates. Reduce damage. (ID 2)
 							$playerdamage = floor($playerdamage * 0.85);
-							$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[2]</br>";
+							$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[2]<br/>";
 						}
 						if (!empty($abilities[4]) && $playerdamage > 0) { //Roll for Dissipate. (ID 4)
 							$targetvalue = 100 - (1 + floor($buddyrow['Echeladder'] / 100) + ($buddyrow['Godtier'] * 6) + floor($luck / 10));
@@ -715,7 +715,7 @@ if (empty($_SESSION['username'])) {
 									$dissipating = True; //we want to avoid every hit.
 								}
 								//$mysqli->query("UPDATE `Players` SET `dissipatefocus` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-								$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[4]</br>";
+								$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[4]<br/>";
 								$playerdamage = 0; //Dissipate is NOT invulnerability. Specials will strike through it.
 							}
 						}
@@ -723,7 +723,7 @@ if (empty($_SESSION['username'])) {
 						if (strpos($individualstatus, $nocapstr) !== False) { //Player's massive damage cap is gone.
 							$savingthrow = rand((1 + ceil($luck / 5)), 100); //Player gets a save every time they are struck.
 							if ($savingthrow > 66) {
-								$bosslog = $bosslog . $buddyrow['username'] . "'s massive damage protection has returned.</br>";
+								$bosslog = $bosslog . $buddyrow['username'] . "'s massive damage protection has returned.<br/>";
 								$individualstatus = str_replace($nocapstr, "", $individualstatus);
 							}
 						} else {
@@ -737,8 +737,8 @@ if (empty($_SESSION['username'])) {
 							$offenseplus = $offenseplus * ($buddyrow['Godtier'] + 1); //Multiply by the "standard" non class affected godtier modifier.
 							//$mysqli->query("UPDATE `Players` SET `offenseboost` = $buddyrow[offenseboost]+$offenseplus WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 							$buddyrow['offenseboost'] += $offenseplus;
-							$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[12]</br>";
-							$message = $message . "Offense boost: $offenseplus</br>";
+							$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[12]<br/>";
+							$message = $message . "Offense boost: $offenseplus<br/>";
 						}
 						if ($playerdamage <= 500)
 							$playerdamage = rand(200, 500); //Always does at least a bit of damage
@@ -750,7 +750,7 @@ if (empty($_SESSION['username'])) {
 					if ($chancething < 1)
 						$chancething = 1;
 					if ($buddyrow['motifcounter'] > 0 && $buddyrow['Aspect'] == "Hope") { //But not really.
-						$bosslog = $bosslog . $buddyrow['username'] . "takes lethal damage! As their exhausted body falls to the ground, a shining white light fills it. Moments later, they spring back to their feet.</br>";
+						$bosslog = $bosslog . $buddyrow['username'] . "takes lethal damage! As their exhausted body falls to the ground, a shining white light fills it. Moments later, they spring back to their feet.<br/>";
 						$damage = 0;
 						$buddyrow[$healthvialstr] = $buddyrow['motifcounter'] * 500;
 						if ($buddyrow[$healthvialstr] > $buddyrow['Gel_Viscosity'])
@@ -763,7 +763,7 @@ if (empty($_SESSION['username'])) {
 						$buddyrow['motifcounter'] = 0;
 					} elseif (!empty($abilities[20]) && ($chancething <= ceil(($buddyrow['Aspect_Vial'] * 100) / $buddyrow['Gel_Viscosity']))) { //Hope Endures activated (ID 20)
 						$endured = True;
-						$bosslog = $bosslog . $buddyrow['username'] . "'s" . $abilities[20] . "</br>";
+						$bosslog = $bosslog . $buddyrow['username'] . "'s" . $abilities[20] . "<br/>";
 						$damage = ($buddyrow[$healthvialstr] - 1); //So their health goes to one.
 						$aspectcost = floor($buddyrow['Aspect_Vial'] / 2);
 						$mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $buddyrow[Aspect_Vial]-$aspectcost WHERE `Players`.`username` = '" . $buddyrow['username'] . "' LIMIT 1 ;");
@@ -773,7 +773,7 @@ if (empty($_SESSION['username'])) {
 					} else {
 						$damage = ($buddyrow[$healthvialstr] - 1); //So their health goes to one.
 						$repeat = False; //Don't do it again.
-						$bosslog = $bosslog . $buddyrow['username'] . "is KOed!</br>";
+						$bosslog = $bosslog . $buddyrow['username'] . "is KOed!<br/>";
 						if ($buddyrow['dreamingstatus'] == "Awake") {
 							$downstr = "down";
 						} else {
@@ -804,7 +804,7 @@ if (empty($_SESSION['username'])) {
 				}
 				if ($sceptrearc)
 					$buddyrow[$healthvialstr] = floor($buddyrow[$healthvialstr] / 2);
-				$bosslog = $bosslog . $buddyrow[$enemystr] . " inflicts $damage damage on " . $buddyrow['username'] . "!</br>";
+				$bosslog = $bosslog . $buddyrow[$enemystr] . " inflicts $damage damage on " . $buddyrow['username'] . "!<br/>";
 				$bossdamagedealt += $damage;
 				if ($buddyrow['invulnerability'] > 0) {
 					//$EOTquery = $EOTquery . ", `invulnerability` = $buddyrow[invulnerability]-1";
@@ -844,7 +844,7 @@ if (empty($_SESSION['username'])) {
 				//$mysqli->query($EOTquery);
 				//Begin checking passive abilities that trigger at end of turn here.
 				if (!empty($abilities[11]) && ($buddyrow['powerboost'] < 0 || $buddyrow['offenseboost'] < 0 || $buddyrow['defenseboost'] < 0 || $buddyrow['temppowerboost'] < 0 || $buddyrow['tempoffenseboost'] < 0 || $buddyrow['tempdefenseboost'] < 0)) { //There's a boost below zero. Trigger Blockhead (ID 11)
-					$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[11]</br>";
+					$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[11]<br/>";
 					$boosttypes = array(0 => "powerboost", "offenseboost", "defenseboost", "temppowerboost", "tempoffenseboost", "tempdefenseboost");
 					$type = 0;
 					while ($type < count($boosttypes)) {
@@ -864,14 +864,14 @@ if (empty($_SESSION['username'])) {
 					$motifresult = $mysqli->query("SELECT * FROM Fraymotifs WHERE `Fraymotifs`.`Aspect` = '" . $buddyrow['Aspect'] . "'");
 					$motifrow = $motifresult->fetch_array();
 					if (!empty($motifrow['solo3'])) {
-						$usagestr = "Turn $buddyrow[motifcounter] of $buddyrow[username]'s $motifrow[solo3]:</br>";
+						$usagestr = "Turn $buddyrow[motifcounter] of $buddyrow[username]'s $motifrow[solo3]:<br/>";
 					} else {
-						$usagestr = "Turn $buddyrow[motifcounter] of $buddyrow[username]'s $buddyrow[Aspect] III:</br>";
+						$usagestr = "Turn $buddyrow[motifcounter] of $buddyrow[username]'s $buddyrow[Aspect] III:<br/>";
 					}
 					switch ($buddyrow['Aspect']) {
 						case "Breath": //Breathless Battaglia
 							if (($buddyrow['motifcounter'] % 5) != 0) { //Drain power.
-								$usagestr = $usagestr . "The fraymotif steals the breath from $buddyrow[$enemystr].</br>";
+								$usagestr = $usagestr . "The fraymotif steals the breath from $buddyrow[$enemystr].<br/>";
 								$enemies = 1;
 								$powerdrain = 1000;
 								$powerdrained = 0;
@@ -882,7 +882,7 @@ if (empty($_SESSION['username'])) {
 									$powerstr = "enemy" . strval($enemies) . "power";
 									if (!empty($enemyrow)) { //Not a grist enemy.
 										if ($enemyrow['reductionresist'] != 0 && $powerdrain > $enemyrow['reductionresist']) { //Enemy resists power reduction.
-											$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the power reduction!</br>";
+											$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the power reduction!<br/>";
 											$powerdrain = $enemyrow['reductionresist'];
 										}
 									}
@@ -895,7 +895,7 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Players` SET `motifvar` = $buddyrow[motifvar]+$powerdrained WHERE `Players`.`username` = '$buddyrow[username]' LIMIT 1 ;");
 								$buddyrow['motifvar'] += $powerdrained;
 							} else { //Use drained power to attack.
-								$usagestr = $usagestr . "The stolen power is unleashed in a massive tornado!</br>";
+								$usagestr = $usagestr . "The stolen power is unleashed in a massive tornado!<br/>";
 								$enemies = 1;
 								$damage = $buddyrow['motifvar'] * 10; //Results in 40k after four rounds of stealing from one enemy, or a whopping 200k after four turns of stealing from five.
 								$enemystr = "enemy" . strval($enemies) . "name";
@@ -905,7 +905,7 @@ if (empty($_SESSION['username'])) {
 								$maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
 								if (!empty($enemyrow)) { //Not a grist enemy.
 									if ($enemyrow['massiveresist'] != 100 && $damage > (floor($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
-										$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!</br>";
+										$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!<br/>";
 										$damage = floor(($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist']);
 									}
 								}
@@ -918,7 +918,7 @@ if (empty($_SESSION['username'])) {
 							}
 							break;
 						case "Heart":
-							$usagestr = $usagestr . "The melody brings up reserves of power from deep within you.</br>";
+							$usagestr = $usagestr . "The melody brings up reserves of power from deep within you.<br/>";
 							$aspectregen = $buddyrow['motifcounter'] * 600;
 							if ($aspectregen > 6000)
 								$aspectregen = 6000; //Rampup is complete after ten turns.
@@ -929,7 +929,7 @@ if (empty($_SESSION['username'])) {
 							$buddyrow['Aspect_Vial'] = $newaspect; //Juuuust in case.
 							break;
 						case "Life":
-							$usagestr = $usagestr . "Life infuses you, regenerating your health.</br>";
+							$usagestr = $usagestr . "Life infuses you, regenerating your health.<br/>";
 							$regen = $buddyrow['motifcounter'] * 200;
 							if ($regen > 2000)
 								$regen = 2000; //Rampup is complete after ten turns.
@@ -940,19 +940,19 @@ if (empty($_SESSION['username'])) {
 							$buddyrow[$healthvialstr] = $newhealth; //Juuuust in case.
 							break;
 						case "Hope":
-							$usagestr = $usagestr . "The aura of Hope surrounding you grows stronger.</br>"; //Hope's effect is handled up in the death code.
+							$usagestr = $usagestr . "The aura of Hope surrounding you grows stronger.<br/>"; //Hope's effect is handled up in the death code.
 							break;
 						case "Light": //This enables critical hits. Handled in enemy damage code.
 							$usagestr = $usagestr . "The song makes your attacks feel luckier, somehow.";
 							break;
 						case "Mind":
-							$usagestr = $usagestr . "The music helps you relax and focus on the task at hand. That being delivering a righteous smackdown.</br>";
+							$usagestr = $usagestr . "The music helps you relax and focus on the task at hand. That being delivering a righteous smackdown.<br/>";
 							$powerboost = 1000;
 							//$mysqli->query("UPDATE `Players` SET `powerboost` = $buddyrow[powerboost]+$powerboost WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							$buddyrow['powerboost'] += $powerboost; //Juuuust in case.
 							break;
 						case "Blood":
-							$usagestr = $usagestr . "Life force is drained from $buddyrow[enemy1name], flowing through you as power.</br>";
+							$usagestr = $usagestr . "Life force is drained from $buddyrow[enemy1name], flowing through you as power.<br/>";
 							$damage = 8000;
 							$boost = 0;
 							$enemies = 1;
@@ -964,7 +964,7 @@ if (empty($_SESSION['username'])) {
 								$maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
 								if (!empty($enemyrow)) { //Not a grist enemy.
 									if ($enemyrow['massiveresist'] != 100 && $damage > (floor($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
-										$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!</br>";
+										$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!<br/>";
 										$damage = floor(($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist']);
 									}
 								}
@@ -978,7 +978,7 @@ if (empty($_SESSION['username'])) {
 							$buddyrow['powerboost'] += $boost; //Juuuust in case.
 							break;
 						case "Doom":
-							$usagestr = $usagestr . "The slow, toxic inevitability of Death afflicts $buddyrow[enemy1name]</br>";
+							$usagestr = $usagestr . "The slow, toxic inevitability of Death afflicts $buddyrow[enemy1name]<br/>";
 							$enemies = 1;
 							$enemystr = "enemy" . strval($enemies) . "name";
 							$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $buddyrow[$enemystr] . "'");
@@ -988,7 +988,7 @@ if (empty($_SESSION['username'])) {
 							$damage = ceil($buddyrow[$maxhealthstr] * 0.0625 * $buddyrow['motifcounter']);
 							if (!empty($enemyrow)) { //Not a grist enemy.
 								if ($enemyrow['massiveresist'] != 100 && $damage > (floor($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
-									$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!</br>";
+									$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!<br/>";
 									$damage = floor(($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist']);
 								}
 							}
@@ -999,9 +999,9 @@ if (empty($_SESSION['username'])) {
 							break;
 						case "Rage":
 							if ($buddyrow['motifcounter'] == 1) {
-								$usagestr = $usagestr . "A deep, primordial fury wells up within $buddyrow[username].</br>";
+								$usagestr = $usagestr . "A deep, primordial fury wells up within $buddyrow[username].<br/>";
 							} else {
-								$usagestr = $usagestr . "$buddyrow[username]'s fury slowly subsides.</br>";
+								$usagestr = $usagestr . "$buddyrow[username]'s fury slowly subsides.<br/>";
 							}
 							$offenseboost = (10 - $buddyrow['motifcounter']) * 1200;
 							if ($offenseboost <= 0) {
@@ -1013,7 +1013,7 @@ if (empty($_SESSION['username'])) {
 							$buddyrow['offenseboost'] = $offenseboost; //Juuuust in case.
 							break;
 						case "Void": //Suppresses special monster abilities. Handled in the monster ability area.
-							$usagestr = $usagestr . "The power of Void suppresses $buddyrow[enemy1name]'s abilities slightly.</br>";
+							$usagestr = $usagestr . "The power of Void suppresses $buddyrow[enemy1name]'s abilities slightly.<br/>";
 							break;
 						case "Space":
 							$zillystr = "";
@@ -1074,7 +1074,7 @@ if (empty($_SESSION['username'])) {
 									$damage = $itemrow['power'] + floor(($itemrow['aggrieve'] + $itemrow['aggress'] + $itemrow['assail'] + $itemrow['assault']) / 20);
 									break;
 							}
-							$usagestr = $usagestr . $itemstr . " appears out of thin air and assaults $buddyrow[username], then disappears.</br>";
+							$usagestr = $usagestr . $itemstr . " appears out of thin air and assaults $buddyrow[username], then disappears.<br/>";
 							$enemies = 1;
 							$enemystr = "enemy" . strval($enemies) . "name";
 							$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $buddyrow[$enemystr] . "'");
@@ -1083,7 +1083,7 @@ if (empty($_SESSION['username'])) {
 							$maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
 							if (!empty($enemyrow)) { //Not a grist enemy.
 								if ($enemyrow['massiveresist'] != 100 && $damage > (floor($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
-									$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!</br>";
+									$usagestr = $usagestr . $buddyrow[$enemystr] . " resists the massive damage!<br/>";
 									if ($zilly >= 95) {
 										$usagestr = $usagestr . "But THE GLORY OF " . $zillystr . " penetrates your foe's resistance!"; //Treat resistance as though it's half as effective.
 										if ($damage > floor(($buddyrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'] * 2))
@@ -1099,7 +1099,7 @@ if (empty($_SESSION['username'])) {
 							$buddyrow[$healthstr] = $buddyrow[$healthstr] - $damage;
 							break;
 						case "Time": //Prevents boosts from ticking down as well, this is handled elsewhere. Prints "INFINITY TURNS" as the duration.
-							$usagestr = $usagestr . "The sonata extends and magnifies $buddyrow[username]'s temporary boosts.</br>";
+							$usagestr = $usagestr . "The sonata extends and magnifies $buddyrow[username]'s temporary boosts.<br/>";
 							$buddyrow['temppowerboost'] += 50;
 							$buddyrow['tempoffenseboost'] += 50;
 							$buddyrow['tempdefenseboost'] += 50;
@@ -1108,7 +1108,7 @@ if (empty($_SESSION['username'])) {
 							//$mysqli->query("UPDATE `Players` SET `tempdefenseboost` = $buddyrow[tempdefenseboost] WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 							break;
 						default:
-							$message = $message . "Player aspect $buddyrow[Aspect] unrecognized. This is probably a bug.</br>";
+							$message = $message . "Player aspect $buddyrow[Aspect] unrecognized. This is probably a bug.<br/>";
 							break;
 					}
 					//$mysqli->query("UPDATE `Players` SET `motifcounter` = $buddyrow[motifcounter]+1 WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //Increment the motif counter by one.
@@ -1152,10 +1152,10 @@ if (empty($_SESSION['username'])) {
 									if ($savingthrow + $enemyrow['resist_Doom'] > 100) { //Enemy throws off this instance of poisoning
 										$removethis = $statusarray[$p] . "|";
 										$individualstatus = preg_replace('/' . $removethis . '/', '', $individualstatus, 1);
-										$bosslog = $bosslog . $userrow[$enemystr] . " fights off some of $buddyrow[username]'s poison!</br>";
+										$bosslog = $bosslog . $userrow[$enemystr] . " fights off some of $buddyrow[username]'s poison!<br/>";
 									} else {
 										$severity += floatval($currentpoison[2]);
-										$bosslog = $bosslog . $userrow[$enemystr] . " loses some health to $buddyrow[username]'s poison!</br>";
+										$bosslog = $bosslog . $userrow[$enemystr] . " loses some health to $buddyrow[username]'s poison!<br/>";
 									}
 								}
 								$p++;
@@ -1172,11 +1172,11 @@ if (empty($_SESSION['username'])) {
 							while (!empty($statusarray[$p])) {
 								if (strpos($statusarray[$p], $bleedingstr) !== False) { //This is a bleed instance. Yes, they stack.
 									$currentbleed = explode(":", $statusarray[$p]);
-									$bosslog = $bosslog . $buddyrow[$enemystr] . " loses some blood or blood analogue!</br>";
+									$bosslog = $bosslog . $buddyrow[$enemystr] . " loses some blood or blood analogue!<br/>";
 									if (intval($currentbleed[2]) <= 0) { //Bleeding has expired.
 										$removethis = $statusarray[$p] . "|";
 										$individualstatus = preg_replace('/' . $removethis . '/', '', $individualstatus, 1);
-										$bosslog = $bosslog . "One of " . $userrow[$enemystr] . "'s wounds is no longer bleeding!</br>";
+										$bosslog = $bosslog . "One of " . $userrow[$enemystr] . "'s wounds is no longer bleeding!<br/>";
 									} else {
 										$instances++;
 										$replacethis = $statusarray[$p] . "|";
@@ -1259,7 +1259,7 @@ if (empty($_SESSION['username'])) {
 			$oldrow = $oldresult->fetch_array();
 			$buddyrow['Aspect_Vial'] += ($buddyrow['Gel_Viscosity'] * 0.1);
 			if (!empty($abilities[9])) { //Gogo Aspect Connection!
-				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[9]</br>";
+				$bosslog = $bosslog . $buddyrow['username'] . "'s $abilities[9]<br/>";
 				$buddyrow['Aspect_Vial'] += ($buddyrow['Gel_Viscosity'] * 0.05);
 			}
 			if ($buddyrow['Aspect_Vial'] >= $buddyrow['Gel_Viscosity'])
@@ -1287,7 +1287,7 @@ if (empty($_SESSION['username'])) {
 		$processedbuddies++;
 	}
 	if (!empty($meteorstrike) && !$meteorstrike) {
-		$bosslog = $bosslog . "The meteor sails into orbit around Skaia.</br>";
+		$bosslog = $bosslog . "The meteor sails into orbit around Skaia.<br/>";
 	}
 	//Recombination happens here.
 	$enemystr = "enemy1name";
@@ -1323,7 +1323,7 @@ if (empty($_SESSION['username'])) {
 			$currentlog = $currentlog . $buddyrow['username'] . " inflicts $healthreduc damage";
 			if ($powerreduc > 0)
 				echo " and $powerreduc power reduction";
-			$currentlog = $currentlog . " on $buddyrow[enemy1name]</br>";
+			$currentlog = $currentlog . " on $buddyrow[enemy1name]<br/>";
 			if ($focusvalue[$buddyrow['username']] < 0)
 				$focusvalue[$buddyrow['username']] = 0;
 			if (!empty($downarray[$buddyrow['username']])) {
@@ -1339,8 +1339,8 @@ if (empty($_SESSION['username'])) {
 			$mysqli->query("UPDATE `Players` SET `sessionbossfocus` = 0, `enemydata` = '', `sessionbossengaged` = 0, `sessionbossleader` = 0 WHERE `Players`.`username` = '$buddyrow[username]' LIMIT 1;");
 		}
 		$mysqli->query("UPDATE `Sessions` SET `sessionbossname` = '' WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
-		$lastround = $mysqli->real_escape_string($currentlog . $statuslog . "You have lost to $sessionrow[sessionbossname]! Enemies throughout the Incipisphere wink out of existence temporarily.</br>");
-		$currentlog = $currentlog . $statuslog . "You have lost to $sessionrow[sessionbossname]! Enemies throughout the Incipisphere wink out of existence temporarily.</br>---------------</br>---------------</br>---------------</br>" . $sessionrow['combatlog'];
+		$lastround = $mysqli->real_escape_string($currentlog . $statuslog . "You have lost to $sessionrow[sessionbossname]! Enemies throughout the Incipisphere wink out of existence temporarily.<br/>");
+		$currentlog = $currentlog . $statuslog . "You have lost to $sessionrow[sessionbossname]! Enemies throughout the Incipisphere wink out of existence temporarily.<br/>---------------<br/>---------------<br/>---------------<br/>" . $sessionrow['combatlog'];
 		$currentlog = $mysqli->real_escape_string($currentlog);
 		$mysqli->query("UPDATE `Sessions` SET `combatlog` = '$currentlog' WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
 		$mysqli->query("UPDATE `Sessions` SET `lastround` = '$lastround' WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
@@ -1365,23 +1365,23 @@ if (empty($_SESSION['username'])) {
 					$savingthrow = rand(1, 100);
 					if ($savingthrow > 80) { //Enemy throws off the debuff (Note that resistance doesn't factor here)
 						$currentstatus = str_replace($removethis, '', $currentstatus); //Throws off all instances. We can't stack this debuff.
-						$statuslog = $statuslog . $bossrow['basename'] . "'s health gel becomes more solid!</br>";
+						$statuslog = $statuslog . $bossrow['basename'] . "'s health gel becomes more solid!<br/>";
 					}
 				case SHRUNK: //Roll a save. Note that this status is usually permanent.
 					$savingthrow = rand(1, 100);
 					if ($savingthrow > 95) {
 						$currentstatus = str_replace($removethis, '', $currentstatus); //Throws off all instances. We can't stack this debuff.
-						$statuslog = $statuslog . $bossrow['basename'] . " returns to normal size!</br>";
+						$statuslog = $statuslog . $bossrow['basename'] . " returns to normal size!<br/>";
 					}
 					break;
 				case MISFORTUNE: //Roll for effects, THEN roll a save.
 					$misfortune = rand(1, 100);
 					if ($misfortune <= 2) { //2% chance but this seriously messes the boss up.
-						$statuslog = $statuslog . "$bossrow[basename] is struck by lightning!</br>";
+						$statuslog = $statuslog . "$bossrow[basename] is struck by lightning!<br/>";
 						$damage = 612 * 413;
 						$healthtotal = floor($healthtotal - $damage);
 					} elseif ($misfortune <= 10) {
-						$statuslog = $statuslog . "The ground gives way beneath $bossrow[basename] and it plummets, shaking it up pretty bad when it lands.</br>";
+						$statuslog = $statuslog . "The ground gives way beneath $bossrow[basename] and it plummets, shaking it up pretty bad when it lands.<br/>";
 						$damage = 413 * 100;
 						$healthtotal = floor($healthtotal - $damage);
 					} elseif ($misfortune <= 25) {
@@ -1389,11 +1389,11 @@ if (empty($_SESSION['username'])) {
 						if ($bossrow['basename'] == "The Black King") {
 							$statuslog = $statuslog . " (actually, I guess pretty high, what with this whole Reckoning thing)";
 						}
-						echo "</br>";
+						echo "<br/>";
 						$damage = 30000;
 						$healthtotal = floor($healthtotal - $damage);
 					} elseif ($misfortune <= 50) {
-						$statuslog = $statuslog . "$bossrow[basename] trips over and falls. Hilarious!</br>";
+						$statuslog = $statuslog . "$bossrow[basename] trips over and falls. Hilarious!<br/>";
 						$damage = floor($healthtotal / 100);
 						$powerdown = 2200;
 						$healthtotal = floor($healthtotal - $damage);
@@ -1404,7 +1404,7 @@ if (empty($_SESSION['username'])) {
 						if ($bossrow['basename'] == "The Black King" && $misfortune <= 66) { //Additional chance for a meteor to hit him.
 							$statuslog = $statuslog . "A meteor hits $bossrow[basename]. What are the chances?";
 							$statuslog = $statuslog . " (actually, I guess pretty high, what with this whole Reckoning thing)";
-							echo "</br>";
+							echo "<br/>";
 							$damage = 30000;
 							$healthtotal = floor($healthtotal - $damage);
 						}
@@ -1412,14 +1412,14 @@ if (empty($_SESSION['username'])) {
 					$savingthrow = rand(1, 100);
 					if ($savingthrow >= 80) { //Enemy throws off the debuff
 						$currentstatus = str_replace($removethis, '', $currentstatus); //Throws off all instances. We can't stack this debuff.
-						$statuslog = $statuslog . $bossrow['basename'] . " appears less unlucky. This concept is just as visually nebulous as the idea that it appeared unlucky in the first place.</br>";
+						$statuslog = $statuslog . $bossrow['basename'] . " appears less unlucky. This concept is just as visually nebulous as the idea that it appeared unlucky in the first place.<br/>";
 					}
 					break;
 				case HOPELESS: //Save is somewhat different
 					$savingthrow = rand(1, 100);
 					$percent = ceil(($bossdamagedealt / (6666 * $chumroll)) * 200);
 					if ($savingthrow <= $percent) { //More damage dealt = more chance to throw this off!
-						$statuslog = $statuslog . $bossrow['basename'] . " is inspired by its latest attacks and shakes off the feeling of hopelessness!</br>";
+						$statuslog = $statuslog . $bossrow['basename'] . " is inspired by its latest attacks and shakes off the feeling of hopelessness!<br/>";
 						$currentstatus = str_replace($removethis, "", $currentstatus);
 					}
 					break;
@@ -1437,7 +1437,7 @@ if (empty($_SESSION['username'])) {
 					//Note - If each fighter does 15k damage, the save is impossible with zero resistance.
 					if ($savingthrow > (($damagedealt / ($fighters * 150)) - $resistfactor)) {
 						$currentstatus = str_replace($removethis, "", $currentstatus);
-						$statuslog = $statuslog . "$bossrow[basename] manages to calm down</br>";
+						$statuslog = $statuslog . "$bossrow[basename] manages to calm down<br/>";
 					}
 					break;
 				case MELLOW: //Format is MELLOW:<%chance>|
@@ -1446,7 +1446,7 @@ if (empty($_SESSION['username'])) {
 					//Note - If each fighter does 15k damage, the save is guaranteed with zero resistance.
 					if ($savingthrow < (($damagedealt / ($fighters * 150)) + $resistfactor)) {
 						$currentstatus = str_replace($removethis, "", $currentstatus);
-						$statuslog = $statuslog . "$bossrow[basename] manages to get riled up again</br>";
+						$statuslog = $statuslog . "$bossrow[basename] manages to get riled up again<br/>";
 					}
 					break;
 				case KNOCKDOWN: //Lasts one turn, get rid of it, yadda yadda.
@@ -1456,7 +1456,7 @@ if (empty($_SESSION['username'])) {
 					$savingthrow = rand(1, 100);
 					if ($savingthrow > 95) {
 						$currentstatus = str_replace($removethis, '', $currentstatus); //Throws off all instances. We can't stack this debuff.
-						$statuslog = $statuslog . $bossrow['basename'] . " appears less buggy</br>";
+						$statuslog = $statuslog . $bossrow['basename'] . " appears less buggy<br/>";
 					}
 					break;
 				default:
@@ -1492,40 +1492,40 @@ if (empty($_SESSION['username'])) {
 				$successful[$effect] = true;
 				switch ($effect) {
 					case 'TIMESTOP': //Format is TIMESTOP:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] is frozen in time!</br>";
+						$statuslog = $statuslog . "$bossrow[basename] is frozen in time!<br/>";
 						break;
 					case 'WATERYGEL': //Format is WATERYGEL:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] appears to have lost some viscosity.</br>";
+						$statuslog = $statuslog . "$bossrow[basename] appears to have lost some viscosity.<br/>";
 						break;
 					case 'SHRUNK': //Format is SIZECHANGE:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] suddenly shrinks!</br>";
+						$statuslog = $statuslog . "$bossrow[basename] suddenly shrinks!<br/>";
 						break;
 					case 'MISFORTUNE': //Format is MISFORTUNE:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] looks unlucky. Hm? What does unlucky look like? How should I know?</br>";
+						$statuslog = $statuslog . "$bossrow[basename] looks unlucky. Hm? What does unlucky look like? How should I know?<br/>";
 						break;
 					case 'HOPELESS': //Format is HOPELESS:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] looks dejected...</br>";
+						$statuslog = $statuslog . "$bossrow[basename] looks dejected...<br/>";
 						break;
 					case 'DISORIENTED': //Format is DISORIENTED:<%chance>:<duration>|
-						$statuslog = $statuslog . "$bossrow[basename] is wandering around the battlefield in a daze!</br>";
+						$statuslog = $statuslog . "$bossrow[basename] is wandering around the battlefield in a daze!<br/>";
 						break;
 					case 'DISTRACTED': //Format is DISTRACTED:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] looks away for a moment</br>";
+						$statuslog = $statuslog . "$bossrow[basename] looks away for a moment<br/>";
 						break;
 					case 'ENRAGED': //Format is ENRAGED:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] looks really angry!</br>";
+						$statuslog = $statuslog . "$bossrow[basename] looks really angry!<br/>";
 						break;
 					case 'MELLOW': //Format is MELLOW:<%chance>|
-						$statuslog = $statuslog . "$bossrow[basename] looks super chill, man...</br>";
+						$statuslog = $statuslog . "$bossrow[basename] looks super chill, man...<br/>";
 						break;
 					case 'KNOCKDOWN': //Format is KNOCKDOWN:<%multiplier>|. Knockdown chance depends on damage dealt.
-						$statuslog = $statuslog . "$bossrow[basename] is sent flying by the force of your attacks!</br>";
+						$statuslog = $statuslog . "$bossrow[basename] is sent flying by the force of your attacks!<br/>";
 						break;
 					case 'GLITCHED': //Format is GLITCHED:<%chance>|. NOTE - Glitching is a permanent status ailment. Please balance accordingly.
-						$statuslog = $statuslog . "$bossrow[basename] appears somewhat $glitchstr</br>";
+						$statuslog = $statuslog . "$bossrow[basename] appears somewhat $glitchstr<br/>";
 						break;
 					default:
-						echo "$effect unrecognized. Please submit a bug report!</br>";
+						echo "$effect unrecognized. Please submit a bug report!<br/>";
 						break;
 				}
 			}
@@ -1550,7 +1550,7 @@ if (empty($_SESSION['username'])) {
 			//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = " . $newpower . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			$pluspower = $newpower - $powertotal;
 			$powertotal = $newpower;
-			$statuslog = $statuslog . $bossrow['basename'] . " recovers $pluspower power</br>";
+			$statuslog = $statuslog . $bossrow['basename'] . " recovers $pluspower power<br/>";
 		}
 		if ($enemyrow['healthrecover'] > 0 && $healthtotal < $sessionrow['sessionbossmaxhealth'] && $healthtotal > ($sessionrow['sessionbossmaxhealth'] / 20)) { //Enemy recovers from some health loss every turn and has lost some.
 			$newhealth = $healthtotal + ($enemyrow['healthrecover'] * $chumroll);
@@ -1559,7 +1559,7 @@ if (empty($_SESSION['username'])) {
 			//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = " . $newpower . " WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			$plushealth = $newhealth - $healthtotal;
 			$healthtotal = $newhealth;
-			$statuslog = $statuslog . $bossrow['basename'] . " regenerates $plushealth health</br>";
+			$statuslog = $statuslog . $bossrow['basename'] . " regenerates $plushealth health<br/>";
 		}
 		$mysqli->query("UPDATE `Sessions` SET `sessionbosshealth` = $healthtotal, `sessionbosspower` = $powertotal WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
 
@@ -1568,7 +1568,7 @@ if (empty($_SESSION['username'])) {
 		$sessionmates = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $sessioname . "' AND `Players`.`sessionbossengaged` = 1;");
 		$crushtheweaklings = rand(1, 100);
 		if ($crushtheweaklings > 85) {
-			$statuslog = $statuslog . $bossrow['basename'] . " decides to go after weaker players next round.</br>";
+			$statuslog = $statuslog . $bossrow['basename'] . " decides to go after weaker players next round.<br/>";
 			$highest = max($focusvalue);
 			foreach ($focusvalue as &$value) {
 				$value = $highest - $value;
@@ -1589,7 +1589,7 @@ if (empty($_SESSION['username'])) {
 					$randomthing = rand(1, 100);
 					if ($randomthing <= floor(100 / ($fighters - $chooser))) { //Player chosen
 						$focus = 0;
-						$statuslog = $statuslog . $buddyrow['enemy1name'] . " fails to attack $buddyrow[username] due to disorientation!</br>";
+						$statuslog = $statuslog . $buddyrow['enemy1name'] . " fails to attack $buddyrow[username] due to disorientation!<br/>";
 					} else {
 						$chooser++;
 					}
@@ -1614,7 +1614,7 @@ if (empty($_SESSION['username'])) {
 		if ($healthtotal <= 1500 * $fighters)
 			$healthtotal = 0;
 		if ($healthtotal <= 0) {
-			$statuslog = $statuslog . "$bossrow[basename] has been defeated!</br>";
+			$statuslog = $statuslog . "$bossrow[basename] has been defeated!<br/>";
 			$sessionmates = $mysqli->query("SELECT * FROM `Players` WHERE `Players`.`session_name` = '" . $sessioname . "' AND `Players`.`sessionbossengaged` = 1;");
 			while ($buddyrow = $sessionmates->fetch_array()) {
 				$mysqli->query("UPDATE `Players` SET `sessionbossfocus` = 0, `enemydata` = '', `sessionbossengaged` = 0, `kingvote` = 0, `sessionbossleader` = 0 WHERE `Players`.`username` = '$buddyrow[username]' LIMIT 1;");
@@ -1622,16 +1622,16 @@ if (empty($_SESSION['username'])) {
 			switch ($bossrow['basename']) { //DATA: Individual victory text and routine for each boss.
 				case 'The Black King':
 					$mysqli->query("UPDATE `Sessions` SET `sessionbossname` = '', `checkmate` = 1 WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
-					$statuslog = $statuslog . "The Reckoning slows quickly to a halt as his lifeless body collapses, shrinking as the once mighty Black sceptre shatters into pieces. Skaia glows bright, as if in jubilation at your success. Congratulations! You have won Sburb!</br>";
+					$statuslog = $statuslog . "The Reckoning slows quickly to a halt as his lifeless body collapses, shrinking as the once mighty Black sceptre shatters into pieces. Skaia glows bright, as if in jubilation at your success. Congratulations! You have won Sburb!<br/>";
 					break;
 				default:
-					$currentlog = $currentlog . "However, we aren't sure what $bossrow[basename] is, so you'd better submit a bug report.</br>";
+					$currentlog = $currentlog . "However, we aren't sure what $bossrow[basename] is, so you'd better submit a bug report.<br/>";
 					break;
 			}
 		}
 		$lastround = $currentlog . $statuslog;
 		$lastescaped = $mysqli->real_escape_string($lastround);
-		$currentlog = $currentlog . $statuslog . "---------------</br>" . $sessionrow['combatlog'];
+		$currentlog = $currentlog . $statuslog . "---------------<br/>" . $sessionrow['combatlog'];
 		$currentlog = $mysqli->real_escape_string($currentlog);
 		$mysqli->query("UPDATE `Sessions` SET `combatlog` = '$currentlog' WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
 		$mysqli->query("UPDATE `Sessions` SET `lastround` = '$lastescaped' WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");

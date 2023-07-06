@@ -69,11 +69,11 @@ function convertHybrid($workrow, $isbodygear)
 	return $workrow;
 }
 if (empty($_SESSION['username'])) {
-	echo "Log in to access this developer's tool.</br>";
+	echo "Log in to access this developer's tool.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	if ($userrow['session_name'] != "Doodlefluffer") {
-		echo "This is a balancing tool. It is for use by developers. It's super boring, so you're not missing out on much.</br>";
+		echo "This is a balancing tool. It is for use by developers. It's super boring, so you're not missing out on much.<br/>";
 	} else {
 		$database = $mysqli->query("SELECT * FROM `Players`");
 		$i = 1;

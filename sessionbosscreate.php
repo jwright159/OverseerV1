@@ -2,7 +2,7 @@
 require_once "header.php";
 require "monstermaker.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to engage bosses.</br>";
+	echo "Log in to engage bosses.<br/>";
 } else {
 
 	//Need a check to make sure the boss fight is ready to happen, and also one to make sure there's not already a fight happening.
@@ -25,11 +25,11 @@ if (empty($_SESSION['username'])) {
 				$chumroll++;
 			}
 			if ((($kingvotes / $chumroll) * 100 <= 49.99999) && $username != "The Overseer") { //Need at least 50/50
-				echo 'Not enough users vote in favour to initiate strife against the Black King!</br>';
+				echo 'Not enough users vote in favour to initiate strife against the Black King!<br/>';
 			} elseif ($sessionrow['sessionbossname'] != "") { //Session already fighting boss
-				echo 'A session-wide boss is already being fought!</br>';
+				echo 'A session-wide boss is already being fought!<br/>';
 			} elseif (($sessionrow['checkmate'] == 1 || $sessionrow['battlefieldtotal'] < $chumroll * $powerperplayer || $userrow[$downstr] == 1) && $username != "The Overseer") {
-				echo "You are not able to fight this boss right now.</br>";
+				echo "You are not able to fight this boss right now.<br/>";
 			} else {
 				$mysqli->query("UPDATE Players SET `enemydata` = '' WHERE `Players`.`kingvote` = 1 AND `Players`.`session_name` = '$userrow[session_name]'");
 				$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$userrow[session_name]'");
@@ -79,7 +79,7 @@ if (empty($_SESSION['username'])) {
 				$mysqli->query("UPDATE `Players` SET `offenseboost` = 0 WHERE `Players`.`kingvote` = 1 AND `Players`.`session_name` = '$userrow[session_name]'");
 				$mysqli->query("UPDATE `Players` SET `defenseboost` = 0 WHERE `Players`.`kingvote` = 1 AND `Players`.`session_name` = '$userrow[session_name]'");
 				$mysqli->query("UPDATE `Players` SET `sessionbossleader` = 1 WHERE `Players`.`username` = '$username'"); //This player is now the leader.
-				echo "<a href='sessionboss.php'>The Black King has been engaged</a>. (No, not to the Black Queen, dumby)</br>";
+				echo "<a href='sessionboss.php'>The Black King has been engaged</a>. (No, not to the Black Queen, dumby)<br/>";
 			}
 			break;
 		default:

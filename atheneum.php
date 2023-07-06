@@ -1,7 +1,7 @@
 <?php
 require_once "header.php";
 if (empty($_SESSION['username'])) {
-	echo "Log in to view the Atheneum.</br>";
+	echo "Log in to view the Atheneum.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
 	echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</style></head><body>";
@@ -20,11 +20,11 @@ if (empty($_SESSION['username'])) {
 	else
 		$showstring = "WHERE `Captchalogue`.`abstratus` LIKE '" . $_GET['show'] . "%' OR `Captchalogue`.`abstratus` LIKE '%, " . $_GET['show'] . "%'";
 
-	echo 'Session Atheneum</br>';
-	echo 'All items acquired or previewed by players in your session will be shown here.</br>';
-	echo '<a href="populateatheneum.php">Use this page to add all current inventory items acquired before the update</a></br></br>';
-	echo 'View options:</br><a href="atheneum.php?show=all">All items</a> | <a href="atheneum.php?show=weapons">Weapons</a> | <a href="atheneum.php?show=notaweapon">Non-weapons</a> | <a href="atheneum.php?show=wearable">Wearables</a> | <a href="atheneum.php?show=consume">Consumables</a> | <a href="atheneum.php?show=base">Base items</a> | <a href="atheneum.php?show=nonbase">Non-base items</a></br>';
-	echo '<form method="get" action="atheneum.php">Or search for an abstratus: <input type="text" name="show"><input type="submit" value="Search"></form></br></br>';
+	echo 'Session Atheneum<br/>';
+	echo 'All items acquired or previewed by players in your session will be shown here.<br/>';
+	echo '<a href="populateatheneum.php">Use this page to add all current inventory items acquired before the update</a><br/><br/>';
+	echo 'View options:<br/><a href="atheneum.php?show=all">All items</a> | <a href="atheneum.php?show=weapons">Weapons</a> | <a href="atheneum.php?show=notaweapon">Non-weapons</a> | <a href="atheneum.php?show=wearable">Wearables</a> | <a href="atheneum.php?show=consume">Consumables</a> | <a href="atheneum.php?show=base">Base items</a> | <a href="atheneum.php?show=nonbase">Non-base items</a><br/>';
+	echo '<form method="get" action="atheneum.php">Or search for an abstratus: <input type="text" name="show"><input type="submit" value="Search"></form><br/><br/>';
 	if (!empty($_GET['testsession']) && $userrow['session_name'] == "Developers") {
 		$lookups = $_GET['testsession'];
 	} else {
@@ -40,13 +40,13 @@ if (empty($_SESSION['username'])) {
 		$totalitems++;
 		if (strrpos($sesrow['atheneum'], $crow['captchalogue_code'])) {
 			$founditems++;
-			echo '<a href="inventory.php?holocode=' . $crow['captchalogue_code'] . '">' . $crow['name'] . ' - <itemcode>' . $crow['captchalogue_code'] . '</itemcode></a></br>';
+			echo '<a href="inventory.php?holocode=' . $crow['captchalogue_code'] . '">' . $crow['name'] . ' - <itemcode>' . $crow['captchalogue_code'] . '</itemcode></a><br/>';
 		}
 	}
 	$percents = ($founditems / $totalitems) * 100;
-	echo "</br>ITEMS FOUND: " . strval($founditems) . " / " . strval($totalitems) . " (" . strval($percents) . "%)</br>";
+	echo "<br/>ITEMS FOUND: " . strval($founditems) . " / " . strval($totalitems) . " (" . strval($percents) . "%)<br/>";
 	if ($showstring == "") {
-		echo "Prof. Blah's Analysis:</br>";
+		echo "Prof. Blah's Analysis:<br/>";
 		if ($percents <= 1)
 			echo "Try getting some base items from the catalogue!";
 		elseif ($percents <= 2)
@@ -76,8 +76,8 @@ if (empty($_SESSION['username'])) {
 		elseif ($percents < 100)
 			echo "well at this point the only thing left to do is to get those last few items... we're all going to die anyway";
 		else {
-			echo "You've finally done it. You've acquired all of the items that exist in this game. If there was ever a session that deserved to beat the game... it's " . $userrow['session_name'] . ".</br>";
-			echo "I guess there's only one thing to do now...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>...</br>";
+			echo "You've finally done it. You've acquired all of the items that exist in this game. If there was ever a session that deserved to beat the game... it's " . $userrow['session_name'] . ".<br/>";
+			echo "I guess there's only one thing to do now...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>";
 			echo "SUBMIT MORE ITEMS??????????? :L";
 		}
 	}

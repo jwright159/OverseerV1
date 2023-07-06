@@ -48,7 +48,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) { //TIMESTOP has one argument: The chance of it working.
 					$timestopped = True;
 					$currentstatus = $currentstatus . $statustr . "TIMESTOP|";
-					$message = $message . "$werow[$enemystr] is frozen in time!</br>";
+					$message = $message . "$werow[$enemystr] is frozen in time!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the timestop effect!<br/>";
 				break;
@@ -73,7 +73,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow[$resiststr] / 100); //if the enemy already has resistance to this, it'll be harder to change
 				if ($roll > (100 - (intval($currentarray[3]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "RESIST:$currentarray[1]:$currentarray[2]|";
-					$message = $message . "$werow[$enemystr]'s resistance to $currentarray[1] is modified to $currentarray[2]%!</br>";
+					$message = $message . "$werow[$enemystr]'s resistance to $currentarray[1] is modified to $currentarray[2]%!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr]'s $currentarray[1] resistance remains the same.<br/>";
 				break;
@@ -82,7 +82,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Life'] / 100); //Enemy's Life resistance reduces success chance.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) { //WATERYGEL has one argument: The chance of it working.
 					$currentstatus = $currentstatus . $statustr . "WATERYGEL|";
-					$message = $message . "$werow[$enemystr] appears to have lost some viscosity.</br>";
+					$message = $message . "$werow[$enemystr] appears to have lost some viscosity.<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the watery gel effect!<br/>";
 				break;
@@ -92,7 +92,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				if ($roll > (100 - intval($currentarray[1]))) { //Check to see if poison applies. Note that Doom resistance doesn't decrease this
 					$severity = (ceil($currentarray[2] * $resistfactor * 100)) / 100; //Round to two decimal places.
 					$currentstatus = $currentstatus . $statustr . "POISON:" . $severity . "|";
-					$message = $message . "$werow[$enemystr] doesn't look too well...</br>";
+					$message = $message . "$werow[$enemystr] doesn't look too well...<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the poison effect!<br/>";
 				break;
@@ -101,7 +101,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Space'] / 100); //Space resistance reduces the chance of shrinking working
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "SHRUNK|";
-					$message = $message . "$werow[$enemystr] suddenly shrinks!</br>";
+					$message = $message . "$werow[$enemystr] suddenly shrinks!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the shrinking effect!<br/>";
 				break;
@@ -110,7 +110,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Heart'] / 100); //Heart resistance reduces success chance
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "LOCKDOWN:$currentarray[2]|"; //applying multiple instances will have no additional effect
-					$message = $message . "$werow[$enemystr]'s connection to its abilities is severed!</br>";
+					$message = $message . "$werow[$enemystr]'s connection to its abilities is severed!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the lockdown effect!<br/>";
 				break;
@@ -121,7 +121,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$resistfactor = 1 - ($enemyrow['resist_Heart'] / 100); //Heart resistance reduces success chance
 					if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 						$currentstatus = $currentstatus . $statustr . "CHARMED|";
-						$message = $message . "$werow[$enemystr] is charmed temporarily to your side!</br>";
+						$message = $message . "$werow[$enemystr] is charmed temporarily to your side!<br/>";
 					} else
 						$failedmessage .= "$werow[$enemystr] resists the charm effect!<br/>";
 				}
@@ -131,9 +131,9 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Blood'] / 100); //Blood resistance reduces the successful absorption
 				if ($roll > (100 - intval($currentarray[1]))) {
 					if ($resistfactor >= 0) {
-						$message = $message . "Your attack siphons health gel from $werow[$enemystr]!</br>";
+						$message = $message . "Your attack siphons health gel from $werow[$enemystr]!<br/>";
 					} else {
-						$message = $message . "Your attack siphons health gel from $werow[$enemystr]! Unfortunately, the gel harms you instead of healing you.</br>";
+						$message = $message . "Your attack siphons health gel from $werow[$enemystr]! Unfortunately, the gel harms you instead of healing you.<br/>";
 					}
 					$healthgain = ceil(($enemydamage * ($currentarray[2] / 100)) * $resistfactor);
 					//NOTE: We need to calculate this after all weapon effects that amplify damage.
@@ -151,9 +151,9 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Heart'] / 100); //Heart resistance reduces the successful absorption
 				if ($roll > (100 - intval($currentarray[1]))) {
 					if ($resistfactor >= 0) {
-						$message = $message . "You absorb the damage on $werow[$enemystr] to fuel your aspect!</br>";
+						$message = $message . "You absorb the damage on $werow[$enemystr] to fuel your aspect!<br/>";
 					} else {
-						$message = $message . "You attempt to absorb the damage on $werow[$enemystr] as aspect power, but $werow[$enemystr]'s soul is so strong that it drains your Aspect Vial instead!</br>";
+						$message = $message . "You attempt to absorb the damage on $werow[$enemystr] as aspect power, but $werow[$enemystr]'s soul is so strong that it drains your Aspect Vial instead!<br/>";
 					}
 					$healthgain = ceil(($enemydamage * ($currentarray[2] / 100)) * $resistfactor);
 					//NOTE: We need to calculate this after all weapon effects that amplify damage.
@@ -171,7 +171,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Light'] / 100); //Light resistance reduces the chance of misfortune working
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "UNLUCKY|";
-					$message = $message . "$werow[$enemystr] looks unlucky. Hm? What does unlucky look like? How should I know?</br>";
+					$message = $message . "$werow[$enemystr] looks unlucky. Hm? What does unlucky look like? How should I know?<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] doesn't look any luckier or unluckier than before, whatever that means.<br/>";
 				break;
@@ -186,7 +186,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				//NOTE - May change this to modify duration instead of or as well as resisting application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) { //Check to see if wound bleeds.
 					$currentstatus = $currentstatus . $statustr . "BLEEDING:" . $currentarray[2] . "|";
-					$message = $message . "$werow[$enemystr] is bleeding!</br>";
+					$message = $message . "$werow[$enemystr] is bleeding!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the bleeding effect!<br/>";
 				break;
@@ -195,7 +195,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Hope'] / 100); //Enemy's Hope resistance reduces chance of application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "HOPELESS|";
-					$message = $message . "$werow[$enemystr] looks dejected...</br>";
+					$message = $message . "$werow[$enemystr] looks dejected...<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] remains hopeful!<br/>";
 				break;
@@ -204,7 +204,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Mind'] / 100); //Enemy's Mind resistance reduces chance of application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "DISORIENTED:" . $currentarray[2] . "|";
-					$message = $message . "$werow[$enemystr] is wandering around the battlefield in a daze!</br>";
+					$message = $message . "$werow[$enemystr] is wandering around the battlefield in a daze!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the disoriented effect!<br/>";
 				break;
@@ -213,7 +213,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Mind'] / 100); //Enemy's Mind resistance reduces chance of application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "DISTRACTED|";
-					$message = $message . "$werow[$enemystr] looks away for a moment</br>";
+					$message = $message . "$werow[$enemystr] looks away for a moment<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] manages to stay focused!<br/>";
 				break;
@@ -227,7 +227,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					} else {
 						$currentstatus = $currentstatus . $statustr . "ENRAGED|";
 					}
-					$message = $message . "$werow[$enemystr] looks really angry!</br>";
+					$message = $message . "$werow[$enemystr] looks really angry!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists becoming enraged!<br/>";
 				break;
@@ -242,7 +242,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 						$justmellowed = True;
 						$currentstatus = $currentstatus . $statustr . "MELLOW|";
 					}
-					$message = $message . "$werow[$enemystr] looks super chill, man...</br>";
+					$message = $message . "$werow[$enemystr] looks super chill, man...<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the mellow effect!<br/>";
 				break;
@@ -256,7 +256,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$target = 100 - ((($effdamage * (intval($currentarray[1]) / 100) * $resistfactor) / $userrow[$healthstr]) * 300); //33% effective damage = 100% chance
 				if ($roll > $target) {
 					$currentstatus = $currentstatus . $statustr . "KNOCKDOWN|";
-					$message = $message . "$werow[$enemystr] is sent flying by the force of the blow!</br>";
+					$message = $message . "$werow[$enemystr] is sent flying by the force of the blow!<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] stands firm!<br/>";
 				break;
@@ -266,7 +266,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$currentstatus = $currentstatus . $statustr . "GLITCHED|";
 					$glitchstr = horribleMess();
-					$message = $message . "$werow[$enemystr] appears somewhat $glitchstr</br>";
+					$message = $message . "$werow[$enemystr] appears somewhat $glitchstr<br/>";
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the glitchy effect!<br/>";
 				break;
@@ -326,10 +326,10 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$frozenstr = ($statustr . "FROZEN|");
 					if (strpos($currentstatus, $frozenstr) !== False) { //Negate this instead of applying burn
 						$currentstatus = str_replace($frozenstr, "", $currentstatus);
-						$message = $message . "The fire melts the ice around $werow[$enemystr].</br>";
+						$message = $message . "The fire melts the ice around $werow[$enemystr].<br/>";
 					} else {
 						$currentstatus = $currentstatus . $statustr . "BURNING:$currentarray[2]|";
-						$message = $message . "$werow[$enemystr] catches fire!</br>";
+						$message = $message . "$werow[$enemystr] catches fire!<br/>";
 					}
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the burning effect!<br/>";
@@ -341,10 +341,10 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 					$burnstr = ($statustr . "BURNING");
 					if (strpos($currentstatus, $burnstr) !== False) { //Negate this instead of applying burn
 						$currentstatus = str_replace($burnstr, "", $currentstatus);
-						$message = $message . "The sheer coldness puts out $werow[$enemystr]'s fire.</br>";
+						$message = $message . "The sheer coldness puts out $werow[$enemystr]'s fire.<br/>";
 					} else {
 						$currentstatus = $currentstatus . $statustr . "FROZEN|";
-						$message = $message . "$werow[$enemystr] becomes encased in ice!</br>";
+						$message = $message . "$werow[$enemystr] becomes encased in ice!<br/>";
 					}
 				} else
 					$failedmessage .= "$werow[$enemystr] resists the freezing effect!<br/>";

@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (empty($_SESSION['username'])) {
-	echo "Log in to fix the overseer's derps</br>";
-	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a></br>';
+	echo "Log in to fix the overseer's derps<br/>";
+	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 } else {
 	$con = $mysqli->connect("localhost", "theovers_DC", "pi31415926535");
 	if (!$con) {
@@ -21,7 +21,7 @@ if (empty($_SESSION['username'])) {
 				$mysqli->query("INSERT INTO `Echeladders` (`username`) VALUES ('$row[username]');"); //Give the player an Echeladder. Players love echeladders.
 				$mysqli->query("INSERT INTO `Messages` (`username`) VALUES ('$row[username]');"); //Create entry in message table.
 				$mysqli->query("INSERT INTO `Ability_Patterns` (`username`) VALUES ('$row[username]');"); //Create entry in pattern table.
-				echo "$row[username] fixed.</br>";
+				echo "$row[username] fixed.<br/>";
 			}
 		}
 	}

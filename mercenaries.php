@@ -5,7 +5,7 @@ require_once "includes/pricesandvaules.php";
 require_once "includes/effectprinter.php";
 
 if (empty($_SESSION['username'])) {
-	echo "Log in to interact with your allies.</br>";
+	echo "Log in to interact with your allies.<br/>";
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "You can't communicate with your allies while asleep!";
 } elseif ($userrow['enemydata'] != "" || $userrow['aiding'] != "" || $userrow['indungeon'] != 0) {
