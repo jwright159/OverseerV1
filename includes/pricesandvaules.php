@@ -2,24 +2,18 @@
 
 function randomItem($griststring, $costcap, $gristname, $totalgrists, $specialstring)
 {
-	$totalpool = 0;
 	if (!empty($specialstring)) {
 		$specialstring = "(" . $specialstring . ")";
 		//echo "SELECT `name` FROM `Captchalogue` WHERE `Captchalogue`.`$griststring` > 0 $specialstring";
 	} else {
 		$specialstring = "`Captchalogue`.`$griststring` > 0";
 	}
-	$poolresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE $specialstring AND `Captchalogue`.`effects` NOT LIKE '%NOCONSORT|%'");
-	while ($poolresult->fetch_array())
-		$totalpool++;
+	$poolresult = fetchAll("SELECT `name` FROM Captchalogue WHERE $specialstring AND effects NOT LIKE '%NOCONSORT|%'");
 	$foundone = false;
 	$attempts = 0;
 	$attemptscap = 100;
 	while (!$foundone && $attempts < $attemptscap) {
-		$pick = rand(1, $totalpool);
-		$pick--;
-		$pickresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE $specialstring AND `Captchalogue`.`effects` NOT LIKE '%NOCONSORT|%' LIMIT $pick,1");
-		$pickrow = $pickresult->fetch_array();
+		$pickrow = $poolresult[array_rand($poolresult)];
 		//echo $pickrow['name'] . " found</br>";
 		$thiscost = totalGristcost($pickrow, $gristname, $totalgrists);
 		if ($thiscost <= $costcap)
@@ -78,16 +72,10 @@ function totalBooncost($countrow, $landrow, $gristname, $totalgrists, $sessionna
 
 function getDialogue($dtype, $userrow, $land1, $land2, $gate = 1)
 {
-	$totalpool = 0;
 	if ($gate < 1)
 		$gate = 1;
-	$poolresult = $mysqli->query("SELECT `ID` FROM `Consort_Dialogue` WHERE `Consort_Dialogue`.`context` = '$dtype' AND `gate` <= $gate");
-	while ($poolresult->fetch_array())
-		$totalpool++;
-	$pick = rand(1, $totalpool);
-	$pick--;
-	$pickresult = $mysqli->query("SELECT * FROM `Consort_Dialogue` WHERE `Consort_Dialogue`.`context` = '$dtype' AND `gate` <= $gate LIMIT $pick,1");
-	$pickrow = $pickresult->fetch_array();
+	$poolresult = fetchAll("SELECT ID FROM Consort_Dialogue WHERE context = :context AND gate <= :gate", ['context' => $dtype, 'gate' => $gate]);
+	$pickrow = $poolresult[array_rand($poolresult)];
 	if (!empty($pickrow['dialogue']))
 		$pickrow = parseDialogue($pickrow, $userrow, $land1, $land2);
 	else
@@ -140,14 +128,16 @@ function abbreviateLand($land1, $land2)
 	$landshort = "LO";
 	$boom = explode(" ", $land1);
 	$bcount = 0;
-	while ($bcount <= count($boom)) {
+	while ($bcount <= count($boom))
+	{
 		$landshort .= strtoupper(substr($boom[$bcount], 0, 1));
 		$bcount++;
 	}
 	$landshort .= "A";
 	$boom = explode(" ", $land2);
 	$bcount = 0;
-	while ($bcount <= count($boom)) {
+	while ($bcount <= count($boom))
+	{
 		$landshort .= strtoupper(substr($boom[$bcount], 0, 1));
 		$bcount++;
 	}
@@ -156,21 +146,19 @@ function abbreviateLand($land1, $land2)
 
 function avgGristtier($sessionname, $gristname)
 {
-	$playersresult = $mysqli->query("SELECT `grist_type` FROM Players WHERE `Players`.`session_name` = '$sessionname'");
 	$totallands = 0;
 	$totaltier = 0;
-	while ($playerrow = $playersresult->fetch_array()) {
-		$gristresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $playerrow['grist_type'] . "'");
-		$gristrow = $gristresult->fetch_array();
-		$i = 1;
-		while ($i <= 9) {
+	foreach (fetchAll("SELECT grist_type FROM Players WHERE session_name = :sessionName", ['sessionName' => $sessionname]) as $playerrow) {
+		$gristrow = fetchOne("SELECT * FROM Grist_Types WHERE `name` = :gristType", ['gristType' => $playerrow['grist_type']]);
+		for ($i = 1; $i <= 9; $i++)
+		{
 			$griststring = "grist" . strval($i);
-			if ($gristrow[$griststring] == $gristname) {
+			if ($gristrow[$griststring] == $gristname)
+			{
 				$totallands++;
 				$totaltier += $i;
-				$i = 10;
+				break;
 			}
-			$i++;
 		}
 	}
 	if ($totallands != 0)
@@ -182,14 +170,12 @@ function avgGristtier($sessionname, $gristname)
 
 function econonyLevel($exp)
 {
-	$level = floor(pow($exp / 1000, 1 / 3));
-	return $level;
+	return floor(pow($exp / 1000, 1 / 3));
 }
 
 function joinParty($userrow, $hired, $offer, $consort)
 {
-	$mercresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE basename = '$hired'");
-	$mercrow = $mercresult->fetch_array();
+	$mercrow = fetchOne("SELECT * FROM Enemy_Types WHERE basename = :basename", ['basename' => $hired]);
 	$baseloyalty = $mercrow['basehealth'] / $mercrow['basepower']; //don't round it just yet
 	$offerpercent = $offer / $mercrow['maxboons']; //higher offer = higher loyalty and vice versa
 	$loyalty = ceil($baseloyalty * $offerpercent);
@@ -201,28 +187,29 @@ function joinParty($userrow, $hired, $offer, $consort)
 	} else
 		$mercname = $mercrow['basename'];
 	$newally = "IDLE:" . $mercrow['basename'] . ":" . strval($loyalty) . ":" . $mercname . ":" . $mercrow['description'] . ":" . strval($mercrow['basepower']);
-	$userrow['allies'] .= $mysqli->real_escape_string($newally . "|");
-	$mysqli->query("UPDATE Players SET `allies` = '" . $userrow['allies'] . "' WHERE username = '" . $userrow['username'] . "'");
+	$userrow['allies'] .= $newally . "|";
+	query("UPDATE Players SET allies = :allies WHERE username = :username", ['allies' => $userrow['allies'], 'username' => $userrow['username']]);
 	return $newally;
 }
 
+/**
+ * Essentially holds data on "default" consort types available on a land and when they become available
+ */
 function mercRefresh($userrow)
-{ //essentially holds data on "default" consort types available on a land and when they become available
+{
 	$startallies = $userrow['landallies'];
-	if (strpos($userrow['landallies'], "Consort") === false) {
+
+	if (strpos($userrow['landallies'], "Consort") === false)
 		$userrow['landallies'] .= "Consort|";
-	}
-	if (strpos($userrow['landallies'], "Consort Guard") === false) {
-		if (econonyLevel($userrow['econony']) > 10)
-			$userrow['landallies'] .= "Consort Guard|";
-	}
-	if (strpos($userrow['landallies'], "Consort Knight") === false) {
-		if (econonyLevel($userrow['econony']) > 20)
-			$userrow['landallies'] .= "Consort Knight|";
-	}
+
+	if (strpos($userrow['landallies'], "Consort Guard") === false && econonyLevel($userrow['econony']) > 10)
+		$userrow['landallies'] .= "Consort Guard|";
+
+	if (strpos($userrow['landallies'], "Consort Knight") === false && econonyLevel($userrow['econony']) > 20)
+		$userrow['landallies'] .= "Consort Knight|";
+	
 	if ($startallies != $userrow['landallies'])
-		$mysqli->query("UPDATE Players SET landallies = '" . $userrow['landallies'] . "' WHERE username = '" . $userrow['username'] . "'");
+		query("UPDATE Players SET landallies = :landallies WHERE username = :username", ['landallies' => $userrow['landallies'], 'username' => $userrow['username']]);
+	
 	return $userrow;
 }
-
-?>
