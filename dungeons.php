@@ -102,10 +102,8 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 			}
 		}
 		$selected = false;
-		$itemsresult = $mysqli->query("SELECT `name` FROM `Captchalogue` $exstr");
-		$totalitems = 0;
-		while ($row = $itemsresult->fetch_array())
-			$totalitems++;
+		$itemsresult = fetchAll("SELECT `name` FROM Captchalogue $exstr");
+		$totalitems = count($itemsresult);
 		$item = rand(1, $totalitems); //Starting point for the item search.
 		$item--; //otherwise it will eliminate 1 item from the search and if there's only 1 item dats bad
 		$loopies = $totalitems;
@@ -113,8 +111,7 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 		$max = ceil($max * (1 + ($distance / 16)));
 		while (!$selected) {
 			$loopies--;
-			$itemresult = $mysqli->query("SELECT * FROM Captchalogue $exstr LIMIT " . $item . " , 1 ;");
-			$itemrow = $itemresult->fetch_array();
+			$itemrow = $itemsresult[$item];
 			$itemname = $itemrow['name'];
 			//if ($debugprintbossloots) echo "checking $itemname<br/>";
 			$total = 0;
@@ -146,6 +143,7 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 }
 function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $isboss, $trow)
 {
+	global $mysqli;
 	$square = strval($row) . "," . strval($col);
 	if ($isboss > 0) {
 		if (!empty($trow['boss'])) {
@@ -164,15 +162,11 @@ function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $
 						$hcount = 2; //1 is the hydra itself
 						while ($hcount <= 8) { //7 heads in total~
 							$boss .= "|ENEMY" . strval($hcount) . ":";
-							$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head'");
-							$countr = 0;
-							while ($randrow = $randomresult->fetch_array()) {
-								$countr++;
-							}
+							$randomresult = fetchAll("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head'");
+							$countr = count($randomresult);
 							$whodat = rand(1, $countr);
 							$whodat--;
-							$randomresult = $mysqli->query("SELECT `basename` FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` LIKE '%Hydra Head' LIMIT $whodat,1");
-							$randrow = $randomresult->fetch_array();
+							$randrow = $randomresult[$whodat];
 							$randenemy = $randrow['basename'];
 							if (empty($randenemy))
 								echo "DEBUGNOTE: Tried to spawn G3F3 boss thing with ID of $whodat, returned empty. This is no cause for alarm if you are not a dev, unless you see this message a bunch of times.<br/>";
@@ -237,7 +231,8 @@ function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $
 				$ecount = 0;
 				$equery = "SELECT * FROM `Enemy_Types` WHERE (";
 				$eexplode = explode("|", $trow['enemies']);
-				while (!empty($eexplode[$ecount])) {
+				while (!empty($eexplode[$ecount]))
+				{
 					$equery .= "basename = '" . $mysqli->real_escape_string($eexplode[$ecount]) . "' OR ";
 					$ecount++;
 				}
@@ -246,14 +241,13 @@ function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $
 			} else { //if not, populate the dungeon with underlings from lands/dungeons
 				$equery = "SELECT * FROM `Enemy_Types` WHERE `basepower` > $realmin AND `basepower` < $realmax AND (`appearson` = 'Lands' OR `appearson` = 'Dungeons')";
 			}
-			$potentialresult = $mysqli->query($equery);
-			$options = 0;
-			while ($potentialrow = $potentialresult->fetch_array())
-				$options++;
-			$potentialresult = $mysqli->query($equery);
-			while (($potentialrow = $potentialresult->fetch_array()) && $options > 0) {
+			$potentialresult = fetchAll($equery);
+			$options = count($potentialresult);
+			foreach ($potentialresult as $potentialrow)
+			{
 				$selected = floor(rand(1, $options) / $options); //1 in $options chance
-				if ($selected) {
+				if ($selected)
+				{
 					$options = 0;
 					$tier = 1;
 					while ((($potentialrow['basepower'] * $tier) + ($tier * $tier)) <= $realmax && $tier < 10)
@@ -261,9 +255,14 @@ function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $
 					$tier--; //Subtract off the tier addition that violated the loop condition.
 					$roomarray[$square] = $roomarray[$square] . "|ENEMY" . strval($enemies) . ":" . $potentialrow['basename'] . "|TIER" . strval($enemies) . ":" . strval($tier);
 					//Code to add enemy to array goes here.
-				} else {
+				}
+				else
+				{
 					$options--;
 				}
+				
+				if ($options <= 0)
+					break;
 			}
 			$enemies--;
 		}
@@ -274,14 +273,11 @@ function generateDoor($roomarray, $row, $col, $brow, $bcol, $gate)
 {
 	$square = strval($row) . "," . strval($col);
 	$bsquare = strval($brow) . "," . strval($bcol); //the square that the door is blocking
-	$totaldoors = 0;
-	$doorresult = $mysqli->query("SELECT `ID` FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`gate` <= $gate");
-	while ($doorresult->fetch_array())
-		$totaldoors++;
+	$doorresult = fetchAll("SELECT `ID` FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`gate` <= $gate");
+	$totaldoors = count($doorresult);
 	if ($totaldoors > 0) { //if there ARE any results
 		$door = rand(1, $totaldoors);
-		$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`gate` <= $gate LIMIT " . $door . " , 1 ;");
-		$drow = $doorresult->fetch_array(); //SHOULD return exactly 1 row
+		$drow = $doorresult[$door];
 		if (strpos($drow['keys'], "|") === false) {
 			$spawnkey = $drow['keys'];
 		} else {
@@ -292,7 +288,7 @@ function generateDoor($roomarray, $row, $col, $brow, $bcol, $gate)
 		}
 		$foundaroom = false;
 		$tries = 100 - ($gate * 10); //there will be a chance the key won't spawn, so that the player has to either create the key themselves or find another way to get past the door
-		while (!$foundaroom && $tries > 0) { //here we pick random rooms until we find one that isn't empty. 
+		while (!$foundaroom && $tries > 0) { //here we pick random rooms until we find one that isn't empty.
 			//since this function is called during generation, the key won't spawn beyond the door because there are no rooms beyond it yet.
 			$rcol = rand(1, 10);
 			$rrow = rand(1, 10);
@@ -383,9 +379,10 @@ function makeSidepath($roomarray, $entryrow, $entrycol, $baselength, $gate, $rep
 
 function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance, $lolname, $trow)
 {
+	global $mysqli;
 	$dgnstring = $lolname . "_" . strval($floor);
-	$mysqli->query("DELETE FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Wipe the dungeon row.
-	$mysqli->query("INSERT INTO `Dungeons` (`username`) VALUES ('$dgnstring');");
+	query("DELETE FROM `Dungeons` WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Wipe the dungeon row.
+	query("INSERT INTO `Dungeons` (`username`) VALUES ('$dgnstring');");
 	//Remake it, but empty. Note that this means a dungeon row will appear if the user has never entered a dungeon before.
 	//Procedurally generate a dungeon here. Don't forget to reload the user row to reflect the new "in a dungeon" status
 	if (!empty($trow['name'])) {
@@ -414,7 +411,7 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 	$west = 4;
 	$possibilities = array($north => false, false, false, false); //North, East, South, West, checking in clockwise direction.
 	while ($i <= 4) {
-		$possibilities[rand(1, 4)] = true; //1 in 64 chance of single arm, 6 in 64 for four arms. Probabilities for 2 and 3 are similar, exact values not important. 
+		$possibilities[rand(1, 4)] = true; //1 in 64 chance of single arm, 6 in 64 for four arms. Probabilities for 2 and 3 are similar, exact values not important.
 		$i++;
 	}
 	//Paranoia: Handle all border cases so that arms never appear going off the playing area. (Entrance should never be on the edge though)
@@ -447,7 +444,7 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 				break;
 			default:
 				//ERROR ERROR
-				logDebugMessage($username . " - dungeon generator tried to make arm in direction $i");
+				logDebugMessage($userrow['username'] . " - dungeon generator tried to make arm in direction $i");
 				break;
 		}
 		$oldroom = strval($oldrow) . "," . strval($oldcol);
@@ -498,7 +495,7 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 							break;
 						default:
 							echo "ERROR: Unsupported direction $direction<br/>";
-							logDebugMessage($username . " - dungeon generator tried to continue arm in direction $direction");
+							logDebugMessage($userrow['username'] . " - dungeon generator tried to continue arm in direction $direction");
 							//ERROR ERROR
 							break;
 					}
@@ -586,7 +583,7 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 			$bossrow = $randomrow;
 			$bosscol = $randomcol;
 		} else
-			$roomarray[$furthestroom[$longest]] .= "|DESCRIPTION:This room is totally barren, except for a sticky note on the wall. It reads, \"Dear $username, Unfortunately, this dungeon seems to be so complex that we couldn't find room for the boss/stairs, despite our every effort to ensure this wouldn't happen. We offer our sincerest apology and hope that you have not totally lost faith in dungeon diving. -The Management\"";
+			$roomarray[$furthestroom[$longest]] .= "|DESCRIPTION:This room is totally barren, except for a sticky note on the wall. It reads, \"Dear $userrow[username], Unfortunately, this dungeon seems to be so complex that we couldn't find room for the boss/stairs, despite our every effort to ensure this wouldn't happen. We offer our sincerest apology and hope that you have not totally lost faith in dungeon diving. -The Management\"";
 	}
 	if ($finalfloor) {
 		if ($floor == $gate)
@@ -602,15 +599,15 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 		while ($j <= 10) {
 			$tile = strval($i) . "," . strval($j);
 			if (!empty($roomarray[$tile]))
-				$mysqli->query("UPDATE `Dungeons` SET `$tile` = '" . $mysqli->real_escape_string($roomarray[$tile]) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+				query("UPDATE `Dungeons` SET `$tile` = '" . $mysqli->real_escape_string($roomarray[$tile]) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
 			$j++;
 		}
 		$j = 1;
 		$i++;
 	}
-	$mysqli->query("UPDATE `Dungeons` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol,`dungeongate` = $gate,`dungeonland` = '$land' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
+	query("UPDATE `Dungeons` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol,`dungeongate` = $gate,`dungeonland` = '$land' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;");
 	if ($floor == 1) {
-		$mysqli->query("UPDATE `Players` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol WHERE `Players`.`username` = '" . $userrow['username'] . "'"); //put the player on the entrance
+		query("UPDATE `Players` SET `dungeonrow` = $entryrow,`dungeoncol` = $entrycol WHERE `Players`.`username` = '" . $userrow['username'] . "'"); //put the player on the entrance
 	}
 	return $armlength[$longest];
 }
@@ -1066,7 +1063,7 @@ if (empty($_SESSION['username'])) {
 									$clearencounter = false;
 									$encounterslain = true;
 									$flag = ""; //Scrap the encounter.
-								} elseif ($encounterslain == true) { //Last encounter was defeated. This one has not been yet.
+								} elseif ($encounterslain) { //Last encounter was defeated. This one has not been yet.
 									$encounterslain = false;
 								}
 								if ($encounter) { //Encounter being initiated at this stage.
@@ -1418,7 +1415,7 @@ if (empty($_SESSION['username'])) {
 					echo '<a href="strife.php">==&gt;</a><br/>';
 				}
 				if ($connection) {
-					$mysqli->query("UPDATE `Dungeons` SET `$newroom` = '" . $mysqli->real_escape_string($newflags) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Set the flags for this room on entry. 
+					$mysqli->query("UPDATE `Dungeons` SET `$newroom` = '" . $mysqli->real_escape_string($newflags) . "' WHERE `Dungeons`.`username` = '$dgnstring' LIMIT 1;"); //Set the flags for this room on entry.
 					//Note that "entry" may mean performing an action in the room (i.e. "entering" the room from itself) at some stage.
 					$mysqli->query("UPDATE `Players` SET `olddungeonrow` = $userrow[dungeonrow] WHERE `Players`.`username` = '$username' LIMIT 1;"); //Save these for things like fleeing the room.
 					$mysqli->query("UPDATE `Players` SET `olddungeoncol` = $userrow[dungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
@@ -1865,5 +1862,5 @@ if (empty($_SESSION['username'])) {
 		echo "</div>";
 	}
 }
+
 require_once "footer.php";
-?>
