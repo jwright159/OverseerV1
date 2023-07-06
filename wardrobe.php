@@ -58,10 +58,11 @@ function refreshLuck($userrow)
 				$invslot = $userrow['accessory'];
 				break;
 		}
-		if ($slot != "" && $slot != "2HAND") {
-			$realname = str_replace("'", "\\\\''", $userrow[$invslot]);
+		if ($invslot != "" && $invslot != "2HAND")
+		{
+			$realname = escapeItemName($userrow[$invslot]);
 			$row = fetchOne("SELECT `name`, effects FROM Captchalogue WHERE `name` = :name LIMIT 1;", ['name' => $realname]);
-			$realname = str_replace("\\", "", $row['name']);
+			$realname = unescapeItemName($row['name']);
 			if ($realname == $userrow[$invslot]) {
 				$effects = $row['effects'];
 				$effectarray = explode('|', $effects);
