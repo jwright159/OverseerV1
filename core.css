@@ -1,5 +1,5 @@
 body {
-  font-family: Courier New;
+  font-family: 'Courier New', Courier, monospace;
   background-color: #535353;
   margin-left: 190px;
   margin-right: 150px;
@@ -55,7 +55,7 @@ nobr {
 }
 
 p.courier {
-  font-family: "Courier New Bold",Courier,bold;
+  font-family: 'Courier New Bold', Courier, monospace;
   font-weight: bold;
 }
 
@@ -76,6 +76,16 @@ h1, h2, h3, h4, h5 {
 .spacer {
 	margin-top: 1em;
 	margin-bottom: 1em;
+}
+
+.indent {
+	padding-left: 1em;
+}
+
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #datea {
