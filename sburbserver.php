@@ -3,12 +3,8 @@ require_once "header.php";
 require_once 'additem.php';
 require_once "includes/grist_icon_parser.php";
 
-if (strpos($userrow['storeditems'], "DREAMBOT.") !== false && $userrow['dreamingstatus'] != "Awake") {
-	//items in storage with the DREAMBOT tag will grant access to the server program as one's dreamself
-	$dreambot == true;
-} else {
-	$dreambot == false;
-}
+//items in storage with the DREAMBOT tag will grant access to the server program as one's dreamself
+$dreambot = strpos($userrow['storeditems'], "DREAMBOT.") !== false && $userrow['dreamingstatus'] != "Awake";
 
 if (empty($_SESSION['username'])) {
 	echo "Log in to mess with the server program.<br/>";
