@@ -1,10 +1,10 @@
 <?php
 session_start();
 $supertime_begin = microtime(true);
-require 'includes/headerin.php';
-require 'includes/global_functions.php';
-
+require_once 'includes/headerin.php';
+require_once 'includes/global_functions.php';
 ?>
+
 <!DOCTYPE html>
 <html>
 
