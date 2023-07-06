@@ -1,5 +1,4 @@
-<?php
-require_once "header.php"; ?>
+<?php require_once "header.php"; ?>
 
 <script>
 	$(document).ready(function () {
@@ -25,24 +24,33 @@ require_once "header.php"; ?>
 	});
 </script>
 
-<?php
-if (empty($_SESSION['username'])) {
-	echo '<form id="loginb" action="login.php" method="post"> Username: <input id="usernameb" maxlength="50" name="usernameb" type="text" /><br/> Password: <input id="passwordb" maxlength="50" name="passwordb" type="password" /><br/>
-<a href="playerform.php">Enter a Session</a> |
-<a href="sessionform.php"> Create a Session</a>
-<br/>
-<a href="forgotpassword.php">Forget your password?</a>
-<br/>
-<input name="Submit" type="submit" value="Submit" /> </form>
-<span style="color: red;" id="catchb"></span>
+<?php if (empty($_SESSION['username'])) { ?>
 
-';
-} else {
-	echo "<script>
-$(document).ready(function () {
-    window.location = 'index.php';
-});
-</script>";
-}
-require_once "footer.php";
-?>
+	<form id="loginb" action="login.php" method="post">
+		<p>Username: <input id="usernameb" maxlength="50" name="usernameb" type="text" /></p>
+		<p>Password: <input id="passwordb" maxlength="50" name="passwordb" type="password" /></p>
+
+		<p>
+			<a href="playerform.php">Enter a Session</a>
+			|
+			<a href="sessionform.php"> Create a Session</a>
+		</p>
+
+		<p><a href="forgotpassword.php">Forget your password?</a></p>
+
+		<input name="Submit" type="submit" value="Submit" />
+	</form>
+
+	<span style="color: red;" id="catchb"></span>
+
+<?php } else { ?>
+
+	<script>
+		$(document).ready(function () {
+			window.location = 'index.php';
+		});
+	</script>
+
+<?php } ?>
+
+<?php require_once "footer.php"; ?>
