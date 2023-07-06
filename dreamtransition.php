@@ -86,7 +86,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 				$mysqli->query("UPDATE `Players` SET `tempoffenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `Brief_Luck` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-				$mysqli->query("UPDATE `Players` SET `strifesuceessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
+				$mysqli->query("UPDATE `Players` SET `strifesucceessexplore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `strifefailureexlpore` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `correctgristtype` = 'None' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Stops anti-cheating going off for Prospit/Derse encounters.
 				if ($userrow['encountersspent'] > 0) { //Player spent encounters while awake.
