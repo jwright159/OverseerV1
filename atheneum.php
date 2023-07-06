@@ -1,11 +1,17 @@
 <?php
 require_once "header.php";
-if (empty($_SESSION['username'])) {
+
+if (empty($_SESSION['username']))
+{
 	echo "Log in to view the Atheneum.<br/>";
-} else {
+}
+else
+{
 	require_once "includes/SQLconnect.php";
-	echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</style></head><body>";
-	if ($_GET['show'] == "weapons")
+	echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New', Courier, monospace}</style></head><body>";
+	if (empty($_GET['show']) || $_GET['show'] == "all")
+		$showstring = "";
+	elseif ($_GET['show'] == "weapons")
 		$showstring = "WHERE `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%'";
 	elseif ($_GET['show'] == "wearable")
 		$showstring = "WHERE `Captchalogue`.`abstratus` LIKE '%headgear%' OR `Captchalogue`.`abstratus` LIKE '%accessory%' OR `Captchalogue`.`abstratus` LIKE '%facegear%' OR `Captchalogue`.`abstratus` LIKE '%bodygear%'";
@@ -15,8 +21,6 @@ if (empty($_SESSION['username'])) {
 		$showstring = "WHERE `Captchalogue`.`catalogue` = 1";
 	elseif ($_GET['show'] == "nonbase")
 		$showstring = "WHERE `Captchalogue`.`catalogue` = 0";
-	elseif ($_GET['show'] == "all" || empty($_GET['show']))
-		$showstring = "";
 	else
 		$showstring = "WHERE `Captchalogue`.`abstratus` LIKE '" . $_GET['show'] . "%' OR `Captchalogue`.`abstratus` LIKE '%, " . $_GET['show'] . "%'";
 
@@ -82,5 +86,5 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 }
+
 require_once "footer.php";
-?>
