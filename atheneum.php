@@ -7,8 +7,6 @@ if (empty($_SESSION['username']))
 }
 else
 {
-	require_once "includes/SQLconnect.php";
-	echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New', Courier, monospace}</style></head><body>";
 	if (empty($_GET['show']) || $_GET['show'] == "all")
 		$showstring = "";
 	elseif ($_GET['show'] == "weapons")

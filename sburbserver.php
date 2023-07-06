@@ -15,7 +15,7 @@ if (empty($_SESSION['username'])) {
 } elseif ($userrow['dreamingstatus'] != "Awake" && !$dreambot) {
 	echo "Your dream self can't access your computer!";
 } else {
-	echo "<!DOCTYPE html><html><head><style>gristvalue{color: #FF0000; font-size: 60px;}</style><style>gristvalue2{color: #0FAFF1; font-size: 60px;}</style><style>itemcode{font-family:'Courier New'}</style></head><body>";
+	echo "<style>gristvalue{color: #FF0000; font-size: 60px;} gristvalue2{color: #0FAFF1; font-size: 60px;}</style>";
 	$compugood = true;
 	if ($dreambot) {
 		if (strpos($userrow['storeditems'], "ISCOMPUTER.") == 0) { //dreambot checks for a computer in storage, regardless of player computability

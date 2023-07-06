@@ -196,6 +196,10 @@ img#banning {
   display: none;
 }
 
+itemcode {
+	font-family: 'Courier New', Courier, monospace;
+}
+
 /*---- CROSS BROWSER DROPDOWN MENU ----*/
 ul.drop {
   list-style: none;

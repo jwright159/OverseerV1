@@ -256,7 +256,8 @@ function terminateStrife(array $userrow, int $result)
 		$aides = 0;
 		foreach ($sessionmates as $row)
 			if ($row['aiding'] == $username) //Aiding character.
-				$aides += 1; foreach ($sessionmates as $row) {
+				$aides += 1;
+		foreach ($sessionmates as $row) {
 			if ($row['aiding'] == $username) //Aiding character.
 			{
 				if ($newfighter == "" && rand(1, $aides) == 1) //Character has been selected to be the next target.

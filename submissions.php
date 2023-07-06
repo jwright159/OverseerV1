@@ -1,10 +1,10 @@
 <?php
 require_once "header.php";
 
-function updateSubmission($subid)
+function updateSubmission($feedrow, $subid)
 {
 	$currenttime = time();
-	$mysqli->query("UPDATE `Feedback` SET `lastupdated` = $currenttime WHERE `Feedback`.`ID` = $subid ;");
+	query("UPDATE Feedback SET lastupdated = $currenttime WHERE ID = $subid;");
 	$feedrow['lastupdated'] = $currenttime;
 }
 
@@ -12,7 +12,7 @@ if (empty($_SESSION['username'])) {
 	echo "Log in to view item submissions.<br/>";
 } else {
 	require_once "includes/SQLconnect.php";
-	echo "<!DOCTYPE html><html><head><style>itemcode{font-family:'Courier New'}</style><style>normal{color: #111111;}</style><style>urgent{color: #0000CC;}</style><style>defunct{color: #CC0000;}</style><style>clarify{color: #CCCC00;}</style><style>greenlit{color: #00AA00;}</style><style>suspended{color: #999999;}</style><style>randomized{color: #EE6606;}</style><style>halp{color: #FFFFFF;}</style></head><body>";
+	echo "<style>normal{color: #111111;} urgent{color: #0000CC;} defunct{color: #CC0000;} clarify{color: #CCCC00;} greenlit{color: #00AA00;} suspended{color: #999999;} randomized{color: #EE6606;} halp{color: #FFFFFF;}</style>";
 	if (empty($_GET['page'])) {
 		$page = 1;
 	} else {
@@ -201,7 +201,7 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Feedback` SET `usercomments` = '" . $newncomments . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 						$feedrow['usercomments'] = $newcomments;
 						echo "Your comment has been posted.<br/>";
-						updateSubmission($_GET['view']);
+						updateSubmission($feedrow, $_GET['view']);
 						if ($feedrow['clarify'] == 1 && !empty($_POST['clearedup'])) {
 							$mysqli->query("UPDATE `Feedback` SET `clarify` = 0 WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
 							echo 'Yellow flag unset. A mod will get back to this submission shortly.<br/>';

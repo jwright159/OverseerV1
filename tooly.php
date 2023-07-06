@@ -7,7 +7,7 @@ require_once "header.php";
 require_once "includes/grist_icon_parser.php";
 $max_items = 50;
 
-echo "<!DOCTYPE html><html><head><style>gristvalue{color: #FF0000; font-size: 60px;}</style><style>gristvalue2{color: #0FAFF1; font-size: 60px;}</style><style>itemcode{font-family:'Courier New'}</style></head><body>";
+echo "<style>gristvalue{color: #FF0000; font-size: 60px;} gristvalue2{color: #0FAFF1; font-size: 60px;}</style>";
 $gristed = false; //will be set to true when grist types are initialized
 
 //--Begin designix code here.--

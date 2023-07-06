@@ -8,7 +8,6 @@ if (empty($_SESSION['username'])) {
 } elseif ($userrow['dreamingstatus'] != "Awake") {
 	echo "Your dream self doesn't have any equipment to use!";
 } else {
-	echo "<style>itemcode{font-family:'Courier New'}</style>";
 	$dcount = 0;
 	$sessionname = $userrow['session_name'];
 	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
@@ -16,28 +15,19 @@ if (empty($_SESSION['username'])) {
 	$canon = $sessionrow['canon'];
 	$challenge = $sessionrow['challenge'];
 
-	if (strpos($userrow['storeditems'], "PUNCHDESIGNIX.") !== false)
-		$designix = true;
-	if (strpos($userrow['storeditems'], "CRUXTRUDER.") !== false)
-		$cruxtruder = true;
-	if (strpos($userrow['storeditems'], "TOTEMLATHE.") !== false)
-		$lathe = true;
-	if (strpos($userrow['storeditems'], "ALCHEMITER.") !== false)
-		$alchemiter = true;
-	if (strpos($userrow['storeditems'], "HOLOPAD.") !== false)
-		$holopad = true;
-	if (strpos($userrow['storeditems'], "LASERSTATION.") !== false)
-		$intlaser = true;
-	if (strpos($userrow['storeditems'], "JUMPER.") !== false)
-		$jumper = true;
-	if (strpos($userrow['storeditems'], "USELESS.") !== false)
-		$useless = true;
-	if (strpos($userrow['storeditems'], "CRUXBLEND.") !== false)
-		$cruxblend = true;
-	if (strpos($userrow['storeditems'], "CARDSHRED.") !== false)
-		$cardshred = true;
-	if (strpos($userrow['storeditems'], "COMBOFINDER") !== false) {
-		$combofinder = true;
+	$designix = strpos($userrow['storeditems'], "PUNCHDESIGNIX.") !== false;
+	$cruxtruder = strpos($userrow['storeditems'], "CRUXTRUDER.") !== false;
+	$lathe = strpos($userrow['storeditems'], "TOTEMLATHE.") !== false;
+	$alchemiter = strpos($userrow['storeditems'], "ALCHEMITER.") !== false;
+	$holopad = strpos($userrow['storeditems'], "HOLOPAD.") !== false;
+	$intlaser = strpos($userrow['storeditems'], "LASERSTATION.") !== false;
+	$jumper = strpos($userrow['storeditems'], "JUMPER.") !== false;
+	$useless = strpos($userrow['storeditems'], "USELESS.") !== false;
+	$cruxblend = strpos($userrow['storeditems'], "CRUXBLEND.") !== false;
+	$cardshred = strpos($userrow['storeditems'], "CARDSHRED.") !== false;
+	$combofinder = strpos($userrow['storeditems'], "COMBOFINDER") !== false;
+	if ($combofinder)
+	{
 		$breakdowna = explode("|", $userrow['storeditems']);
 		$i = 0;
 		$cf = 0;
@@ -70,8 +60,9 @@ if (empty($_SESSION['username'])) {
 			$i++;
 		}
 	}
-	if (strpos($userrow['storeditems'], "SENDIFICATOR") !== false) {
-		$sendify = true;
+	$sendify = strpos($userrow['storeditems'], "SENDIFICATOR") !== false;
+	if ($sendify)
+	{
 		$maxsendsize = "miniature";
 		$breakdowna = explode("|", $userrow['storeditems']);
 		$i = 0;
@@ -86,20 +77,23 @@ if (empty($_SESSION['username'])) {
 			$i++;
 		}
 	}
-	$j = 0;
-	while ($j < $invslots) { //check the inventory for any items with effects that work when held, rather than in storage (such as ghosters)
+	
+	//check the inventory for any items with effects that work when held, rather than in storage (such as ghosters)
+	$canghost = false;
+	for ($j = 0; $j < $invslots; $j++) {
 		$jnvstr = "inv" . strval($j);
-		$compuname = str_replace("'", "\\\\''", $userrow[$jnvstr]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
-		$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
-		$compuresult = $mysqli->query("SELECT `name`, `effects` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $compuname . "' LIMIT 1;");
-		while ($compurow = $compuresult->fetch_array()) {
-			$ghosters = specialArray($compurow['effects'], "GHOSTER");
-			if ($ghosters[0] == "GHOSTER") {
-				$canghost = true;
-				$ghostname = $compurow['name'];
+		if (!empty($userrow[$jnvstr]))
+		{
+			$compuname = escapeItemName($userrow[$jnvstr]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
+			$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
+			if ($compurow = fetchOne("SELECT `name`, effects FROM Captchalogue WHERE `name` = :name LIMIT 1;", ['name' => $compuname])) {
+				$ghosters = specialArray($compurow['effects'], "GHOSTER");
+				if ($ghosters[0] == "GHOSTER") {
+					$canghost = true;
+					$ghostname = $compurow['name'];
+				}
 			}
 		}
-		$j++;
 	}
 
 	if (!empty($_POST['punchcard'])) {
