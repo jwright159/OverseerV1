@@ -1,7 +1,8 @@
 <?php
-require 'additem.php';
+require_once 'additem.php';
 require_once "header.php";
 require_once "includes/effectprinter.php";
+
 function heaviestBonus($workrow)
 {
 	$bonusrow['abstain'] = $workrow['abstain'];
@@ -32,6 +33,7 @@ function heaviestBonus($workrow)
 	elseif ($bonusrow['assault'] == $bestbonus)
 		return "assault";
 }
+
 function refreshLuck($userrow)
 {
 	$slot = 0;
@@ -58,8 +60,7 @@ function refreshLuck($userrow)
 		}
 		if ($slot != "" && $slot != "2HAND") {
 			$realname = str_replace("'", "\\\\''", $userrow[$invslot]);
-			$result = $mysqli->query("SELECT `name`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`name` = '$realname' LIMIT 1;");
-			$row = $result->fetch_array();
+			$row = fetchOne("SELECT `name`, effects FROM Captchalogue WHERE `name` = :name LIMIT 1;", ['name' => $realname]);
 			$realname = str_replace("\\", "", $row['name']);
 			if ($realname == $userrow[$invslot]) {
 				$effects = $row['effects'];
@@ -71,7 +72,7 @@ function refreshLuck($userrow)
 					$currentarray = explode(':', $currenteffect);
 					//Note that what each array entry means depends on the effect.
 					switch ($currentarray[0]) {
-						case LUCK:
+						case 'LUCK':
 							$totalluck += $currentarray[1];
 							break;
 						default:
@@ -83,9 +84,8 @@ function refreshLuck($userrow)
 		}
 		$slot++;
 	}
-	if ($totalluck != $userrow['Luck']) {
-		$mysqli->query("UPDATE `Players` SET `Luck` = $totalluck WHERE `Players`.`username` = '" . $userrow['username'] . "'");
-	}
+	if ($totalluck != $userrow['Luck'])
+		query("UPDATE Players SET Luck = :luck WHERE username = :username", ['luck' => $totalluck, 'username' => $userrow['username']]);
 }
 if (empty($_SESSION['username'])) {
 	echo "Log in to view and manipulate your strife portfolio and options.<br/>";
@@ -405,7 +405,7 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 						}
-						if ($itemabstrati == $userrow[$abstrastr] || $itemabstrati == "headgear") {
+						if ((!empty($abstrastr) && $itemabstrati == $userrow[$abstrastr]) || $itemabstrati == "headgear") {
 							//Item can be worn on head
 							echo '<option value = "' . $invslot . '">' . $userrow[$invslot];
 							if ($row['size'] == "large")
@@ -495,7 +495,7 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 						}
-						if ($itemabstrati == $userrow[$abstrastr] || $itemabstrati == "facegear") {
+						if ((!empty($abstrastr) && $itemabstrati == $userrow[$abstrastr]) || $itemabstrati == "facegear") {
 							//User has existing matching abstratus
 							echo '<option value = "' . $invslot . '">' . $userrow[$invslot] . '</option>';
 							$i = $userrow['abstrati'];
@@ -581,7 +581,7 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 						}
-						if ($itemabstrati == $userrow[$abstrastr] || $itemabstrati == "bodygear") {
+						if ((!empty($abstrastr) && $itemabstrati == $userrow[$abstrastr]) || $itemabstrati == "bodygear") {
 							//User has existing matching abstratus
 							echo '<option value = "' . $invslot . '">' . $userrow[$invslot] . '</option>';
 							$i = $userrow['abstrati'];
@@ -690,23 +690,22 @@ if (empty($_SESSION['username'])) {
 	{
 		if ($itemname != "Nothing") { //If the item is a real item
 			$itemname = str_replace("'", "\\\\''", $itemname); //tch tch.
-			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-			while ($itemrow = $itemresult->fetch_array()) { //Pull itemrow data from mysqli array
+			if ($itemrow = fetchOne("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'")) { //Pull itemrow data from mysqli array
 				// var_dump($itemrow); //DEV, checks for array conents
 				//Stolen code from inventory.php START
-				$PrintBit = "";
+				$printBit = "";
 				$actives = $itemrow['aggrieve'] + $itemrow['aggress'] + $itemrow['assail'] + $itemrow['assault'];
 				if ($actives != 0)
-					$PrintBit = $PrintBit . " Actives: $actives";
+					$printBit = $printBit . " Actives: $actives";
 				$passives = $itemrow['abuse'] + $itemrow['accuse'] + $itemrow['abjure'] + $itemrow['abstain'];
 				if ($passives != 0)
-					$PrintBit = $PrintBit . " Passives: $passives";
+					$printBit = $printBit . " Passives: $passives";
 				if ($itemrow['power'] != 0)
-					$PrintBit = $PrintBit . " Power: $itemrow[power]";
-				if ($PrintBit != "")
-					$PrintBit = " (" . $PrintBit . " )";
+					$printBit = $printBit . " Power: $itemrow[power]";
+				if ($printBit != "")
+					$printBit = " (" . $printBit . " )";
 
-				return $PrintBit;
+				return $printBit;
 
 				//End stolen code
 			}
@@ -1016,5 +1015,5 @@ while (($col = $invresult->fetch_field()) && $terminateloop == False) {
 		}
 	}
 }
+
 require_once "footer.php";
-?>
