@@ -31,7 +31,11 @@ function allthesestairs($roomarray, $newrow, $newcol, $newfloor)
 	}
 	return $roomarray;
 }
-//Some notes on the arguments of these functions: $distance is how far "into" the dungeon the room is. $gate is the gate number (1, 3, 5). $land is the Land the dungeon is located on.
+
+/**
+ * @param int $distance How far "into" the dungeon the room is
+ * @param int $gate The gate number (1, 3, 5)
+ */
 function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boonbucks, $trow)
 {
 	global $gristname;
@@ -120,6 +124,11 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 	}
 	return $roomarray;
 }
+
+/**
+ * @param int $distance How far "into" the dungeon the room is
+ * @param int $gate The gate number (1, 3, 5)
+ */
 function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $isboss, $trow)
 {
 	global $mysqli;
@@ -633,7 +642,7 @@ if (empty($_SESSION['username'])) {
 	}
 	$gristname = initGrists();
 	$allowallescape = true;
-	if ($_GET['emergency'] == "escape") {
+	if (!empty($_GET['emergency']) && $_GET['emergency'] == "escape") {
 		if ($userrow['session_name'] == "Developers" || $allowallescape == true) {
 			$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 			$userrow['indungeon'] = 0;

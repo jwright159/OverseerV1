@@ -547,16 +547,20 @@ function initGrists()
 {
 	$reachgrist = false;
 	$totalgrists = 0;
-	foreach (fetchColumns('Captchalogue') as $col) {
-		$gristcost = $col->name;
+	foreach (fetchColumns('Captchalogue') as $gristcost)
+	{
 		$gristtype = substr($gristcost, 0, -5);
-		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
+
+		if ($gristcost == "Build_Grist_Cost") //Reached the start of the grists.
+		{
 			$reachgrist = true;
 		}
-		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
+		elseif ($gristcost == "End_Of_Grists") //Reached the end of the grists.
+		{
 			$reachgrist = false;
 			break;
 		}
+
 		if ($reachgrist) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;

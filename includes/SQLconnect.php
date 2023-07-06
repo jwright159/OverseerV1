@@ -39,8 +39,7 @@ function fetchAll(string $query, array|null $params = null)
 
 function fetchColumns(string $table)
 {
-	$columns = [];
-	$result = query('SELECT * FROM :table LIMIT 0;', ['table' => $table]);
+	$result = query("SELECT * FROM $table LIMIT 0;");
 	for ($i = 0; $i < $result->columnCount(); $i++)
 		$columns[] = $result->getColumnMeta($i)['name'];
 	return $columns;
