@@ -77,7 +77,7 @@ Version Alpha 2.2 pineapple:<br/>
 	baddies and more loot!<br/>
 	- Three new dungeon enemies have been added during the course of this update: Golems, Constructs, and Wyverns.
 	You've probably seen them already, though :L<br/>
-	- Three new bosses have been added as well; the Hydra (for 3-floor gate 3 dungeons), the True Hekatonchire (for
+	- Three new bosses have been added as well; the Hydra (for 3-floor gate 3 dungeons), the true Hekatonchire (for
 	5-floor gate 5 dungeons), and one super secret random encounter boss!<br/>
 	- Dungeon UI update! Movement buttons have actual images and will stay anchored in one spot! The map itself has been
 	tweaked a bit as well!<br/>

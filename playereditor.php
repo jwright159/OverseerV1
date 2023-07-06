@@ -41,7 +41,7 @@ if (empty($_SESSION['username'])) {
 	echo '<form action="playereditor.php" method="post">Select class:<select name="class"> '; //Select a class
 	echo '<option value=""></option>';
 	$classes = $mysqli->query("SELECT * FROM Titles");
-	$reachclass = True;
+	$reachclass = true;
 	while ($row = $classes->fetch_array()) {
 		$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
 		$classrow = $classresult->fetch_array();
@@ -51,22 +51,22 @@ if (empty($_SESSION['username'])) {
 			$activepassivestr = "(Passive, $classrow[passivefactor]%)";
 		}
 		if ($row['Class'] == "General")
-			$reachclass = False;
-		if ($reachclass == True)
+			$reachclass = false;
+		if ($reachclass == true)
 			echo '<option value="' . $row['Class'] . '">' . $row['Class'] . ' ' . $activepassivestr . '</option>';
 	}
 	echo '</select><br/>';
 	echo 'Select aspect:<select name="aspect"> '; //Select an aspect
 	echo '<option value=""></option>';
 	$aspects = $mysqli->query("SELECT * FROM Titles");
-	$reachaspect = False;
+	$reachaspect = false;
 	while ($col = $aspects->fetch_field()) {
 		$aspect = $col->name;
 		if ($aspect == "Breath")
-			$reachaspect = True;
+			$reachaspect = true;
 		if ($aspect == "General")
-			$reachaspect = False;
-		if ($reachaspect == True)
+			$reachaspect = false;
+		if ($reachaspect == true)
 			echo '<option value="' . $aspect . '">' . $aspect . '</option>';
 	}
 	echo '</select><br/><form action="playereditor.php" method="post">New echeladder rung: <input id="newrung" name="newrung" type="text" /><br/>';

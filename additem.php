@@ -81,20 +81,20 @@ function addAbstratus($absstring, $userrow)
 	$i = 1;
 	if (strrpos($absstring, ",")) {
 		$mainabstratus = "";
-		$alreadydone = False;
-		$foundcomma = False;
+		$alreadydone = false;
+		$foundcomma = false;
 		$j = 0;
-		while ($foundcomma != True) {
+		while ($foundcomma != true) {
 			$char = "";
 			$char = substr($absstring, $j, 1);
 			if ($char == ",") { //Found a comma. We know there is one because of the if statement above. Break off the string as the main abstratus.
 				$mainabstratus = substr($absstring, 0, $j);
-				$foundcomma = True;
+				$foundcomma = true;
 			} else {
 				$j++;
 			}
 		}
-		if ($alreadydone == False && $mainabstratus != "notaweapon" && $mainabstratus != "headgear" && $mainabstratus != "bodygear" && $mainabstratus != "facegear" && $mainabstratus != "accessory" && $mainabstratus != "computer") { //New abstratus to add to the options.
+		if ($alreadydone == false && $mainabstratus != "notaweapon" && $mainabstratus != "headgear" && $mainabstratus != "bodygear" && $mainabstratus != "facegear" && $mainabstratus != "accessory" && $mainabstratus != "computer") { //New abstratus to add to the options.
 			$newabstratus = $mainabstratus; //only add the main abstratus of the weapon, consider having it choose a random one instead later
 		}
 	} else {

@@ -6,20 +6,20 @@ require_once "includes/grist_icon_parser.php";
 function initGrists()
 {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
-	$reachgrist = False;
-	$terminateloop = False;
+	$reachgrist = false;
+	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+	while (($col = $result2->fetch_field()) && $terminateloop == false) {
 		$gristcost = $col->name;
 		$gristtype = substr($gristcost, 0, -5);
 		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-			$reachgrist = True;
+			$reachgrist = true;
 		}
 		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
-			$reachgrist = False;
-			$terminateloop = True;
+			$reachgrist = false;
+			$terminateloop = true;
 		}
-		if ($reachgrist == True) {
+		if ($reachgrist == true) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -69,27 +69,27 @@ if (empty($_SESSION['username'])) {
 	if ($compugood) {
 
 		if (!empty($_POST['client'])) {
-			$playerfound = False;
+			$playerfound = false;
 			$registered = "";
 			$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $mysqli->real_escape_string($_POST['client']) . "'");
 			while ($row = $sessionmates->fetch_array()) {
 				if ($row['session_name'] == $userrow['session_name']) {
 					if ($row['username'] == $mysqli->real_escape_string($_POST['client']) && ($row['server_player'] == "" || $row['server_player'] == $username)) {
-						$playerfound = True;
+						$playerfound = true;
 						$client = $mysqli->real_escape_string($_POST['client']);
 						$mysqli->query("UPDATE `Players` SET `server_player` = '$username' WHERE `Players`.`username` = '$client' LIMIT 1 ;");
 						$mysqli->query("UPDATE `Players` SET `client_player` = '$client' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 						echo "Client registered.<br/>";
 						$userrow['client_player'] = $client;
 					} else {
-						if ($row['server_player'] != "" && $playerfound != True) {
-							$playerfound = True;
+						if ($row['server_player'] != "" && $playerfound != true) {
+							$playerfound = true;
 							echo "Client already possesses a server player: " . $row['server_player'] . "<br/>";
 						}
 					}
 				}
 			}
-			if ($playerfound == False) {
+			if ($playerfound == false) {
 				echo "Target player was not found in your session.<br/>";
 			}
 		}
@@ -212,7 +212,7 @@ if (empty($_SESSION['username'])) {
 										$gristtype = $gristname[$gristcount];
 										$gristcost = $gristtype . "_Cost";
 										if ($irow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-											$nothing = False; //Item costs something.
+											$nothing = false; //Item costs something.
 											$totalthiscost = $irow[$gristcost] * $_POST['q-' . $args[0]];
 											$refundquery = $refundquery . "`$gristtype` = " . strval($clientrow[$gristtype]) . "+" . strval($totalthiscost) . ", ";
 											$clientrow[$gristtype] += $irow[$gristcost];

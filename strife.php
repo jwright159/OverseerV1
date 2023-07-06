@@ -48,7 +48,7 @@ if (empty($_SESSION['username'])) {
 		} else {
 			echo "You are not currently engaged in strife.<br/>";
 		}
-		if ($userrow[$downstr] == 1 && $up != True) { //Player is not gaining a new encounter and IS down. Up is a variable in the header.
+		if ($userrow[$downstr] == 1 && $up != true) { //Player is not gaining a new encounter and IS down. Up is a variable in the header.
 			if ($userrow['dreamingstatus'] == "Prospit") {
 				echo "You're still exhausted from all that do-gooding! You will recover instead of earning your next encounter and you're far too tired to be helpful yet.<br/>";
 			} else {
@@ -124,22 +124,22 @@ if (empty($_SESSION['username'])) {
 			}
 			$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
 			$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-			$aidneeded = False;
+			$aidneeded = false;
 			while ($row = $sessionmates->fetch_array()) {
 				if ($row['session_name'] == $userrow['session_name'] && $row['username'] != $userrow['username'] && $row['dreamingstatus'] == $userrow['dreamingstatus']) { //No aiding yourself!
 					//Note that we can only try to aid allies with the same current dreaming status.
 					if (!empty($row['enemydata'])) { //Ally is strifing
 						if ($row['noassist'] != 1 && $row['sessionbossengaged'] != 1) { //Player is able to receive assistance.
-							if ($aidneeded == False) {
+							if ($aidneeded == false) {
 								echo '<form action="strifeaid.php" method="post">Select an ally to aid:<select name="aid"> ';
-								$aidneeded = True;
+								$aidneeded = true;
 							}
 							echo '<option value="' . $row['username'] . '">' . $row['username'] . '</option>'; //Add ally to list of aidable allies.
 						}
 					}
 				}
 			}
-			if ($aidneeded == True) {
+			if ($aidneeded == true) {
 				echo '</select><br/><input type="submit" value="Assist this ally" /> </form><br/>';
 			}
 		}
@@ -270,53 +270,53 @@ if (empty($_SESSION['username'])) {
 						echo "%<br/>";
 						echo $userrow[$descstr] . "<br/>";
 						//This section stores the messages that appear when an enemy has a status effect. DATA SECTION: Status messages.
-						if (strpos($userrow['strifestatus'], ($statustr . "TIMESTOP|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "TIMESTOP|")) !== false) {
 							echo "Frozen in Time: This enemy will not act this round.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "WATERYGEL|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "WATERYGEL|")) !== false) {
 							echo "Watery Health Gel: This enemy's Health Vial is easier to dislodge with basic attacks<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "POISON")) !== False) { // No "|": poison status has arguments after it
+						if (strpos($userrow['strifestatus'], ($statustr . "POISON")) !== false) { // No "|": poison status has arguments after it
 							echo "Poisoned: This enemy's health is being slowly sapped<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "SHRUNK|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "SHRUNK|")) !== false) {
 							echo "Shrunk: This enemy is at least twice as adorable as it was.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "UNLUCKY|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "UNLUCKY|")) !== false) {
 							echo "Unlucky: Bad things keep happening!<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "BLEEDING")) !== False) { // No "|": bleeding status has arguments after it
+						if (strpos($userrow['strifestatus'], ($statustr . "BLEEDING")) !== false) { // No "|": bleeding status has arguments after it
 							echo "Bleeding: This enemy is bleeding out, gradually losing health and power<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "HOPELESS|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "HOPELESS|")) !== false) {
 							echo "Hopeless: This enemy does not believe in itself.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "DISORIENTED")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "DISORIENTED")) !== false) {
 							echo "Disoriented: This enemy is unable to cooperate with allies effectively.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "DISTRACTED|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "DISTRACTED|")) !== false) {
 							echo "Distracted: This enemy is distracted and will take more damage on your next attack.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "ENRAGED|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "ENRAGED|")) !== false) {
 							echo "Enraged: This enemy is not paying sufficient attention to defending itself.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "MELLOW|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "MELLOW|")) !== false) {
 							echo "Mellowed Out: Whoa...this dude's, like...totally peaced out, man. He thinks attacking is, like, totally lame and won't hit as hard.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "KNOCKDOWN|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "KNOCKDOWN|")) !== false) {
 							echo "Knocked Over: This enemy will need to spend a turn getting back up.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "GLITCHED|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "GLITCHED|")) !== false) {
 							$glitchstr = generateStatusGlitchString();
 							echo "Glitched Out: $glitchstr<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "BURNING")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "BURNING")) !== false) {
 							echo "Burning: This enemy is on fire and is steadily taking damage.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "FROZEN|")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "FROZEN|")) !== false) {
 							echo "Frozen: This enemy is frozen solid thanks to a layer of ice, and cannot act until it breaks out.<br/>";
 						}
-						if (strpos($userrow['strifestatus'], ($statustr . "LOCKDOWN")) !== False) {
+						if (strpos($userrow['strifestatus'], ($statustr . "LOCKDOWN")) !== false) {
 							echo "Locked Down: This enemy is unable to use any of its special abilities for the time being.<br/>";
 						}
 					}
@@ -370,22 +370,22 @@ if (empty($_SESSION['username'])) {
 						echo "<br/>Defense penalty of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
 				}
 				//This is where we print messages for the player's more abnormal status effects.
-				if (strpos($userrow['strifestatus'], "PLAYER:NOCAP|") !== False) {
+				if (strpos($userrow['strifestatus'], "PLAYER:NOCAP|") !== false) {
 					echo "No damage cap: The damage you take from a single enemy is not currently capped.<br/>";
 				}
-				if (strpos($userrow['strifestatus'], "PLAYER:POISON") !== False) {
+				if (strpos($userrow['strifestatus'], "PLAYER:POISON") !== false) {
 					echo "Poisoned: You are taking damage over time.<br/>";
 				}
-				if (strpos($userrow['strifestatus'], "PLAYER:CONFUSE") !== False) {
+				if (strpos($userrow['strifestatus'], "PLAYER:CONFUSE") !== false) {
 					echo "Confused: You may occasionally accidentally hurt yourself.<br/>";
 				}
-				if (strpos($userrow['strifestatus'], "PLAYER:BLIND") !== False) {
+				if (strpos($userrow['strifestatus'], "PLAYER:BLIND") !== false) {
 					echo "Blinded: You have a 50% chance of missing an enemy this turn.<br/>";
 				}
-				if (strpos($userrow['strifestatus'], "PLAYER:BONUSCONSUME") !== False) {
+				if (strpos($userrow['strifestatus'], "PLAYER:BONUSCONSUME") !== false) {
 					echo "Bonus action: You have at least one bonus consumable action!<br/>";
 				}
-				if (strpos($userrow['strifestatus'], "HASABILITY") !== False) { //NOTE - The convention of prefixing with PLAYER: has been removed as of this point.
+				if (strpos($userrow['strifestatus'], "HASABILITY") !== false) { //NOTE - The convention of prefixing with PLAYER: has been removed as of this point.
 					//Status effects with no prefix will be aassumed to belong to the player. PLAYER: prefix is still usable, however, if you wish.
 					echo "Temporary ability: You possess one or more abilities for this combat only. Check the roletech page for details.<br/>";
 				}

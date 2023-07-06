@@ -27,9 +27,9 @@ if (empty($_SESSION['username'])) {
 				$kingvotes++;
 			$chumroll++;
 		}
-		$boss = False;
+		$boss = false;
 		if ($userrow['battlefield_access'] == 1 && $sessionrow['checkmate'] == 0 && $sessionrow['battlefieldtotal'] >= $chumroll * $powerperplayer) {
-			$boss = True;
+			$boss = true;
 			if ($userrow['kingvote'] == 0) {
 				echo '<form action="sessionbossvote.php" method="post"><input type="hidden" id="kingvote" name="kingvote" value="yes"><input type="submit" value="Vote for a fight against The Black King"></form>';
 			} else {

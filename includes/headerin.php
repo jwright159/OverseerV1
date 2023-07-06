@@ -60,7 +60,7 @@ if (empty($_SESSION['username'])) {
 	$dropchance = 3; //Drop chances are argument 4.
 	//NOTE - Time's encounter reducing ability activates here, but performing an ability search when that's the only thing that ever will affect the timer constantly seems wasteful.
 	//So we just check directly.
-	$up = False;
+	$up = false;
 	$time = time();
 	if ($userrow['Aspect'] == "Time") {
 		$interval = 9; //1080; //18 minutes
@@ -95,7 +95,7 @@ if (empty($_SESSION['username'])) {
 		if ($sessionrow['sessionbossname'] == '') {
 			$encounters -= 1;
 			$mysqli->query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Player recovers.
-			$up = True;
+			$up = true;
 		}
 	}
 	if ($encounters > 100)

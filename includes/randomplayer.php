@@ -29,7 +29,7 @@ function randomClass($session)
 	$available = 0;
 	while ($subcount < $count) {
 		if ($classcount[$classname[$subcount]] == $min) {
-			$classenabled[$classname[$subcount]] = True;
+			$classenabled[$classname[$subcount]] = true;
 			$available++;
 		}
 		$subcount++;
@@ -38,7 +38,7 @@ function randomClass($session)
 	$subcount = 0;
 	$skipcount = 0;
 	while ($subcount < $count) {
-		if ($classenabled[$classname[$subcount]] == True) {
+		if ($classenabled[$classname[$subcount]] == true) {
 			if ($skipcount == $therandomclass) {
 				$theclassname = $classname[$subcount];
 				$subcount = $count;
@@ -75,10 +75,10 @@ function randomAspect($session)
 	while ($col = $classresult->fetch_field()) {
 		$aspect = $col->name;
 		if ($aspect == "Breath")
-			$reachaspect = True;
+			$reachaspect = true;
 		if ($aspect == "General")
-			$reachaspect = False;
-		if ($reachaspect == True) {
+			$reachaspect = false;
+		if ($reachaspect == true) {
 			$classname[$count] = $aspect;
 			$count++;
 		}
@@ -88,7 +88,7 @@ function randomAspect($session)
 	$available = 0;
 	while ($subcount < $count) {
 		if ($classcount[$classname[$subcount]] == $min) {
-			$classenabled[$classname[$subcount]] = True;
+			$classenabled[$classname[$subcount]] = true;
 			$available++;
 		}
 		$subcount++;
@@ -97,7 +97,7 @@ function randomAspect($session)
 	$subcount = 0;
 	$skipcount = 0;
 	while ($subcount < $count) {
-		if ($classenabled[$classname[$subcount]] == True) {
+		if ($classenabled[$classname[$subcount]] == true) {
 			if ($skipcount == $therandomclass) {
 				$theclassname = $classname[$subcount];
 				$subcount = $count;
@@ -139,7 +139,7 @@ function randomGristtype($session)
 	$gmin = min($gristcount);
 	while ($count < $grists) {
 		if ($gristcount[$gristname[$count]] == $gmin) {
-			$gristavailable[$count] = True;
+			$gristavailable[$count] = true;
 			$available++;
 		}
 		$count++;
@@ -148,7 +148,7 @@ function randomGristtype($session)
 	$subcount = 0;
 	$skipcount = 0;
 	while ($subcount < $count) {
-		if ($gristavailable[$subcount] == True) {
+		if ($gristavailable[$subcount] == true) {
 			if ($skipcount == $therandomgrist) {
 				$theclassname = $gristname[$subcount];
 				$subcount = $count;

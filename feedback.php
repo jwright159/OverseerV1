@@ -30,20 +30,20 @@ function getBonus($b)
 function initGrists()
 {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
-	$reachgrist = False;
-	$terminateloop = False;
+	$reachgrist = false;
+	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+	while (($col = $result2->fetch_field()) && $terminateloop == false) {
 		$gristcost = $col->name;
 		$gristtype = substr($gristcost, 0, -5);
 		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-			$reachgrist = True;
+			$reachgrist = true;
 		}
 		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
-			$reachgrist = False;
-			$terminateloop = True;
+			$reachgrist = false;
+			$terminateloop = true;
 		}
-		if ($reachgrist == True) {
+		if ($reachgrist == true) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -119,7 +119,7 @@ if (empty($_SESSION['username'])) {
 			$fbrow = $yourfbresult->fetch_array();
 		} else
 			$editid = 0;
-		$aok = True;
+		$aok = true;
 		if (empty($_POST['ignoresearch'])) {
 			if ($_POST['operate'] == "and" || $_POST['operate'] == "or") {
 				if (!empty($_POST['item1'])) {
@@ -261,7 +261,7 @@ if (empty($_SESSION['username'])) {
 			$newpower = intval($_POST['power']);
 			if ($newpower == 0) {
 				echo "Submission error: please put an exact integer into the power field, or leave it blank if you aren't sure (or if the item shouldn't have a power level).<br/>";
-				$aok = False;
+				$aok = false;
 			}
 		} else
 			$newpower = 0;
@@ -273,15 +273,15 @@ if (empty($_SESSION['username'])) {
 			$newother = $mysqli->real_escape_string($_POST['other']);
 		if ($newpower > 9999) {
 			echo "Submission error: new item's power level cannot exceed 9999. Use additional comments to convey combat bonuses or uncertainty<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if (strlen($newcode) != 8 && strlen($newcode) != 0) {
 			echo "Submission error: captcha code is not exactly 8 letters, please double check it or leave it blank<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if ($newitem == "") {
 			echo "Submission error: please give this item a name<br/>";
-			$aok = False;
+			$aok = false;
 		} else {
 			$existresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE `name` = '" . $mysqli->real_escape_string($newitem) . "'");
 			$existrow = $existresult->fetch_array();
@@ -292,14 +292,14 @@ if (empty($_SESSION['username'])) {
 		}
 		if ($newdesc == "") {
 			echo "Submission error: please give this item a description, it can be as vague or as short as you want as long as we can tell what it is<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if (strlen($newcode) == 8 && $aok) {
 			$existresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $newcode . "' LIMIT 1;");
 			$existrow = $existresult->fetch_array();
 			if ($existrow['captchalogue_code'] == $newcode) {
 				echo 'Submission error: the submission\'s code refers to <a href="inventory.php?holocode=' . $newcode . '">an item that already exists</a>. Make sure you\'ve given the correct code.<br/>';
-				$aok = False;
+				$aok = false;
 			} elseif ($challenge == 1 && strrpos($sessionrow['atheneum'], $newcode) === false) {
 				echo "Submission error: in Challenge Mode, you cannot submit a code that you haven't tried. Please double check the code or use a non-challenge account to suggest this.<br/>";
 				$aok = false;
@@ -397,14 +397,14 @@ if (empty($_SESSION['username'])) {
 		$newitem = $mysqli->real_escape_string(str_replace(';', ':', $_POST['artitem']));
 		$newdesc = $mysqli->real_escape_string(str_replace(';', ':', $_POST['newart']));
 		$newother = $mysqli->real_escape_string("Reward requested: " . $_POST['reward']);
-		$aok = True;
+		$aok = true;
 		if ($newitem == "") {
 			echo "Submission error: please give the name/code of the item you are submitting art for<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if ($newdesc == "") {
 			echo "Submission error: please give a link to the art you are submitting<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if ($aok) {
 			$mysqli->query("INSERT INTO `Feedback` (`ID`, `user`, `type`, `name`, `description`, `comments`) VALUES ('" . $newid . "', '" . $username . "', 'art', '" . $newitem . "', '" . $newdesc . "', '" . $newother . "')");
@@ -417,10 +417,10 @@ if (empty($_SESSION['username'])) {
 		$systemrow = $systemresult->fetch_array();
 		$newid = $systemrow['totalsubmissions'];
 		$newother = $mysqli->real_escape_string($_POST['bugdesc']);
-		$aok = True;
+		$aok = true;
 		if ($newother == "") {
 			echo "Submission error: you left the bug report blank!<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if ($aok) {
 			$currenttime = time();
@@ -434,10 +434,10 @@ if (empty($_SESSION['username'])) {
 		$systemrow = $systemresult->fetch_array();
 		$newid = $systemrow['totalsubmissions'];
 		$newother = $mysqli->real_escape_string($_POST['gamefeedback']);
-		$aok = True;
+		$aok = true;
 		if ($newother == "") {
 			echo "Submission error: you left the feedback blank!<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if ($aok) {
 			$currenttime = time();

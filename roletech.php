@@ -61,21 +61,21 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 		}
 		if ($abilityrow = $usage->fetch_array()) {
 			if ($abilityrow['Active'] == 1) { //Ability is active
-				$strifing = False;
+				$strifing = false;
 				if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
-					$strifing = True; //Calculate this here.
+					$strifing = true; //Calculate this here.
 					$userrow = parseEnemydata($userrow);
 					if ($userrow['combatconsume'] == 1) { //Already used a consumable this round.
 						$bonusconsumestr = "PLAYER:BONUSCONSUME|";
-						if (strpos($userrow['strifestatus'], $bonusconsumestr) !== False) { //Player has a bonus consumable usage
+						if (strpos($userrow['strifestatus'], $bonusconsumestr) !== false) { //Player has a bonus consumable usage
 							$bonusconsumable = true;
 							$userrow['combatconsume'] = 0;
 						}
 					}
 				}
 				if ($userrow['Aspect_Vial'] >= $abilityrow['Aspect_Cost']) {
-					if ($userrow['combatconsume'] == 0 || $strifing == False) { //User has an action or isn't strifing
-						$targetfound = False;
+					if ($userrow['combatconsume'] == 0 || $strifing == false) { //User has an action or isn't strifing
+						$targetfound = false;
 						if ($abilityrow['targets'] == 1) { //Check to see if the chosen target can be reached.
 							if (!empty($_POST['target']) && $mysqli->real_escape_string($_POST['target']) != $username) { //Target is another player.
 								$target = $mysqli->real_escape_string($_POST['target']);
@@ -91,7 +91,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 									} elseif ($userrow['sessionbossengaged'] == 1 && $userrow['sessionbossengaged'] != $targetrow['sessionbossengaged']) { //Handle session boss case.
 										echo "While strifing, you may not use abilities on those not participating in your strife.<br/>";
 									} else { //Success.
-										$targetfound = True;
+										$targetfound = true;
 									}
 									$targetrow = parseEnemydata($targetrow);
 								} else {
@@ -100,7 +100,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 							} else {
 								$target = $username;
 								$targetrow = $userrow;
-								$targetfound = True; //Self always targetable. Unless you're a Sylph, lol. (Add exception for this later when Sylph abilities are actually a thing)
+								$targetfound = true; //Self always targetable. Unless you're a Sylph, lol. (Add exception for this later when Sylph abilities are actually a thing)
 							}
 						}
 						if ($bonusconsumable) { //This indicates that we used up a bonus consumable instance that was confirmed above.
@@ -108,7 +108,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 							$p = 0;
 							$instancefound = false;
 							while (!empty($statusarray[$p]) && !$instancefound) {
-								if (strpos($statusarray[$p], $bonusconsumestr) !== False) { //This is one of the bonus consume instances.
+								if (strpos($statusarray[$p], $bonusconsumestr) !== false) { //This is one of the bonus consume instances.
 									$instancefound = true;
 									$removethis = $statusarray[$p] . "|";
 									$userrow['strifestatus'] = preg_replace('/' . $removethis . '/', '', $userrow['strifestatus'], 1);
@@ -181,7 +181,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 										$mysqli->query("UPDATE `Players` SET `tempdefenseboost` = 0 WHERE `Players`.`username` = '$target' LIMIT 1 ;");
 									$currentstatus = $targetrow['strifestatus']; //Start removing any effect defined in here.
 									$nocapstr = "PLAYER:NOCAP|"; //Implement this as a nice loop later.
-									if (strpos($targetrow['strifestatus'], $nocapstr) !== False) { //Player's damage is uncapped.
+									if (strpos($targetrow['strifestatus'], $nocapstr) !== false) { //Player's damage is uncapped.
 										$currentstatus = str_replace($nocapstr, "", $currentstatus);
 									}
 									//Below: update the strife status.
@@ -314,9 +314,9 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 		}
 	}
 	echo "Your available roletech:<br/><br/>";
-	$tech = False;
+	$tech = false;
 	while ($ability = $abilities->fetch_array()) {
-		$tech = True;
+		$tech = true;
 		echo "$ability[Name]:<br/>";
 		echo "$ability[Description]<br/>";
 		echo "Class: $ability[Class]<br/>";
@@ -337,7 +337,7 @@ BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $u
 		}
 		echo "<br/>";
 	}
-	if ($tech == False)
+	if ($tech == false)
 		echo "None!";
 }
 require_once "footer.php";

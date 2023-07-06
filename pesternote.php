@@ -4,12 +4,12 @@ if (empty($_SESSION['username'])) {
 	echo "Log in to edit your Pesternote settings.<br/>";
 } else {
 	if (!empty($_POST['username'])) {
-		$pesterclash = False;
+		$pesterclash = false;
 		$pesterresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`pesternoteUsername` = '" . $_POST['username'] . "'");
 		while ($row = $pesterresult->fetch_array()) {
 			if ($_POST['username'] == $row['username']) { //Name clash: Player name is already taken.
 				echo "That Pesternote account is linked to another Overseer account. Sorry!<br/>";
-				$pesterclash = True;
+				$pesterclash = true;
 			}
 		}
 		if (!$pesterclash) {

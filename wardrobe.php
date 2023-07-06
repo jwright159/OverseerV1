@@ -332,20 +332,20 @@ if (empty($_SESSION['username'])) {
 	if ($headname != "Nothing")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "") {
+		if ($reachinv == true && $userrow[$invslot] != "") {
 			//This is a non-empty inventory slot.
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -355,18 +355,18 @@ if (empty($_SESSION['username'])) {
 				$itemname = str_replace("\\", "", $itemname);
 				//Remove escape characters.
 				$firstabstratus = "";
-				$foundcomma = False;
+				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == False) {
+				if (strrchr($row['abstratus'], ',') == false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != True) {
+					while ($foundcomma != true) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
 							//Found a comma. We know there is one because of the if statement above. Break off the string as the main abstratus.
 							$firstabstratus = substr($row['abstratus'], 0, $j);
-							$foundcomma = True;
+							$foundcomma = true;
 						} else {
 							$j++;
 						}
@@ -377,11 +377,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != False) {
+						while (strrchr($itemabstrati, ',') != false) {
 							//Comma means there's still another abstratus in there to check.
-							$foundcomma = False;
+							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != True) {
+							while ($foundcomma != true) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -389,7 +389,7 @@ if (empty($_SESSION['username'])) {
 									$abstratuscheck = substr($itemabstrati, 0, $j);
 									$itemabstrati = substr($itemabstrati, ($j + 2));
 									//Assume a space after the comma
-									$foundcomma = True;
+									$foundcomma = true;
 									if ($abstratuscheck == "headgear") {
 										//Item can be worn on head
 										echo '<option value = "' . $invslot . '">' . $userrow[$invslot];
@@ -426,20 +426,20 @@ if (empty($_SESSION['username'])) {
 	if ($facename != "Nothing" && $facename != "Covered by headgear")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "" && $invslot != $userrow['headgear'] && $invslot != $equippedhead) {
+		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $userrow['headgear'] && $invslot != $equippedhead) {
 			//This is a non-empty inventory slot that isn't worn on the head
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -449,18 +449,18 @@ if (empty($_SESSION['username'])) {
 				$itemname = str_replace("\\", "", $itemname);
 				//Remove escape characters.
 				$firstabstratus = "";
-				$foundcomma = False;
+				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == False) {
+				if (strrchr($row['abstratus'], ',') == false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != True) {
+					while ($foundcomma != true) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
 							//Found a comma. We know there is one because of the if statement above. Break off the string as the main abstratus.
 							$firstabstratus = substr($row['abstratus'], 0, $j);
-							$foundcomma = True;
+							$foundcomma = true;
 						} else {
 							$j++;
 						}
@@ -471,11 +471,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != False) {
+						while (strrchr($itemabstrati, ',') != false) {
 							//Comma means there's still another abstratus in there to check.
-							$foundcomma = False;
+							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != True) {
+							while ($foundcomma != true) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -483,7 +483,7 @@ if (empty($_SESSION['username'])) {
 									$abstratuscheck = substr($itemabstrati, 0, $j);
 									$itemabstrati = substr($itemabstrati, ($j + 2));
 									//Assume a space after the comma
-									$foundcomma = True;
+									$foundcomma = true;
 									if ($abstratuscheck == "facegear") {
 										//User has existing matching abstratus
 										echo '<option value = "' . $invslot . '">' . $userrow[$invslot] . '</option>';
@@ -512,20 +512,20 @@ if (empty($_SESSION['username'])) {
 	if ($bodyname != "Basic clothes")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
+		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
 			//This is a non-empty inventory slot that isn't worn on the head
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -535,18 +535,18 @@ if (empty($_SESSION['username'])) {
 				$itemname = str_replace("\\", "", $itemname);
 				//Remove escape characters.
 				$firstabstratus = "";
-				$foundcomma = False;
+				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == False) {
+				if (strrchr($row['abstratus'], ',') == false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != True) {
+					while ($foundcomma != true) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
 							//Found a comma. We know there is one because of the if statement above. Break off the string as the main abstratus.
 							$firstabstratus = substr($row['abstratus'], 0, $j);
-							$foundcomma = True;
+							$foundcomma = true;
 						} else {
 							$j++;
 						}
@@ -557,11 +557,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != False) {
+						while (strrchr($itemabstrati, ',') != false) {
 							//Comma means there's still another abstratus in there to check.
-							$foundcomma = False;
+							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != True) {
+							while ($foundcomma != true) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -569,7 +569,7 @@ if (empty($_SESSION['username'])) {
 									$abstratuscheck = substr($itemabstrati, 0, $j);
 									$itemabstrati = substr($itemabstrati, ($j + 2));
 									//Assume a space after the comma
-									$foundcomma = True;
+									$foundcomma = true;
 									if ($abstratuscheck == "bodygear") {
 										//User has existing matching abstratus
 										echo '<option value = "' . $invslot . '">' . $userrow[$invslot] . '</option>';
@@ -598,20 +598,20 @@ if (empty($_SESSION['username'])) {
 	if ($accname != "Nothing")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
+		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
 			//This is a non-empty inventory slot that isn't worn on the head
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -621,18 +621,18 @@ if (empty($_SESSION['username'])) {
 				$itemname = str_replace("\\", "", $itemname);
 				//Remove escape characters.
 				$firstabstratus = "";
-				$foundcomma = False;
+				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == False) {
+				if (strrchr($row['abstratus'], ',') == false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != True) {
+					while ($foundcomma != true) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
 							//Found a comma. We know there is one because of the if statement above. Break off the string as the main abstratus.
 							$firstabstratus = substr($row['abstratus'], 0, $j);
-							$foundcomma = True;
+							$foundcomma = true;
 						} else {
 							$j++;
 						}
@@ -643,11 +643,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != False) {
+						while (strrchr($itemabstrati, ',') != false) {
 							//Comma means there's still another abstratus in there to check.
-							$foundcomma = False;
+							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != True) {
+							while ($foundcomma != true) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -655,7 +655,7 @@ if (empty($_SESSION['username'])) {
 									$abstratuscheck = substr($itemabstrati, 0, $j);
 									$itemabstrati = substr($itemabstrati, ($j + 2));
 									//Assume a space after the comma
-									$foundcomma = True;
+									$foundcomma = true;
 									if ($abstratuscheck == "accessory") {
 										//User has existing matching abstratus
 										echo '<option value = "' . $invslot . '">' . $userrow[$invslot] . '</option>';
@@ -855,20 +855,20 @@ echo "Current defense bonus from wearables: $totaldef <br/>";
 $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 echo $username;
 echo "'s captchalogued wearables:<br/><br/>";
-$reachinv = False;
-$terminateloop = False;
-while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+$reachinv = false;
+$terminateloop = false;
+while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 	$invslot = $col->name;
 	if ($invslot == "inv1") {
 		//Reached the start of the inventory.
-		$reachinv = True;
+		$reachinv = true;
 	}
 	if ($invslot == "abstratus1") {
 		//Reached the end of the inventory.
-		$reachinv = False;
-		$terminateloop = True;
+		$reachinv = false;
+		$terminateloop = true;
 	}
-	if ($reachinv == True && $userrow[$invslot] != "") {
+	if ($reachinv == true && $userrow[$invslot] != "") {
 		//This is a non-empty inventory slot.
 		$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 		//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.

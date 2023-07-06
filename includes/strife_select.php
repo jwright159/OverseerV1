@@ -7,7 +7,7 @@ if ($userrow['dreamingstatus'] == "Prospit") {
 } else {
 	echo "You are not currently engaged in strife.<br/></div>";
 }
-if ($userrow[$downstr] == 1 && $up != True) { //Player is not gaining a new encounter and IS down. Up is a variable in the header.
+if ($userrow[$downstr] == 1 && $up != true) { //Player is not gaining a new encounter and IS down. Up is a variable in the header.
 	if ($userrow['dreamingstatus'] == "Prospit") {
 		echo "You're still exhausted from all that do-gooding! You will recover instead of earning your next encounter and you're far too tired to be helpful yet.<br/>";
 	} else {
@@ -33,7 +33,7 @@ if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreaming
 		$gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
 		$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 		$currentrow = $userrow;
-		$done = False;
+		$done = false;
 		while (!$done) {
 			$locationstr = "Land of " . $currentrow['land1'] . " and " . $currentrow['land2'];
 			echo '<option value="' . $currentrow['username'] . '">' . $locationstr . '</option>';
@@ -41,10 +41,10 @@ if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreaming
 				$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
 				$currentrow = $currentresult->fetch_array();
 				if ($currentrow['house_build_grist'] < $gaterow["gate2"])
-					$done = True; //This house is unreachable. Chain is broken here.
+					$done = true; //This house is unreachable. Chain is broken here.
 			} else { //Player has no server, gates go nowhere. This is not canonical behaviour, but canonical behaviour is impossible since it relies on prediction. Alternatively, loop is complete.
 				//Note that if gate 1 has not been reached, then gate 2 wasn't either and the Land was never accessed in the first place!
-				$done = True; //No further steps.
+				$done = true; //No further steps.
 			}
 		}
 		if ($userrow['battlefield_access'] != 0) { //Player has handled their denizen or gone god tier. The battlefield is available as a zone.
@@ -98,22 +98,22 @@ if ($encounters > 0 && ($up == 1 || ($userrow['down'] != 1 && $userrow['dreaming
 	}
 	$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
 	$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
-	$aidneeded = False;
+	$aidneeded = false;
 	while ($row = $sessionmates->fetch_array()) {
 		if ($row['session_name'] == $userrow['session_name'] && $row['username'] != $userrow['username'] && $row['dreamingstatus'] == $userrow['dreamingstatus']) { //No aiding yourself!
 			//Note that we can only try to aid allies with the same current dreaming status.
 			if (!empty($row['enemy1name']) || !empty($row['enemy2name']) || !empty($row['enemy3name']) || !empty($row['enemy4name']) || !empty($row['enemy5name'])) { //Ally is strifing
 				if ($row['noassist'] != 1 && $row['sessionbossengaged'] != 1) { //Player is able to receive assistance.
-					if ($aidneeded == False) {
+					if ($aidneeded == false) {
 						echo '<form action="strifeaid.php" method="post">Select an ally to aid:<select name="aid"> ';
-						$aidneeded = True;
+						$aidneeded = true;
 					}
 					echo '<option value="' . $row['username'] . '">' . $row['username'] . '</option>'; //Add ally to list of aidable allies.
 				}
 			}
 		}
 	}
-	if ($aidneeded == True) {
+	if ($aidneeded == true) {
 		echo '</select><br/><input type="submit" value="Assist this ally" /> </form></div><br/>';
 	}
 }

@@ -267,10 +267,10 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							}
 						}
 						$powerboost = 0;
-						$temp = False;
+						$temp = false;
 						if ($patternrow[$temporarystr] != 0) { //Temporary boost. Scale it up accordingly.
 							$mysqli->query("UPDATE `Ability_Patterns` SET `temporaryuses` = $patternrow[temporaryuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
-							$temp = True;
+							$temp = true;
 							$factor = 1 + ($aspectrow['Temporary'] / $patternrow[$temporarystr]);
 							$patternrow[$offenseupstr] = floor($patternrow[$offenseupstr] * $factor);
 							$patternrow[$defenseupstr] = floor($patternrow[$defenseupstr] * $factor);
@@ -294,7 +294,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$mysqli->query("UPDATE `Ability_Patterns` SET `defenseupuses` = $patternrow[defenseupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
 						if ($powerboost != 0)
 							$mysqli->query("UPDATE `Ability_Patterns` SET `powerupuses` = $patternrow[powerupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
-						if ($temp == False) {
+						if ($temp == false) {
 							if ($patternrow[$offenseupstr] != 0)
 								$mysqli->query("UPDATE `Players` SET `offenseboost` = $targetrow[offenseboost]+$patternrow[$offenseupstr] WHERE `Players`.`username` = '$target'");
 							if ($patternrow[$defenseupstr] != 0)
@@ -544,9 +544,9 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 	echo 'Temporary boost (leave empty to make boost entire battle rather than a number of turns): <input id="temporary" name="temporary" type="text" /><br/>';
 	echo '<input type="submit" value="Create it!">';
 	//Code for pattern hints will go here.
-	$hint = False;
+	$hint = false;
 	if ($patternrow['damageuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Damage'] * $classrow['Damage']; //Note that 10k is the average.
 	}
 }

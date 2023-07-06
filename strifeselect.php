@@ -21,9 +21,9 @@ if (empty($_SESSION['username'])) {
 			if ($row = $result->fetch_array()) {
 				if ($row['username'] == $_POST['land']) {
 					if ($username == $_POST['land']) { //if the player chose their own land, always admit (and don't bother checking the chain)
-						$aok = True;
+						$aok = true;
 					} else {
-						$aok = False;
+						$aok = false;
 						$chain = chainArray($userrow);
 						$totalchain = count($chain);
 						$landcount = 1; //0 should be the user's land which we already printed
@@ -33,7 +33,7 @@ if (empty($_SESSION['username'])) {
 							$landcount++;
 						}
 					}
-					if ($row['session_name'] == $userrow['session_name'] && $userrow['dreamingstatus'] == "Awake" && $aok == True) {
+					if ($row['session_name'] == $userrow['session_name'] && $userrow['dreamingstatus'] == "Awake" && $aok == true) {
 						$landrow = $row;
 					} else {
 						$_POST['land'] = "Cheatyland";

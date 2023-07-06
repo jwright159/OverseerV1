@@ -411,7 +411,7 @@ if (empty($_SESSION['username'])) {
 			$message = $message . "Lv. 83 Knightskill Aspect Fighter activates! Your strikes are imbued with " . $userrow['Aspect'] . " affinity.";
 		}
 		$confusestr = "PLAYER:CONFUSE|";
-		if (strpos($currentstatus, $confusestr) !== False) { //Player is confused.
+		if (strpos($currentstatus, $confusestr) !== false) { //Player is confused.
 			$bonuseffects .= "RECOIL:50:25|"; //confusion causes 50% chance to deal 25% of damage done to enemy
 		}
 		$npcaidmsg = "";
@@ -506,17 +506,17 @@ if (empty($_SESSION['username'])) {
 		}
 		$loyaltydrain = 0;
 		//Assistance code ends here
-		$once = True;
+		$once = true;
 		if (!empty($_POST['repeat'])) {
-			$repeat = True;
+			$repeat = true;
 		} else {
-			$repeat = False;
+			$repeat = false;
 		}
 		$turncounter = 0;
 		$nodamagecounter = 0;
-		while ($once == True || $repeat == True) {
+		while ($once == true || $repeat == true) {
 			$turncounter += 1;
-			$nodamage = False;
+			$nodamage = false;
 			if (!empty($abilities[1]) && $offense == "aggress") { //Activate passive aggression: apply passive modifier. (ID 1)
 				$message = $message . "$abilities[1]<br/>";
 				$unarmedpower = floor($unarmedpower * ($classrow['passivefactor'] / 100));
@@ -630,9 +630,9 @@ if (empty($_SESSION['username'])) {
 				$message = $message . $npcaidmsg;
 			$i = 1;
 			$enemiesfought = 0;
-			$alldead = True;
+			$alldead = true;
 			$damage = 0;
-			$enemydown = False;
+			$enemydown = false;
 			$targetedenemies = 0;
 			while ($i <= $max_enemies) {
 				//first loop is to find out how many enemies exist at the beginning of the round, to deal with monsters that spawn more monsters
@@ -655,7 +655,7 @@ if (empty($_SESSION['username'])) {
 				$descstr = "enemy" . strval($i) . "desc"; //Need this to check for nulls.
 				$categorystr = "enemy" . strval($i) . "category";
 				if ($userrow[$enemystr] != "") { //Enemy spotted!
-					$enemyrowexists = False;
+					$enemyrowexists = false;
 					if (empty($_SESSION[$userrow[$enemystr]])) {
 						$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE '" . $userrow[$enemystr] . "' LIKE CONCAT ('%', `Enemy_Types`.`basename`, '%')");
 						while ($temprow = $enemyresult->fetch_array()) { //Enemy showed up in the table.
@@ -665,7 +665,7 @@ if (empty($_SESSION['username'])) {
 									//this should prevent mismatches like Lich Queen using the entry for Lich, or Imp King using the entry for Imp
 								}
 							} else {
-								$enemyrowexists = True;
+								$enemyrowexists = true;
 								$enemyrow = $temprow;
 							}
 						}
@@ -674,10 +674,10 @@ if (empty($_SESSION['username'])) {
 						}
 					} else {
 						$enemyrow = $_SESSION[$userrow[$enemystr]];
-						$enemyrowexists = True;
+						$enemyrowexists = true;
 					}
 					$disorientedstr = ($statustr . "DISORIENTED");
-					if (strpos($currentstatus, $disorientedstr) !== False) { //This enemy is disoriented. It is treated as not existing for the purposes of volume bonuses.
+					if (strpos($currentstatus, $disorientedstr) !== false) { //This enemy is disoriented. It is treated as not existing for the purposes of volume bonuses.
 						$message = $message . $userrow[$enemystr] . "is disoriented and cannot fight effectively with allies<br/>";
 						$numbersfactor = 1;
 					} else {
@@ -756,10 +756,10 @@ if (empty($_SESSION['username'])) {
 						//echo " and your damage is $enemydamage<br/>";
 						$waterygelstr = ($statustr . "WATERYGEL|");
 						$enragedstr = ($statustr . "ENRAGED|");
-						if (strpos($currentstatus, $waterygelstr) !== False) { //This enemy is suffering from watery health gel.
+						if (strpos($currentstatus, $waterygelstr) !== false) { //This enemy is suffering from watery health gel.
 							$enemydamage = floor($enemydamage * 1.1);
 						}
-						if (strpos($currentstatus, $enragedstr) !== False) { //This enemy is angry and defends poorly.
+						if (strpos($currentstatus, $enragedstr) !== false) { //This enemy is angry and defends poorly.
 							$enemydamage += floor($userrow[$powerstr] * 0.1);
 						}
 						if (!empty($abilities[21])) { //Inevitability activates. Calculate bonus damage (ID 21)
@@ -784,7 +784,7 @@ if (empty($_SESSION['username'])) {
 							$enemydamage += rand(floor($offensepower * (0.85 + ($luck * 0.003))), ceil($offensepower * 1.15)); //Double the base damage before subtraction by adding it on again.
 						} else { //if you were lucky enough to crit while blinded, let you have your moment
 							$blindstr = "PLAYER:BLIND|";
-							if (strpos($currentstatus, $blindstr) !== False) { //Player is blinded.
+							if (strpos($currentstatus, $blindstr) !== false) { //Player is blinded.
 								$roll = rand(1, 100);
 								if ($roll > 50 - floor($luck / 2)) { //max luck negates blindness entirely
 									$message = $message . "Your blindness causes you to miss $userrow[$enemystr] completely!<br/>";
@@ -805,16 +805,16 @@ if (empty($_SESSION['username'])) {
 						}
 						if ($enemydamage < 0)
 							$enemydamage = 0; //No healing enemies with attacks!
-						$timestopped = False;
+						$timestopped = false;
 						if ($enemydamage != 0) { //Effects that trigger on hit go here. They only trigger if damage is dealt!
 							//Check the main row weapon for effects.
 							$mainoff = 1;
 							$werow = $userrow;
 							require 'includes/strife_weaponeffects.php';
-							$nodamage = False; //Damage was dealt.
+							$nodamage = false; //Damage was dealt.
 							if (empty($justmellowed)) { //Damage was dealt and we didn't apply mellow
 								$mellowstr = ($statustr . "MELLOW|");
-								if (strpos($currentstatus, $mellowstr) !== False) { //Enemy struck, chance to un-mellow
+								if (strpos($currentstatus, $mellowstr) !== false) { //Enemy struck, chance to un-mellow
 									$savingthrow = rand(1, 100);
 									$resistfactor = ($enemyrow['resist_Rage'] / 2); //Enemy's Rage resistance improves the save.
 									if ($savingthrow > (80 - $resistfactor)) {
@@ -825,7 +825,7 @@ if (empty($_SESSION['username'])) {
 							}
 							if (!empty($charmed[$i])) { //Damage was dealt and we didn't apply charmed this round
 								$charmstr = ($statustr . "CHARMED|");
-								if (strpos($currentstatus, $charmstr) !== False) { //Enemy struck, chance to return to normal
+								if (strpos($currentstatus, $charmstr) !== false) { //Enemy struck, chance to return to normal
 									$savingthrow = rand(1, 100);
 									$resistfactor = ($enemyrow['resist_Heart'] / 2); //Enemy's Heart resistance improves the save.
 									if ($savingthrow > (50 - $resistfactor)) { //increased chance if struck
@@ -837,7 +837,7 @@ if (empty($_SESSION['username'])) {
 							}
 						} else { //Effects that trigger when damage is NOT dealt go here.
 							$enragedstr = ($statustr . "ENRAGED|");
-							if (strpos($currentstatus, $enragedstr) !== False) { //No damage, chance to calm down
+							if (strpos($currentstatus, $enragedstr) !== false) { //No damage, chance to calm down
 								$savingthrow = rand(1, 100);
 								$resistfactor = ($enemyrow['resist_Rage'] / 2); //Enemy's Rage resistance improves the save.
 								if ($savingthrow > (80 - $resistfactor)) {
@@ -846,7 +846,7 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 							$charmstr = ($statustr . "CHARMED|");
-							if (strpos($currentstatus, $charmstr) !== False) { //Enemy NOT struck, chance to return to normal anyway
+							if (strpos($currentstatus, $charmstr) !== false) { //Enemy NOT struck, chance to return to normal anyway
 								$savingthrow = rand(1, 100);
 								$resistfactor = ($enemyrow['resist_Heart'] / 2); //Enemy's Heart resistance improves the save.
 								if ($savingthrow > (80 - $resistfactor)) {
@@ -858,7 +858,7 @@ if (empty($_SESSION['username'])) {
 						}
 						$newenemyhealth = $userrow[$healthstr] - $enemydamage; //Subtract off the damage.
 						$distractedstr = ($statustr . "DISTRACTED|");
-						if (strpos($currentstatus, $distractedstr) !== False) { //This enemy is distracted. Double damage!
+						if (strpos($currentstatus, $distractedstr) !== false) { //This enemy is distracted. Double damage!
 							$message = $message . $userrow[$enemystr] . "is distracted and takes double damage from the blow!<br/>";
 							$newenemyhealth = $newenemyhealth - $enemydamage;
 							$currentstatus = str_replace($distractedstr, "", $currentstatus); //Distraction lasts one turn.
@@ -866,8 +866,8 @@ if (empty($_SESSION['username'])) {
 					} else
 						$newenemyhealth = $userrow[$healthstr]; //derp.
 					if ($newenemyhealth <= 0) { //Enemy defeated.
-						$enemydown = True;
-						$repeat = False; //Don't do it again.
+						$enemydown = true;
+						$repeat = false; //Don't do it again.
 						require 'includes/strife_rewards.php';
 						if ($bonusboons > 0) {
 							echo "You also find $bonusboons on the ground near the enemy!<br/>";
@@ -879,7 +879,7 @@ if (empty($_SESSION['username'])) {
 							$statusarray = explode("|", $currentstatus);
 							$p = 0;
 							while (!empty($statusarray[$p])) {
-								if (strpos($statusarray[$p], $statustr) !== False) {
+								if (strpos($statusarray[$p], $statustr) !== false) {
 									$removethis = $statusarray[$p] . "|";
 									$currentstatus = preg_replace('/' . $removethis . '/', '', $currentstatus, 1);
 								}
@@ -887,7 +887,7 @@ if (empty($_SESSION['username'])) {
 							}
 						}
 						if (!empty($bossdead) && empty($alreadykilledone)) { //A dungeon boss was just slain. Grant Echeladder rungs!
-							$alreadykilledone = True;
+							$alreadykilledone = true;
 							$loyaltydrain -= 50; //defeating a boss is a serious accomplishment and your allies will respect you for it
 							if ($userrow['Echeladder'] < 612) {
 								$rungs = climbEcheladder($userrow, 5);
@@ -916,7 +916,7 @@ if (empty($_SESSION['username'])) {
 						}
 						$userrow[$enemystr] = ""; //Make them disappear for EOT reasons.
 					} else {
-						$alldead = False; //Enemy not dead, so they can retaliate. Probably.
+						$alldead = false; //Enemy not dead, so they can retaliate. Probably.
 						$timestopstr = ($statustr . "TIMESTOP|");
 						$hopelessstr = ($statustr . "HOPELESS|");
 						$knockdownstr = ($statustr . "KNOCKDOWN|");
@@ -925,7 +925,7 @@ if (empty($_SESSION['username'])) {
 						$hopelessroll = rand(1, 100);
 						$glitchedroll = rand(1, 100);
 						$frozed = false;
-						if (strpos($currentstatus, $frozenstr) !== False && strpos($currentstatus, $timestopstr) === False) { //Check this here so that the enemy can still attack if it breaks out. Timestop must be cleared in an earlier round first.
+						if (strpos($currentstatus, $frozenstr) !== false && strpos($currentstatus, $timestopstr) === false) { //Check this here so that the enemy can still attack if it breaks out. Timestop must be cleared in an earlier round first.
 							if ($enemydamage > 0)
 								$breakchance = 50;
 							else
@@ -939,25 +939,25 @@ if (empty($_SESSION['username'])) {
 							} else
 								$frozed = true;
 						}
-						if (strpos($currentstatus, $timestopstr) !== False) { //This enemy is frozen in time.
+						if (strpos($currentstatus, $timestopstr) !== false) { //This enemy is frozen in time.
 							$message = $message . $userrow[$enemystr] . " is frozen in time!<br/>";
-							if ($timestopped == False) { //Enemy was not stopped by a weapon strike this round
+							if ($timestopped == false) { //Enemy was not stopped by a weapon strike this round
 								$currentstatus = str_replace($timestopstr, "", $currentstatus);
 							} else {
-								$timestopped = False;
+								$timestopped = false;
 							}
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
-						} elseif ((strpos($currentstatus, $glitchstr) !== False) && $glitchedroll < 30) { //Glitching out stops the enemy from trying to get up.
+						} elseif ((strpos($currentstatus, $glitchstr) !== false) && $glitchedroll < 30) { //Glitching out stops the enemy from trying to get up.
 							$message = $message . generateGlitchString();
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} elseif ($frozed == true) { //Time stopped/frozen enemies can't get up from knockdown.
 							$message = $message . $userrow[$enemystr] . " remains frozen in ice and cannot move!<br/>";
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
-						} elseif (strpos($currentstatus, $knockdownstr) !== False) { //Time stopped/frozen enemies can't get up from knockdown.
+						} elseif (strpos($currentstatus, $knockdownstr) !== false) { //Time stopped/frozen enemies can't get up from knockdown.
 							$message = $message . $userrow[$enemystr] . " picks itself back up.<br/>";
 							$currentstatus = str_replace($knockdownstr, "", $currentstatus);
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
-						} elseif ((strpos($currentstatus, $hopelessstr) !== False) && $hopelessroll < 50) { //If enemy unable to attack, don't bother with this.
+						} elseif ((strpos($currentstatus, $hopelessstr) !== false) && $hopelessroll < 50) { //If enemy unable to attack, don't bother with this.
 							$message = $message . $userrow[$enemystr] . " doesn't bother attacking this round, it wouldn't do anything anyway.<br/>";
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} else {
@@ -965,7 +965,7 @@ if (empty($_SESSION['username'])) {
 							$playerdefense = rand(floor($defensepower * (0.85 + ($luck * 0.003))), ceil($defensepower * 1.15));
 							$playerdamage = floor($playerdamage - $playerdefense);
 							$mellowstr = ($statustr . "MELLOW|");
-							if (strpos($currentstatus, $mellowstr) !== False) { //This enemy is totally mellowed out.
+							if (strpos($currentstatus, $mellowstr) !== false) { //This enemy is totally mellowed out.
 								$playerdamage -= floor($userrow[$powerstr] * 0.1);
 							}
 							if (!empty($abilities[23])) { //Check for Fortune's Protection (ID 23)
@@ -983,7 +983,7 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 							$shrunkstr = ($statustr . "SHRUNK|");
-							if (strpos($currentstatus, $shrunkstr) !== False) { //This enemy is shrunk
+							if (strpos($currentstatus, $shrunkstr) !== false) { //This enemy is shrunk
 								$playerdamage = floor($playerdamage / 1.5);
 								$message = $message . "The $userrow[$enemystr] tries to hit you, but it's tiny so it doesn't do as much damage. Isn't that just precious?<br/>";
 							}
@@ -1006,17 +1006,17 @@ if (empty($_SESSION['username'])) {
 								if ($targetvalue < 50)
 									$targetvalue = 50; //Maximum 50% chance.
 								$rand = rand(1, 100);
-								if ($rand > $targetvalue || $userrow['dissipatefocus'] == 1 || $dissipating == True) { //Ability triggers
+								if ($rand > $targetvalue || $userrow['dissipatefocus'] == 1 || $dissipating == true) { //Ability triggers
 									if ($userrow['dissipatefocus'] == 1) {
 										$userrow['dissipatefocus'] = 0;
-										$dissipating = True; //we want to avoid every hit.
+										$dissipating = true; //we want to avoid every hit.
 									}
 									$message = $message . "$abilities[4]<br/>";
 									$playerdamage = 0; //Dissipate is NOT invulnerability. Specials will strike through it.
 								}
 							}
 							$nocapstr = "PLAYER:NOCAP|";
-							if (strpos($currentstatus, $nocapstr) !== False) { //Player's massive damage cap is gone.
+							if (strpos($currentstatus, $nocapstr) !== false) { //Player's massive damage cap is gone.
 								$savingthrow = rand((1 + ceil($luck / 5)), 100); //Player gets a save every time they are struck.
 								if ($savingthrow > 66) {
 									$message = $message . "Your massive damage protection has returned.<br/>";
@@ -1034,8 +1034,8 @@ if (empty($_SESSION['username'])) {
 								$message = $message . "Offense boost: $offenseplus<br/>";
 							}
 							if ($playerdamage != 0) {
-								$nodamage = False;
-								if ((strpos($currentstatus, $hopelessstr) !== False)) { //Enemy has a chance to feel better about themselves
+								$nodamage = false;
+								if ((strpos($currentstatus, $hopelessstr) !== false)) { //Enemy has a chance to feel better about themselves
 									$savingthrow = rand(1, 100);
 									$percent = ceil(($playerdamage / $userrow['Gel_Viscosity']) * 200);
 									if ($savingthrow <= $percent) { //Higher chance the more of the player's HP they deal. Capped hits are 2/3 chance
@@ -1045,12 +1045,12 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 							$blindstr = "PLAYER:BLIND|";
-							if (strpos($currentstatus, $blindstr) !== False) { //Player is blinded.
+							if (strpos($currentstatus, $blindstr) !== false) { //Player is blinded.
 								$message = $message . "Your vision has returned.<br/>";
 								$currentstatus = str_replace($blindstr, "", $currentstatus); //wears off after one turn
 							}
 							$confusestr = "PLAYER:CONFUSE|";
-							if (strpos($currentstatus, $confusestr) !== False) { //Player is confused.
+							if (strpos($currentstatus, $confusestr) !== false) { //Player is confused.
 								$savingthrow = rand(1, 100);
 								if ($savingthrow + floor($luck / 2) > 75) {
 									$message = $message . "You have come back to your senses.<br/>";
@@ -1059,11 +1059,11 @@ if (empty($_SESSION['username'])) {
 							}
 							$lockeddown = false;
 							$lockdownstr = $statustr . "LOCKDOWN";
-							if (strpos($currentstatus, $lockdownstr) !== False) { //This enemy is locked down, and can't use abilities
+							if (strpos($currentstatus, $lockdownstr) !== false) { //This enemy is locked down, and can't use abilities
 								$statusarray = explode("|", $currentstatus);
 								$p = 0;
 								while (!empty($statusarray[$p])) {
-									if (strpos($statusarray[$p], $lockdownstr) !== False) { //multiple instances do not add anything; essentially, applying multiple instances will reset the timer
+									if (strpos($statusarray[$p], $lockdownstr) !== false) { //multiple instances do not add anything; essentially, applying multiple instances will reset the timer
 										$currentbleed = explode(":", $statusarray[$p]);
 										if (intval($currentbleed[2]) <= 0) { //lockdown has expired, or at least this instance of it
 											$removethis = $statusarray[$p] . "|";
@@ -1106,7 +1106,7 @@ if (empty($_SESSION['username'])) {
 					$mysqli->query("UPDATE `Players` SET `motifcounter` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					$userrow['motifcounter'] = 0;
 				} elseif (!empty($abilities[20]) && ($chancething <= ceil(($userrow['Aspect_Vial'] * 100) / $userrow['Gel_Viscosity']))) { //Hope Endures activated (ID 20)
-					$endured = True;
+					$endured = true;
 					$message = $message . $abilities[20] . "<br/>";
 					$damage = ($userrow[$healthvialstr] - 1); //So their health goes to one.
 					$aspectcost = floor($userrow['Aspect_Vial'] / 2);
@@ -1116,7 +1116,7 @@ if (empty($_SESSION['username'])) {
 					$damage = ($userrow[$healthvialstr] - 1); //So their health goes to one.
 				} else {
 					$damage = ($userrow[$healthvialstr] - 1); //So their health goes to one.
-					$repeat = False; //Don't do it again.
+					$repeat = false; //Don't do it again.
 					if ($userrow['dreamingstatus'] == "Prospit") {
 						echo "All that civic-minded work you've been doing has really tired you out!<br/>";
 					} else {
@@ -1129,12 +1129,12 @@ if (empty($_SESSION['username'])) {
 			}
 			//End-of-turn effects happen here, including damage. Note that we update userrow so that the repeat function works.
 			$poisonstr = "PLAYER:POISON";
-			if (strpos($currentstatus, $poisonstr) !== False) { //Player is poisoned. (Format: POISON:<percent chance>:<percent severity>|
+			if (strpos($currentstatus, $poisonstr) !== false) { //Player is poisoned. (Format: POISON:<percent chance>:<percent severity>|
 				$statusarray = explode("|", $currentstatus);
 				$p = 0;
 				$severity = 0;
 				while (!empty($statusarray[$p])) {
-					if (strpos($statusarray[$p], $poisonstr) !== False) { //This is a poison instance. Yes, they stack.
+					if (strpos($statusarray[$p], $poisonstr) !== false) { //This is a poison instance. Yes, they stack.
 						$currentpoison = explode(":", $statusarray[$p]);
 						$savingthrow = rand(1, 100);
 						if ($savingthrow + $luck > 80) { //Player throws off this instance of poisoning.
@@ -1216,7 +1216,7 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 			$stunstr = "PLAYER:STUN|";
-			if (strpos($currentstatus, $stunstr) !== False) { //Player is stunned.
+			if (strpos($currentstatus, $stunstr) !== false) { //Player is stunned.
 				$currentstatus = str_replace($stunstr, "", $currentstatus); //wears off after one turn
 				$message = $message . "You are stunned and cannot use a consumable or aspect power next round!<br/>";
 				$userrow['combatconsume'] = 1;
@@ -1253,7 +1253,7 @@ if (empty($_SESSION['username'])) {
 			$i = 1;
 			while ($i <= $max_enemies) {
 				$enemystr = "enemy" . strval($i) . "name";
-				$enemyrowexists = False;
+				$enemyrowexists = false;
 				if ($userrow[$enemystr] != "") { //Enemy still exists after this round of combat.
 					$healthstr = "enemy" . strval($i) . "health";
 					$maxhealthstr = "enemy" . strval($i) . "maxhealth";
@@ -1270,7 +1270,7 @@ if (empty($_SESSION['username'])) {
 									//this should prevent mismatches like Lich Queen using the entry for Lich, or Imp King using the entry for Imp
 								}
 							} else {
-								$enemyrowexists = True;
+								$enemyrowexists = true;
 								$enemyrow = $temprow;
 							}
 						}
@@ -1279,21 +1279,21 @@ if (empty($_SESSION['username'])) {
 						}
 					} else {
 						$enemyrow = $_SESSION[$userrow[$enemystr]];
-						$enemyrowexists = True;
+						$enemyrowexists = true;
 					}
-					if ($enemyrowexists == True) {
+					if ($enemyrowexists == true) {
 						$poisonstr = ($statustr . "POISON");
 						$waterygelstr = ($statustr . "WATERYGEL|");
 						$unluckystr = ($statustr . "UNLUCKY|");
 						$bleedingstr = ($statustr . "BLEEDING");
 						$disorientedstr = ($statustr . "DISORIENTED");
 						$burningstr = ($statustr . "BURNING|");
-						if (strpos($currentstatus, $poisonstr) !== False) { //This enemy is poisoned. (Format: POISON:<percent chance>:<percent severity>|
+						if (strpos($currentstatus, $poisonstr) !== false) { //This enemy is poisoned. (Format: POISON:<percent chance>:<percent severity>|
 							$statusarray = explode("|", $currentstatus);
 							$p = 0;
 							$severity = 0;
 							while (!empty($statusarray[$p])) {
-								if (strpos($statusarray[$p], $poisonstr) !== False) { //This is a poison instance. Yes, they stack.
+								if (strpos($statusarray[$p], $poisonstr) !== false) { //This is a poison instance. Yes, they stack.
 									$currentpoison = explode(":", $statusarray[$p]);
 									$savingthrow = rand(1, 100);
 									if ($savingthrow + $enemyrow['resist_Doom'] > 100) { //Enemy throws off this instance of poisoning
@@ -1312,12 +1312,12 @@ if (empty($_SESSION['username'])) {
 								$newhealth = 1;
 							$userrow[$healthstr] = $newhealth;
 						}
-						if (strpos($currentstatus, $burningstr) !== False) { //This enemy is burned. (Format: BURNING:<damage>| where damage is a static number)
+						if (strpos($currentstatus, $burningstr) !== false) { //This enemy is burned. (Format: BURNING:<damage>| where damage is a static number)
 							$statusarray = explode("|", $currentstatus);
 							$p = 0;
 							$firedamage = 0;
 							while (!empty($statusarray[$p])) {
-								if (strpos($statusarray[$p], $burningstr) !== False) { //This is a burn instance. Yes, they stack.
+								if (strpos($statusarray[$p], $burningstr) !== false) { //This is a burn instance. Yes, they stack.
 									$currentburn = explode(":", $statusarray[$p]);
 									$savingthrow = rand(1, 100);
 									if ($savingthrow + ceil($enemyrow['resist_Rage'] / 2) > 75) { //Enemy throws off this instance of burning
@@ -1342,12 +1342,12 @@ if (empty($_SESSION['username'])) {
 								$newhealth = 1;
 							$userrow[$healthstr] = $newhealth;
 						}
-						if (strpos($currentstatus, $bleedingstr) !== False) { //This enemy is bleeding. Drain off some health and power.
+						if (strpos($currentstatus, $bleedingstr) !== false) { //This enemy is bleeding. Drain off some health and power.
 							$statusarray = explode("|", $currentstatus);
 							$p = 0;
 							$instances = 0;
 							while (!empty($statusarray[$p])) {
-								if (strpos($statusarray[$p], $bleedingstr) !== False) { //This is a bleed instance. Yes, they stack.
+								if (strpos($statusarray[$p], $bleedingstr) !== false) { //This is a bleed instance. Yes, they stack.
 									$currentbleed = explode(":", $statusarray[$p]);
 									$message = $message . $userrow[$enemystr] . " loses some blood or blood analogue!<br/>";
 									if (intval($currentbleed[2]) <= 0) { //Bleeding has expired.
@@ -1373,18 +1373,18 @@ if (empty($_SESSION['username'])) {
 							$userrow[$healthstr] = $newhealth;
 							$userrow[$powerstr] = $newpower;
 						}
-						if (strpos($currentstatus, $disorientedstr) !== False) { //This enemy is disoriented (only effect is tickdown here)
+						if (strpos($currentstatus, $disorientedstr) !== false) { //This enemy is disoriented (only effect is tickdown here)
 							$statusarray = explode("|", $currentstatus);
 							$p = 0;
-							$stilldisoriented = False;
+							$stilldisoriented = false;
 							while (!empty($statusarray[$p])) {
-								if (strpos($statusarray[$p], $disorientedstr) !== False) { //This is a disorientation instance. (Note that the longest duration one effectively applies)
+								if (strpos($statusarray[$p], $disorientedstr) !== false) { //This is a disorientation instance. (Note that the longest duration one effectively applies)
 									$currentdisoriented = explode(":", $statusarray[$p]);
 									if (intval($currentdisoriented[2]) <= 0) { //Disorientation has expired.
 										$removethis = $statusarray[$p] . "|";
 										$currentstatus = preg_replace('/' . $removethis . '/', '', $currentstatus, 1);
 									} else {
-										$stilldisoriented = True;
+										$stilldisoriented = true;
 									}
 									if (!$stilldisoriented) {
 										$message = $message . $userrow[$enemystr] . " appears to focus on the battle again!<br/>";
@@ -1393,7 +1393,7 @@ if (empty($_SESSION['username'])) {
 								$p++;
 							}
 						}
-						if (strpos($currentstatus, $unluckystr) !== False) { //This enemy is unlucky.
+						if (strpos($currentstatus, $unluckystr) !== false) { //This enemy is unlucky.
 							$misfortune = rand(1, 100);
 							$newhealth = $userrow[$healthstr]; //Set defaults here.
 							$newpower = $userrow[$powerstr];
@@ -1564,13 +1564,13 @@ if (empty($_SESSION['username'])) {
 			$mysqli->query($megaquery);
 			writeEnemydata($userrow);
 			if ($once)
-				$once = False; //Don't run through more than once unless repeat is true.
-			if ($nodamage == True)
+				$once = false; //Don't run through more than once unless repeat is true.
+			if ($nodamage == true)
 				$nodamagecounter++;
 			if ($nodamagecounter >= 5)
-				$repeat = False; //No damage for five turns, stop repeating.
+				$repeat = false; //No damage for five turns, stop repeating.
 			if ($turncounter >= 20)
-				$repeat = False; //20 turns, stop repeating.
+				$repeat = false; //20 turns, stop repeating.
 		}
 		if (!$dontcheckvictory) { //something happened mid-calculation that ended strife, such as TH's "deny invuln" thing
 			if ($alldead) { //They're dead, Dave.
@@ -1600,7 +1600,7 @@ if (empty($_SESSION['username'])) {
 			} else {
 				$userrow = refreshEnemydata($userrow);
 				include("strife.php");
-				if ($userrow[$downstr] != 1 && $enemydown != True) { //Print this if neither player nor enemy slain
+				if ($userrow[$downstr] != 1 && $enemydown != true) { //Print this if neither player nor enemy slain
 					$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
 					$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string($message) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
 				} else {

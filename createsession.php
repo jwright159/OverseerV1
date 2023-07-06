@@ -5,16 +5,16 @@ $_POST['session'] = str_replace(">", "", $_POST['session']); //this is why we ca
 $_POST['session'] = str_replace("<", "", $_POST['session']);
 $_POST['session'] = str_replace("'", "", $_POST['session']); //kill apostrophes while we're at it
 $result = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '" . $_POST['session'] . "'");
-$clash = False;
+$clash = false;
 
 if ($_POST['session'] != "" && $_POST['sessionpw'] == $_POST['confirmpw']) {
 	while ($row = $result->fetch_array()) {
 		if ($_POST['session'] == $row['name']) { //Name clash: Session name is already taken.
 			echo "Session creation failed: Session name is in use.";
-			$clash = True;
+			$clash = true;
 		}
 	}
-	if ($clash == False) {
+	if ($clash == false) {
 		$name = $mysqli->real_escape_string($_POST['session']);
 		$pw = $mysqli->real_escape_string($_POST['sessionpw']);
 		if (!empty($_POST['randoms'])) {

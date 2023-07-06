@@ -61,7 +61,7 @@ if (empty($_SESSION['username'])) {
 					$mysqli->query("UPDATE `Messages` SET `msg" . strval($_GET['view']) . "` = '" . $msgstring . "|READ' WHERE `username` = '" . $username . "' LIMIT 1;");
 					$userrow['newmessage']--;
 					$mysqli->query("UPDATE `Players` SET `newmessage` = " . strval($userrow['newmessage']) . " WHERE `Players`.`username` = '$username' LIMIT 1;");
-					$marked[intval($_GET['view'])] = True;
+					$marked[intval($_GET['view'])] = true;
 				}
 				if ($boom[0] != "Submissions" && $boom[0] != "Gristwire" && $boom[0] != "Porkhollow") {
 					$boom[0] = str_replace("<i>", "", $boom[0]);
@@ -86,7 +86,7 @@ if (empty($_SESSION['username'])) {
 				$check = 1;
 				while ($check <= $max_inbox) {
 					if (!empty($_POST['select' . strval($check)]) || !empty($_POST['selectall'])) {
-						$marked[$check] = True;
+						$marked[$check] = true;
 						$sendstring = str_replace("\\", "", $msgrow['msg' . strval($check)]); //god dang these apostrophes
 						$sendstring = $mysqli->real_escape_string($sendstring);
 						if (!strpos($msgrow['msg' . strval($check)], "|READ") && !empty($msgrow['msg' . strval($check)])) {
@@ -105,7 +105,7 @@ if (empty($_SESSION['username'])) {
 				$check = 1;
 				while ($check <= $max_inbox) {
 					if (!empty($_POST['select' . strval($check)]) || !empty($_POST['selectall'])) {
-						$deleted[$check] = True;
+						$deleted[$check] = true;
 						$mysqli->query("UPDATE `Messages` SET `msg" . strval($check) . "` = '' WHERE `username` = '" . $username . "' LIMIT 1;");
 						if (!strpos($msgrow['msg' . strval($check)], "|READ") && !empty($msgrow['msg' . strval($check)])) {
 							$userrow['newmessage']--;
@@ -145,17 +145,17 @@ if (empty($_SESSION['username'])) {
 			}
 			$rcount = 0;
 			while ($rcount < $receivers) {
-				$founduser = False;
+				$founduser = false;
 				$sendresult = $mysqli->query("SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $sendto[$rcount] . "' LIMIT 1;");
 				while ($sendrow = $sendresult->fetch_array()) {
 					if ($sendrow['username'] == $sendto[$rcount]) {
 						$check = 1;
-						$founduser = True;
-						$foundempty = False;
-						while ($check <= $max_inbox && $foundempty == False) { //make sure there's a free spot in recipient's inbox
+						$founduser = true;
+						$foundempty = false;
+						while ($check <= $max_inbox && $foundempty == false) { //make sure there's a free spot in recipient's inbox
 							if ($sendrow['msg' . strval($check)] == "")
-								$foundempty = True;
-							if ($foundempty == False)
+								$foundempty = true;
+							if ($foundempty == false)
 								$check++;
 						}
 						if ($foundempty) {
@@ -189,7 +189,7 @@ if (empty($_SESSION['username'])) {
 							echo $sendto[$rcount] . " did not receive message: inbox full.<br/>";
 					}
 				}
-				if ($founduser == False)
+				if ($founduser == false)
 					echo $sendto[$rcount] . " did not receive message: user not found.<br/>";
 				$rcount++;
 			}

@@ -10,20 +10,20 @@ $max_items = 50;
 function initGrists()
 {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1"); //document grist types now so we don't have to do it later
-	$reachgrist = False;
-	$terminateloop = False;
+	$reachgrist = false;
+	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+	while (($col = $result2->fetch_field()) && $terminateloop == false) {
 		$gristcost = $col->name;
 		$gristtype = substr($gristcost, 0, -5);
 		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-			$reachgrist = True;
+			$reachgrist = true;
 		}
 		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
-			$reachgrist = False;
-			$terminateloop = True;
+			$reachgrist = false;
+			$terminateloop = true;
 		}
-		if ($reachgrist == True) {
+		if ($reachgrist == true) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -71,10 +71,10 @@ if (!empty($code)) { //User is using the holopad.
 }
 if (!empty($holoCode)) {
 	$itemresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `captchalogue_code` = '" . $holoCode . "'");
-	$itemfound = False;
+	$itemfound = false;
 	while ($itemrow = $itemresult->fetch_array()) {
-		$itemfound = True;
-		$nothing = True;
+		$itemfound = true;
+		$nothing = true;
 		$itemname = $itemrow['name'];
 		$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 		if ($itemrow['art'] != "")
@@ -85,8 +85,8 @@ if (!empty($holoCode)) {
 			echo "<b>$itemname</b>:<br/>";
 		$desc = descvarConvert($userrow, $itemrow['description'], $itemrow['effects']);
 		echo $desc . "<br/><b>It costs:</b>";
-		$reachgrist = False;
-		$terminateloop = False; //time-saver
+		$reachgrist = false;
+		$terminateloop = false; //time-saver
 		if ($gristed == false) {
 			$gristname = initGrists();
 			$totalgrists = count($gristname);
@@ -97,7 +97,7 @@ if (!empty($holoCode)) {
 			$gristtype = $gristname[$gristcount];
 			$gristcost = $gristtype . "_Cost";
 			if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-				$nothing = False; //Item costs something.
+				$nothing = false; //Item costs something.
 				echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
 				if ($userrow[$gristtype] >= $itemrow[$gristcost]) {
 					echo " <gristvalue2>$itemrow[$gristcost] </gristvalue2>";
@@ -146,9 +146,9 @@ if (!empty($holoCode)) {
 			echo "Abstain: $itemrow[abstain]<br/>";
 	}
 }
-if ($itemfound == False)
+if ($itemfound == false)
 	echo 'The code you have inputted refers to an item that does not exist.<br/>';
-if ($itemfound == True)
+if ($itemfound == true)
 	echo "<br/>";
 //FORMS-----------------------------------------------------------------
 echo '<form action="tooly.php" method="post">First item :<input id="code1" name="code1" type="text" /><br/>';

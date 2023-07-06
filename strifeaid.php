@@ -23,7 +23,7 @@ if (empty($_SESSION['username'])) {
 		if ($aidrow['session_name'] != $userrow['session_name']) {
 			echo "And just what do you think YOU'RE doing?";
 		} elseif (!empty($aidrow['enemydata'])) {
-			$aok = False;
+			$aok = false;
 			if (($aidrow['dreamingstatus'] == $userrow['dreamingstatus'] && $userrow['dreamingstatus'] != "Awake") || $userrow['Godtier'] != 0)
 				$aok = true;
 			$chain = chainArray($userrow);
@@ -87,7 +87,7 @@ if (empty($_SESSION['username'])) {
 			if ($aidrow['session_name'] != $userrow['session_name']) {
 				echo "And just what do you think YOU'RE doing?";
 			} else {
-				$aok = False;
+				$aok = false;
 				$chain = chainArray($userrow);
 				$totalchain = count($chain);
 				$landcount = 1;

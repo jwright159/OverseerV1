@@ -74,7 +74,7 @@ if (empty($_SESSION['username'])) {
 		if ((empty($userrow['Class']) || $userrow['Class'] == "Default") && empty($userrow['Aspect'])) {
 			$titlegood = 0;
 			$aspects = $mysqli->query("SELECT * FROM Titles LIMIT 1;");
-			$reachaspect = False;
+			$reachaspect = false;
 			while ($col = $aspects->fetch_field()) {
 				$aspect = $col->name;
 
@@ -87,13 +87,13 @@ if (empty($_SESSION['username'])) {
 					$titlegood++;
 			}
 			$classes = $mysqli->query("SELECT * FROM Titles");
-			$reachclass = True;
+			$reachclass = true;
 			while ($row = $classes->fetch_array()) {
 				$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
 				$classrow = $classresult->fetch_array();
 				if ($row['Class'] == "General")
-					$reachclass = False;
-				if ($reachclass == True) {
+					$reachclass = false;
+				if ($reachclass == true) {
 					if ($_POST['class'] == $row['Class'])
 						$titlegood++;
 				}
@@ -108,22 +108,22 @@ if (empty($_SESSION['username'])) {
 				$sesname = $userrow['session_name'];
 				$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sesname' LIMIT 1;"); //select session so we know if uniques are on
 				$sesrow = $sessionresult->fetch_array();
-				$aok = False;
+				$aok = false;
 				if ($sesrow['uniqueclasspects'] == 1) {
 					$teamresult = $mysqli->query("SELECT `Class`,`Aspect` FROM Players WHERE `Players`.`session_name` = '$sesname'");
 					$totalplayers = 0;
-					$classclash = False;
-					$aspectclash = False;
-					$doubleclash = False;
+					$classclash = false;
+					$aspectclash = false;
+					$doubleclash = false;
 					$failreason = "nothing";
 					while ($row = $teamresult->fetch_array()) {
 						$totalplayers++;
 						if ($row['Class'] == $newclass)
-							$classclash = True;
+							$classclash = true;
 						if ($row['Aspect'] == $newaspect)
-							$aspectclash = True;
+							$aspectclash = true;
 						if ($row['Class'] == $newclass && $row['Aspect'] == $newaspect)
-							$doubleclash = True;
+							$doubleclash = true;
 					}
 					if ($totalplayers <= 12 && $classclash)
 						$failreason = $newclass;
@@ -132,13 +132,13 @@ if (empty($_SESSION['username'])) {
 					if ($totalplayers <= 144 && $doubleclash)
 						$failreason = $newclass . " of " . $newaspect;
 					if ($failreason == "nothing")
-						$aok = True;
+						$aok = true;
 					else {
 						$newclass = "";
 						$newaspect = "";
 					}
 				} else
-					$aok = True;
+					$aok = true;
 				if ($aok) {
 					$mysqli->query("UPDATE `Players` SET `Class` = '$newclass' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					$mysqli->query("UPDATE `Players` SET `Aspect` = '$newaspect' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
@@ -227,7 +227,7 @@ if (empty($_SESSION['username'])) {
 		echo "Both your class and aspect must be accepted simultaneously.";
 		echo '<form action="overview.php" method="post">Select class:<select name="class"> '; //Select a class
 		$classes = $mysqli->query("SELECT * FROM Titles");
-		$reachclass = True;
+		$reachclass = true;
 		while ($row = $classes->fetch_array()) {
 			$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$row[Class]';");
 			$classrow = $classresult->fetch_array();
@@ -237,21 +237,21 @@ if (empty($_SESSION['username'])) {
 				$activepassivestr = "(Passive, $classrow[passivefactor]%)";
 			}
 			if ($row['Class'] == "General")
-				$reachclass = False;
-			if ($reachclass == True)
+				$reachclass = false;
+			if ($reachclass == true)
 				echo '<option value="' . $row['Class'] . '">' . $row['Class'] . ' ' . $activepassivestr . '</option>';
 		}
 		echo '</select><br/>';
 		echo 'Select aspect:<select name="aspect"> '; //Select an aspect
 		$aspects = $mysqli->query("SELECT * FROM Titles LIMIT 1;");
-		$reachaspect = False;
+		$reachaspect = false;
 		while ($col = $aspects->fetch_field()) {
 			$aspect = $col->name;
 			if ($aspect == "Breath")
-				$reachaspect = True;
+				$reachaspect = true;
 			if ($aspect == "General")
-				$reachaspect = False;
-			if ($reachaspect == True)
+				$reachaspect = false;
+			if ($reachaspect == true)
 				echo '<option value="' . $aspect . '">' . $aspect . '</option>';
 		}
 		echo '</select><br/><input type="submit" value="Accept it." /> </form>';
@@ -384,16 +384,16 @@ if (empty($_SESSION['username'])) {
 		if ($row['session_name'] == $userrow['session_name']) {
 			//echo "$row[username] <br/>";
 			$buddyname[$buddies] = $row['username'];
-			$printed[$buddyname[$buddies]] = False;
+			$printed[$buddyname[$buddies]] = false;
 			$buddies++;
 		}
 	}
 	echo "Known server/client chains in your session:<br/>";
 	$clientless = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "' AND `Players`.`client_player` = '' ;");
 	while ($currentrow = $clientless->fetch_array()) { //first show the chains of those without clients to ensure that chains aren't repeated
-		$done = False;
+		$done = false;
 		echo $currentrow['username'];
-		$printed[$currentrow['username']] = True;
+		$printed[$currentrow['username']] = true;
 		$namebeingchecked = $currentrow['username'];
 		while (!$done) {
 			if (!empty($currentrow['server_player']) && $currentrow['server_player'] != $namebeingchecked) {
@@ -401,27 +401,27 @@ if (empty($_SESSION['username'])) {
 				$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
 				$currentrow = $currentresult->fetch_array();
 				echo $currentrow['username'];
-				$printed[$currentrow['username']] = True;
+				$printed[$currentrow['username']] = true;
 			} else {
-				$done = True;
+				$done = true;
 				echo "<br/>";
 			}
 		}
 	}
 	$currentrow = $userrow;
-	$superdone = False;
-	$done = False;
+	$superdone = false;
+	$done = false;
 	if (!empty($userrow['client_player']) && !$printed[$userrow['client_player']]) {
 		echo $userrow['client_player'] . " ==&gt; ";
-		$printed[$userrow['client_player']] = True;
+		$printed[$userrow['client_player']] = true;
 	}
 	if (!$printed[$username]) {
 		echo $username;
-		$printed[$username] = True;
+		$printed[$username] = true;
 	}
 	$check = 0;
 	$namebeingchecked = $username;
-	$printed[$username] = True;
+	$printed[$username] = true;
 	while (!$superdone) {
 		while (!$done) {
 			if (!empty($currentrow['server_player']) && $currentrow['server_player'] != $namebeingchecked && $printed[$currentrow['server_player']] == false) {
@@ -429,9 +429,9 @@ if (empty($_SESSION['username'])) {
 				$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
 				$currentrow = $currentresult->fetch_array();
 				echo $currentrow['username'];
-				$printed[$currentrow['username']] = True;
+				$printed[$currentrow['username']] = true;
 			} else {
-				$done = True;
+				$done = true;
 				echo "<br/>";
 			}
 		}
@@ -441,13 +441,13 @@ if (empty($_SESSION['username'])) {
 				$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $buddyname[$check] . "';");
 				$currentrow = $currentresult->fetch_array();
 				echo $currentrow['username'];
-				$printed[$currentrow['username']] = True;
-				$done = False; //break this while loop and go print the chain of this person
+				$printed[$currentrow['username']] = true;
+				$done = false; //break this while loop and go print the chain of this person
 			}
 			$check++;
 		}
 		if ($check == $buddies)
-			$superdone = True; //that's all of 'em!
+			$superdone = true; //that's all of 'em!
 	}
 	//end chain-displaying code
 

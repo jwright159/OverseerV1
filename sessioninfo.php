@@ -23,14 +23,14 @@ if (!empty($_POST['session']))
 if (!empty($session)) { //Session to examine
 	$sessionesc = str_replace("'", "''", $session); //Add escape characters so we can find session correctly in database.
 	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionesc'");
-	$sessionexists = False;
+	$sessionexists = false;
 	while ($row = $sessionresult->fetch_array()) {
 		if ($row['name'] == $session) {
-			$sessionexists = True;
+			$sessionexists = true;
 			$sessionrow = $row; //This is currently not needed but may be useful later.
 		}
 	}
-	if ($sessionexists != True) {
+	if ($sessionexists != true) {
 		echo "ERROR - Session does not exist.<br/>";
 	} else {
 		$gateresult = $mysqli->query("SELECT * FROM Gates"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
@@ -71,30 +71,30 @@ if (!empty($session)) { //Session to examine
 					echo ", " . $row[$row['offhand']];
 				echo "<br/>";
 				echo "Currently wearing: ";
-				$addcomma = False;
+				$addcomma = false;
 				if ($row['headgear'] != "") {
 					echo $row[$row['headgear']];
-					$addcomma = True;
+					$addcomma = true;
 				}
 				if ($row['facegear'] != "" && $row['facegear'] != "2HAND") {
-					if ($addcomma == True)
+					if ($addcomma == true)
 						echo ", ";
 					echo $row[$row['facegear']];
-					$addcomma = True;
+					$addcomma = true;
 				}
 				if ($row['bodygear'] != "") {
-					if ($addcomma == True)
+					if ($addcomma == true)
 						echo ", ";
 					echo $row[$row['bodygear']];
-					$addcomma = True;
+					$addcomma = true;
 				} else {
-					if ($addcomma == True)
+					if ($addcomma == true)
 						echo ", ";
 					echo "Basic Clothes";
-					$addcomma = True;
+					$addcomma = true;
 				}
 				if ($row['accessory'] != "") {
-					if ($addcomma == True)
+					if ($addcomma == true)
 						echo ", ";
 					echo $row[$row['accessory']];
 				}

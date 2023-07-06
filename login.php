@@ -3,7 +3,7 @@
 if (!empty($_POST['mako']) && $_POST['mako'] == "kawaii") {
 	require_once "includes/SQLconnect.php";
 	$result = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $mysqli->real_escape_string($_POST['username']) . "'");
-	$loggedin = False;
+	$loggedin = false;
 
 	while ($userrow = $result->fetch_array()) {
 		if ($userrow['username'] == $mysqli->real_escape_string($_POST['username']) && password_verify($mysqli->real_escape_string($_POST['password']), $userrow['password'])) {
@@ -91,11 +91,11 @@ if (!empty($_POST['mako']) && $_POST['mako'] == "kawaii") {
 					}
 				}
 			}
-			$loggedin = True;
+			$loggedin = true;
 			echo "true";
 		}
 	}
-	if ($loggedin == False) {
+	if ($loggedin == false) {
 		echo "false";
 	}
 	$mysqli->close();

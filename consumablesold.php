@@ -9,17 +9,17 @@ if (empty($_SESSION['username'])) {
 	$max_enemies = 5; //Again, this is not ideal.
 	//--Begin consuming code here.--
 	if (!empty($_POST['consume'])) { //Consuming time!
-		$fail = False;
-		$donotconsume = False;
+		$fail = false;
+		$donotconsume = false;
 		if ($userrow['enemy1name'] != "" || $userrow['enemy2name'] != "" || $userrow['enemy3name'] != "" || $userrow['enemy4name'] != "" && $userrow['enemy5name'] != "" || $userrow['aiding'] != "") { //User strifing
 			if ($userrow['combatconsume'] == 1) { //Already used a consumable this round.
 				echo "You have already used a consumable or aspect ability during this round of strife!";
-				$fail = True;
+				$fail = true;
 			} else {
 				$mysqli->query("UPDATE `Players` SET `combatconsume` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 			}
 		}
-		if ($fail != True) {
+		if ($fail != true) {
 			switch ($userrow[$_POST['consume']]) { //Determine the consumable and act accordingly.
 				case "Medkit":
 					if ($userrow['aiding'] == "") { //User not currently aiding.
@@ -62,7 +62,7 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Players` SET `Health_Vial` = $targetrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $targetrow['username'] . "' LIMIT 1 ;");
 					} else {
 						echo "It seems like an awful waste to drink this thing outside of strife, although you're not entirely sure why.";
-						$donotconsume = True;
+						$donotconsume = true;
 					}
 					break;
 				case "Faygonight Brew":
@@ -137,7 +137,7 @@ if (empty($_SESSION['username'])) {
 				case "Starman":
 					if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "") { //User is not personally strifing
 						echo "Okay, I'm going to be nice to you here since this thing is so expensive. If you use it now, it'll wear off in a few seconds and be wasted.";
-						$donotconsume = True;
+						$donotconsume = true;
 					} else {
 						echo "You pull the starman out of the captchalogue card and touch it. A rainbow coating washes over you, making you completely invulnerable to damage!";
 						$invuln = 5;
@@ -155,7 +155,7 @@ if (empty($_SESSION['username'])) {
 				case "Nominomicon":
 					if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") { //User is not strifing
 						echo "You give the Nominomicon a good read. It gives you insight into the darkest corners of existence AND makes your fingers deliciously sticky!";
-						$donotconsume = True;
+						$donotconsume = true;
 					} else {
 						if ($userrow['aiding'] == "") { //Player is main strifer
 							echo "You om nom nom the Nominomicon. It consumes some of your vitality to project sticky, unspeakable tentacles at your opponents.";
@@ -471,14 +471,14 @@ if (empty($_SESSION['username'])) {
 					break;
 				case "Mountain Dew: Pitch Black":
 					echo "You attempt to drink the pitch black Mountain Dew. Unfortunately it has the consistency of pitch and you can't get it out of the bottle.";
-					$donotconsume = True;
+					$donotconsume = true;
 					break;
 				case "Faygo - Red Pop flavour":
 					echo "You drink the Faygo. It's motherfuckin' miraculous, but it doesn't actually do anything for you.";
 					break;
 				case "Red Faygo-yo":
 					echo "You extract some of the Faygo from the side of your yo-yo and drink it. The supply replenishes almost immediately.";
-					$donotconsume = True; //Don't consume the yo-yo
+					$donotconsume = true; //Don't consume the yo-yo
 					break;
 				case "Coca-Cola Can":
 					echo "You drink the Coca-Cola. After noticing our use of their copyrighted brand name, they sue the project into oblivion and it is forced to shut down. Thanks a lot. Oh, also nothing happens.";
@@ -626,7 +626,7 @@ if (empty($_SESSION['username'])) {
 				case "New Year's Eve Bomb":
 					if ($userrow['enemy1name'] == "" && $userrow['enemy2name'] == "" && $userrow['enemy3name'] == "" && $userrow['enemy4name'] == "" && $userrow['enemy5name'] == "" && $userrow['aiding'] == "") { //User is not strifing
 						echo "You examine the bomb carefully. You are 100% sure this one isn't a dud!";
-						$donotconsume = True;
+						$donotconsume = true;
 					} else {
 						if ($userrow['aiding'] == "") { //Player is main strifer
 							if (rand(1, 100) <= 95) {
@@ -746,7 +746,7 @@ if (empty($_SESSION['username'])) {
 					break;
 				default:
 					echo "Whatever you just tried to consume, it wasn't a consumable.";
-					$fail = True;
+					$fail = true;
 					break;
 			}
 		}
@@ -768,12 +768,12 @@ if (empty($_SESSION['username'])) {
 	while ($col = $invresult->fetch_field()) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") { //Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") { //Reached the end of the inventory.
-			$reachinv = False;
+			$reachinv = false;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
+		if ($reachinv == true && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 			while ($row = $captchalogue->fetch_array()) {

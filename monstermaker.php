@@ -55,7 +55,7 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 			else
 				$prototypings = $enemyrow['prototypings'];
 			$description = $enemyrow['description'];
-			$prototyped = False;
+			$prototyped = false;
 			$protopower = 1;
 			$protopositive = 0;
 			if ($prototypings > 0)
@@ -70,7 +70,7 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 				}
 				$preentry = $allyrow['pre_entry_prototypes'];
 				while ($preentry > 0) {
-					$prototyped = True;
+					$prototyped = true;
 					$preentrystr = "prototype_item_" . strval($preentry);
 					$description = $description . $allyrow[$preentrystr] . ", ";
 					$preentry--;
@@ -86,7 +86,7 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 				}
 				$prototypings--;
 			}
-			if ($prototyped == True) { //Prototyping has occurred.
+			if ($prototyped == true) { //Prototyping has occurred.
 				$description = substr($description, 0, -2) . ".";
 				if ($protopositive > 0)
 					$protopower = floor(pow($protopower, (1 / $protopositive)) * $protopositive);
@@ -94,17 +94,17 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 				$power = $power + $protopower;
 				$health = $health + $protopower; //NOTE - Since weapons do not scale health, prototyping scales health relatively poorly. (Also note the uranium imp in the flash)
 			} elseif ($enemyrow['prototypings'] > 0) { //Only prototyping enemies can be voided, and only they need "Nothing!" appended.
-				$nullified = True;
+				$nullified = true;
 				if (!$tospooky) {
 					$sessioname = str_replace("'", "''", $userrow['session_name']); //Add escape characters so we can find session correctly in database.
 					$allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $sessioname . "'");
 					while ($allyrow = $allyresult->fetch_array()) {
 						if ($allyrow['session_name'] == $userrow['session_name'] && $allyrow['pre_entry_prototypes'] == 0) {
-							$nullified = False;
+							$nullified = false;
 						}
 					}
 				}
-				if ($nullified == True) { //Session is currently void.
+				if ($nullified == true) { //Session is currently void.
 					$description = "It appears skeletal. You can only barely tell what type of enemy it is supposed to be.";
 					$health = $health * $health * $health; //Tons of health.
 				} else {

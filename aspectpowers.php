@@ -180,7 +180,7 @@ if (empty($_SESSION['username'])) {
 					$bonusconsumable = false;
 					if ($userrow['combatconsume'] == 1) { //Already used a consumable this round.
 						$bonusconsumestr = "PLAYER:BONUSCONSUME|";
-						if (strpos($userrow['strifestatus'], $bonusconsumestr) !== False) { //Player has a bonus consumable usage
+						if (strpos($userrow['strifestatus'], $bonusconsumestr) !== false) { //Player has a bonus consumable usage
 							$bonusconsumable = true;
 						}
 					}
@@ -204,7 +204,7 @@ if (empty($_SESSION['username'])) {
 							$p = 0;
 							$instancefound = false;
 							while (!empty($statusarray[$p]) && !$instancefound) {
-								if (strpos($statusarray[$p], $bonusconsumestr) !== False) { //This is one of the bonus consume instances.
+								if (strpos($statusarray[$p], $bonusconsumestr) !== false) { //This is one of the bonus consume instances.
 									$instancefound = true;
 									$removethis = $statusarray[$p] . "|";
 									$userrow['strifestatus'] = preg_replace('/' . $removethis . '/', '', $userrow['strifestatus'], 1);
@@ -464,10 +464,10 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 								$mysqli->query("UPDATE `Players` SET `strifestatus` = '$currentstatus' WHERE `Players`.`username` = '" . $striferow['username'] . "'");
 						}
 						$powerboost = 0;
-						$temp = False;
+						$temp = false;
 						if ($patternrow[$temporarystr] != 0) { //Temporary boost. Scale it up accordingly.
 							$mysqli->query("UPDATE `Ability_Patterns` SET `temporaryuses` = $patternrow[temporaryuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
-							$temp = True;
+							$temp = true;
 							$factor = 1 + ($aspectrow['Temporary'] / $patternrow[$temporarystr]);
 							$patternrow[$offenseupstr] = floor($patternrow[$offenseupstr] * $factor);
 							$patternrow[$defenseupstr] = floor($patternrow[$defenseupstr] * $factor);
@@ -491,7 +491,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$mysqli->query("UPDATE `Ability_Patterns` SET `defenseupuses` = $patternrow[defenseupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
 						if ($powerboost != 0)
 							$mysqli->query("UPDATE `Ability_Patterns` SET `powerupuses` = $patternrow[powerupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
-						if ($temp == False) {
+						if ($temp == false) {
 							if ($patternrow[$offenseupstr] != 0)
 								$mysqli->query("UPDATE `Players` SET `offenseboost` = $targetrow[offenseboost]+$patternrow[$offenseupstr] WHERE `Players`.`username` = '$target'");
 							if ($patternrow[$defenseupstr] != 0)
@@ -799,64 +799,64 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 	echo '<input type="submit" value="Create it!">';
 	//Code for pattern hints will go here.
 	echo "<br/>";
-	$hint = False;
+	$hint = false;
 	if ($patternrow['damageuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Damage'] * $classrow['Damage']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for direct damage is $hintstr<br/>";
 	}
 	if ($patternrow['powerdownuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Power_down'] * $classrow['Power_down']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for power reduction is $hintstr<br/>";
 	}
 	if ($patternrow['offenseupuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Offense_up'] * $classrow['Offense_up']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for purely offensive boosts is $hintstr<br/>";
 	}
 	if ($patternrow['defenseupuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Defense_up'] * $classrow['Defense_up']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for purely defensive boosts is $hintstr<br/>";
 	}
 	if ($patternrow['powerupuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Power_up'] * $classrow['Power_up']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for balanced power boosts is $hintstr<br/>";
 	}
 	if ($patternrow['invulnuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Invulnerability'] * $classrow['Invulnerability']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for granting invulnerability is $hintstr<br/>";
 	}
 	if ($patternrow['healuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Heal'] * $classrow['Heal']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for healing is $hintstr<br/>";
 	}
 	if ($patternrow['multitargetuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Multitarget'] * $classrow['Multitarget']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		//echo strval($effectiveness);
 		echo "Your classpect combination's potential for targeting multiple enemies is $hintstr<br/>";
 	}
 	if ($patternrow['aspectvialuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Aspect_vial'] * $classrow['Aspect_vial']; //Note that 10k is the average.
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for Aspect Vial conservation is $hintstr<br/>";
 	}
 	if ($patternrow['temporaryuses'] >= 5) {
-		$hint = True;
+		$hint = true;
 		$effectiveness = $aspectrow['Temporary'] * $aspectrow['Temporary'] * 625; //This sets a temporary boosting value of 4 as average (12500)
 		$hintstr = getHintStr($effectiveness);
 		echo "Your classpect combination's potential for performing temporary boosts is $hintstr<br/>";

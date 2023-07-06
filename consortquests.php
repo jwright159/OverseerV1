@@ -114,19 +114,19 @@ if (empty($_SESSION['username'])) {
 	$gateresult = $mysqli->query("SELECT * FROM Gates"); //we'll need this to determine the level of the shops
 	$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 	$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
-	$reachgrist = False;
-	$terminateloop = False;
+	$reachgrist = false;
+	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+	while (($col = $result2->fetch_field()) && $terminateloop == false) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
-			$reachgrist = True;
+			$reachgrist = true;
 		}
 		if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
-			$reachgrist = False;
-			$terminateloop = True;
+			$reachgrist = false;
+			$terminateloop = true;
 		}
-		if ($reachgrist == True) {
+		if ($reachgrist == true) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}

@@ -7,29 +7,29 @@ $currentabstratus = "";
 $k = 0;
 while ($itemrow = $itemresult->fetch_array()) {
 	$mainabstratus = "";
-	$alreadydone = False;
-	$foundcomma = False;
+	$alreadydone = false;
+	$foundcomma = false;
 	$j = 0;
-	if (strrchr($itemrow['abstratus'], ',') == False) {
+	if (strrchr($itemrow['abstratus'], ',') == false) {
 		$mainabstratus = $itemrow['abstratus'];
 	} else {
-		while ($foundcomma != True) {
+		while ($foundcomma != true) {
 			$char = "";
 			$char = substr($itemrow['abstratus'], $j, 1);
 			if ($char == ",") { //Found a comma. We know there is one because of the if statement above. Break off the string as the main abstratus.
 				$mainabstratus = substr($itemrow['abstratus'], 0, $j);
-				$foundcomma = True;
+				$foundcomma = true;
 			} else {
 				$j++;
 			}
 		}
 	}
 	if ($currentabstratus == $mainabstratus) {
-		$alreadydone = True;
+		$alreadydone = true;
 	} else {
 		$currentabstratus = $mainabstratus;
 	}
-	if ($alreadydone == False && $mainabstratus != "notaweapon" && $mainabstratus != "headgear" && $mainabstratus != "bodygear" && $mainabstratus != "facegear" && $mainabstratus != "accessory" && $mainabstratus != "computer") { //I HAVE NEW WEAPON!
+	if ($alreadydone == false && $mainabstratus != "notaweapon" && $mainabstratus != "headgear" && $mainabstratus != "bodygear" && $mainabstratus != "facegear" && $mainabstratus != "accessory" && $mainabstratus != "computer") { //I HAVE NEW WEAPON!
 		$absresult = $mysqli->query("SELECT * FROM `Captchalogue` WHERE `abstratus` LIKE '" . $mainabstratus . "%' OR `abstratus` LIKE '%, " . $mainabstratus . "%'");
 		//ensures that we don't catch dartkind with artkind, inflatablekind with tablekind, etc
 		$total = 0;

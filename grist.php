@@ -6,7 +6,7 @@ if (empty($_SESSION['username'])) {
 } else {
 
 
-	$reachgrist = False;
+	$reachgrist = false;
 
 	echo "Gristwire client v0.0.1a.<br/>";
 
@@ -45,13 +45,13 @@ if (empty($_SESSION['username'])) {
 				echo "You did not specify a recipient player.<br/>";
 			} else {
 				$wireresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
-				$targetfound = False;
-				$poor = False;
+				$targetfound = false;
+				$poor = false;
 				$type = $_POST['grist_type'];
 				if (intval($_POST['amount']) <= $userrow[$type]) {
 					while ($wirerow = $wireresult->fetch_array()) {
 						if ($wirerow['username'] == $_POST['target']) {
-							$targetfound = True;
+							$targetfound = true;
 							$wirename = $wirerow['username'];
 							$modifier = intval($_POST['amount']);
 							$mysqli->query("UPDATE `Players` SET `$type` = $userrow[$type]-$modifier WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -67,11 +67,11 @@ if (empty($_SESSION['username'])) {
 							$sendrow = $sendresult->fetch_array();
 							$check = 1;
 							$max_inbox = 50;
-							$foundempty = False;
-							while ($check <= $max_inbox && $foundempty == False) { //make sure there's a free spot in recipient's inbox
+							$foundempty = false;
+							while ($check <= $max_inbox && $foundempty == false) { //make sure there's a free spot in recipient's inbox
 								if ($sendrow['msg' . strval($check)] == "")
-									$foundempty = True;
-								if ($foundempty == False)
+									$foundempty = true;
+								if ($foundempty == false)
 									$check++;
 							}
 							if ($foundempty) {
@@ -91,11 +91,11 @@ if (empty($_SESSION['username'])) {
 				} else {
 					echo "Transaction failed: You only have $userrow[$type] $type";
 					$quantity = $userrow[$type];
-					$poor = True;
+					$poor = true;
 				}
-				if ($targetfound == True) {
+				if ($targetfound == true) {
 					echo "Transaction successful. You now have $quantity $type after sending $modifier $type to $wirename";
-				} else if ($poor == False) {
+				} else if ($poor == false) {
 					echo "Transaction failed: Target $_POST[target] does not exist.";
 				}
 				echo "<br/>";
@@ -114,39 +114,39 @@ if (empty($_SESSION['username'])) {
 		}
 		echo '</select><br/>Target username (other): <input id="target" name="target" type="text" /><br/> Type of grist: <select name="grist_type"> ';
 		$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;");
-		$reachgrist = False;
-		$terminateloop = False;
-		while (($col = $result2->fetch_field()) && $terminateloop == False) {
+		$reachgrist = false;
+		$terminateloop = false;
+		while (($col = $result2->fetch_field()) && $terminateloop == false) {
 			$gristtype = $col->name;
 			if ($gristtype == "Build_Grist") { //Reached the start of the grists.
-				$reachgrist = True;
+				$reachgrist = true;
 			}
 			if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
-				$reachgrist = False;
-				$terminateloop = True;
+				$reachgrist = false;
+				$terminateloop = true;
 			}
-			if ($reachgrist == True) {
+			if ($reachgrist == true) {
 				echo '<option value="' . $gristtype . '">' . $gristtype . '</option>'; //Produce an option in the dropdown menu for this grist.
 			}
 		}
-		$reachgrist = False; //Paranoia: Reset this just in case
+		$reachgrist = false; //Paranoia: Reset this just in case
 		echo '</select><br/>Amount to transfer: <input id="amount" name="amount" type="text" /><br/>Attach a message (optional):<br/><textarea name="body" rows="6" cols="40" form="wire"></textarea><br/><input type="submit" value="Wire it!" /> </form>';
 	}
 
 	$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1 ;");
 	echo "<div class='grister'>";
 	$rowcount = 1;
-	$terminateloop = False;
-	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+	$terminateloop = false;
+	while (($col = $result2->fetch_field()) && $terminateloop == false) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
-			$reachgrist = True;
+			$reachgrist = true;
 		}
 		if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
-			$reachgrist = False;
-			$terminateloop = True;
+			$reachgrist = false;
+			$terminateloop = true;
 		}
-		if (($reachgrist == True) && ($userrow[$gristtype] != 0)) { //Print grist, grist image, and grist total.
+		if (($reachgrist == true) && ($userrow[$gristtype] != 0)) { //Print grist, grist image, and grist total.
 			echo "<div class='grist $gristtype'>";
 			if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
 				echo '<center><img src="Images/Grist/' . $gristtype . '.gif " height="50" width="50"></img></center>' . $gristtype . ' - ';

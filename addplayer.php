@@ -13,8 +13,8 @@ require_once "includes/SQLconnect.php";
 $inactivetime = 1209600; //the amount of time a head admin has to log in before their session is considered "inactive"
 //this number amounts to 14 days; if set to 0, the script won't care how long it's been
 
-$playerclash = False;
-$sessionlogin = False;
+$playerclash = false;
+$sessionlogin = false;
 $_POST['username'] = str_replace(">", "", $_POST['username']); //this is why we can't have nice things
 $_POST['username'] = str_replace("<", "", $_POST['username']);
 $_POST['username'] = str_replace("'", "", $_POST['username']); //kill apostrophes while we're at it
@@ -29,7 +29,7 @@ else {
 		$randname[$allowsessions] = $row['name'];
 	}
 	if ($allowsessions == 0) { //if there aren't any
-		$playerclash = True;
+		$playerclash = true;
 		echo "Player entry failed: No sessions found that are allowing random entries at this time.";
 	} else {
 		$pickedsession = rand(1, $allowsessions);
@@ -63,16 +63,16 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
 	while ($row = $playerresult->fetch_array()) {
 		if ($_POST['username'] == $row['username']) { //Name clash: Player name is already taken.
 			echo "Player entry failed: Player with this name is already in the Medium.";
-			$playerclash = True;
+			$playerclash = true;
 		}
 	}
-	if ($playerclash == False) {
+	if ($playerclash == false) {
 		while ($row = $sessionresult->fetch_array()) {
 			if ($_POST['session'] == $row['name'] && ($_POST['sessionpw'] == $row['password'] || !empty($_POST['randomsession']))) {
-				$sessionlogin = True;
+				$sessionlogin = true;
 			}
 		}
-		if ($sessionlogin == True) {
+		if ($sessionlogin == true) {
 			$name = $mysqli->real_escape_string($_POST['username']);
 			$pw = password_hash($mysqli->real_escape_string($_POST['password']), PASSWORD_BCRYPT);
 			$session = $mysqli->real_escape_string($_POST['session']);
@@ -91,7 +91,7 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
 			$client = $mysqli->real_escape_string($_POST['client']);
 			$dreamer = $_POST['dreamer'];
 			$gristtype = $_POST['grist_type'];
-			$clientfound = False;
+			$clientfound = false;
 			$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '$session'");
 			$chumroll = 0;
 			while ($row = $sessionmates->fetch_array()) {
@@ -99,7 +99,7 @@ if ($_POST['username'] != "" && $_POST['password'] == $_POST['confirmpw']) {
 					$chumroll++;
 					if ($row['username'] == $client && $row['server_player'] == "") {
 						$clientrow = $row;
-						$clientfound = True; //Player exists in session and does not already have a server player
+						$clientfound = true; //Player exists in session and does not already have a server player
 					}
 				}
 			}

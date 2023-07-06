@@ -32,17 +32,17 @@ if (empty($_SESSION['username'])) {
 					echo 'Solo Fraymotif III: ' . $targetrow['solo3'] . '<br/>';
 					echo 'Boondollars: ' . $targetrow['Boondollars'] . '<br/>';
 					echo 'Encounters: ' . $targetrow['encounters'] . '<br/>';
-					$reachgrist = False;
+					$reachgrist = false;
 					$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 					while ($col = $result2->fetch_field()) {
 						$gristtype = $col->name;
 						if ($gristtype == "Build_Grist") { //Reached the start of the grists.
-							$reachgrist = True;
+							$reachgrist = true;
 						}
 						if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
-							$reachgrist = False;
+							$reachgrist = false;
 						}
-						if ($reachgrist == True) {
+						if ($reachgrist == true) {
 							echo $gristtype . ': ' . $targetrow[$gristtype] . '<br/>';
 						}
 					}
@@ -64,14 +64,14 @@ if (empty($_SESSION['username'])) {
 							$k = 1;
 							$itemsgiven = 0;
 							while ($k <= 50 && $itemsgiven < $quantity) {
-								$foundblank = False;
-								while ($foundblank == False) {
+								$foundblank = false;
+								while ($foundblank == false) {
 									if ($targetrow['inv' . $k] == "") {
-										$foundblank = True;
+										$foundblank = true;
 									} else {
 										$k++;
 										if ($k > 50) {
-											$foundblank = True;
+											$foundblank = true;
 										}
 									}
 								}
@@ -95,17 +95,17 @@ if (empty($_SESSION['username'])) {
 						if ($field == "Echeladder" && $amount + $targetrow['Echeladder'] < 1)
 							$amount = 1 - $targetrow['Echeladder'];
 						if ($field == "allgrists") {
-							$reachgrist = False;
+							$reachgrist = false;
 							$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 							while ($col = $result2->fetch_field()) {
 								$gristtype = $col->name;
 								if ($gristtype == "Build_Grist") { //Reached the start of the grists.
-									$reachgrist = True;
+									$reachgrist = true;
 								}
 								if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
-									$reachgrist = False;
+									$reachgrist = false;
 								}
-								if ($reachgrist == True) {
+								if ($reachgrist == true) {
 									$mysqli->query("UPDATE Players SET `$gristtype` = " . strval($targetrow[$gristtype] + $amount) . " WHERE `Players`.`username` = '" . $_POST['user'] . "' LIMIT 1;");
 								}
 							}
@@ -139,11 +139,11 @@ if (empty($_SESSION['username'])) {
 						$sendrow = $sendresult->fetch_array();
 						$check = 1;
 						$max_inbox = 50;
-						$foundempty = False;
-						while ($check <= $max_inbox && $foundempty == False) { //make sure there's a free spot in recipient's inbox
+						$foundempty = false;
+						while ($check <= $max_inbox && $foundempty == false) { //make sure there's a free spot in recipient's inbox
 							if ($sendrow['msg' . strval($check)] == "")
-								$foundempty = True;
-							if ($foundempty == False)
+								$foundempty = true;
+							if ($foundempty == false)
 								$check++;
 						}
 						if ($foundempty) {
@@ -168,17 +168,17 @@ if (empty($_SESSION['username'])) {
 		echo '<option value="encounters">Encounters</option>';
 		echo '<option value="Echeladder">Echeladder rungs</option>';
 		echo '<option value="abstrati">Strife abstrati</option>';
-		$reachgrist = False;
+		$reachgrist = false;
 		$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 		while ($col = $result2->fetch_field()) {
 			$gristtype = $col->name;
 			if ($gristtype == "Build_Grist") { //Reached the start of the grists.
-				$reachgrist = True;
+				$reachgrist = true;
 			}
 			if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
-				$reachgrist = False;
+				$reachgrist = false;
 			}
-			if ($reachgrist == True) {
+			if ($reachgrist == true) {
 				echo '<option value="' . $gristtype . '">' . $gristtype . '</option>'; //Produce an option in the dropdown menu for this grist.
 			}
 		}

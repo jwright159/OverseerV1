@@ -5,20 +5,20 @@ require_once "header.php";
 function initGrists()
 {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
-	$reachgrist = False;
-	$terminateloop = False;
+	$reachgrist = false;
+	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+	while (($col = $result2->fetch_field()) && $terminateloop == false) {
 		$gristcost = $col->name;
 		$gristtype = substr($gristcost, 0, -5);
 		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-			$reachgrist = True;
+			$reachgrist = true;
 		}
 		if ($gristcost == "End_of_Grists") { //Reached the end of the grists.
-			$reachgrist = False;
-			$terminateloop = True;
+			$reachgrist = false;
+			$terminateloop = true;
 		}
-		if ($reachgrist == True) {
+		if ($reachgrist == true) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -44,11 +44,11 @@ if (empty($_SESSION['username'])) {
 	echo "You have been banned from using the Randomizer, most likely due to abuse or spam.<br/>";
 } else {
 
-	$showdetails = False;
-	$dontshowitems = False;
+	$showdetails = false;
+	$dontshowitems = false;
 	$urladdon = "?";
 	if (empty($_GET['detail']) || $_GET['detail'] != "no") {
-		$showdetails = True;
+		$showdetails = true;
 		$urladdon .= "detail=yes";
 	}
 
@@ -85,25 +85,25 @@ if (empty($_SESSION['username'])) {
 			$newother = $newother . ")";
 		} else
 			$newpower = intval($_POST['power']);
-		$aok = True;
+		$aok = true;
 		if ($newpower > 9999) {
 			echo "Submission error: new item's power level cannot exceed 9999. Use additional comments to convey combat bonuses or uncertainty<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if ($newitem == "") {
 			echo "Submission error: please give this item a name<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if ($newdesc == "") {
 			echo "Submission error: please give this item a description, it can be as vague or as short as you want as long as we can tell what it is<br/>";
-			$aok = False;
+			$aok = false;
 		}
 		if (strlen($newcode) == 8) {
 			$existresult = $mysqli->query("SELECT `captchalogue_code`,`name` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $newcode . "' LIMIT 1;");
 			$existrow = $existresult->fetch_array();
 			if ($existrow['captchalogue_code'] == $newcode) {
 				echo "Submission error: the code you gave refers to an item that already exists. Make sure you've given the correct code.<br/>";
-				$aok = False;
+				$aok = false;
 			} elseif ($challenge == 1 && strrpos($sessionrow['atheneum'], $newcode) === false) {
 				echo "Some people think they can outsmart me... maybe. *sniff* maybe. I have yet to meet someone who can outsmart hardcoding.<br/>";
 				$aok = false;
@@ -165,10 +165,10 @@ if (empty($_SESSION['username'])) {
 					$totalaotw++;
 			}
 		}
-		$makecombo = True;
+		$makecombo = true;
 		$attempts = 0;
-		while ($makecombo == True && $attempts < 100) {
-			$makecombo = False;
+		while ($makecombo == true && $attempts < 100) {
+			$makecombo = false;
 			$attempts++;
 			if (empty($_GET['userabstratus'])) {
 				$item1 = rand(1, $totalitems);
@@ -223,12 +223,12 @@ if (empty($_SESSION['username'])) {
 			$itemresult = $mysqli->query("SELECT `captchalogue_code` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $codeand . "'");
 			while ($itemrow = $itemresult->fetch_array()) {
 				if ($itemrow['captchalogue_code'] == $codeand)
-					$makecombo = True; //and if it does, re-shuffle
+					$makecombo = true; //and if it does, re-shuffle
 			}
 			$itemresult = $mysqli->query("SELECT `captchalogue_code` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $codeor . "'");
 			while ($itemrow = $itemresult->fetch_array()) {
 				if ($itemrow['captchalogue_code'] == $codeor)
-					$makecombo = True;
+					$makecombo = true;
 			}
 		}
 	} else {
@@ -243,7 +243,7 @@ if (empty($_SESSION['username'])) {
 		}
 		if ($totalitems < 3) {
 			echo "You don't have enough items for randomly choosing between them to make a difference.<br/>";
-			$dontshowitems = True;
+			$dontshowitems = true;
 		} else {
 			$item1 = 0;
 			$item2 = 0;
@@ -265,9 +265,9 @@ if (empty($_SESSION['username'])) {
 					$k++;
 				}
 			}
-			$makecombo = True;
-			while ($makecombo == True) {
-				$makecombo = False;
+			$makecombo = true;
+			while ($makecombo == true) {
+				$makecombo = false;
 				$truename1 = str_replace("'", "\\\\''", $userrow['inv' . $item1]);
 				$itemresult1 = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $truename1 . "' LIMIT 1 ;");
 				$irow1 = $itemresult1->fetch_array();
@@ -279,18 +279,18 @@ if (empty($_SESSION['username'])) {
 				$itemresult = $mysqli->query("SELECT `captchalogue_code` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $codeand . "'");
 				while ($itemrow = $itemresult->fetch_array()) {
 					if ($itemrow['captchalogue_code'] == $codeand)
-						$makecombo = True; //and if it does, re-shuffle
+						$makecombo = true; //and if it does, re-shuffle
 				}
 				$itemresult = $mysqli->query("SELECT `captchalogue_code` FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $codeor . "'");
 				while ($itemrow = $itemresult->fetch_array()) {
 					if ($itemrow['captchalogue_code'] == $codeor)
-						$makecombo = True;
+						$makecombo = true;
 				}
 			}
 		}
 	}
 
-	if ($dontshowitems == False) {
+	if ($dontshowitems == false) {
 		$irow1['name'] = str_replace("\\'", "'", $irow1['name']);
 		$irow2['name'] = str_replace("\\'", "'", $irow2['name']);
 		echo 'Your random items are: <br/>';

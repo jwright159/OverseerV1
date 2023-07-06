@@ -158,37 +158,37 @@ if (empty($_SESSION['username'])) {
 			echo "Your focus: $userrow[sessionbossfocus]%<br/>";
 			echo $userrow[$descstr] . "<br/>";
 			//This section stores the messages that appear when an enemy has a status effect. DATA SECTION: Status messages.
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "TIMESTOP|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "TIMESTOP|")) !== false) {
 				echo "Frozen in Time: This enemy will not act this round.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "WATERYGEL|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "WATERYGEL|")) !== false) {
 				echo "Watery Health Gel: This enemy's Health Vial is easier to dislodge with basic attacks<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "SHRUNK|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "SHRUNK|")) !== false) {
 				echo "Shrunk: This enemy is at least twice as adorable as it was.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "UNLUCKY|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "UNLUCKY|")) !== false) {
 				echo "Unlucky: Bad things keep happening!<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "HOPELESS|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "HOPELESS|")) !== false) {
 				echo "Hopeless: This enemy does not believe in itself.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "DISORIENTED")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "DISORIENTED")) !== false) {
 				echo "Disoriented: This enemy is disoriented and will miss a player next round.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "DISTRACTED|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "DISTRACTED|")) !== false) {
 				echo "Distracted: This enemy is distracted and cannot focus as effectively.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "ENRAGED|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "ENRAGED|")) !== false) {
 				echo "Enraged: This enemy is not paying sufficient attention to defending itself.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "MELLOW|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "MELLOW|")) !== false) {
 				echo "Mellowed Out: Whoa...this dude's, like...totally peaced out, man. He thinks attacking is, like, totally lame and won't hit as hard.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "KNOCKDOWN|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "KNOCKDOWN|")) !== false) {
 				echo "Knocked Over: This enemy will need to spend a turn getting back up.<br/>";
 			}
-			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "GLITCHED|")) !== False) {
+			if (strpos($sessionrow['sessionbossstatus'], ($statustr . "GLITCHED|")) !== false) {
 				$glitchstr = generateGlitchString();
 				echo "Glitched Out: This enemy $glitchstr<br/>";
 			}
@@ -263,7 +263,7 @@ if (empty($_SESSION['username'])) {
 			echo "<br/>Defense penalty of $userrow[tempdefenseboost]: $userrow[tempdefenseduration] rounds.";
 	}
 	//This is where we print messages for the player's more abnormal status effects.
-	if (strpos($sessionrow['sessionbossstatus'], "PLAYER:NOCAP|") !== False) {
+	if (strpos($sessionrow['sessionbossstatus'], "PLAYER:NOCAP|") !== false) {
 		echo "No damage cap: The damage you take from a single enemy is not currently capped.<br/>";
 	}
 	if ($userrow['equipped'] != "") {

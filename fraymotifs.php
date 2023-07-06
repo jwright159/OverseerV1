@@ -74,16 +74,16 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	//NOTE - The below stack of switch statements is effectively where fraymotif effect is stored for lookup.
 	if (!empty($_POST['usemotif'])) {
 		$usagestr = "";
-		$fail = False;
+		$fail = false;
 		if ($userrow['fraymotifuses'] == 0) { //User is out of fraymotifs
 			echo "You have no more fraymotif uses left!<br/>";
-			$fail = True;
+			$fail = true;
 		} elseif ($userrow[$_POST['usemotif']] == 0) { //HAAAAAX!
 			echo "Niice try, iidiiot.<br/>";
-			$fail = True;
+			$fail = true;
 		} elseif ($userrow['combatmotifuses'] == 0) {
 			echo "Okay, I'm sure you thought getting into a fight and waiting a day for all your fraymotifs to come back DURING that fight was clever. And it kind of was. Unfortunately, it's also a stupid tactic to need to balance around so you're not allowed to do it.<br/>";
-			$fail = True;
+			$fail = true;
 		} else {
 			//Check for enemy flags and stuff here. The first two arrays are used to store the new values for health/power resulting from a fraymotif.
 			$monsterpowers = array(1 => $userrow['enemy1power'], $userrow['enemy2power'], $userrow['enemy3power'], $userrow['enemy4power'], $userrow['enemy5power']);
@@ -281,7 +281,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 							break;
 						default:
 							echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-							$fail = True;
+							$fail = true;
 							break;
 					}
 					break;
@@ -526,7 +526,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 							break;
 						default:
 							echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-							$fail = True;
+							$fail = true;
 							break;
 					}
 					break;
@@ -552,7 +552,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Heart":
@@ -561,7 +561,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Life":
@@ -580,7 +580,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Hope":
@@ -599,7 +599,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Light":
@@ -608,7 +608,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Mind":
@@ -627,7 +627,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Blood":
@@ -636,7 +636,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Doom":
@@ -658,7 +658,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Rage":
@@ -677,7 +677,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Void":
@@ -696,7 +696,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Space":
@@ -715,7 +715,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						case "Time":
@@ -737,17 +737,17 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 								$mysqli->query("UPDATE `Players` SET `motifcounter` = 1, `motifvar` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							} else {
 								echo "A battle theme is already playing!<br/>";
-								$fail = True;
+								$fail = true;
 							}
 							break;
 						default:
 							echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-							$fail = True;
+							$fail = true;
 							break;
 					}
 					break;
 				default:
-					$combo = False; //We look for an assister who can perform the combomotif
+					$combo = false; //We look for an assister who can perform the combomotif
 					$sessionmates = $mysqli->query("SELECT * FROM Players WHERE `Players`.`session_name` = '" . $userrow['session_name'] . "'");
 					while ($row = $sessionmates->fetch_array()) {
 						if ($row['aiding'] == $username) { //Aiding character.
@@ -755,12 +755,12 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 							if ($useraspect == "Blood")
 								$useraspect = "Blood(motif)";
 							if ($row['Aspect'] == $motif && $row[$useraspect] == 1)
-								$combo = True; //Applicable player found.
+								$combo = true; //Applicable player found.
 						}
 					}
-					if ($combo == False) { //No assisting player with the correct aspect and fraymotif
+					if ($combo == false) { //No assisting player with the correct aspect and fraymotif
 						echo "You are not being assisted by any player able to help you perform this fraymotif!<br/>";
-						$fail = True;
+						$fail = true;
 					} else { //Gogogo!
 						switch ($motif) { //We're using a combo motif. Grab the non-player part of the combo.
 							case "Breath":
@@ -791,7 +791,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -823,7 +823,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -855,7 +855,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -887,7 +887,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -919,7 +919,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -951,7 +951,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -983,7 +983,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -1015,7 +1015,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -1047,7 +1047,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -1079,7 +1079,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -1111,7 +1111,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
@@ -1143,20 +1143,20 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 										break;
 									default:
 										echo "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.";
-										$fail = True;
+										$fail = true;
 										break;
 								}
 								break;
 							default:
 								echo "Aspect $motif unrecognized. This is probably a bug.";
-								$fail = True;
+								$fail = true;
 								break;
 						}
 					}
 					break;
 			}
 		}
-		if ($fail == False) {
+		if ($fail == false) {
 			$userrow['fraymotifuses'] -= 1;
 			$userrow['combatmotifuses'] -= 1;
 			$mysqli->query("UPDATE `Players` SET `fraymotifuses` = " . $userrow['fraymotifuses'] . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");

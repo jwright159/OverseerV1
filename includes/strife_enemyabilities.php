@@ -93,7 +93,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			if ($playerdamage > ($userrow['Gel_Viscosity'] / 6))
 				$playerdamage = floor(($userrow['Gel_Viscosity'] / 6) - 1); //Massive damage safety net.
 			if ($playerdamage != 0)
-				$nodamage = False;
+				$nodamage = false;
 			if ($userrow['invulnerability'] == 0)
 				$damage += aspectDamage($resistances, "Blood", $playerdamage, 4);
 			break;
@@ -149,13 +149,13 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$damage = $damage + (350 * $roll);
 			}
 			break;
-		case "True Hekatonchire":
+		case "true Hekatonchire":
 			$difrow = refreshSingular($i, $i, $userrow); //pull the row from the database so we can tell just how much damage was done to it this round
 			$difference = $difrow[$healthstr] - $userrow[$healthstr];
 			if ($difference > 0) {
 				$roll = rand(0, rand(0, 49));
 				if ($roll > 0) {
-					$message = $message . "The True Hekatonchire forms a defensive wall using " . strval($roll) . " of its arms, blocking some of the damage!<br/>";
+					$message = $message . "The true Hekatonchire forms a defensive wall using " . strval($roll) . " of its arms, blocking some of the damage!<br/>";
 					$blocked = $roll * 35;
 					if ($blocked > $difference)
 						$blocked = $difference;
@@ -166,13 +166,13 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			if ($roll > 0) {
 				if ($userrow['invulnerability'] == 0) {
 					if ($roll == 1) {
-						$message = $message . "The True Hekatonchire lashes out at you with 1 additional arm!<br/>";
+						$message = $message . "The true Hekatonchire lashes out at you with 1 additional arm!<br/>";
 					} else {
-						$message = $message . "The True Hekatonchire lashes out at you with " . strval($roll) . " additional arms!<br/>";
+						$message = $message . "The true Hekatonchire lashes out at you with " . strval($roll) . " additional arms!<br/>";
 					}
 					$damage = $damage + (35 * $roll); //this can add up quickly
 				} else {
-					echo "Noticing you are now impervious to damage, the True Hekatonchire decides to pick you up and toss you out of the room instead.<br/>";
+					echo "Noticing you are now impervious to damage, the true Hekatonchire decides to pick you up and toss you out of the room instead.<br/>";
 					//player is forcibly ejected from strife as if they absconded lolol
 					$userrow = terminateStrife($userrow, 2);
 					if ($userrow['dungeonstrife'] == 2) { //User strifing in a dungeon
@@ -342,7 +342,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$material = rand(1, 9); //NOTE - Only affects health of summon. Does not affect power.
 					$griststring = "grist" . strval($material);
 					$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
-					$slot = generateEnemy($userrow, $landrow['grist_type'], $summongristrow[$griststring], "Lich", False);
+					$slot = generateEnemy($userrow, $landrow['grist_type'], $summongristrow[$griststring], "Lich", false);
 					if ($slot != -1) { //Success
 						$userrow = refreshSingular($slot, $slot, $userrow);
 						$currentstatus = $userrow['strifestatus']; //necessary because of spawnstatus
@@ -407,7 +407,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				$material = rand(1, 9); //NOTE - Only affects health of summon. Does not affect power.
 				$griststring = "grist" . strval($material);
 				$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
-				$slot = generateEnemy($userrow, $landrow['grist_type'], $summongristrow[$griststring], $roboname, False);
+				$slot = generateEnemy($userrow, $landrow['grist_type'], $summongristrow[$griststring], $roboname, false);
 				if ($slot != -1) { //Success
 					$userrow = refreshSingular($slot, $slot, $userrow);
 					$currentstatus = $userrow['strifestatus']; //necessary because of spawnstatus
@@ -531,7 +531,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 					$message = $message . "The Necromancer raises some skeletal minions!<br/>";
 				while ($quantity > 0) {
 					$userrow['strifestatus'] = $currentstatus; //necessary because of spawnstatus
-					$slot = generateEnemy($userrow, "None", "None", "Skeletal Consort", False);
+					$slot = generateEnemy($userrow, "None", "None", "Skeletal Consort", false);
 					if ($slot != -1) { //Success
 						$userrow = refreshSingular($slot, $slot, $userrow);
 						$currentstatus = $userrow['strifestatus'];

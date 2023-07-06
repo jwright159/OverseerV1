@@ -11,20 +11,20 @@ $max_items = 50;
 function initGrists()
 {
 	$result2 = $mysqli->query("SELECT * FROM `Captchalogue` LIMIT 1;"); //document grist types now so we don't have to do it later
-	$reachgrist = False;
-	$terminateloop = False;
+	$reachgrist = false;
+	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == False) {
+	while (($col = $result2->fetch_field()) && $terminateloop == false) {
 		$gristcost = $col->name;
 		$gristtype = substr($gristcost, 0, -5);
 		if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-			$reachgrist = True;
+			$reachgrist = true;
 		}
 		if ($gristcost == "End_Of_Grists") { //Reached the end of the grists.
-			$reachgrist = False;
-			$terminateloop = True;
+			$reachgrist = false;
+			$terminateloop = true;
 		}
-		if ($reachgrist == True) {
+		if ($reachgrist == true) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -171,7 +171,7 @@ if (empty($_SESSION['username'])) {
 
 	if (!empty($_GET['holocode'])) { //User is using the holopad.
 		$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_GET['holocode'] . "'");
-		$itemfound = False;
+		$itemfound = false;
 		while ($itemrow = $itemresult->fetch_array()) {
 			if ($itemrow['captchalogue_code'] == $_GET['holocode']) {
 				if (!strrpos($sessionrow['atheneum'], $_GET['holocode'])) {
@@ -182,8 +182,8 @@ if (empty($_SESSION['username'])) {
 						echo "The code you are previewing has not yet been discovered by your session. You can view it, but you have to either combine the items to make it or physically acquire the item another way to add it to your atheneum.<br/>";
 					}
 				}
-				$itemfound = True;
-				$nothing = True;
+				$itemfound = true;
+				$nothing = true;
 				$itemname = $itemrow['name'];
 				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 				if ($itemrow['art'] != "")
@@ -194,8 +194,8 @@ if (empty($_SESSION['username'])) {
 					echo "The holopad displays the $itemname. It also prints out a short description:<br/>";
 				$desc = descvarConvert($userrow, $itemrow['description'], $itemrow['effects']);
 				echo $desc . "<br/>" . "The inputted holocode is repeated: <span style='color:#F3C; font-size:30px; font-weight:bold;'>" . $_GET['holocode'] . "</span><br/>" . "It costs ";
-				$reachgrist = False;
-				$terminateloop = False; //time-saver
+				$reachgrist = false;
+				$terminateloop = false; //time-saver
 				if ($gristed == false) {
 					$gristname = initGrists();
 					$totalgrists = count($gristname);
@@ -206,7 +206,7 @@ if (empty($_SESSION['username'])) {
 					$gristtype = $gristname[$gristcount];
 					$gristcost = $gristtype . "_Cost";
 					if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-						$nothing = False; //Item costs something.
+						$nothing = false; //Item costs something.
 						echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
 						if ($userrow[$gristtype] >= $itemrow[$gristcost]) {
 							echo " <gristvalue2>$itemrow[$gristcost] </gristvalue2>";
@@ -264,9 +264,9 @@ if (empty($_SESSION['username'])) {
 				$recipetext = "&newrecipe=" . $itemrow1['name'] . "%20%26%26%20" . $itemrow2['name'];
 		} else
 			$recipetext = "";
-		if ($itemfound == False)
+		if ($itemfound == false)
 			echo 'The holopad informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php?type=item&newcode=' . $_GET['holocode'] . $recipetext . '">Suggest this item!</a><br/>';
-		if ($itemfound == True)
+		if ($itemfound == true)
 			echo "<br/>";
 		if ($challenge == 1 && $combined) { //go ahead and add to the atheneum anyway so that the player can suggest the item if they want
 			if (!strrpos($sessionrow['atheneum'], $_GET['holocode'])) {
@@ -313,7 +313,7 @@ if (empty($_SESSION['username'])) {
 			$n = 1;
 			if (empty($_POST['autostore']) && $userrow['sessionbossengaged'] == 0) {
 				$freespots = 0;
-				$notenoughspots = False;
+				$notenoughspots = false;
 				while ($n <= 50) { //find out how many free spots are available in the user's inventory
 					$invstr = "inv" . $n;
 					if ($userrow[$invstr] == '')
@@ -323,7 +323,7 @@ if (empty($_SESSION['username'])) {
 				if ($freespots < $numberalched) { //if the user tried to make more items than they could fit, set the actual number of items made to the amount of slots they have
 					$tostorage = $numberalched - $freespots; //send the rest to storage
 					$numberalched = $freespots;
-					$notenoughspots = True;
+					$notenoughspots = true;
 				}
 			} else {
 				if ($userrow['sessionbossengaged'] != 0)
@@ -332,11 +332,11 @@ if (empty($_SESSION['username'])) {
 				$numberalched = 0;
 			}
 			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['alchcode'] . "'");
-			$itemfound = False;
-			$canafford = True;
-			$nothing = True;
-			$reachgrist = False;
-			$terminateloop = False;
+			$itemfound = false;
+			$canafford = true;
+			$nothing = true;
+			$reachgrist = false;
+			$terminateloop = false;
 			$itemrow = $itemresult->fetch_array();
 			if ($itemrow['captchalogue_code'] == $_POST['alchcode']) {
 				if (itemSize($itemrow['size']) > itemSize($userrow['moduspower'])) { //item is too big for the player's fetch modus
@@ -344,7 +344,7 @@ if (empty($_SESSION['username'])) {
 					$numberalched = 0;
 					$freespots = 0;
 				}
-				$itemfound = True;
+				$itemfound = true;
 				$alchrow = $itemrow; //for use later
 				echo "The item costs ";
 				if (!$gristed) {
@@ -359,9 +359,9 @@ if (empty($_SESSION['username'])) {
 					//echo $gristtype . " " . $gristcost;
 					//echo strval($itemrow[$gristcost]);
 					if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-						$nothing = False; //Item costs something.
+						$nothing = false; //Item costs something.
 						if ($userrow[$gristtype] < $itemrow[$gristcost] * ($numberalched + $tostorage)) { //Player cannot afford to alchemize this item.
-							$canafford = False;
+							$canafford = false;
 						}
 						echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
 						if ($userrow[$gristtype] >= $itemrow[$gristcost]) {
@@ -390,7 +390,7 @@ if (empty($_SESSION['username'])) {
 					echo " <gristvalue2>0 </gristvalue2>";
 				}
 			}
-			if ($itemfound == True && $canafford == True) { //Player successfully creates item.
+			if ($itemfound == true && $canafford == true) { //Player successfully creates item.
 				$n = 0; //0 instead of 1 so that it'll give a failure return and print the standard "no room" code if there's no room for even 1 of them
 				while ($n < $numberalched) { //earlier code should prevent making the item if not enough space for it
 					$itemslot = addItem($itemrow['name'], $userrow); //We need to use this result later.
@@ -487,14 +487,14 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 			}
-			if ($itemfound == True && $canafford == False) {
+			if ($itemfound == true && $canafford == false) {
 				if ($numberalched == 1) {
 					echo "<br/>You cannot afford to make this item, whatever it is.<br/>";
 				} else {
 					echo "<br/>You cannot afford to make that many copies of this item, whatever it is.<br/>";
 				}
 			}
-			if ($itemfound == False)
+			if ($itemfound == false)
 				echo 'The alchemiter informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php?type=item&newcode=' . $_POST['alchcode'] . '">Suggest this item!</a><br/>';
 		} else
 			echo "The code you have inputted is not in your Atheneum yet. In Challenge Mode, you must acquire a code before an item can be made with it.<br/>";
@@ -526,14 +526,14 @@ if (empty($_SESSION['username'])) {
 					//echo $itemname;
 				}
 				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-				$nothing = True;
-				$success = False; //this is needed in case the item is a ghost item
+				$nothing = true;
+				$success = false; //this is needed in case the item is a ghost item
 				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					if ($itemname == $userrow[$_POST[$invstring]] || $isghost) {
 						$recycled[$invstring] = true; //For use later.
-						$success = True;
+						$success = true;
 						$deploytag = specialArray($itemrow['effects'], "DEPLOYABLE");
 						if ($deploytag[0] != "DEPLOYABLE") {
 							echo "You recycle your $itemname into ";
@@ -551,7 +551,7 @@ if (empty($_SESSION['username'])) {
 									$gristtype = $gristname[$gristcount];
 									$gristcost = $gristtype . "_Cost";
 									if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-										$nothing = False; //Item costs something.
+										$nothing = false; //Item costs something.
 										$refundquery = $refundquery . "`$gristtype` = $userrow[$gristtype]+$itemrow[$gristcost], ";
 										$userrow[$gristtype] += $itemrow[$gristcost];
 										echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
@@ -589,7 +589,7 @@ if (empty($_SESSION['username'])) {
 						}
 					}
 				}
-				if ($success == False) {
+				if ($success == false) {
 					if ($userrow[$_POST[$invstring]] != "") {
 						$mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 						echo "It seems that the item you tried to recycle (" . $userrow[$_POST[$invstring]] . ") no longer exists, or never existed to begin with. You get no grist, but the item has been removed from your inventory, freeing the slot. If you alchemized that item legitimately, please submit a bug report and we'll return your grist ASAP!";

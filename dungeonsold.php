@@ -2,7 +2,7 @@
 require 'monstermaker.php';
 require 'additem.php';
 require_once "header.php";
-$canusespecibus = True;
+$canusespecibus = true;
 function roomlink($roomarray, $newrow, $newcol, $oldrow, $oldcol)
 {
 	$newentry = strval($newrow) . "," . strval($newcol);
@@ -11,10 +11,10 @@ function roomlink($roomarray, $newrow, $newcol, $oldrow, $oldcol)
 		$roomarray[$newentry] = "LINK:" . $oldentry;
 	} else {
 		$linkstr = "LINK:" . $oldentry;
-		/*if (strpos($roomarray[$newentry],$linkstr) !== False)*/$roomarray[$newentry] = $linkstr . "|" . $roomarray[$newentry]; //Don't perform link if already linked. (that check bugs out!)
+		/*if (strpos($roomarray[$newentry],$linkstr) !== false)*/$roomarray[$newentry] = $linkstr . "|" . $roomarray[$newentry]; //Don't perform link if already linked. (that check bugs out!)
 	}
 	$linkstr = "LINK:" . $newentry;
-	/*if (strpos($roomarray[$oldentry],$linkstr) !== False)*/$roomarray[$oldentry] = $linkstr . "|" . $roomarray[$oldentry];
+	/*if (strpos($roomarray[$oldentry],$linkstr) !== false)*/$roomarray[$oldentry] = $linkstr . "|" . $roomarray[$oldentry];
 	return $roomarray;
 }
 //Some notes on the arguments of these functions: $distance is how far "into" the dungeon the room is. $gate is the gate number (1, 3, 5). $land is the Land the dungeon is located on.
@@ -45,7 +45,7 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 				$max = 9999999999999999999999999; //Pick first item. This is a bugged result anyway.
 				break;
 		}
-		$selected = False;
+		$selected = false;
 		if ($lootonly) {
 			$itemsresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE `Captchalogue`.`lootonly` = 1");
 		} else {
@@ -68,24 +68,24 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 			$itemrow = $itemresult->fetch_array();
 			$itemname = $itemrow['name'];
 			$total = 0;
-			$reachgrist = False;
-			$terminateloop = False;
+			$reachgrist = false;
+			$terminateloop = false;
 			$colresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '00000000'"); //Just need the fields anyway.
-			while (($col = $colresult->fetch_field()) && $terminateloop == False) {
+			while (($col = $colresult->fetch_field()) && $terminateloop == false) {
 				$gristcost = $col->name;
 				$gristtype = substr($gristcost, 0, -5);
 				if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-					$reachgrist = True;
+					$reachgrist = true;
 				}
 				if ($gristcost == "End_of_Grists") { //Reached the end of the grists.
-					$reachgrist = False;
-					$terminateloop = True;
+					$reachgrist = false;
+					$terminateloop = true;
 				}
-				if ($reachgrist == True && $itemrow[$gristcost] != 0)
+				if ($reachgrist == true && $itemrow[$gristcost] != 0)
 					$total += $itemrow[$gristcost]; //Item requires some of this grist. Or produces some. Either way, add the amount to the total.
 			}
 			if ($total >= $min && $total <= $max) { //Item has an acceptable grist cost.
-				$selected = True;
+				$selected = true;
 				$roomarray[$entry] = $roomarray[$entry] . "|LOOT|ITEM:" . $itemname;
 			} else {
 				if ($loopies < -8) { //We've looped more times than there are possible items. An item has clearly not been found! Relax the constraints. We will recheck the current item again after this.
@@ -122,7 +122,7 @@ function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $
 				$boss = "The Bug";
 				break;
 		}
-		$roomarray[$square] = $roomarray[$square] . "|ENTRANCE|ENCOUNTER|BOSS:True|ENEMY1:" . $boss;
+		$roomarray[$square] = $roomarray[$square] . "|ENTRANCE|ENCOUNTER|BOSS:true|ENEMY1:" . $boss;
 	} else {
 		if ($enemies < 1)
 			$enemies = 1; //Paranoia - At least one enemy.
@@ -239,7 +239,7 @@ if (empty($_SESSION['username'])) {
 			$playertile = strval($dungeonrow['dungeonrow']) . "," . strval($dungeonrow['dungeoncol']);
 			$dungeonresult = $mysqli->query("SELECT `$playertile` FROM `Dungeons` WHERE `Dungeons`.`username` = '$username' LIMIT 1;");
 			$dungeonrow = $dungeonresult->fetch_array();
-			if (strpos($dungeonrow[$playertile], "ENTRANCE") !== False) {
+			if (strpos($dungeonrow[$playertile], "ENTRANCE") !== false) {
 				$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 				$userrow['indungeon'] = 0;
 			} else {
@@ -259,8 +259,8 @@ if (empty($_SESSION['username'])) {
 			$gateresult = $mysqli->query("SELECT * FROM Gates");
 			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 			$currentrow = $userrow;
-			$done = False;
-			$access = False;
+			$done = false;
+			$access = false;
 			while (!$done) { //Note that we break out of everything once access is set, since it sets $done to be true down there.
 				$gates = 0;
 				$i = 1;
@@ -270,7 +270,7 @@ if (empty($_SESSION['username'])) {
 						if ($_POST['newdungeon'] == $currentrow['username'] . ":" . strval($i)) {
 							$gate = $i; //May as well set this here.
 							$land = $currentrow['username'];
-							$access = True;
+							$access = true;
 						}
 						$gates++;
 					} else {
@@ -282,19 +282,19 @@ if (empty($_SESSION['username'])) {
 					$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
 					$currentrow = $currentresult->fetch_array();
 					if ($currentrow['house_build_grist'] < $gaterow["gate2"])
-						$done = True; //This house is unreachable. Chain is broken here.
+						$done = true; //This house is unreachable. Chain is broken here.
 				} else { //Player has no server, gates go nowhere. This is not canonical behaviour, but canonical behaviour is impossible since it relies on prediction. Alternatively, loop is complete.
 					//Note that if gate 1 has not been reached, then gate 2 wasn't either and the Land was never accessed in the first place! ($access being true also cancels out here)
-					$done = True; //No further steps.
+					$done = true; //No further steps.
 				}
 			}
 			if (strpos($userrow['storeditems'], "GLITCHGATE.") !== false)
 				$access = true; //always admit the player if they have the glitch gate (hey, it's bugged anyway)
-			//Finish checking input here. $access must be True for success
+			//Finish checking input here. $access must be true for success
 			if ($access) {
 				$mysqli->query("UPDATE `Players` SET `encounters` = $userrow[encounters]-3 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 				$mysqli->query("UPDATE `Players` SET `encountersspent` = $userrow[encountersspent]+3 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-				$dungeongen = True;
+				$dungeongen = true;
 				$mysqli->query("DELETE FROM `Dungeons` WHERE `Dungeons`.`username` = '$username' LIMIT 1;"); //Wipe the dungeon row.
 				$mysqli->query("INSERT INTO `Dungeons` (`username`) VALUES ('$username');");
 				//Remake it, but empty. Note that this means a dungeon row will appear if the user has never entered a dungeon before.
@@ -309,20 +309,20 @@ if (empty($_SESSION['username'])) {
 				$east = 2;
 				$south = 3;
 				$west = 4;
-				$possibilities = array($north => False, False, False, False); //North, East, South, West, checking in clockwise direction.
+				$possibilities = array($north => false, false, false, false); //North, East, South, West, checking in clockwise direction.
 				while ($i <= 4) {
-					$possibilities[rand(1, 4)] = True; //1 in 64 chance of single arm, 6 in 64 for four arms. Probabilities for 2 and 3 are similar, exact values not important. 
+					$possibilities[rand(1, 4)] = true; //1 in 64 chance of single arm, 6 in 64 for four arms. Probabilities for 2 and 3 are similar, exact values not important. 
 					$i++;
 				}
 				//Paranoia: Handle all border cases so that arms never appear going off the playing area. (Entrance should never be on the edge though)
 				if ($entryrow == 1)
-					$possibilities[$south] = False;
+					$possibilities[$south] = false;
 				if ($entryrow == 10)
-					$possibilities[$north] = False;
+					$possibilities[$north] = false;
 				if ($entrycol == 1)
-					$possibilities[$west] = False;
+					$possibilities[$west] = false;
 				if ($entrycol == 10)
-					$possibilities[$east] = False;
+					$possibilities[$east] = false;
 				$i = $north; //Start at north
 				$armlength = array($north => 0, 0, 0, 0); //Track this so we can put proportionate rewards down: the longer the path, the better the loot and the tougher the monsters!
 				$furthestroom = array($north => "0,0", "0,0", "0,0", "0,0"); //This stores the room at the end of each "arm" with rooms. The boss room is placed adjacent to the one with the most distance.
@@ -358,7 +358,7 @@ if (empty($_SESSION['username'])) {
 								$randomrow = rand(1, 10);
 								$randomcol = rand(1, 10);
 								$randomsquare = strval($randomrow) . "," . strval($randomcol);
-								while (strpos($roomarray[$randomsquare], "ENTRANCE") !== False) { //Keep re-selecting if we hit the entrance. 1% chance per loop
+								while (strpos($roomarray[$randomsquare], "ENTRANCE") !== false) { //Keep re-selecting if we hit the entrance. 1% chance per loop
 									$randomrow = rand(1, 10);
 									$randomcol = rand(1, 10);
 									$randomsquare = strval($randomrow) . "," . strval($randomcol);
@@ -401,21 +401,21 @@ if (empty($_SESSION['username'])) {
 									$continue = 0;
 								} else {
 									$newthing = strval($newrow) . "," . strval($newcol);
-									$wasempty = False;
+									$wasempty = false;
 									if (!empty($roomarray[$newthing])) {
 										$continue = 0; //Room already exists: Terminate branch, but still link the two targets.
 									} else { //Room does not already exist: Check for adding enemies and phat lootz
-										$wasempty = True;
+										$wasempty = true;
 									}
 									$roomarray = roomlink($roomarray, $newrow, $newcol, $oldrow, $oldcol); //ink function links two spaces, creating the "new" or first one if it did not exist.
 									if ($wasempty)
 										$furthestroom[$i] = (strval($newrow) . "," . strval($newcol)); //Room was empty: Is now the furthest along room for this arm of the dungeon.
 									if ($wasempty && rand(1, 3) == 3)
-										$roomarray = generateLoot($roomarray, $newrow, $newcol, $armlength[$i], $gate, False, False); //Room was empty: 1 in 3 chance of loot.
+										$roomarray = generateLoot($roomarray, $newrow, $newcol, $armlength[$i], $gate, false, false); //Room was empty: 1 in 3 chance of loot.
 									if ($wasempty && rand(1, 2) == 2) { //Room was empty: 1 in 2 chance of hostiles.
-										$roomarray = generateEncounter($roomarray, $newrow, $newcol, $armlength[$i], $gate, rand(1, rand(1, 5)), False); //Create encounter. No. of opponents weighted to 2.
+										$roomarray = generateEncounter($roomarray, $newrow, $newcol, $armlength[$i], $gate, rand(1, rand(1, 5)), false); //Create encounter. No. of opponents weighted to 2.
 										if (rand(1, 2) == 2)
-											$roomarray = generateLoot($roomarray, $newrow, $newcol, $armlength[$i], $gate, False, False); //1 in 2 chance of encounter guarding some loot. This stacks.
+											$roomarray = generateLoot($roomarray, $newrow, $newcol, $armlength[$i], $gate, false, false); //1 in 2 chance of encounter guarding some loot. This stacks.
 									}
 									//if ($wasempty && rand(1,4) == 4) $roomarray = generateDoor($roomarray,$oldrow,$oldcol,$newrow,$newcol,$gate); //doors are broken and won't be a thing until later
 									$previousdir = $direction; //Set the previous direction.
@@ -444,32 +444,32 @@ if (empty($_SESSION['username'])) {
 				$westone = strval($longestcoords[0]) . "," . strval(intval($longestcoords[1]) - 1);
 				if (empty($roomarray[$northone]) && intval($longestcoords[0]) != 10) { //North room is empty and not off the map. other checks are similar.
 					$roomarray = roomlink($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), intval($longestcoords[0]), intval($longestcoords[1]));
-					$roomarray = generateEncounter($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, 1, True); //Generate the boss encounter.
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, False, False); //Phat lewtz
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, False, False);
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, True, False); //Phat loot-only special lewtz
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, False, True); //SWAG
+					$roomarray = generateEncounter($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, 1, true); //Generate the boss encounter.
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, false, false); //Phat lewtz
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, false, false);
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, true, false); //Phat loot-only special lewtz
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) + 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, false, true); //SWAG
 				} elseif (empty($roomarray[$southone]) && intval($longestcoords[0]) != 1) {
 					$roomarray = roomlink($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), intval($longestcoords[0]), intval($longestcoords[1]));
-					$roomarray = generateEncounter($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, 1, True); //Generate the boss encounter.
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, False, False); //Phat lewtz
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, False, False);
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, True, False);
-					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, False, True);
+					$roomarray = generateEncounter($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, 1, true); //Generate the boss encounter.
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, false, false); //Phat lewtz
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, false, false);
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, true, false);
+					$roomarray = generateLoot($roomarray, (intval($longestcoords[0]) - 1), intval($longestcoords[1]), ($armlength[$longest] + 1), $gate, false, true);
 				} elseif (empty($roomarray[$eastone]) && intval($longestcoords[1]) != 10) {
 					$roomarray = roomlink($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), intval($longestcoords[0]), intval($longestcoords[1]));
-					$roomarray = generateEncounter($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, 1, True); //Generate the boss encounter.
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, False, False); //Phat lewtz
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, False, False);
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, True, False);
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, False, True);
+					$roomarray = generateEncounter($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, 1, true); //Generate the boss encounter.
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, false, false); //Phat lewtz
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, false, false);
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, true, false);
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) + 1), ($armlength[$longest] + 1), $gate, false, true);
 				} elseif (empty($roomarray[$westone]) && intval($longestcoords[1]) != 1) {
 					$roomarray = roomlink($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), intval($longestcoords[0]), intval($longestcoords[1]));
-					$roomarray = generateEncounter($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, 1, True); //Generate the boss encounter.
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, False, False); //Phat lewtz
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, False, False);
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, True, False);
-					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, False, True);
+					$roomarray = generateEncounter($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, 1, true); //Generate the boss encounter.
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, false, false); //Phat lewtz
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, false, false);
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, true, false);
+					$roomarray = generateLoot($roomarray, intval($longestcoords[0]), (intval($longestcoords[1]) - 1), ($armlength[$longest] + 1), $gate, false, true);
 				} else {
 					//Nowhere to put the boss!
 				}
@@ -534,37 +534,37 @@ if (empty($_SESSION['username'])) {
 				$oldroom = strval($dungeonrow['dungeonrow']) . "," . strval($dungeonrow['dungeoncol']);
 				$previous = "";
 				$newflags = "";
-				$connection = False; //This will be set to true when a connection to the previous room is found.
-				$encounterslain = False;
-				$alreadyencountered = False;
-				$encounter = False;
-				$clearencounter = False;
-				$failedencounter = False;
+				$connection = false; //This will be set to true when a connection to the previous room is found.
+				$encounterslain = false;
+				$alreadyencountered = false;
+				$encounter = false;
+				$clearencounter = false;
+				$failedencounter = false;
 				if ($newroom == $oldroom)
-					$connection = True; //Rooms are connected to themselves automatically.
-				$encounter = False; //This is set to true if an encounter is...er, encountered.
+					$connection = true; //Rooms are connected to themselves automatically.
+				$encounter = false; //This is set to true if an encounter is...er, encountered.
 				$flags = explode("|", $dungeonrow[$newroom]);
 				$i = 0;
 				while (!empty($flags[$i])) {
 					$flag = $flags[$i];
 					switch ($flag) {
 						case 'CLEARED':
-							$clearencounter = True;
+							$clearencounter = true;
 							$flag = ""; //Disappears after use.
 							break; //This has no arguments. Must appear before encounter to be cleared.
 						case 'ENCOUNTER':
 							$previous = $flag;
 							if ($encounter) {
-								$alreadyencountered = True; //There's already an encounter loaded in.
+								$alreadyencountered = true; //There's already an encounter loaded in.
 							} else {
-								$encounter = True;
+								$encounter = true;
 								if ($clearencounter) {
-									$encounter = False; //Encounter not actually set off
-									$clearencounter = False;
-									$encounterslain = True;
+									$encounter = false; //Encounter not actually set off
+									$clearencounter = false;
+									$encounterslain = true;
 									$flag = ""; //Scrap the encounter.
-								} elseif ($encounterslain == True) { //Last encounter was defeated. This one has not been yet.
-									$encounterslain = False;
+								} elseif ($encounterslain == true) { //Last encounter was defeated. This one has not been yet.
+									$encounterslain = false;
 								}
 								if ($encounter) { //Encounter being initiated at this stage.
 									if ($userrow['encounters'] > 0 && $userrow[$downstr] == 0) {
@@ -579,7 +579,7 @@ if (empty($_SESSION['username'])) {
 										$col = $dungeonrow['dungeoncol'];
 										echo "<form action='dungeons.php#display' method='post'>";
 										echo "<input type='submit' value='Go back'></form>"; //Form does nothing, since player has already been moved back once they click.
-										$failedencounter = True;
+										$failedencounter = true;
 									}
 								}
 							}
@@ -623,7 +623,7 @@ if (empty($_SESSION['username'])) {
 							if ($argument[0] == "LINK") { //It's a link, check it.
 								if ($argument[1] == $oldroom) {
 									if (empty($argument[2]))
-										$connection = True; //This room is indeed connected to the other one.
+										$connection = true; //This room is indeed connected to the other one.
 									if (!empty($argument[2]) && !empty($_POST['dooritem'])) {
 										$doorresult = $mysqli->query("SELECT * FROM `Dungeon_Doors` WHERE `Dungeon_Doors`.`ID` = $flags[2]"); //look up the door
 										$drow = $doorresult->fetch_array();
@@ -838,7 +838,7 @@ if (empty($_SESSION['username'])) {
 									$grist = "None";
 								}
 								//Code to blank grist type if enemy not a grist enemy will go here.
-								$monsterpower = generateEnemy($userrow, $gristrow['grist_type'], $grist, $encounterargs[$enemyflag], True); //Make the enemy and assign them to combat.
+								$monsterpower = generateEnemy($userrow, $gristrow['grist_type'], $grist, $encounterargs[$enemyflag], true); //Make the enemy and assign them to combat.
 								$userrow = refreshEnemydata($userrow);
 								if ($monsterpower != -1) { //Success!
 									if (!empty($tier)) {
@@ -877,7 +877,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	if (empty($failedencounter))
-		$failedencounter = False;
+		$failedencounter = false;
 	if ($userrow['indungeon'] == 0) { //Select a dungeon to go to. NOTE: Form submits string formatted like username:gate, with the username corresponding to the Land the dungeon is on.
 		if (!empty($dungeongen)) { //Just generated a dungeon.
 			//header('location:/dungeons.php'); //Reload the page now that we're in a dungeon.
@@ -905,7 +905,7 @@ if (empty($_SESSION['username'])) {
 			$typerow = $gristtype->fetch_array();
 			$griststr = "grist" . strval($gtier); //Pull the correct tier of grist.
 			$grist = $typerow[$griststr];
-			$monsterpower = generateEnemy($userrow, $gristrow['grist_type'], $grist, $guardian, True);
+			$monsterpower = generateEnemy($userrow, $gristrow['grist_type'], $grist, $guardian, true);
 			$userrow = refreshEnemydata($userrow);
 			$mysqli->query("UPDATE `Players` SET `dungeonstrife` = 4 WHERE `Players`.`username` = '$username' LIMIT 1;"); //This is set to 3 by striferesolve if the player fails.
 			echo 'You find yourself at the entrance to a dungeon. An underling stands before it, likely tasked with keeping out thieves who might steal the treasures within.<br/>';
@@ -916,7 +916,7 @@ if (empty($_SESSION['username'])) {
 			$gateresult = $mysqli->query("SELECT * FROM Gates");
 			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 			$currentrow = $userrow;
-			$done = False;
+			$done = false;
 			echo '<form action="dungeons.php#display" method="post"><select name="newdungeon">';
 			while (!$done) {
 				$gates = 0;
@@ -940,10 +940,10 @@ if (empty($_SESSION['username'])) {
 					$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
 					$currentrow = $currentresult->fetch_array();
 					if ($currentrow['house_build_grist'] < $gaterow["gate2"])
-						$done = True; //This house is unreachable. Chain is broken here.
+						$done = true; //This house is unreachable. Chain is broken here.
 				} else { //Player has no server, gates go nowhere. This is not canonical behaviour, but canonical behaviour is impossible since it relies on prediction. Alternatively, loop is complete.
 					//Note that if gate 1 has not been reached, then gate 2 wasn't either and the Land was never accessed in the first place!
-					$done = True; //No further steps.
+					$done = true; //No further steps.
 				}
 			}
 			if (strpos($userrow['storeditems'], "GLITCHGATE.") !== false)
@@ -964,7 +964,7 @@ if (empty($_SESSION['username'])) {
 		while ($i >= 1) {
 			while ($j <= $dungeoncols) {
 				$room = strval($i) . "," . strval($j);
-				if (strpos($dungeonrow[$room], "VISITED") !== False) {
+				if (strpos($dungeonrow[$room], "VISITED") !== false) {
 					$flags = explode("|", $dungeonrow[$room]);
 					$k = 0;
 					while (!empty($flags[$k])) {
@@ -973,10 +973,10 @@ if (empty($_SESSION['username'])) {
 							case "LINK":
 								$coords = explode(",", $flag[1]); //coords[0] is the x coord, 1 is the y.
 								if ($coords[0] > $i + 1 || $coords[0] < $i - 1 || $coords[1] > $j + 1 || $coords[1] < $j - 1) { //Not adjacent. Room has a transportalizer.
-									$transportarray[$flag[1]] = True;
-									$transportarray[$room] = True;
+									$transportarray[$flag[1]] = true;
+									$transportarray[$room] = true;
 								}
-								$adjacentarray[$flag[1]] = True;
+								$adjacentarray[$flag[1]] = true;
 							default:
 								//We only care about links here!
 								break;
@@ -993,56 +993,56 @@ if (empty($_SESSION['username'])) {
 		//May add coordinate tiles around the edges. In this case, both i and j will go down to 0 as coordinate tiles are placed.
 		$i = $dungeonrows;
 		$j = 1;
-		$onentrance = False;
+		$onentrance = false;
 		while ($i >= 1) {
 			//$offset = ($i * 2) - 1;
 			while ($j <= $dungeoncols) {
 				$room = strval($i) . "," . strval($j);
 				echo "<span style='position:relative; top:-" . strval(($dungeonrows - $i) * 23) . "px; z-index:0'>"; //The multiplier is set for line breaking issues.
-				if ((strpos($dungeonrow[$room], ("LINK:" . strval($i) . "," . strval($j - 1))) === False)) { //Rooms not connected.
+				if ((strpos($dungeonrow[$room], ("LINK:" . strval($i) . "," . strval($j - 1))) === false)) { //Rooms not connected.
 					echo "<img src='/Images/Dungeontiles/verticalline.png'>";
-				} elseif ((strpos($dungeonrow[$room], "VISITED")) === False && (strpos($dungeonrow[(strval($i) . "," . strval($j - 1))], "VISITED")) === False) { //Neither room seen.
+				} elseif ((strpos($dungeonrow[$room], "VISITED")) === false && (strpos($dungeonrow[(strval($i) . "," . strval($j - 1))], "VISITED")) === false) { //Neither room seen.
 					echo "<img src='/Images/Dungeontiles/verticalline.png'>";
 				} else {
 					echo "<img src='/Images/Dungeontiles/verticalspace.png'>";
 				}
 				if ($room == $currentroom) { //This is the current room.
-					//if (strpos($dungeonrow[$room],"BOSS") !== False && strpos($dungeonrow[$room],"CLEARED") !== False) $onentrance = true; //the player defeated the boss and can leave instantly
+					//if (strpos($dungeonrow[$room],"BOSS") !== false && strpos($dungeonrow[$room],"CLEARED") !== false) $onentrance = true; //the player defeated the boss and can leave instantly
 					if (!empty($transportarray[$room])) { //Transportalizer in room.
 						echo "<img src='/Images/Dungeontiles/playertransport.png'>";
-					} elseif (strpos($dungeonrow[$room], "ENTRANCE") !== False && strpos($dungeonrow[$room], "BOSS") === false) { //Player in entrance.
-						$onentrance = True;
+					} elseif (strpos($dungeonrow[$room], "ENTRANCE") !== false && strpos($dungeonrow[$room], "BOSS") === false) { //Player in entrance.
+						$onentrance = true;
 						echo "<img src='/Images/Dungeontiles/playerentrance.png'>";
 					} else {
 						echo "<img src='/Images/Dungeontiles/playertile.png'>";
 					}
-				} elseif (strpos($dungeonrow[$room], "ENTRANCE") !== False && strpos($dungeonrow[$room], "BOSS") === false) { //This is the entrance tile, and there isn't an undefeated boss on it.
+				} elseif (strpos($dungeonrow[$room], "ENTRANCE") !== false && strpos($dungeonrow[$room], "BOSS") === false) { //This is the entrance tile, and there isn't an undefeated boss on it.
 					echo "<img src='/Images/Dungeontiles/entrancetile.png'>";
-				} elseif (strpos($dungeonrow[$room], "VISITED") !== False) { //Tile visited. We have information about it.
+				} elseif (strpos($dungeonrow[$room], "VISITED") !== false) { //Tile visited. We have information about it.
 					if (!empty($transportarray[$room])) { //Transportalizer in room.
-						if (strpos($dungeonrow[$room], "ENCOUNTER") !== False && strpos($dungeonrow[$room], "CLEARED") === False) {
-							if (strpos($dungeonrow[$room], "BOSS") !== False) { //This is a boss tile (Probably unique).
+						if (strpos($dungeonrow[$room], "ENCOUNTER") !== false && strpos($dungeonrow[$room], "CLEARED") === false) {
+							if (strpos($dungeonrow[$room], "BOSS") !== false) { //This is a boss tile (Probably unique).
 								echo "<img src='/Images/Dungeontiles/bosstransport.png'>";
-							} elseif (strpos($dungeonrow[$room], "LOOT") !== False) {
+							} elseif (strpos($dungeonrow[$room], "LOOT") !== false) {
 								echo "<img src='/Images/Dungeontiles/enemyloottransport.png'>";
 							} else {
 								echo "<img src='/Images/Dungeontiles/enemytransport.png'>";
 							}
-						} elseif (strpos($dungeonrow[$room], "LOOT") !== False) {
+						} elseif (strpos($dungeonrow[$room], "LOOT") !== false) {
 							echo "<img src='/Images/Dungeontiles/loottransport.png'>";
 						} else {
 							echo "<img src='/Images/Dungeontiles/transporttile.png'>";
 						}
 					} else { //No transportalizer
-						if (strpos($dungeonrow[$room], "ENCOUNTER") !== False && strpos($dungeonrow[$room], "CLEARED") === False) {
-							if (strpos($dungeonrow[$room], "BOSS") !== False) { //This is a boss tile (Probably unique).
+						if (strpos($dungeonrow[$room], "ENCOUNTER") !== false && strpos($dungeonrow[$room], "CLEARED") === false) {
+							if (strpos($dungeonrow[$room], "BOSS") !== false) { //This is a boss tile (Probably unique).
 								echo "<img src='/Images/Dungeontiles/bosstile.png'>";
-							} elseif (strpos($dungeonrow[$room], "LOOT") !== False) {
+							} elseif (strpos($dungeonrow[$room], "LOOT") !== false) {
 								echo "<img src='/Images/Dungeontiles/enemyloot.png'>";
 							} else {
 								echo "<img src='/Images/Dungeontiles/enemytile.png'>";
 							}
-						} elseif (strpos($dungeonrow[$room], "LOOT") !== False) {
+						} elseif (strpos($dungeonrow[$room], "LOOT") !== false) {
 							echo "<img src='/Images/Dungeontiles/loottile.png'>";
 						} else {
 							echo "<img src='/Images/Dungeontiles/blanktile.png'>";
@@ -1050,13 +1050,13 @@ if (empty($_SESSION['username'])) {
 					}
 				} elseif (!empty($adjacentarray[$room])) { //Tile not visited, but tile connected to tile has been visited.
 					if (!empty($transportarray[$room])) { //Transportalizer in room.
-						if (strpos($dungeonrow[$room], "BOSS") !== False) { //This is a boss tile (Probably unique).
+						if (strpos($dungeonrow[$room], "BOSS") !== false) { //This is a boss tile (Probably unique).
 							echo "<img src='/Images/Dungeontiles/bosstransport.png'>";
 						} else {
 							echo "<img src='/Images/Dungeontiles/unknowntransport.png'>";
 						}
 					} else {
-						if (strpos($dungeonrow[$room], "BOSS") !== False) { //This is a boss tile (Probably unique).
+						if (strpos($dungeonrow[$room], "BOSS") !== false) { //This is a boss tile (Probably unique).
 							echo "<img src='/Images/Dungeontiles/bosstile.png'>";
 						} else {
 							echo "<img src='/Images/Dungeontiles/unknowntile.png'>";
@@ -1074,9 +1074,9 @@ if (empty($_SESSION['username'])) {
 			while ($j <= $dungeoncols) {
 				$room = strval($i) . "," . strval($j);
 				echo "<img src='/Images/Dungeontiles/corner.png'>";
-				if ((strpos($dungeonrow[$room], ("LINK:" . strval($i - 1) . "," . strval($j))) === False)) { //Rooms not connected.
+				if ((strpos($dungeonrow[$room], ("LINK:" . strval($i - 1) . "," . strval($j))) === false)) { //Rooms not connected.
 					echo "<img src='/Images/Dungeontiles/horizontalline.png'>";
-				} elseif ((strpos($dungeonrow[$room], "VISITED")) === False && (strpos($dungeonrow[(strval($i - 1) . "," . strval($j))], "VISITED")) === False) { //Neither room seen.
+				} elseif ((strpos($dungeonrow[$room], "VISITED")) === false && (strpos($dungeonrow[(strval($i - 1) . "," . strval($j))], "VISITED")) === false) { //Neither room seen.
 					echo "<img src='/Images/Dungeontiles/horizontalline.png'>";
 				} else {
 					echo "<img src='/Images/Dungeontiles/horizontalspace.png'>";
@@ -1091,7 +1091,7 @@ if (empty($_SESSION['username'])) {
 		if (!$failedencounter && empty($encounterargs)) { //Failed encounters and actual encounters disable movement.
 			$flags = explode("|", $dungeonrow[$currentroom]);
 			$i = 0;
-			$linkreached = False;
+			$linkreached = false;
 			while (!empty($flags[$i])) {
 				$flag = explode(":", $flags[$i]);
 				switch ($flag[0]) {
@@ -1106,8 +1106,8 @@ if (empty($_SESSION['username'])) {
 						echo "<br/>";
 						break;
 					case "LINK":
-						if ($linkreached == False) {
-							$linkreached = True;
+						if ($linkreached == false) {
+							$linkreached = true;
 							echo "</span>";
 							echo "<span style='position:relative; top:-" . strval($dungeonrows * 85) . "px; left:" . strval($dungeoncols * 70) . "px; z-index:42'>";
 						}

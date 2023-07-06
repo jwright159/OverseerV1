@@ -15,8 +15,8 @@ if (empty($_SESSION['username'])) {
 	//--Begin consuming code here.--
 	$dontechoconsumemenu = false; //in case there's an item that makes it impossible for further consumption
 	if (!empty($_POST['consume'])) { //Consuming time!
-		$fail = False;
-		$donotconsume = False;
+		$fail = false;
+		$donotconsume = false;
 		if (strpos($_POST['consume'], "inv") === false) { //player is trying to consume from outside their inventory!
 			echo "Look at you, trying to be clever! Unfortunately, you can only consume items from your inventory.<br/>";
 			$fail = true;
@@ -24,12 +24,12 @@ if (empty($_SESSION['username'])) {
 		if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") { //User strifing
 			if ($userrow['combatconsume'] == 1) { //Already used a consumable this round.
 				$bonusconsumestr = "PLAYER:BONUSCONSUME|";
-				if (strpos($userrow['strifestatus'], $bonusconsumestr) !== False) { //Player has a bonus consumable usage
+				if (strpos($userrow['strifestatus'], $bonusconsumestr) !== false) { //Player has a bonus consumable usage
 					$statusarray = explode("|", $userrow['strifestatus']);
 					$p = 0;
 					$instancefound = false;
 					while (!empty($statusarray[$p]) && !$instancefound) {
-						if (strpos($statusarray[$p], $bonusconsumestr) !== False) { //This is one of the bonus consume instances.
+						if (strpos($statusarray[$p], $bonusconsumestr) !== false) { //This is one of the bonus consume instances.
 							$instancefound = true;
 							$removethis = $statusarray[$p] . "|";
 							$userrow['strifestatus'] = preg_replace('/' . $removethis . '/', '', $userrow['strifestatus'], 1);
@@ -39,11 +39,11 @@ if (empty($_SESSION['username'])) {
 					}
 				} else { //Only triggers if no bonus consumable usage was found.
 					echo "You have already used a consumable during this round of strife!";
-					$fail = True;
+					$fail = true;
 				}
 			}
 		}
-		if ($fail != True) {
+		if ($fail != true) {
 			switch ($userrow[$_POST['consume']]) { //Determine the consumable and act accordingly.
 				case "Klatchian Coffee":
 					echo "As you drink the coffee, everything begins to clear up... AAAAAAAA-<br/>";
@@ -363,7 +363,7 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Players` SET `Health_Vial` = $targetrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $targetrow['username'] . "' LIMIT 1 ;");
 					} else {
 						echo "It seems like an awful waste to drink this thing outside of strife, although you're not entirely sure why.";
-						$donotconsume = True;
+						$donotconsume = true;
 					}
 					break;
 				case "Pan Galactic Gargle Blaster":
@@ -482,7 +482,7 @@ if (empty($_SESSION['username'])) {
 				case "Nominomicon":
 					if ($userrow['enemydata'] == "" && $userrow['aiding'] == "") { //User is not strifing
 						echo "You give the Nominomicon a good read. It gives you insight into the darkest corners of existence AND makes your fingers deliciously sticky!";
-						$donotconsume = True;
+						$donotconsume = true;
 					} else {
 						if ($userrow['aiding'] == "") { //Player is main strifer
 							echo "You om nom nom the Nominomicon. It consumes some of your vitality to project sticky, unspeakable tentacles at your opponents.";
@@ -529,7 +529,7 @@ if (empty($_SESSION['username'])) {
 				case "New Year's Eve Bomb":
 					if ($userrow['enemydata'] == "" && $userrow['aiding'] == "") { //User is not strifing
 						echo "You examine the bomb carefully. You are 100% sure this one isn't a dud!";
-						$donotconsume = True;
+						$donotconsume = true;
 					} else {
 						if ($userrow['aiding'] == "") { //Player is main strifer
 							if (rand(1, 100) <= 95 || $userrow['sessionbossengaged'] == 1) {
@@ -680,13 +680,13 @@ if (empty($_SESSION['username'])) {
 					if ($crow['name'] != $consearch) { //if an entry doesn't exist for the consumable
 						echo "Whatever you just tried to consume, it wasn't a consumable.";
 						logDebugMessage($username . " - tried to consume $consearch, no hardcoded effect or consumable row");
-						$fail = True;
+						$fail = true;
 					} else {
-						$noenemies = False;
-						$noheal = False;
+						$noenemies = false;
+						$noheal = false;
 						$randpercent = $crow['randompercentage'] / 100;
 						if ($crow['donotconsume'] == "1")
-							$donotconsume = True;
+							$donotconsume = true;
 						$affectrow = $userrow;
 						$allyheal = 1;
 						if (!empty($_POST['target'])) {
@@ -695,39 +695,39 @@ if (empty($_SESSION['username'])) {
 								$affectrow = $targetresult->fetch_array();
 								if ($affectrow['sessionbossengaged'] != 1 || $affectrow['session_name'] != $userrow['session_name']) { //make sure the target is in the same session and fighting BK
 									echo "That player isn't currently fighting the Black King in your session!";
-									$fail = True;
+									$fail = true;
 								}
 							} else {
 								echo "Cheaters never win, and winners never cheat!";
-								$fail = True;
+								$fail = true;
 							}
 						}
 						if ($affectrow['Aspect'] != $crow['aspect_restrict'] && $crow['aspect_restrict'] != "") { //user/ally is not compatible aspect, nothing happens
 							echo "It seems that only a hero of " . $crow['aspect_restrict'] . " can unlock the true potential of this item...";
-							$fail = True;
+							$fail = true;
 						}
 						if ($userrow['enemydata'] == "" && $userrow['aiding'] == "") { //user not strifing
-							if ($fail == False)
+							if ($fail == false)
 								echo $crow['message_outside'];
-							$noenemies = True;
+							$noenemies = true;
 							if ($crow['outsideuse'] == 0) {
-								$fail = True;
+								$fail = true;
 							}
 						} else {
 							$targets = $crow['number_targets'];
 							if ($crow['selfifnotarget'] == 1)
-								$noheal = True; //don't perform actions on player if this item is meant to be used on enemies
+								$noheal = true; //don't perform actions on player if this item is meant to be used on enemies
 							if ($userrow['aiding'] == "") { //user is main strifer; I THINK that this will be blank if fighting black king
-								if ($fail == False)
+								if ($fail == false)
 									echo $crow['message_battle'];
 								if ($crow['battleuse'] == 0) {
-									$fail = True;
+									$fail = true;
 								}
 							} else {
-								if ($fail == False)
+								if ($fail == false)
 									echo $crow['message_aiding'];
 								if ($crow['aiduse'] == 0) {
-									$fail = True;
+									$fail = true;
 								} elseif ($crow['allypercentage'] != 0) { //set the target of the comsumable to the player the user is aiding (for healing and enemies) 
 									$allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['aiding'] . "'");
 									$affectrow = $allyresult->fetch_array();
@@ -735,9 +735,9 @@ if (empty($_SESSION['username'])) {
 								}
 							}
 						}
-						if ($fail == False) {
+						if ($fail == false) {
 							$affectrow = parseEnemydata($affectrow);
-							if ($noenemies == False) {
+							if ($noenemies == false) {
 								$debuff = $crow['debuff_exact'];
 								$debuff = floor(rand($debuff - ($debuff * $randpercent), $debuff + ($debuff * $randpercent)) * $allyheal);
 								$damage = $crow['damage_exact'];
@@ -791,7 +791,7 @@ if (empty($_SESSION['username'])) {
 								writeEnemydata($affectrow);
 								$alreadywritten = true;
 							}
-							if ($noheal == False) {
+							if ($noheal == false) {
 								$heal = $crow['heal_exact'];
 								$heal = floor(rand($heal - ($heal * $randpercent), $heal + ($heal * $randpercent)) * $allyheal);
 								if ($crow['heal_scale'] != 0)
@@ -914,12 +914,12 @@ if (empty($_SESSION['username'])) {
 		while ($col = $invresult->fetch_field()) {
 			$invslot = $col->name;
 			if ($invslot == "inv1") { //Reached the start of the inventory.
-				$reachinv = True;
+				$reachinv = true;
 			}
 			if ($invslot == "abstratus1") { //Reached the end of the inventory.
-				$reachinv = False;
+				$reachinv = false;
 			}
-			if ($reachinv == True && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
+			if ($reachinv == true && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
 				$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 				$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 				while ($row = $captchalogue->fetch_array()) {

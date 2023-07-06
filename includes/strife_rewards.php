@@ -1,15 +1,15 @@
 <?php
 
-$foundspace = False;
+$foundspace = false;
 $j = 0;
-while ($foundspace != True) {
+while ($foundspace != true) {
 	$char = substr($userrow[$enemystr], $j, 1);
 	if ($char == " ") { //Found the gap between grist type and enemy. Note that depending on enemy, these values may not be used.
 		$grist = substr($userrow[$enemystr], 0, $j);
 		$enemytype = substr($userrow[$enemystr], ($j + 1));
-		$foundspace = True;
+		$foundspace = true;
 	} elseif ($j > 18) { //Timeout: Doesn't need to be longer than the longest grist.
-		$foundspace = True;
+		$foundspace = true;
 	} else {
 		$j++;
 	}
@@ -26,7 +26,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		echo "Wow. You manage to somehow bludgeon your hangover into submission. Because that makes so much sense.<br/>";
 		break;
 	case "Kraken":
-		$bossdead = True;
+		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Kraken to clear a gate 1 dungeon!");
 		echo "You have slain the Kraken! The boss door opens, allowing you to exit the dungeon. Also you get stuff: ";
@@ -56,7 +56,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		echo ".<br/>";
 		break;
 	case "Hekatonchire":
-		$bossdead = True;
+		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Hekatonchire to clear a gate 3 dungeon!");
 		echo "You have slain the Hetako- no wait, Hekakon- no, Hekatonsh...Hekatom...look, just take the reward, okay? ";
@@ -85,11 +85,11 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		}
 		echo ".<br/>";
 		break;
-	case "True Hekatonchire":
-		$bossdead = True;
+	case "true Hekatonchire":
+		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
-			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a True Hekatonchire to clear a 5-floor gate 5 dungeon!");
-		echo "You have slain the True Hetakomabob! Yeah, you've decided to forget trying to pronounce these names and just snag the loot: ";
+			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a true Hekatonchire to clear a 5-floor gate 5 dungeon!");
+		echo "You have slain the true Hetakomabob! Yeah, you've decided to forget trying to pronounce these names and just snag the loot: ";
 		$buildgrist = 105000 + (rand(0, 1) * 10000) + (rand(0, 1) * 60000) + (floor(rand(0, 2) / 2) * 200000) + (rand(0, $luck) * 900);
 		echo "<img src='Images/Grist/" . gristNameToImagePath("Build_Grist") . "' height='15' width='15' alt = 'xcx'/> $buildgrist";
 		$userrow['Build_Grist'] = $userrow['Build_Grist'] + $buildgrist;
@@ -116,7 +116,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		echo ".<br/>";
 		break;
 	case "Lich Queen":
-		$bossdead = True;
+		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Lich Queen to clear a gate 5 dungeon!");
 		echo "CONGRATULATIONS! You have slain the Queen, thus- oh, hang on. Wrong Queen. Er, here, have some grist or something.<br/>";
@@ -145,7 +145,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		}
 		break;
 	case "Progenitor":
-		$bossdead = True;
+		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Progenitor to clear the Automaton Factory!");
 		echo "Finally having taken more damage than it can handle, Progenitor falls to pieces in front of you. As it collapses into piles of grist, you hear a soft, synthetic voice: \"I don't hate you.\"<br/>";
@@ -171,7 +171,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		}
 		break;
 	case "Hydra":
-		$bossdead = True;
+		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a Hydra to clear a 3-floor gate 3 dungeon!");
 		echo "The Hydra's body has taken enough damage that it can no longer support the heads! The entire thing collapses, leaving behind a treasure trove of grist.<br/>";
@@ -348,7 +348,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			}
 			if ($moreheads == false && $bossdead == false && $thehydra != "enemy0name") { //that's it! hydra is down, and there was a hydra to begin with (so not The Bug)
 				$userrow[$thehydra] = ""; //blank the name so the body disappears
-				$bossdead = True;
+				$bossdead = true;
 				if ($nonhydrafoes)
 					$alldead = true; //it's a long story
 				if (!empty($userrow['pesternoteUsername']))
@@ -381,7 +381,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		}
 		break;
 	case "The Bug":
-		$bossdead = True;
+		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
 			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated The Bug to clear a gate " . horribleMess() . " dungeon!");
 		echo "After a harrowing b" . horribleMess() . ", The Bug finally expl" . horribleMess() . " into a pile of artifa" . horribleMess() . " and various grist. You're not sure if you just helped " . horribleMess() . "bugfix the game, or destroyed " . horribleMess() . " vital bit of code, but at least you g" . horribleMess() . horribleMess() . "<br/>";
@@ -494,11 +494,11 @@ if (empty($gristrow) && $userrow[$categorystr] != "None") {
 if (empty($enemytype))
 	$enemytype = "HERPDERP";
 $gristquery = "UPDATE `Players` SET ";
-$dropped = False;
+$dropped = false;
 switch ($enemytype) { //Legacy: doesn't actually do anything.
 	default:
 		if (!empty($enemyrow['drops'])) { //Enemy has drops defined.
-			$dropped = True;
+			$dropped = true;
 			echo " You collect the spoils: ";
 			$droparray = explode("|", $enemyrow['drops']);
 			$dropnumber = 0;

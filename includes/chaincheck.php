@@ -43,7 +43,7 @@ function chainArray($startrow)
 	$minus3row = $currentrow;
 	$minus2row = $currentrow;
 	$minus1row = $currentrow;
-	$done = False;
+	$done = false;
 	$step = 1;
 	$chain[0] = $currentrow['username'];
 	$count = 1;
@@ -79,7 +79,7 @@ function chainArray($startrow)
 			if (($currentrow['highgate'] < ($step * 2) || !$clientcan) && !$fly) {
 				$step++; //check for the next highest gate pair
 				if ($step > 3)
-					$done = True; //This house is unreachable. Chain is broken here.
+					$done = true; //This house is unreachable. Chain is broken here.
 			} else {
 				if ($subgates[$currentrow['username']] == 1) {
 					$subgates[$currentrow['username']] = 2; //subgate can be reached via regular gates
@@ -92,7 +92,7 @@ function chainArray($startrow)
 					$done = true; //give up there will never be that many players
 			}
 		} else {
-			$done = True; //No further steps.
+			$done = true; //No further steps.
 		}
 		if ($done == true && $canusesubgate) {
 			while ($countb <= $subgatecount) {

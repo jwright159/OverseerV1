@@ -40,12 +40,12 @@ if (empty($_SESSION['username'])) {
 				echo "You didn't specify a recipient!<br/>";
 			} else {
 				$wireresult2 = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['target'] . "'");
-				$targetfound = False;
-				$poor = False;
+				$targetfound = false;
+				$poor = false;
 				if (intval($_POST['amount']) <= $userrow['Boondollars']) {
 					while ($wirerow2 = $wireresult2->fetch_array()) {
 						if ($wirerow2['username'] == $_POST['target']) {
-							$targetfound = True;
+							$targetfound = true;
 							$modifier = intval($_POST['amount']);
 							$mysqli->query("UPDATE `Players` SET `Boondollars` = $userrow[$boon]-$modifier WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							$quantity = $userrow[$boon] - $modifier;
@@ -60,11 +60,11 @@ if (empty($_SESSION['username'])) {
 							$sendrow = $sendresult->fetch_array();
 							$check = 1;
 							$max_inbox = 50;
-							$foundempty = False;
-							while ($check <= $max_inbox && $foundempty == False) { //make sure there's a free spot in recipient's inbox
+							$foundempty = false;
+							while ($check <= $max_inbox && $foundempty == false) { //make sure there's a free spot in recipient's inbox
 								if ($sendrow['msg' . strval($check)] == "")
-									$foundempty = True;
-								if ($foundempty == False)
+									$foundempty = true;
+								if ($foundempty == false)
 									$check++;
 							}
 							if ($foundempty) {
@@ -83,11 +83,11 @@ if (empty($_SESSION['username'])) {
 					}
 				} else {
 					echo "Transaction failed: You only have $userrow[$boon] boondollars";
-					$poor = True;
+					$poor = true;
 				}
-				if ($targetfound == True) {
+				if ($targetfound == true) {
 					echo "Transaction successful. Boondollars: $quantity";
-				} else if ($poor == False) {
+				} else if ($poor == false) {
 					echo "Transaction failed: Target does not exist.<br/>Boondollars: $userrow[$boon]";
 				}
 				echo "<br/>";

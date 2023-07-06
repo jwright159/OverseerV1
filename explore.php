@@ -17,10 +17,10 @@ function replacer($userrow, $string)
 }
 function linkchecker($userrow, $explorow, $num)
 {
-	$pass = True;
+	$pass = true;
 	$livestr = "link" . $num . "live";
 	if ($explorow[$livestr] == 0 && $userrow['session_name'] != "Developers")
-		$pass = False; //Link not live.
+		$pass = false; //Link not live.
 	//NOTE - Conditions on the link will be investigated for satisfaction here.
 	return $pass;
 }
@@ -34,9 +34,9 @@ if (empty($_SESSION['username'])) {
 } else {
 	require_once "includes/SQLconnect.php";
 	//Begin travel code here.
-	$travel = False;
+	$travel = false;
 	if (!empty($_POST['newevent'])) {
-		$travel = True;
+		$travel = true;
 		if (!empty($_POST['olddesc']))
 			echo "=" . $_POST['olddesc'] . "<br/><br/>";
 		echo '<p class="courier">' . $_POST['oldevent'] . "</p><br/>";
@@ -80,7 +80,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	//End travel code here.
-	if ($travel == False) { //We didn't move. If we did, we did this in the travel code to facilitate randoming.
+	if ($travel == false) { //We didn't move. If we did, we did this in the travel code to facilitate randoming.
 		$exploresult = $mysqli->query("SELECT * FROM `Explore_" . $userrow['dreamingstatus'] . "` WHERE `Explore_" . $userrow['dreamingstatus'] . "`.`name` = '" . $userrow['exploration'] . "';");
 		$explorow = $exploresult->fetch_array();
 	}

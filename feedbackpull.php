@@ -14,9 +14,9 @@ if (empty($_SESSION['username'])) {
 				while ($feedrow = $feedbackresult->fetch_array()) {
 					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; <br/>";
 					echo $feedback . "<br/>";
-					$feedbackfound = True;
+					$feedbackfound = true;
 				}
-				if ($feedbackfound == False)
+				if ($feedbackfound == false)
 					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
@@ -25,9 +25,9 @@ if (empty($_SESSION['username'])) {
 				while ($feedrow = $feedbackresult->fetch_array()) {
 					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; <br/>";
 					echo $feedback . "<br/>";
-					$feedbackfound = True;
+					$feedbackfound = true;
 				}
-				if ($feedbackfound == False)
+				if ($feedbackfound == false)
 					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`greenlight` = 1 AND `Feedback`.`urgent` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
@@ -36,14 +36,14 @@ if (empty($_SESSION['username'])) {
 				while ($feedrow = $feedbackresult->fetch_array()) {
 					$feedback = $feedrow['user'] . " - Item suggestion. " . str_replace(":", "THIS IS A COLON", $feedrow['name']) . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; <br/>";
 					echo $feedback . "<br/>";
-					$feedbackfound = True;
+					$feedbackfound = true;
 				}
-				if ($feedbackfound == False)
+				if ($feedbackfound == false)
 					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`defunct` = 1 ORDER BY `Feedback`.`ID` ASC LIMIT $amount");
 			} else {
-				$feedbackfound = False;
+				$feedbackfound = false;
 				$feedbackresult = $mysqli->query("SELECT * FROM `Feedback` WHERE `Feedback`.`type` = '" . $_POST['ftype'] . "'  LIMIT $amount");
 				while ($feedbackrow = $feedbackresult->fetch_array()) {
 					if ($_POST['ftype'] == "art") {
@@ -58,9 +58,9 @@ if (empty($_SESSION['username'])) {
 						$feedback = $feedbackrow['ID'] . ": " . $feedbackrow['user'] . " - " . $feedbackrow['comments'];
 					}
 					echo $feedback . "<br/><br/>";
-					$feedbackfound = True;
+					$feedbackfound = true;
 				}
-				if ($feedbackfound == False)
+				if ($feedbackfound == false)
 					echo "There is currently no feedback of type " . $_POST['ftype'] . "<br/>";
 				if (!empty($_POST['delete']))
 					$mysqli->query("DELETE FROM `Feedback` WHERE `Feedback`.`type` = '" . $_POST['ftype'] . "'  LIMIT $amount");

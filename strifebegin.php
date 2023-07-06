@@ -20,11 +20,11 @@ if (empty($_SESSION['username'])) {
 	require_once "includes/SQLconnect.php";
 	$userrow = parseEnemydata($userrow);
 	if ($username == $_POST['land']) { //if the player chose their own land, always admit (and don't bother checking the chain)
-		$aok = True;
+		$aok = true;
 	} elseif ($_POST['land'] == "Prospit" || $_POST['land'] == "Derse" || $_POST['land'] == "Battlefield" || $_POST['land'] == "LASTFOUGHT") { //well if you got this far with them...
-		$aok = True;
+		$aok = true;
 	} else {
-		$aok = False;
+		$aok = false;
 		$chain = chainArray($userrow);
 		$totalchain = count($chain);
 		$landcount = 1; //0 should be the user's land which we already printed
@@ -43,7 +43,7 @@ if (empty($_SESSION['username'])) {
 				$fillcount++;
 			}
 		}
-		$enemyexists = False;
+		$enemyexists = false;
 		$enemies = 1;
 		while ($enemies <= $max_enemies) {
 			$griststr = "grist" . strval($enemies);
@@ -51,15 +51,15 @@ if (empty($_SESSION['username'])) {
 			$oldgriststr = "oldgrist" . strval($enemies);
 			$oldenemystr = $oldenemyprestr . strval($enemies);
 			if (!empty($_POST[$enemystr]) && !empty($_POST[$griststr])) { //Enemy selected for this combat slot.
-				$cheatyface = True;
+				$cheatyface = true;
 				$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $_POST[$enemystr] . "';");
 				if ($enemyrow = $enemyresult->fetch_array()) {
 					if (($userrow['battlefield_access'] == 1 && $enemyrow['appearson'] == "Battlefield" && $_POST[$griststr] == "None") || $enemyrow['appearson'] == "Event" || ($userrow['dreamingstatus'] == "Awake" && $enemyrow['appearson'] == "Lands") || ($enemyrow['appearson'] == $userrow['dreamingstatus'] && $_POST[$griststr] == "None"))
-						$cheatyface = False; //Event foes have different protected setups.
+						$cheatyface = false; //Event foes have different protected setups.
 				}
-				if ($cheatyface == False) {
-					$enemyexists = True;
-					generateEnemy($userrow, $_POST['gristtype'], $_POST[$griststr], $_POST[$enemystr], False); //Make the enemy and assign them to combat.
+				if ($cheatyface == false) {
+					$enemyexists = true;
+					generateEnemy($userrow, $_POST['gristtype'], $_POST[$griststr], $_POST[$enemystr], false); //Make the enemy and assign them to combat.
 					$userrow = refreshEnemydata($userrow);
 					if (empty($_POST['noprevious'])) {
 						$result2 = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $_POST[$enemystr] . "'");
@@ -113,7 +113,7 @@ if (empty($_SESSION['username'])) {
 				$assisters = $mysqli->query("SELECT * FROM Players WHERE `Players`.`autoassist` = '$username'") or die($mysqli->error());
 				while ($assistrow = $assisters->fetch_array()) {
 					//We must process encounters in case they have earned any.
-					$up = False;
+					$up = false;
 					$time = time();
 					$interval = 1200; //This is where the interval between encounter ticks is set.
 					$lasttick = $assistrow['lasttick'];
@@ -129,7 +129,7 @@ if (empty($_SESSION['username'])) {
 					if ($encounters > $assistrow['encounters'] && ($assistrow['down'] == 1 || $assistrow['dreamdown'] == 1)) { //Both downs recover after a single encounter is earned.
 						$encounters -= 1;
 						$mysqli->query("UPDATE `Players` SET `down` = 0, `dreamdown` = 0 WHERE `Players`.`username` = '" . $assistrow['username'] . "' LIMIT 1 ;"); //Player recovers.
-						$up = True;
+						$up = true;
 					}
 					if ($encounters > 100)
 						$encounters = 100;

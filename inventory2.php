@@ -61,7 +61,7 @@ if (empty($_SESSION['username'])) {
 
 	if (!empty($_GET['holocode'])) { //User is using the holopad.
 		$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_GET['holocode'] . "'");
-		$itemfound = False;
+		$itemfound = false;
 		while ($itemrow = $itemresult->fetch_array()) {
 			if ($itemrow['captchalogue_code'] == $_GET['holocode']) {
 				if (!strrpos($sessionrow['atheneum'], $_GET['holocode'])) {
@@ -72,8 +72,8 @@ if (empty($_SESSION['username'])) {
 						echo "The code you are previewing has not yet been discovered by your session. You can view it, but you have to either combine the items to make it or physically acquire the item another way to add it to your atheneum.<br/>";
 					}
 				}
-				$itemfound = True;
-				$nothing = True;
+				$itemfound = true;
+				$nothing = true;
 				$itemname = $itemrow['name'];
 				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 				if ($itemrow['art'] != "")
@@ -82,21 +82,21 @@ if (empty($_SESSION['username'])) {
 				echo $itemrow['description'];
 				echo "<br/>";
 				echo "It costs ";
-				$reachgrist = False;
-				$terminateloop = False; //time-saver
+				$reachgrist = false;
+				$terminateloop = false; //time-saver
 				$colresult = $mysqli->query("SELECT * FROM Captchalogue LIMIT 1;");
-				while (($col = $colresult->fetch_field()) && $terminateloop == False) {
+				while (($col = $colresult->fetch_field()) && $terminateloop == false) {
 					$gristcost = $col->name;
 					$gristtype = substr($gristcost, 0, -5);
 					if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-						$reachgrist = True;
+						$reachgrist = true;
 					}
 					if ($gristcost == "End_of_Grists") { //Reached the end of the grists.
-						$reachgrist = False;
-						$terminateloop = True;
+						$reachgrist = false;
+						$terminateloop = true;
 					}
-					if ($reachgrist == True && $itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-						$nothing = False; //Item costs something.
+					if ($reachgrist == true && $itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
+						$nothing = false; //Item costs something.
 						if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
 							echo '<img src="Images/Grist/' . $gristtype . '.gif " height="50" width="50" title="' . $gristtype . '"></img>';
 							if ($userrow[$gristtype] >= $itemrow[$gristcost]) {
@@ -141,9 +141,9 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 		}
-		if ($itemfound == False)
+		if ($itemfound == false)
 			echo 'The holopad informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php">Suggest this item!</a><br/>';
-		if ($itemfound == True)
+		if ($itemfound == true)
 			echo "<br/>";
 		if ($challenge == 1 && $combined) { //go ahead and add to the atheneum anyway so that the player can suggest the item if they want
 			if (!strrpos($sessionrow['atheneum'], $_GET['holocode'])) {
@@ -174,7 +174,7 @@ if (empty($_SESSION['username'])) {
 			}
 			$n = 1;
 			$freespots = 0;
-			$notenoughspots = False;
+			$notenoughspots = false;
 			while ($n <= 50) { //find out how many free spots are available in the user's inventory
 				$invstr = "inv" . $n;
 				if ($userrow[$invstr] == '')
@@ -183,33 +183,33 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($freespots < $numberalched) { //if the user tried to make more items than they could fit, set the actual number of items made to the amount of slots they have
 				$numberalched = $freespots;
-				$notenoughspots = True;
+				$notenoughspots = true;
 			}
 			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['alchcode'] . "'");
-			$itemfound = False;
-			$canafford = True;
-			$nothing = True;
-			$reachgrist = False;
-			$terminateloop = False;
+			$itemfound = false;
+			$canafford = true;
+			$nothing = true;
+			$reachgrist = false;
+			$terminateloop = false;
 			while ($itemrow = $itemresult->fetch_array()) {
 				if ($itemrow['captchalogue_code'] == $_POST['alchcode']) {
-					$itemfound = True;
+					$itemfound = true;
 					echo "The item costs ";
 					$colresult = $mysqli->query("SELECT * FROM Captchalogue");
-					while (($col = $colresult->fetch_field()) && $terminateloop == False) {
+					while (($col = $colresult->fetch_field()) && $terminateloop == false) {
 						$gristcost = $col->name;
 						$gristtype = substr($gristcost, 0, -5);
 						if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-							$reachgrist = True;
+							$reachgrist = true;
 						}
 						if ($gristcost == "End_of_Grists") { //Reached the end of the grists.
-							$reachgrist = False;
-							$terminateloop = True;
+							$reachgrist = false;
+							$terminateloop = true;
 						}
-						if ($reachgrist == True && $itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-							$nothing = False; //Item costs something.
+						if ($reachgrist == true && $itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
+							$nothing = false; //Item costs something.
 							if ($userrow[$gristtype] < $itemrow[$gristcost] * $numberalched) { //Player cannot afford to alchemize this item.
-								$canafford = False;
+								$canafford = false;
 							}
 							if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
 								echo '<img src="Images/Grist/' . $gristtype . '.gif" height="50" width="50" title="' . $gristtype . '"></img>';
@@ -234,7 +234,7 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 			}
-			if ($itemfound == True && $canafford == True) { //Player successfully creates item.
+			if ($itemfound == true && $canafford == true) { //Player successfully creates item.
 				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`captchalogue_code` = '" . $_POST['alchcode'] . "'");
 				while ($itemrow = $itemresult->fetch_array()) {
 					if ($itemrow['captchalogue_code'] == $_POST['alchcode']) {
@@ -248,22 +248,22 @@ if (empty($_SESSION['username'])) {
 							$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 							$alchitem = $itemname;
 							require_once "includes/SQLconnect.php"; //Reconnection appears necessary due to addItem making its own little connection.
-							$reachgrist = False;
-							$terminateloop = False;
+							$reachgrist = false;
+							$terminateloop = false;
 							$colresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = 'Perfectly Generic Object' LIMIT 1;");
 							$costquery = "UPDATE `Players` SET ";
-							while (($col = $colresult->fetch_field()) && $terminateloop == False) {
+							while (($col = $colresult->fetch_field()) && $terminateloop == false) {
 								$gristcost = $col->name;
 								$gristtype = substr($gristcost, 0, -5); //Remove "_cost"
 								if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-									$reachgrist = True;
+									$reachgrist = true;
 								}
 								if ($gristcost == "End_of_Grists") { //Reached the end of the grists.
-									$reachgrist = False;
-									$terminateloop = True;
+									$reachgrist = false;
+									$terminateloop = true;
 								}
 								$actualcost = 0;
-								if ($reachgrist == True) {
+								if ($reachgrist == true) {
 									$actualcost = $itemrow[$gristcost] * $numberalched;
 									if ($actualcost != 0)
 										$costquery = $costquery . "`$gristtype` = $userrow[$gristtype]-$actualcost, ";
@@ -295,14 +295,14 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 			}
-			if ($itemfound == True && $canafford == False) {
+			if ($itemfound == true && $canafford == false) {
 				if ($numberalched == 1) {
 					echo "<br/>You cannot afford to make this item, whatever it is.<br/>";
 				} else {
 					echo "<br/>You cannot afford to make that many copies of this item, whatever it is.<br/>";
 				}
 			}
-			if ($itemfound == False)
+			if ($itemfound == false)
 				echo 'The alchemiter informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php">Suggest this item!</a><br/>';
 		} else
 			echo "The code you have inputted is not in your Atheneum yet. In Challenge Mode, you must acquire a code before an item can be made with it.<br/>";
@@ -323,8 +323,8 @@ if (empty($_SESSION['username'])) {
 			if (!empty($_POST[$invstring])) {
 				$itemname = str_replace("'", "\\\\''", $userrow[$_POST[$invstring]]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 				$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
-				$nothing = True;
-				$success = False; //this is needed in case the item is a ghost item
+				$nothing = true;
+				$success = false; //this is needed in case the item is a ghost item
 				while ($itemrow = $itemresult->fetch_array()) {
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
@@ -332,14 +332,14 @@ if (empty($_SESSION['username'])) {
 						$recycled[$invstring] = true; //For use later.
 						if (strrpos($itemrow['abstratus'], "computer") && $userrow['hascomputer'] == 1) { //Check to see if this was the last computer that the player had
 							$check = 1;
-							$nocomputer = True;
+							$nocomputer = true;
 							while ($check <= 50 && $nocomputer) {
 								if ($userrow['inv' . strval($check)] != "") {
 									$icheckname = str_replace("'", "\\\\''", $userrow['inv' . strval($check)]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded. <-- this message will never get old
 									$icheckresult = $mysqli->query("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $icheckname . "'");
 									while ($icheckrow = $icheckresult->fetch_array()) {
 										if (strrpos($icheckrow['abstratus'], "computer"))
-											$nocomputer = False;
+											$nocomputer = false;
 									}
 								}
 								$check++;
@@ -347,7 +347,7 @@ if (empty($_SESSION['username'])) {
 							if ($nocomputer)
 								$mysqli->query("UPDATE `Players` SET `hascomputer` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;"); //mark the player as not having computer access
 						}
-						$success = True;
+						$success = true;
 						echo "You recycle your $itemname into ";
 						$colresult = $mysqli->query("SELECT * FROM Captchalogue LIMIT 1;");
 						$mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -369,21 +369,21 @@ if (empty($_SESSION['username'])) {
 						if ($userrow['accessory'] == $_POST[$invstring]) { //Item is equipped in the accessory slot.
 							$mysqli->query("UPDATE `Players` SET `accesory` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 						}
-						$reachgrist = False;
-						$terminateloop = False;
+						$reachgrist = false;
+						$terminateloop = false;
 						$refundquery = "UPDATE `Players` SET ";
-						while (($col = $colresult->fetch_field()) && $terminateloop == False) {
+						while (($col = $colresult->fetch_field()) && $terminateloop == false) {
 							$gristcost = $col->name;
 							$gristtype = substr($gristcost, 0, -5);
 							if ($gristcost == "Build_Grist_Cost") { //Reached the start of the grists.
-								$reachgrist = True;
+								$reachgrist = true;
 							}
 							if ($gristcost == "End_of_Grists") { //Reached the end of the grists.
-								$reachgrist = False;
-								$terminateloop = True;
+								$reachgrist = false;
+								$terminateloop = true;
 							}
-							if ($reachgrist == True && $itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
-								$nothing = False; //Item costs something.
+							if ($reachgrist == true && $itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
+								$nothing = false; //Item costs something.
 								$refundquery = $refundquery . "`$gristtype` = $userrow[$gristtype]+$itemrow[$gristcost], ";
 								$userrow[$gristtype] += $itemrow[$gristcost];
 								if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
@@ -405,7 +405,7 @@ if (empty($_SESSION['username'])) {
 						}
 					}
 				}
-				if ($success == False) {
+				if ($success == false) {
 					$mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					echo "It seems that the item you tried to recycle no longer exists, or never existed to begin with. You get no grist, but the item has been removed from your inventory, freeing the slot. If you alchemized that item legitimately, please submit a bug report and we'll return your grist ASAP!";
 				}
@@ -431,18 +431,18 @@ if (empty($_SESSION['username'])) {
 	echo "Remote Punch Designix access with Captchalogue Scanner v0.0.1a. Insert two captchalogue cards and four Build Grist to continue.";
 	echo '<form action="inventory.php" method="post">First item:<select name="code1">';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") { //Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") { //Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "" && $invslot != $recycled) { //This is a non-empty inventory slot that wasn't just recycled away.
+		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $recycled) { //This is a non-empty inventory slot that wasn't just recycled away.
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 			while ($itemrow = $itemresult->fetch_array()) {
@@ -465,18 +465,18 @@ if (empty($_SESSION['username'])) {
 	}
 	echo '</select><br/>Second item:<select name="code2">';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") { //Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") { //Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "" && $invslot != $recycled) { //This is a non-empty inventory slot that wasn't just recycled away.
+		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $recycled) { //This is a non-empty inventory slot that wasn't just recycled away.
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 			while ($itemrow = $itemresult->fetch_array()) {
@@ -513,18 +513,18 @@ if (empty($_SESSION['username'])) {
 	echo "Please refresh the interface before attempting to recycle newly alchemized items.";
 	echo '<form action="inventory.php" method="post"><select name="recycle">';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") { //Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") { //Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "" && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
+		if ($reachinv == true && $userrow[$invslot] != "" && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
 			echo '<option value = "' . $invslot . '">' . $userrow[$invslot] . '</option>'; //Add option to recycle this slot.
 		}
 	}
@@ -540,18 +540,18 @@ if (empty($_SESSION['username'])) {
 	echo "'s inventory:<br/><br/>";
 	echo '<form action="inventory.php" method="post">';
 	$reachinv = false;
-	$terminateloop = False;
+	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == False) {
+	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") { //Reached the start of the inventory.
-			$reachinv = True;
+			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") { //Reached the end of the inventory.
-			$reachinv = False;
-			$terminateloop = True;
+			$reachinv = false;
+			$terminateloop = true;
 		}
-		if ($reachinv == True && $userrow[$invslot] != "" && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
+		if ($reachinv == true && $userrow[$invslot] != "" && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
 			echo "Item: $userrow[$invslot]<br/>";
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");

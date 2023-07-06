@@ -46,7 +46,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$roll = rand((1 + floor($luck / 10)), 100);
 				$resistfactor = 1 - ($enemyrow['resist_Time'] / 100); //Enemy's time resistance reduces success chance.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) { //TIMESTOP has one argument: The chance of it working.
-					$timestopped = True;
+					$timestopped = true;
 					$currentstatus = $currentstatus . $statustr . "TIMESTOP|";
 					$message = $message . "$werow[$enemystr] is frozen in time!<br/>";
 				} else
@@ -222,7 +222,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Rage'] / 100); //Enemy's Rage resistance reduces chance of application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$mellowstr = ($statustr . "MELLOW|");
-					if (strpos($currentstatus, $mellowstr) !== False) { //Negate this instead of applying mellow
+					if (strpos($currentstatus, $mellowstr) !== false) { //Negate this instead of applying mellow
 						$currentstatus = str_replace($mellowstr, "", $currentstatus);
 					} else {
 						$currentstatus = $currentstatus . $statustr . "ENRAGED|";
@@ -236,10 +236,10 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Rage'] / 100); //Enemy's Rage resistance reduces chance of application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$enragedstr = ($statustr . "ENRAGED|");
-					if (strpos($currentstatus, $enragedstr) !== False) { //Negate this instead of applying mellow
+					if (strpos($currentstatus, $enragedstr) !== false) { //Negate this instead of applying mellow
 						$currentstatus = str_replace($enragedstr, "", $currentstatus);
 					} else {
-						$justmellowed = True;
+						$justmellowed = true;
 						$currentstatus = $currentstatus . $statustr . "MELLOW|";
 					}
 					$message = $message . "$werow[$enemystr] looks super chill, man...<br/>";
@@ -324,7 +324,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Rage'] / 100); //Enemy's Rage resistance reduces chance of application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$frozenstr = ($statustr . "FROZEN|");
-					if (strpos($currentstatus, $frozenstr) !== False) { //Negate this instead of applying burn
+					if (strpos($currentstatus, $frozenstr) !== false) { //Negate this instead of applying burn
 						$currentstatus = str_replace($frozenstr, "", $currentstatus);
 						$message = $message . "The fire melts the ice around $werow[$enemystr].<br/>";
 					} else {
@@ -339,7 +339,7 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 				$resistfactor = 1 - ($enemyrow['resist_Void'] / 100); //Enemy's Void resistance reduces chance of application.
 				if ($roll > (100 - (intval($currentarray[1]) * $resistfactor))) {
 					$burnstr = ($statustr . "BURNING");
-					if (strpos($currentstatus, $burnstr) !== False) { //Negate this instead of applying burn
+					if (strpos($currentstatus, $burnstr) !== false) { //Negate this instead of applying burn
 						$currentstatus = str_replace($burnstr, "", $currentstatus);
 						$message = $message . "The sheer coldness puts out $werow[$enemystr]'s fire.<br/>";
 					} else {
