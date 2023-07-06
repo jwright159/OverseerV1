@@ -15,6 +15,7 @@ require_once 'includes/global_functions.php';
 	<link href="core.css?1" rel="stylesheet" />
 	<link href="coring.css?1" rel="stylesheet" media="screen and (max-width: 1000px)" />
 	<link href="mobile.css?1" rel="stylesheet" media="screen and (max-width: 800px)" />
+
 	<?php
 	$imagestr = "Images/title/corpia.png";
 	if (!empty($userrow['dreamingstatus'])) {
@@ -25,17 +26,21 @@ require_once 'includes/global_functions.php';
 			echo '<link href="derse.css?1" rel="stylesheet"/>';
 		}
 	}
-	if (mdetect()) {
-		echo '<link href="coring.css?1" rel="stylesheet"/>
-  <link href="mobile.css?1" rel="stylesheet"/>';
+	if (mdetect())
+	{
+		echo '<link href="coring.css?1" rel="stylesheet"/>';
+		echo '<link href="mobile.css?1" rel="stylesheet"/>';
 	}
 	?>
-	<?php if (!empty($userrow['colour']))
-		echo "<style>favcolour{color: $userrow[colour];}</style>"; ?>
+
+	<?php if (!empty($userrow['colour'])) echo "<style>favcolour{color: $userrow[colour];}</style>"; ?>
+
 	<meta name="viewport" content="width=device-width">
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
 	<?php if (mdetect()) { ?>
+
 		<script>
 			$(document).ready(function () {
 				$("ul.drop li ul").hide();
@@ -87,7 +92,9 @@ require_once 'includes/global_functions.php';
 				text-align: center;
 			}
 		</style>
+
 	<?php } else { ?>
+
 		<style>
 			ul.drop li:hover>ul {
 				display: block;
@@ -97,6 +104,7 @@ require_once 'includes/global_functions.php';
 				display: block;
 			}
 		</style>
+
 	<?php } ?>
 
 	<script>
@@ -135,7 +143,7 @@ require_once 'includes/global_functions.php';
 	</script>
 </head>
 
-<body link="#2cff4b" aLink="#2cff4b" vLink="#2cff4b">
+<body>
 
 	<div id="mained">
 		<div id="banner">
@@ -171,28 +179,32 @@ require_once 'includes/global_functions.php';
 						});
 					</script>
 
-					<?php
-					if (empty($_SESSION['username'])) { ?>
+					<?php if (empty($_SESSION['username'])) { ?>
+
 						<style>
 							.intercross {
-								height: 90px;
+								height: 70px;
 							}
 						</style>
-						<?php
-						echo '<form id="login" action="login.php" method="post"> Username: <input id="username" maxlength="50" name="username" type="text" /><br/> Password: <input id="password" maxlength="50" name="password" type="password" />
-    <br/>
-    <input name="Submit" type="submit" value="Submit" /> </form>
-    <span style="color: red;" id="catch"></span>
-    ';
-					} else {
-						echo "<script>
-    $(document).ready(function () {
-        window.location = 'index.php';
-    });
-    </script>";
-					}
-					?>
+						<form id="login" action="login.php" method="post">
+							<p>Username: <input id="username" maxlength="50" name="username" type="text"/></p>
+							<p>Password: <input id="password" maxlength="50" name="password" type="password"/></p>
+							<input name="Submit" type="submit" value="Submit"/>
+						</form>
+						<span style="color: red;" id="catch"></span>
+
+					<?php } else { ?>
+
+						<script>
+							$(document).ready(function () {
+								window.location = 'index.php';
+							});
+						</script>
+
+					<?php } ?>
+
 				</div>
+
 				<div class="intermix">
 					<script>
 						$(document).ready(function () {
@@ -217,21 +229,26 @@ require_once 'includes/global_functions.php';
 							});
 						});
 					</script>
-					<?php
-					if (empty($_SESSION['username'])) {
-						echo '<form id="logina" action="login.php" method="post">
-    &nbsp;<nobr>Username: <input id="usernamea" maxlength="50" name="usernamea" type="text" /></nobr> <nobr>Password: <input id="passworda" maxlength="50" name="passworda" type="password" /></nobr> <input name="Submit" type="submit" value="Submit" />
-    </form>
-    <center><span style="color: red;" class="catch"></span></center>
-    ';
-					} else {
-						echo "<script>
-    $(document).ready(function () {
-        window.location = 'index.php';
-    });
-    </script>";
-					}
-					?>
+
+					<?php if (empty($_SESSION['username'])) { ?>
+
+						<form id="logina" action="login.php" method="post">
+							&nbsp;
+							<nobr>Username: <input id="usernamea" maxlength="50" name="usernamea" type="text" /></nobr>
+							<nobr>Password: <input id="passworda" maxlength="50" name="passworda" type="password" /></nobr>
+							<input name="Submit" type="submit" value="Submit" />
+						</form>
+						<span style="color: red;" class="catch"></span>
+
+					<?php } else { ?>
+
+						<script>
+							$(document).ready(function () {
+								window.location = 'index.php';
+							});
+						</script>
+
+					<?php } ?>
 				</div>
 			<?php } else { ?>
 				<div class="intercross">
@@ -256,7 +273,7 @@ require_once 'includes/global_functions.php';
 						$mainhandInvSlot = $userrow['equipped'];
 					else
 						$mainhandInvSlot = '';
-					$mainPower = getItemPower($mainhandInvSlot);
+					$mainPower = getItemPower($userrow, $mainhandInvSlot);
 
 					if (!empty($_POST['equipoff']))
 						$offhandInvSlot = $_POST['equipoff'];
@@ -264,7 +281,7 @@ require_once 'includes/global_functions.php';
 						$offhandInvSlot = $userrow['offhand'];
 					else
 						$offhandInvSlot = '';
-					$offPower = getItemPower($offhandInvSlot) / 2;
+					$offPower = getItemPower($userrow, $offhandInvSlot) / 2;
 
 					$spritePower = $userrow['sprite_strength'];
 					if ($spritePower < 0)

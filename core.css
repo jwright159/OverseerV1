@@ -17,6 +17,7 @@ nobr {
   display: inline;
 }
 
+/* at one point some links were supposed to be #2cff4b somewhere */
 #banner a:link {
   color: white;
 }
