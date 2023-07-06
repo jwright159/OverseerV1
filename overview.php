@@ -6,13 +6,12 @@ function canFly($checkrow)
 	if ($checkrow['Godtier'] > 0)
 		return true; //player is godtier and can fly no matter what
 	$invcheck = 1;
-	$inv_slots = 50;
-	while ($invcheck <= $inv_slots) {
+	$invSlots = 50;
+	while ($invcheck <= $invSlots) {
 		$invstring = 'inv' . strval($invcheck);
 		if (!empty($checkrow[$invstring])) {
 			$chname = str_replace("'", "\\\\''", $checkrow[$invstring]);
-			$chresult = $mysqli->query("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
-			$chrow = $chresult->fetch_array();
+			$chrow = fetchOne("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
 			if (strrpos($chrow['abstratus'], "flying"))
 				return true;
 		}
@@ -93,10 +92,8 @@ if (empty($_SESSION['username'])) {
 				$classrow = $classresult->fetch_array();
 				if ($row['Class'] == "General")
 					$reachclass = false;
-				if ($reachclass == true) {
-					if ($_POST['class'] == $row['Class'])
-						$titlegood++;
-				}
+				if ($reachclass && $_POST['class'] == $row['Class'])
+					$titlegood++;
 			}
 			if ($titlegood == 2) {
 				$newclass = $mysqli->real_escape_string($_POST['class']);
@@ -238,7 +235,7 @@ if (empty($_SESSION['username'])) {
 			}
 			if ($row['Class'] == "General")
 				$reachclass = false;
-			if ($reachclass == true)
+			if ($reachclass)
 				echo '<option value="' . $row['Class'] . '">' . $row['Class'] . ' ' . $activepassivestr . '</option>';
 		}
 		echo '</select><br/>';
@@ -251,7 +248,8 @@ if (empty($_SESSION['username'])) {
 				$reachaspect = true;
 			if ($aspect == "General")
 				$reachaspect = false;
-			if ($reachaspect == true)
+			
+			if ($reachaspect)
 				echo '<option value="' . $aspect . '">' . $aspect . '</option>';
 		}
 		echo '</select><br/><input type="submit" value="Accept it." /> </form>';
@@ -307,7 +305,7 @@ if (empty($_SESSION['username'])) {
 		$i++;
 	}
 	echo '</select><input type="submit" value="Select it!" /></form><br/>';
-	if ($symbols == false)
+	if (!$symbols)
 		echo "I'm working on this right now dw<br/>";
 	if (empty($userrow['consort_name'])) {
 		echo 'Consorts: Your consorts are currently undefined. Define them below by choosing a color and species.<br/>';
@@ -518,5 +516,5 @@ if (empty($_SESSION['username'])) {
 	}
 	echo "<br/>The more players in your client/server chain have built up to their gates, the more Lands you can access.";
 }
+
 require_once "footer.php";
-?>
