@@ -38,3 +38,5 @@ function fetchAll(string $query, array|null $params = null)
 {
 	return query($query, $params)->fetch_all();
 }
+
+return $mysqli;
