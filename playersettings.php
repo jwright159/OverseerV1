@@ -1,11 +1,9 @@
 <?php
 require_once "header.php";
 
-$enteredOldPasswordCorrectly = !empty($_POST['oldpass']) && password_verify($mysqli->real_escape_string($_POST['oldpass']), $userrow['password']);
-
 if (!empty($_POST['newpass']))
 {
-	if ($enteredOldPasswordCorrectly)
+	if (!empty($_POST['oldpass']) && password_verify($mysqli->real_escape_string($_POST['oldpass']), $userrow['password']))
 	{
 		if ($_POST['newpass'] == $_POST['cnewpass'] && !empty($_POST['newpass']))
 		{
@@ -21,7 +19,7 @@ if (!empty($_POST['newpass']))
 
 if (!empty($_POST['deleteconfirm']))
 {
-	if ($enteredOldPasswordCorrectly)
+	if (password_verify($mysqli->real_escape_string($_POST['deleteconfirm']), $userrow['password']))
 	{
 		//clear all record of the player existing
 		$mysqli->query("UPDATE `Players` SET `server_player` = '' WHERE `Players`.`server_player` = '$username'");
@@ -75,7 +73,7 @@ Confirm New Password: <input type="password" name="cnewpass"><br/>
 <input type="submit" value="Change it!"></form><br/>
 
 <form method="post" action="playersettings.php">Update Email:<br/>
-Current Email: ' . $userrow['email'] . '<br/>
+Current Email: <?php echo $userrow['email']; ?> <br/>
 New Email: <input type="text" name="newemail"><br/>
 Confirm New Email: <input type="text" name="cnewemail"><br/>
 <input type="submit" value="Update it!"></form>
