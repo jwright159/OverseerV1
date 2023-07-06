@@ -672,7 +672,7 @@ if (empty($_SESSION['username'])) {
 		$invcount = 1;
 		while ($invcount <= $max_items) {
 			$invslot = 'inv' . strval($invcount);
-			if ($userrow[$invslot] != "" && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
+			if (!empty($userrow[$invslot]) && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
 				echo '<option value = "' . $invslot . '">' . $userrow[$invslot] . '</option>'; //Add option to recycle this slot.
 			}
 			$invcount++;
@@ -696,7 +696,7 @@ if (empty($_SESSION['username'])) {
 	$invspace = 0;
 	while ($invcount <= $max_items) {
 		$invslot = 'inv' . strval($invcount);
-		if ($userrow[$invslot] != "" && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
+		if (!empty($userrow[$invslot]) && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
 			$pureitemname = str_replace("\\", "", $userrow[$invslot]);
 			$pureitemname = str_replace("'", "", $pureitemname);
 			if (strpos($pureitemname, " (ghost image)") !== false) {
