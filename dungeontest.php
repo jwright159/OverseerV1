@@ -5,4 +5,3 @@ $dungeonresult = $mysqli->query("SELECT * FROM `Dungeons`");
 while ($drow = $dungeonresult->fetch_array()) {
 	echo $drow['username'] . "<br/>";
 }
-?>
