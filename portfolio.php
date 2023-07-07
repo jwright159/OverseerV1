@@ -101,18 +101,20 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		$i++;
 	}
 
-	$classresult = $mysqli->query("SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$userrow[Class]';");
-	$classrow = $classresult->fetch_array();
-	$unarmedpower = floor($userrow['Echeladder'] * (pow(($classrow['godtierfactor'] / 100), $userrow['Godtier'])));
-	$factor = ((612 - $userrow['Echeladder']) / 611);
-	$unarmedpower = ceil($unarmedpower * ((($classrow['level1factor'] / 100) * $factor) + (($classrow['level612factor'] / 100) * (1 - $factor)))); //Finish calculating unarmed power.
-	//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
-	$abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
-AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
 	$abilities = array(0 => "Null ability. No, not void.");
-	while ($temp = $abilityresult->fetch_array()) {
-		$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
-		//as pulling the correct element out of the abilities array via the ID. Note that an ability with an empty usage message will be unusable since the empty function will spit empty at you.
+	if (!empty($userrow['Class']))
+	{
+		$classresult = $mysqli->query("SELECT * FROM Class_modifiers WHERE Class = '$userrow[Class]';");
+		$classrow = $classresult->fetch_array();
+		$unarmedpower = floor($userrow['Echeladder'] * (pow(($classrow['godtierfactor'] / 100), $userrow['Godtier'])));
+		$factor = ((612 - $userrow['Echeladder']) / 611);
+		$unarmedpower = ceil($unarmedpower * ((($classrow['level1factor'] / 100) * $factor) + (($classrow['level612factor'] / 100) * (1 - $factor)))); //Finish calculating unarmed power.
+		//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
+		$abilityresult = $mysqli->query("SELECT ID, Usagestr FROM Abilities WHERE Aspect IN ('$userrow[Aspect]','All') AND Class IN ('$userrow[Class]','All') AND Rungreq BETWEEN 0 AND $userrow[Echeladder] AND Godtierreq BETWEEN 0 AND $userrow[Godtier] ORDER BY Rungreq DESC;");
+		while ($temp = $abilityresult->fetch_array()) {
+			$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
+			//as pulling the correct element out of the abilities array via the ID. Note that an ability with an empty usage message will be unusable since the empty function will spit empty at you.
+		}
 	}
 
 	//--Begin equipping code here.--
