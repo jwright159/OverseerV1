@@ -15,8 +15,7 @@ if (empty($_SESSION['username'])) {
 	if (empty($max_items))
 		$max_items = 50;
 	$maxstorage = $userrow['house_build_grist'] + 1000;
-	$s = 1;
-	while ($s <= $max_items) {
+	for ($s = 1; $s <= $max_items; $s++) {
 		$storstr = 'inv' . strval($s);
 		if (!empty($_POST[$storstr])) {
 			$itemnom = str_replace("'", "\\\\''", $userrow[$storstr]);
@@ -69,16 +68,15 @@ if (empty($_SESSION['username'])) {
 			}
 		} else
 			$storecode[$s] = "nope";
-		$s++;
 	}
 
-	$boom = explode("|", $userrow['storeditems']);
-	$totalitems = empty($userrow['storeditems']) ? 0 : count($boom);
-	$i = 0;
+	$boom = explode("|", substr($userrow['storeditems'], 0, -1));
+	$totalitems = !empty($userrow['storeditems']) ? count($boom) : 0;
 	$space = 0;
 	$itemstored = false;
 	$itemget = false;
-	while ($i < $totalitems) {
+	$itemno = [];
+	for ($i = 0; $i < $totalitems; $i++) {
 		$args = explode(":", $boom[$i]);
 		$itemresult = $mysqli->query("SELECT `captchalogue_code`,`name`,`size`,`effects` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '" . $args[0] . "' LIMIT 1");
 		$irow = $itemresult->fetch_array();
@@ -132,22 +130,25 @@ if (empty($_SESSION['username'])) {
 			echo "ERROR: Items with code " . $args[0] . " stored, but no matching item was found. This is probably a bug; please submit a report!<br/>";
 			logDebugMessage($username . " - has item with code " . $args[0] . " stored, but code wasn't found in database");
 		}
-		$i++;
 	}
 	$actualstore = 0;
-	if ($storecode != "nope") {
-		$i = 0;
+	if ($storecode != "nope")
+	{
 		$nospace = false;
-		while ($i < $totalitems) {
-			if (strpos($itemcomp[$i], "CODE=") !== false) {
+		for ($i = 0; $i < $totalitems; $i++)
+		{
+			if (strpos($itemcomp[$i], "CODE=") !== false)
 				$thiscode = substr($itemcomp[$i], 5, 8);
-			} else
+			else
 				$thiscode = "none";
-			$s = 1;
-			while ($s <= $max_items) {
-				if ($itemcode[$i] == $storecode[$s] && $stackcode[$s] == $thiscode) { //User wants to store more of these items.
+			
+			for ($s = 1; $s <= $max_items; $s++)
+			{
+				if ($itemcode[$i] == $storecode[$s] && $stackcode[$s] == $thiscode) //User wants to store more of these items.
+				{
 					$rslot = "inv" . strval($s);
-					if ($space + $storesize[$s] <= $maxstorage + $contain[$s]) {
+					if ($space + $storesize[$s] <= $maxstorage + $contain[$s])
+					{
 						$itemno[$i]++;
 						$space += $storesize[$s];
 						$maxstorage += $contain[$s];
@@ -158,24 +159,23 @@ if (empty($_SESSION['username'])) {
 						$mysqli->query("UPDATE `Players` SET `$rslot` = '' WHERE `Players`.`username` = '$username' LIMIT 1");
 						$userrow[$rslot] = "";
 						echo $storename[$s] . " stored.<br/>";
-					} else {
+					}
+					else
+					{
 						echo "Not enough space to store " . $storename[$s] . ".<br/>";
 						$nospace = true;
 					}
 				}
-				$s++;
 			}
-			$i++;
 		}
 		if (!$itemstored && !$nospace) { //item not already found in storage, so a new entry must be created
-			$s = 1;
-			while ($s <= $max_items) {
+			for ($s = 1; $s <= $max_items; $s++) {
 				if (!empty($storecode[$s]) && $storecode[$s] != "nope") {
+					$itemno[] = 0;
 					$nextstore = $storecode[$s];
 					$nextstack = $stackcode[$s];
-					$t = 1;
 					$storedone = false;
-					while ($t <= $max_items) {
+					for ($t = 1; $t <= $max_items; $t++) {
 						$rslot = "inv" . strval($t);
 						if ($nextstore == $storecode[$t] && $nextstack == $stackcode[$t]) {
 							if ($space + $storesize[$t] <= $maxstorage + $contain[$t]) {
@@ -195,7 +195,6 @@ if (empty($_SESSION['username'])) {
 								$nospace = true;
 							}
 						}
-						$t++;
 					}
 					if ($storedone) {
 						$itemcode[$i] = $nextstore;
@@ -205,7 +204,6 @@ if (empty($_SESSION['username'])) {
 						$totalitems++;
 					}
 				}
-				$s++;
 			}
 			if ($actualstore > 0) {
 				$itemstored = true; //stored at least one item successfully
