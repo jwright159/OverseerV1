@@ -768,7 +768,7 @@ if (empty($_SESSION['username'])) {
 			//Check the input here.
 			$tfound = false;
 			$trow = array();
-			if ($_POST['questdungeon'] == "yes") {
+			if (!empty($_POST['questdungeon']) && $_POST['questdungeon'] == "yes") {
 				if ($userrow['currentquest'] != 0) {
 					$qresult = $mysqli->query("SELECT * FROM Consort_Dialogue WHERE ID = " . strval($userrow['currentquest']));
 					$qrow = $qresult->fetch_array();
