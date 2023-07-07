@@ -113,7 +113,7 @@ function climbEcheladder(array $userrow, int $rungups)
 				echo "<br/>You ascend to rung: $echerow[$echestr]!";
 		}
 
-		foreach (fetchAll("SELECT * FROM Abilities WHERE Aspect IN (:aspect, 'All') AND Class IN (class,'All') AND Rungreq BETWEEN :rungReqLower AND :rungReqUpper AND Godtierreq = 0 ORDER BY Rungreq DESC;", ['aspect' => $userrow['Aspect'], 'class' => $userrow['Class'], 'rungReqLower' => $userrow['Echeladder'] + 1, 'rungReqUpper' => $userrow['Echeladder'] + $rungs,]) as $levelerability)
+		foreach (fetchAll("SELECT * FROM Abilities WHERE Aspect IN (:aspect, 'All') AND Class IN (:class, 'All') AND Rungreq BETWEEN :rungReqLower AND :rungReqUpper AND Godtierreq = 0 ORDER BY Rungreq DESC;", ['aspect' => $userrow['Aspect'], 'class' => $userrow['Class'], 'rungReqLower' => $userrow['Echeladder'] + 1, 'rungReqUpper' => $userrow['Echeladder'] + $rungs,]) as $levelerability)
 			echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 
 		if ($userrow['Echeladder'] + $rungs == 612)
