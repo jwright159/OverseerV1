@@ -9,7 +9,7 @@ $max_items = 50; //number of items the player's inventory can hold
 
 function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 {
-	global $gristname, $totalgrists;
+	global $gristname, $totalgrists, $mysqli;
 	$reward = rand(1, (100 - (($userrow['Luck'] + $userrow['Brief_Luck']) / 2))); //chance of getting an item instead of boons
 	$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 	$landrow = $landresult->fetch_array();
