@@ -1801,7 +1801,7 @@ if (empty($_SESSION['username'])) {
 		echo "<br/>";
 		if ($onentrance && empty($encounterargs)) {
 			echo "<br/>";
-			if ($isquestcomplete) {
+			if (!empty($isquestcomplete)) {
 				echo "<form action='consortquests.php' method='post'><input type='hidden' name='turnindungeonquest' value='yes'><input type='submit' value='Claim the quest reward before leaving the dungeon!'></form>";
 			} else {
 				echo "<form action='dungeons.php#display' method='post'><input type='hidden' name='exitdungeon' value='yep'><input type='submit' value='Exit the dungeon (WARNING - ALL DUNGEON CONTENT WILL DISAPPEAR!)'></form>";
