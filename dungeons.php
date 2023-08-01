@@ -446,7 +446,7 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 					$randomrow = rand(1, 10);
 					$randomcol = rand(1, 10);
 					$randomsquare = strval($randomrow) . "," . strval($randomcol);
-					while (strpos($roomarray[$randomsquare], "ENTRANCE") !== false && strpos($roomarray[$randomsquare], "STAIRS") !== false) { //Keep re-selecting if we hit the entrance/stairs. 1% chance per loop
+					while (empty($roomarray[$randomsquare]) || strpos($roomarray[$randomsquare], "ENTRANCE") === false || strpos($roomarray[$randomsquare], "STAIRS") === false) { //Keep re-selecting if we hit the entrance/stairs. 1% chance per loop
 						$randomrow = rand(1, 10);
 						$randomcol = rand(1, 10);
 						$randomsquare = strval($randomrow) . "," . strval($randomcol);
