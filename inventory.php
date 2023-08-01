@@ -672,7 +672,7 @@ if (empty($_SESSION['username'])) {
 	$invspace = 0;
 	while ($invcount <= $max_items) {
 		$invslot = 'inv' . strval($invcount);
-		if (!empty($userrow[$invslot]) && !$recycled[$invslot]) { //This is a non-empty inventory slot that wasn't just recycled away.
+		if (!empty($userrow[$invslot]) && empty($recycled[$invslot])) { //This is a non-empty inventory slot that wasn't just recycled away.
 			$pureitemname = str_replace("\\", "", $userrow[$invslot]);
 			$pureitemname = str_replace("'", "", $pureitemname);
 			if (strpos($pureitemname, " (ghost image)") !== false) {
