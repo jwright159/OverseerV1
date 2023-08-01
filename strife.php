@@ -110,6 +110,7 @@ if (empty($_SESSION['username'])) {
 				echo "Enemies fought last:<br/>";
 				$i = 1;
 				while ($i <= $max_enemies) { //Fetch up the enemies the player last fought.
+					if (empty($userrow['olddreamenemy' . strval($i)])) break;
 					$oldenemy = $userrow['olddreamenemy' . strval($i)];
 					$griststr = "grist" . strval($i);
 					$enemystr = "enemy" . strval($i);
