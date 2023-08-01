@@ -98,11 +98,10 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 			$itemname = $itemrow['name'];
 			//if ($debugprintbossloots) echo "checking $itemname<br/>";
 			$total = 0;
-			$grist = 0;
-			while (!empty($gristname[$grist])) {
-				$gristcost = $gristname[$grist] . "_Cost";
-				$total += $itemrow[$gristcost];
-				$grist++;
+			foreach ($gristname as $grist) {
+				$gristcost = $grist . "_Cost";
+				if (!empty($itemrow[$gristcost]))
+					$total += $itemrow[$gristcost];
 			}
 			if ($total >= $min && $total <= $max) { //Item has an acceptable grist cost.
 				$selected = true;
