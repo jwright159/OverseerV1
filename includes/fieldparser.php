@@ -178,7 +178,7 @@ function writeLastfought($userrow)
 		if (!empty($userrow['oldenemy' . $enstr]) || !empty($userrow['olddreamenemy' . $enstr])) { //name will be blanked when enemy is defeated, so we'll blank all of its stats
 			//echo "data found: ";
 			$endatastr .= (!empty($userrow['oldenemy' . $enstr]) ? $userrow['oldenemy' . $enstr] : '') . ":";
-			$endatastr .= $userrow['oldgrist' . $enstr] . ":";
+			$endatastr .= (!empty($userrow['oldgrist' . $enstr]) ? $userrow['oldgrist' . $enstr] : "None") . ":";
 			$endatastr .= (!empty($userrow['olddreamenemy' . $enstr]) ? $userrow['olddreamenemy' . $enstr] : '');
 			$endatastr .= "|";
 			//echo $endatastr . "<br/>";

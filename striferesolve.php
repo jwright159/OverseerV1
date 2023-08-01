@@ -514,7 +514,7 @@ if (empty($_SESSION['username'])) {
 		}
 		$turncounter = 0;
 		$nodamagecounter = 0;
-		while ($once == true || $repeat == true) {
+		while ($once || $repeat) {
 			$turncounter += 1;
 			$nodamage = false;
 			if (!empty($abilities[1]) && $offense == "aggress") { //Activate passive aggression: apply passive modifier. (ID 1)
