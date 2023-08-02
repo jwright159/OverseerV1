@@ -62,26 +62,21 @@ if (!empty($holoCode)) {
 		$desc = descvarConvert($userrow, $itemrow['description'], $itemrow['effects']);
 		echo $desc . "<br/><b>It costs:</b>";
 		$reachgrist = false;
-		$terminateloop = false; //time-saver
-		if ($gristed == false) {
+		if (!$gristed) {
 			$gristname = initGrists();
-			$totalgrists = count($gristname);
 			$gristed = true;
 		}
-		$gristcount = 0;
-		while ($gristcount <= $totalgrists) {
-			$gristtype = $gristname[$gristcount];
-			$gristcost = $gristtype . "_Cost";
+		foreach ($gristname as $grist) {
+			$gristcost = $grist . "_Cost";
 			if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
 				$nothing = false; //Item costs something.
-				echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
-				if ($userrow[$gristtype] >= $itemrow[$gristcost]) {
+				echo '<img src="Images/Grist/' . gristNameToImagePath($grist) . '" height="50" width="50" title="' . $grist . '"></img>';
+				if ($userrow[$grist] >= $itemrow[$gristcost]) {
 					echo " <gristvalue2>$itemrow[$gristcost] </gristvalue2>";
 				} else {
 					echo " <gristvalue>$itemrow[$gristcost] </gristvalue>";
 				}
 			}
-			$gristcount++;
 		}
 		if (strpos($itemrow['effects'], "FLAVORCOST") !== false) {
 			$i = 0;

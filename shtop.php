@@ -11,18 +11,17 @@ if (empty($_SESSION['username'])) {
 	$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 	$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
 	$reachgrist = false;
-	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
+	while (($col = $result2->fetch_field())) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 			$reachgrist = true;
 		}
 		if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 			$reachgrist = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachgrist == true) {
+		if ($reachgrist) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -47,10 +46,10 @@ if (empty($_SESSION['username'])) {
 				$landcount++;
 			}
 			echo '</select><input type="submit" value="Shop here"></form>';
-			/*$debugitem = randomItem('Amber_Cost', 1000, $gristname, $totalgrists);
+			/*$debugitem = randomItem('Amber_Cost', 1000, $gristname);
 			$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 			  $landrow = $landresult->fetch_array();
-			$debugprice = totalBooncost($debugitem, $landrow, $gristname, $totalgrists);
+			$debugprice = totalBooncost($debugitem, $landrow, $gristname);
 			echo strval($debugprice);*/
 			echo '<br/><br/><a href="shop.php">Click here to use the fancy shop page.</a>';
 		} else {
@@ -123,9 +122,9 @@ if (empty($_SESSION['username'])) {
 					$landrow = $landresult->fetch_array();
 					while ($tsi < $maxshopitems) {
 						$thisgrist = $landrow['grist' . strval(rand(1, 9))]; //pick a random grist type from that land
-						$shopitemrow = randomItem($thisgrist . '_Cost', $gaterow['gate' . strval($shopgate)], $gristname, $totalgrists, "");
+						$shopitemrow = randomItem($thisgrist . '_Cost', $gaterow['gate' . strval($shopgate)], $gristname, "");
 						$shopitem[$tsi] = $shopitemrow['name'];
-						$shopprice[$tsi] = round(totalBooncost($shopitemrow, $landrow, $gristname, $totalgrists, $currentrow['session_name']) * $shopinflation);
+						$shopprice[$tsi] = round(totalBooncost($shopitemrow, $landrow, $gristname, $currentrow['session_name']) * $shopinflation);
 						$shoppower[$tsi] = $shopitemrow['power'];
 						$shopkind[$tsi] = $shopitemrow['abstratus'];
 						$shopstring = $shopstring . $shopitem[$tsi] . "==" . strval($shopprice[$tsi]) . "==" . strval($shoppower[$tsi]) . "==" . strval($shopkind[$tsi]) . "|";
@@ -160,7 +159,7 @@ if (empty($_SESSION['username'])) {
 					$canwield = false;
 					$wcount = 1;
 					while ($wcount < 16) {
-						if (!(strrpos($shopkind[$csi], $userrow['abstratus' . strval($wcount)]) === false))
+						if (strrpos($shopkind[$csi], $userrow['abstratus' . strval($wcount)]) !== false)
 							$canwield = true;
 						$wcount++;
 					}
@@ -210,4 +209,3 @@ if (empty($_SESSION['username'])) {
 	}
 }
 require_once "footer.php";
-?>

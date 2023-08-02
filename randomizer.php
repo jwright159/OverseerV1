@@ -2,14 +2,12 @@
 require_once 'designix.php';
 require_once "header.php";
 
-function totalGristcost($countrow, $gristname, $totalgrists)
+function totalGristcost($countrow, $gristname)
 {
-	$i = 0;
 	$totalcost = 0;
-	while ($i < $totalgrists) {
+	foreach ($gristname as $grist) {
 		//echo $gristname[$i] . " - " . strval($countrow[$gristname[$i] . '_Cost']) . "<br/>";
-		$totalcost = $totalcost + $countrow[$gristname[$i] . '_Cost'];
-		$i++;
+		$totalcost += $countrow[$grist . '_Cost'];
 	}
 	return $totalcost;
 }
@@ -115,7 +113,7 @@ if (empty($_SESSION['username'])) {
 		while ($row = $itemsresult->fetch_array()) {
 			if (!empty($_GET['atheneum']) && $_GET['atheneum'] == "yes") {
 				$realtotalitems++;
-				if (!(strrpos($sessionrow['atheneum'], $row['captchalogue_code']) === false)) {
+				if (strrpos($sessionrow['atheneum'], $row['captchalogue_code']) !== false) {
 					$totalitems++;
 					$athenitem[$totalitems] = $realtotalitems;
 				}
@@ -133,7 +131,7 @@ if (empty($_SESSION['username'])) {
 			while ($row = $itemsresult->fetch_array()) {
 				if ($_GET['atheneum'] == "yes") {
 					$realtotalaotw++;
-					if (!(strrpos($sessionrow['atheneum'], $row['captchalogue_code']) === false)) {
+					if (strrpos($sessionrow['atheneum'], $row['captchalogue_code']) !== false) {
 						$totalaotw++;
 						$athenitemb[$totalaotw] = $realtotalaotw;
 					}
@@ -143,7 +141,7 @@ if (empty($_SESSION['username'])) {
 		}
 		$makecombo = true;
 		$attempts = 0;
-		while ($makecombo == true && $attempts < 100) {
+		while ($makecombo && $attempts < 100) {
 			$makecombo = false;
 			$attempts++;
 			if (empty($_GET['userabstratus'])) {
@@ -242,7 +240,7 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 			$makecombo = true;
-			while ($makecombo == true) {
+			while ($makecombo) {
 				$makecombo = false;
 				$truename1 = str_replace("'", "\\\\''", $userrow['inv' . $item1]);
 				$itemresult1 = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $truename1 . "' LIMIT 1 ;");
@@ -266,7 +264,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 
-	if ($dontshowitems == false) {
+	if (!$dontshowitems) {
 		$irow1['name'] = str_replace("\\'", "'", $irow1['name']);
 		$irow2['name'] = str_replace("\\'", "'", $irow2['name']);
 		echo 'Your random items are: <br/>';
@@ -340,12 +338,11 @@ if (empty($_SESSION['username'])) {
 	echo 'Comments on the new item. This field is for suggestions like command bonuses, abstratus the item should have, grist to be used, etc:<br/><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br/>';
 	if ($irow1['power'] == 0 || $irow2['power'] == 0) {
 		$gristname = initGrists();
-		$totalgrists = count($gristname);
 		if ($irow1['power'] == 0) {
-			$irow1['power'] = floor(sqrt(totalGristcost($irow1, $gristname, $totalgrists) * 8));
+			$irow1['power'] = floor(sqrt(totalGristcost($irow1, $gristname) * 8));
 		}
 		if ($irow2['power'] == 0) {
-			$irow2['power'] = floor(sqrt(totalGristcost($irow2, $gristname, $totalgrists) * 8));
+			$irow2['power'] = floor(sqrt(totalGristcost($irow2, $gristname) * 8));
 		}
 	}
 	$fullpower = $irow1['power'] + $irow2['power'];
@@ -370,4 +367,3 @@ if (empty($_SESSION['username'])) {
 	echo '<input type="submit" value="Randomize it!" /></form>';
 }
 require_once "footer.php";
-?>

@@ -357,17 +357,16 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	echo $username;
 	echo "'s captchalogued weapons:<br/><br/>";
 	$reachinv = false;
-	$terminateloop = false;
-	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
+	while (($col = $invresult->fetch_field())) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") { //Reached the start of the inventory.
 			$reachinv = true;
 		}
 		if ($invslot == "abstratus1") { //Reached the end of the inventory.
 			$reachinv = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachinv == true && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
+		if ($reachinv && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 			while ($row = $captchalogue->fetch_array()) {

@@ -171,26 +171,21 @@ if (empty($_SESSION['username'])) {
 				$desc = descvarConvert($userrow, $itemrow['description'], $itemrow['effects']);
 				echo $desc . "<br/>" . "The inputted holocode is repeated: <span style='color:#F3C; font-size:30px; font-weight:bold;'>" . $_GET['holocode'] . "</span><br/>" . "It costs ";
 				$reachgrist = false;
-				$terminateloop = false; //time-saver
-				if ($gristed == false) {
+				if (!$gristed) {
 					$gristname = initGrists();
-					$totalgrists = count($gristname);
 					$gristed = true;
 				}
-				$gristcount = 0;
-				while ($gristcount <= $totalgrists) {
-					$gristtype = $gristname[$gristcount];
-					$gristcost = $gristtype . "_Cost";
+				foreach ($gristname as $grist) {
+					$gristcost = $grist . "_Cost";
 					if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
 						$nothing = false; //Item costs something.
-						echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
-						if ($userrow[$gristtype] >= $itemrow[$gristcost]) {
+						echo '<img src="Images/Grist/' . gristNameToImagePath($grist) . '" height="50" width="50" title="' . $grist . '"></img>';
+						if ($userrow[$grist] >= $itemrow[$gristcost]) {
 							echo " <gristvalue2>$itemrow[$gristcost] </gristvalue2>";
 						} else {
 							echo " <gristvalue>$itemrow[$gristcost] </gristvalue>";
 						}
 					}
-					$gristcount++;
 				}
 				if (strpos($itemrow['effects'], "FLAVORCOST") !== false) {
 					$i = 0;
@@ -312,7 +307,6 @@ if (empty($_SESSION['username'])) {
 			$canafford = true;
 			$nothing = true;
 			$reachgrist = false;
-			$terminateloop = false;
 			$itemrow = $itemresult->fetch_array();
 			if ($itemrow['captchalogue_code'] == $_POST['alchcode']) {
 				if (itemSize($itemrow['size']) > itemSize($userrow['moduspower'])) { //item is too big for the player's fetch modus
@@ -325,28 +319,24 @@ if (empty($_SESSION['username'])) {
 				echo "The item costs ";
 				if (!$gristed) {
 					$gristname = initGrists();
-					$totalgrists = count($gristname);
 					$gristed = true;
 				}
-				$gristcount = 0;
-				while ($gristcount <= $totalgrists) {
-					$gristtype = $gristname[$gristcount];
-					$gristcost = $gristtype . "_Cost";
-					//echo $gristtype . " " . $gristcost;
+				foreach ($gristname as $grist) {
+					$gristcost = $grist . "_Cost";
+					//echo $grist . " " . $gristcost;
 					//echo strval($itemrow[$gristcost]);
 					if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
 						$nothing = false; //Item costs something.
-						if ($userrow[$gristtype] < $itemrow[$gristcost] * ($numberalched + $tostorage)) { //Player cannot afford to alchemize this item.
+						if ($userrow[$grist] < $itemrow[$gristcost] * ($numberalched + $tostorage)) { //Player cannot afford to alchemize this item.
 							$canafford = false;
 						}
-						echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
-						if ($userrow[$gristtype] >= $itemrow[$gristcost]) {
+						echo '<img src="Images/Grist/' . gristNameToImagePath($grist) . '" height="50" width="50" title="' . $grist . '"></img>';
+						if ($userrow[$grist] >= $itemrow[$gristcost]) {
 							echo " <gristvalue2>$itemrow[$gristcost] </gristvalue2>";
 						} else {
 							echo " <gristvalue>$itemrow[$gristcost] </gristvalue>";
 						}
 					}
-					$gristcount++;
 				}
 				if (strpos($itemrow['effects'], "FLAVORCOST") !== false) {
 					$i = 0;
@@ -392,18 +382,15 @@ if (empty($_SESSION['username'])) {
 					//require_once "includes/SQLconnect.php"; //Reconnection appears necessary due to addItem making its own little connection.
 					if (!$gristed) {
 						$gristname = initGrists();
-						$totalgrists = count($gristname);
 						$gristed = true;
 					}
-					$gristcount = 0;
 					$costquery = "UPDATE Players SET ";
-					while ($gristcount <= $totalgrists) {
-						$gristtype = $gristname[$gristcount];
-						$gristcost = $gristtype . "_Cost";
+					foreach ($gristname as $grist) {
+						$gristcost = $grist . "_Cost";
 						$actualcost = 0;
 						$actualcost = $itemrow[$gristcost] * ($numberalched + $actualstore);
 						if ($actualcost != 0)
-							$costquery = $costquery . "`$gristtype` = $userrow[$gristtype]-$actualcost, ";
+							$costquery = $costquery . "`$grist` = $userrow[$grist]-$actualcost, ";
 						$gristcount++;
 					}
 					$costquery = substr($costquery, 0, -2); //Dispose of last comma and space.
@@ -517,23 +504,19 @@ if (empty($_SESSION['username'])) {
 							autoUnequip($userrow, "none", $_POST[$invstring]);
 							if (!$gristed) {
 								$gristname = initGrists();
-								$totalgrists = count($gristname);
 								$gristed = true;
 							}
-							$gristcount = 0;
 							$refundquery = "UPDATE Players SET ";
-							if ($isghost == false) {
-								while ($gristcount <= $totalgrists) {
-									$gristtype = $gristname[$gristcount];
-									$gristcost = $gristtype . "_Cost";
+							if (!$isghost) {
+								foreach ($gristname as $grist) {
+									$gristcost = $grist . "_Cost";
 									if ($itemrow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
 										$nothing = false; //Item costs something.
-										$refundquery = $refundquery . "`$gristtype` = $userrow[$gristtype]+$itemrow[$gristcost], ";
-										$userrow[$gristtype] += $itemrow[$gristcost];
-										echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
+										$refundquery = $refundquery . "`$grist` = $userrow[$grist]+$itemrow[$gristcost], ";
+										$userrow[$grist] += $itemrow[$gristcost];
+										echo '<img src="Images/Grist/' . gristNameToImagePath($grist) . '" height="50" width="50" title="' . $grist . '"></img>';
 										echo " <gristvalue2>$itemrow[$gristcost] </gristvalue2>";
 									}
-									$gristcount++;
 								}
 								if (strpos($itemrow['effects'], "FLAVORCOST") !== false) {
 									$i = 0;
@@ -565,7 +548,7 @@ if (empty($_SESSION['username'])) {
 						}
 					}
 				}
-				if ($success == false) {
+				if (!$success) {
 					if ($userrow[$_POST[$invstring]] != "") {
 						$mysqli->query("UPDATE `Players` SET `" . $_POST[$invstring] . "` = '' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 						echo "It seems that the item you tried to recycle (" . $userrow[$_POST[$invstring]] . ") no longer exists, or never existed to begin with. You get no grist, but the item has been removed from your inventory, freeing the slot. If you alchemized that item legitimately, please submit a bug report and we'll return your grist ASAP!";

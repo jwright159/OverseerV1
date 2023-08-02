@@ -115,17 +115,16 @@ if (empty($_SESSION['username'])) {
 		echo '</select><br/>Target username (other): <input id="target" name="target" type="text" /><br/> Type of grist: <select name="grist_type"> ';
 		$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;");
 		$reachgrist = false;
-		$terminateloop = false;
-		while (($col = $result2->fetch_field()) && $terminateloop == false) {
+		while (($col = $result2->fetch_field())) {
 			$gristtype = $col->name;
 			if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 				$reachgrist = true;
 			}
 			if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 				$reachgrist = false;
-				$terminateloop = true;
+				break;
 			}
-			if ($reachgrist == true) {
+			if ($reachgrist) {
 				echo '<option value="' . $gristtype . '">' . $gristtype . '</option>'; //Produce an option in the dropdown menu for this grist.
 			}
 		}
@@ -136,17 +135,16 @@ if (empty($_SESSION['username'])) {
 	$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1 ;");
 	echo "<div class='grister'>";
 	$rowcount = 1;
-	$terminateloop = false;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
+	while (($col = $result2->fetch_field())) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 			$reachgrist = true;
 		}
 		if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 			$reachgrist = false;
-			$terminateloop = true;
+			break;
 		}
-		if (($reachgrist == true) && ($userrow[$gristtype] != 0)) { //Print grist, grist image, and grist total.
+		if ($reachgrist && $userrow[$gristtype] != 0) { //Print grist, grist image, and grist total.
 			echo "<div class='grist $gristtype'>";
 			if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
 				echo '<center><img src="Images/Grist/' . $gristtype . '.gif " height="50" width="50"></img></center>' . $gristtype . ' - ';
@@ -170,4 +168,3 @@ if (empty($_SESSION['username'])) {
 	$mysqli->close();
 }
 require_once "footer.php";
-?> 

@@ -27,14 +27,12 @@ function getBonus($b)
 	}
 }
 
-function totalGristcost($countrow, $gristname, $totalgrists)
+function totalGristcost($countrow, $gristname)
 {
-	$i = 0;
 	$totalcost = 0;
-	while ($i < $totalgrists) {
+	foreach ($gristname as $grist) {
 		//echo $gristname[$i] . " - " . strval($countrow[$gristname[$i] . '_Cost']) . "<br/>";
-		$totalcost = $totalcost + $countrow[$gristname[$i] . '_Cost'];
-		$i++;
+		$totalcost += $countrow[$grist . '_Cost'];
 	}
 	return $totalcost;
 }
@@ -162,12 +160,11 @@ if (empty($_SESSION['username'])) {
 					$i2row['power'] += $i2row[heaviestBonus($i2row)];
 					if ($i1row['power'] == 0 || $i2row['power'] == 0) { //one/both of them doesn't have a power so let's give an approximation based on grist cost
 						$gristname = initGrists();
-						$totalgrists = count($gristname);
 						if ($i1row['power'] == 0) {
-							$i1row['power'] = floor(sqrt(totalGristcost($i1row, $gristname, $totalgrists) * 8));
+							$i1row['power'] = floor(sqrt(totalGristcost($i1row, $gristname) * 8));
 						}
 						if ($i2row['power'] == 0) {
-							$i2row['power'] = floor(sqrt(totalGristcost($i2row, $gristname, $totalgrists) * 8));
+							$i2row['power'] = floor(sqrt(totalGristcost($i2row, $gristname) * 8));
 						}
 					}
 					$reccpower = ($i1row['power'] + $i2row['power']) * 1.5;
@@ -320,13 +317,10 @@ if (empty($_SESSION['username'])) {
 			if ($bonuses == "" && $editid != 0)
 				$bonuses = $fbrow['bonuses'];
 			$gristname = initGrists();
-			$totalgrists = count($gristname);
-			$i = 0;
-			while ($i < $totalgrists) {
-				if (intval($_POST[$gristname[$i]]) != 0) {
-					$grists .= $gristname[$i] . ":" . strval($_POST[$gristname[$i]]) . "|";
+			foreach ($gristname as $grist) {
+				if (intval($_POST[$grist]) != 0) {
+					$grists .= $grist . ":" . strval($_POST[$grist]) . "|";
 				}
-				$i++;
 			}
 			if ($grists == "" && $editid != 0)
 				$grists = $fbrow['grists'];
@@ -563,13 +557,10 @@ if (empty($_SESSION['username'])) {
 			echo 'Size: <select name="size"><option value="miniature">miniature (1)</option><option value="tiny">tiny (5)</option><option value="small">small (10)</option><option value="average" selected>average (20)</option><option value="large">large (40)</option><option value="huge">huge (100)</option><option value="immense">immense (250)</option><option value="ginormous">ginormous (1000)</option></select>';
 			echo ' (note that large is used for two-handed weapons and headgear that covers the face; huge and above cannot be equipped and are mostly for notaweapon fluff)';
 			$gristname = initGrists();
-			$totalgrists = count($gristname);
-			$i = 0;
 			echo '<br/>Grist types:<br/>Note that grist costs will be autobalanced based on the given power level, so instead of costs, think of these as ratios. For every grist that you want to assign to this item, put down a number representing its weight among the total grist costs. For example: putting 2 in Build_Grist and 1 in Amber will make the item cost twice as much build as amber. If you don\'t care about ratios, just put 1\'s in the grists you want.<br/>';
-			while ($i < $totalgrists) {
-				echo "<img src='/Images/Grist/" . gristNameToImagePath($gristname[$i]) . "' height='15' width='15' alt = 'xcx'/>";
-				echo $gristname[$i] . ': <input type="text" name="' . $gristname[$i] . '" /><br/>';
-				$i++;
+			foreach ($gristname as $grist) {
+				echo "<img src='/Images/Grist/" . gristNameToImagePath($grist) . "' height='15' width='15' alt = 'xcx'/>";
+				echo $grist . ': <input type="text" name="' . $grist . '" /><br/>';
 			}
 			echo 'Comments on the new item. Things such as consumable or extra item effects go here.<br/><a href="https://the-overseer.wikia.com/wiki/List_of_item_effects">(You can find a full list of possible item effects here.)</a><br/><textarea name="other" rows="6" cols="40" form="newitem"></textarea><br/>';
 			echo '<input type="submit" name="button" value="Suggest it!" /></form><br/>';

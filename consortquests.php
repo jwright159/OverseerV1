@@ -9,7 +9,7 @@ $max_items = 50; //number of items the player's inventory can hold
 
 function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 {
-	global $gristname, $totalgrists, $mysqli;
+	global $gristname, $mysqli;
 	$reward = rand(1, (100 - (($userrow['Luck'] + $userrow['Brief_Luck']) / 2))); //chance of getting an item instead of boons
 	$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 	$landrow = $landresult->fetch_array();
@@ -33,8 +33,8 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 			}
 		} else {
 			$thisgrist = $landrow['grist' . strval(rand(1, 9))] . "_Cost"; //pick a random grist type from that land
-			$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, $totalgrists, $qrow['specialreward']);
-			$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $totalgrists, $currentrow['session_name']);
+			$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, $qrow['specialreward']);
+			$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $currentrow['session_name']);
 			$basecost = $realbasecost - $rewarditemcost;
 			$basecost = ceil($basecost * (1 + ($inflation / 100)));
 			$rewardname = str_replace("\\", "", $rewarditem['name']);
@@ -50,8 +50,8 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 		}
 	} elseif ($reward < 10) { //10% chance normally of getting an item in return, 20% if max luck
 		$thisgrist = $landrow['grist' . strval(rand(1, 9))] . "_Cost"; //pick a random grist type from that land
-		$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, $totalgrists, "");
-		$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $totalgrists, $currentrow['session_name']);
+		$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, "");
+		$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $currentrow['session_name']);
 		$basecost = $realbasecost - $rewarditemcost;
 		$basecost = ceil($basecost * (1 + ($inflation / 100)));
 		$rewardname = str_replace("\\", "", $rewarditem['name']);
@@ -115,18 +115,17 @@ if (empty($_SESSION['username'])) {
 	$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 	$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
 	$reachgrist = false;
-	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
+	while (($col = $result2->fetch_field()) ) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 			$reachgrist = true;
 		}
 		if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 			$reachgrist = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachgrist == true) {
+		if ($reachgrist) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -324,9 +323,9 @@ if (empty($_SESSION['username'])) {
 							$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 							$landrow = $landresult->fetch_array();
 							$landgate = highestGate($gaterow, $currentrow['house_build_grist']);
-							$offercost = totalGristcost($qirow, $gristname, $totalgrists);
+							$offercost = totalGristcost($qirow, $gristname);
 							if ($offercost <= $gaterow['gate' . strval($landgate)]) { //see if the consort has access to wealth sufficient to pay for the item
-								$realbasecost = totalBooncost($qirow, $landrow, $gristname, $totalgrists, $currentrow['session_name']);
+								$realbasecost = totalBooncost($qirow, $landrow, $gristname, $currentrow['session_name']);
 								autoUnequip($userrow, "none", $_POST['questitem']);
 								$mysqli->query("UPDATE Players SET `$_POST[questitem]` = '' WHERE `Players`.`username` = '$username'"); //reward player and clear quest
 								$userrow[$_POST['questitem']] = "";

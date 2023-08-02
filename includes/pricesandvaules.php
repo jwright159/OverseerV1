@@ -1,6 +1,6 @@
 <?php
 
-function randomItem($griststring, $costcap, $gristname, $totalgrists, $specialstring)
+function randomItem($griststring, $costcap, $gristname, $specialstring)
 {
 	if (!empty($specialstring)) {
 		$specialstring = "(" . $specialstring . ")";
@@ -15,7 +15,7 @@ function randomItem($griststring, $costcap, $gristname, $totalgrists, $specialst
 	while (!$foundone && $attempts < $attemptscap) {
 		$pickrow = $poolresult[array_rand($poolresult)];
 		//echo $pickrow['name'] . " found<br/>";
-		$thiscost = totalGristcost($pickrow, $gristname, $totalgrists);
+		$thiscost = totalGristcost($pickrow, $gristname);
 		if ($thiscost <= $costcap)
 			$foundone = true;
 		$attempts++;
@@ -26,46 +26,43 @@ function randomItem($griststring, $costcap, $gristname, $totalgrists, $specialst
 		return false;
 }
 
-function totalGristcost($countrow, $gristname, $totalgrists)
+function totalGristcost($countrow, $gristname)
 {
-	$i = 0;
 	$totalcost = 0;
-	while ($i < $totalgrists) {
+	foreach ($gristname as $grist) {
 		//echo $gristname[$i] . " - " . strval($countrow[$gristname[$i] . '_Cost']) . "<br/>";
-		$totalcost = $totalcost + $countrow[$gristname[$i] . '_Cost'];
-		$i++;
+		if (!empty($countrow[$grist . '_Cost']))
+			$totalcost += $countrow[$grist . '_Cost'];
 	}
 	return $totalcost;
 }
 
-function totalBooncost($countrow, $landrow, $gristname, $totalgrists, $sessionname)
+function totalBooncost($countrow, $landrow, $gristname, $sessionname)
 {
-	$i = 0;
 	$totalcost = 0;
-	while ($i < $totalgrists) {
-		if ($countrow[$gristname[$i] . "_Cost"] != 0) {
+	foreach ($gristname as $grist) {
+		if ($countrow[$grist . "_Cost"] != 0) {
 			$gristvalue = 0;
-			if ($gristname[$i] == "Build_Grist")
+			if ($grist == "Build_Grist")
 				$gristvalue = 20;
-			elseif ($gristname[$i] == "Artifact_Grist")
+			elseif ($grist == "Artifact_Grist")
 				$gristvalue = 0;
 			else {
 				$j = 0;
 				$match = false;
 				while ($j < 9 && !$match) {
 					$j++;
-					if ($landrow['grist' . strval($j)] == $gristname[$i])
+					if ($landrow['grist' . strval($j)] == $grist)
 						$match = true;
 				}
 				if ($match)
 					$gristvalue = 20 * ($j + 1);
 				else
-					$gristvalue = avgGristtier($sessionname, $gristname[$i]); //grist can't be found on this land, so it's worth a ton to the consorts
+					$gristvalue = avgGristtier($sessionname, $grist); //grist can't be found on this land, so it's worth a ton to the consorts
 			}
-			//echo "gristvalue of " . $gristname[$i] . " is " . strval($gristvalue) . "<br/>";
-			$totalcost = $totalcost + ($countrow[$gristname[$i] . '_Cost'] * $gristvalue);
+			//echo "gristvalue of " . $grist . " is " . strval($gristvalue) . "<br/>";
+			$totalcost = $totalcost + ($countrow[$grist . '_Cost'] * $gristvalue);
 		}
-		$i++;
 	}
 	return $totalcost;
 }
