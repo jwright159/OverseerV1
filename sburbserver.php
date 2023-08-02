@@ -107,17 +107,17 @@ if (empty($_SESSION['username'])) {
 							$currentstack = $existtag[1];
 						else
 							$currentstack = 0;
-						if ($deploytag[1] == "MAXSTORE")
+						if (!empty($deploytag[1]) && $deploytag[1] == "MAXSTORE")
 							$fullstack = $deploytag[2];
 						else
 							$fullstack = 1;
 						if ($currentstack < $fullstack || $drow['captchalogue_code'] == "11111111") { //the user doesn't have this in their storage yet
 							$canafford = false;
-							if ($deploytag[1] == "FREE") {
+							if (!empty($deploytag[1]) && $deploytag[1] == "FREE") {
 								$canafford = true;
 								$coststring = "Build_Grist";
 								$newgrist = $clientrow['Build_Grist'];
-							} elseif ($deploytag[1] == "TIER1") {
+							} elseif (!empty($deploytag[1]) && $deploytag[1] == "TIER1") {
 								$coststring = $tier1grist;
 								if ($clientrow[$tier1grist] > $deploytag[2]) {
 									$canafford = true;

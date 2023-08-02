@@ -194,9 +194,8 @@ function storageSpace($storestring)
 	$space = 0;
 	while ($i <= $totalitems) {
 		$args = explode(":", $boom[$i]);
-		$itemresult = $mysqli->query("SELECT `captchalogue_code`,`size` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$args[0]' LIMIT 1");
-		$irow = $itemresult->fetch_array();
-		if ($irow['captchalogue_code'] == $args[0]) { //Item found.
+		$irow = $mysqli->query("SELECT `captchalogue_code`,`size` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$args[0]' LIMIT 1")->fetch_array();
+		if (!empty($irow)) { //Item found.
 			$space += itemSize($irow['size']) * $args[1];
 		} else
 			echo "ERROR: Items with code $args[0] stored, but no matching item was found. Please inform a dev immediately.<br/>";
@@ -344,7 +343,7 @@ function storeItem($item, $tostorage, $userrow, $stackcode = "00000000")
 				$args[2] = "";
 			}
 		}
-		if ($args[0] == $itemrow['captchalogue_code'] && (strpos($args[2], $stackwith) !== false || empty($stackwith))) {
+		if ($args[0] == $itemrow['captchalogue_code'] && (empty($stackwith) || strpos($args[2], $stackwith) !== false)) {
 			while ($tostorage > 0) {
 				if ($space + $storesize <= $maxstorage) {
 					$tostorage--;
@@ -369,4 +368,3 @@ function storeItem($item, $tostorage, $userrow, $stackcode = "00000000")
 	}
 	return $actualstore; //returns number of items stored
 }
-?>
