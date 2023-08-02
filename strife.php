@@ -641,6 +641,7 @@ if (empty($_SESSION['username'])) {
 							else
 								$npcdesc = $npcrow['description'];
 							$npcloyalty = $statusarg[2];
+							if (!isset($aidpower)) $aidpower = 0;
 							$aidpower += $npcpower;
 							if (!$npcechoed) {
 								echo "NPC allies currently aiding you:<br/>";
