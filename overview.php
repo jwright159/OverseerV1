@@ -156,14 +156,10 @@ if (empty($_SESSION['username'])) {
 	}
 	//End status code here. Begin symbol code
 	if (!empty($_POST['newimage'])) { //Reimagining image.
-		if ($newimg == "nobody.png") {
-			echo "You're not a nobody, you're a special snowflake!<br/>";
-		} else {
-			$newimg = $mysqli->real_escape_string($_POST['newimage']);
-			$newimg = str_replace("<", "&lt;", $newimg);
-			$userrow['symbol'] = $newimg;
-			$mysqli->query("UPDATE `Players` SET `symbol` = '$newimg' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
-		}
+		$newimg = $mysqli->real_escape_string($_POST['newimage']);
+		$newimg = str_replace("<", "&lt;", $newimg);
+		$userrow['symbol'] = $newimg;
+		$mysqli->query("UPDATE `Players` SET `symbol` = '$newimg' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 	}
 	//End symbol code here. Begin awakening code here.
 	if (!empty($_POST['dreamer'])) { //Choosing dream affiliation.
