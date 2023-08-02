@@ -151,7 +151,7 @@ if (empty($_SESSION['username'])) {
 					$room = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
 					$dgnresult = $mysqli->query("SELECT `$room` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
 					$dgnrow = $dgnresult->fetch_array();
-					if ((!(strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . ":") === false) || !(strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . "|") === false)) && strpos($dgnrow[$room], "ENCOUNTER|") === false) {
+					if ((strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . ":") !== false || strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . "|") !== false) && strpos($dgnrow[$room], "ENCOUNTER|") === false) {
 						//user is at the quest goal and any encounter here was taken care of
 						$realbasecost = $qrow['req_power'] * 1000; //standard base cost for dungeon quests is variable; should be based on the difficulty
 						$newquest = 0;
@@ -184,7 +184,7 @@ if (empty($_SESSION['username'])) {
 
 						$KABLOOEY = explode("|", $dgnrow[$room]);
 						for ($i = 1; $i <= count($KABLOOEY); $i++) {
-							if (!(strpos($KABLOOEY[$i], "QUESTGOAL") === false)) {
+							if (strpos($KABLOOEY[$i], "QUESTGOAL") !== false) {
 								unset($KABLOOEY[$i]);
 								break;
 							}
@@ -225,7 +225,7 @@ if (empty($_SESSION['username'])) {
 									$victory = true; //item matches one of the keywords
 								$counter++;
 							}
-							if (!$victory and empty($failreason))
+							if (!$victory && empty($failreason))
 								$failreason = "It seems that this item isn't quite what they had in mind.";
 						}
 						if (!empty($qrow['req_abstratus']) && $victory) {
@@ -239,7 +239,7 @@ if (empty($_SESSION['username'])) {
 									$victory = true; //item matches one of the abstrati
 								$counter++;
 							}
-							if (!$victory and empty($failreason))
+							if (!$victory && empty($failreason))
 								$failreason = "This isn't the right kind of item.";
 						}
 						if (!empty($qrow['req_grist']) && $victory) {
@@ -612,4 +612,3 @@ if (empty($_SESSION['username'])) {
 	}
 }
 require_once "footer.php";
-?>
