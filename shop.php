@@ -301,9 +301,7 @@ if ($dona == "Gold") {
 							}
 						}
 
-						$forcerefresh = false;
-						if ($_GET['forcerefresh'] == "yes" && $userrow['session_name'] == "Developers")
-							$forcerefresh = true;
+						$forcerefresh = !empty($_GET['forcerefresh']) && $_GET['forcerefresh'] == "yes" && $userrow['session_name'] == "Developers";
 
 						if (empty($currentrow['shopstock']) || (time() - $currentrow['lastshoptick'] > 86400) || $forcerefresh) { //the shop is empty or a day has passed since the shop was last refreshed
 							$shopgate = highestGate($gaterow, $currentrow['house_build_grist']);
