@@ -943,7 +943,6 @@ if (empty($_SESSION['username'])) {
 			$mysqli->query("UPDATE `Players` SET `dungeoncol` = $userrow[olddungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
 			$userrow['dungeonrow'] = $userrow['olddungeonrow']; //I don't think this is actually necessary, but just in case
 			$userrow['dungeoncol'] = $userrow['olddungeoncol'];
-			header('location:/dungeons.php');
 		} elseif ($userrow['dungeonstrife'] == 2) { //Victory!
 			echo "You have defeated the enemies guarding this room!<br/>";
 			$room = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
@@ -957,7 +956,6 @@ if (empty($_SESSION['username'])) {
 		} elseif ($userrow['dungeonstrife'] == 3) { //Failure (dungeon guardian)
 			$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 			$userrow['indungeon'] = 0;
-			header('location:/dungeons.php');
 		} elseif ($userrow['dungeonstrife'] == 4) { //Victory (dungeon guardian)!
 			echo "You enter the dungeon. The danger has only just begun...<br/>";
 		}
