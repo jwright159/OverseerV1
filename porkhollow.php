@@ -31,7 +31,7 @@ if (empty($_SESSION['username'])) {
 	if ($compugood) {
 		//--Begin wiring code here--
 
-		if ($_POST['amount'] > 0) { //We have a positive amount of Boondollars to transfer.
+		if (!empty($_POST['amount']) && $_POST['amount'] > 0) { //We have a positive amount of Boondollars to transfer.
 			if ($_POST['intarget'] != "")
 				$_POST['target'] = $_POST['intarget'];
 			if ($_POST['target'] == $username) { //Player is trying to wire themselves boondollars!
@@ -111,4 +111,3 @@ if (empty($_SESSION['username'])) {
 	$mysqli->close();
 }
 require_once "footer.php";
-?>
