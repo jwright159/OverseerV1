@@ -104,9 +104,7 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 
-				$forcerefresh = false;
-				if ($_GET['forcerefresh'] == "yes" && $userrow['session_name'] == "Developers")
-					$forcerefresh = true;
+				$forcerefresh = !empty($_GET['forcerefresh']) && $_GET['forcerefresh'] == "yes" && $userrow['session_name'] == "Developers";
 
 				if (empty($currentrow['shopstock']) || (time() - $currentrow['lastshoptick'] > 86400) || $forcerefresh) { //the shop is empty or a day has passed since the shop was last refreshed
 					$shopgate = highestGate($gaterow, $currentrow['house_build_grist']);
@@ -159,7 +157,7 @@ if (empty($_SESSION['username'])) {
 					$canwield = false;
 					$wcount = 1;
 					while ($wcount < 16) {
-						if (strrpos($shopkind[$csi], $userrow['abstratus' . strval($wcount)]) !== false)
+						if (!empty($userrow['abstratus' . strval($wcount)]) && strrpos($shopkind[$csi], $userrow['abstratus' . strval($wcount)]) !== false)
 							$canwield = true;
 						$wcount++;
 					}
@@ -196,7 +194,7 @@ if (empty($_SESSION['username'])) {
 						echo "This looks like something you can wear.<br/>";
 					} elseif (strrpos($shopkind[$csi], "computer")) {
 						echo "You think you can use this to communicate with your friends.<br/>";
-					} elseif (!(strrpos($shopkind[$csi], "notaweapon") === false)) {
+					} elseif (strrpos($shopkind[$csi], "notaweapon") !== false) {
 						echo "This item doesn't look like it can be equipped.<br/>";
 					} else
 						echo "You can't wield this weapon.<br/>";
