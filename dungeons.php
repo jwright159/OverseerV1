@@ -1838,12 +1838,10 @@ if (empty($_SESSION['username'])) {
 		} else
 			echo "<img src='/Images/Dungeontiles/dgnbtn_south_blocked.png'>";
 		echo "</td><td><img src='/Images/symbols/nobody.png'></td></tr></table><br/>";
-		if ($transrows > 0) {
-			$i = 1;
-			while ($i <= $transrows) {
+		if (!empty($transrows) && $transrows > 0) {
+			for ($i = 1; $i <= $transrows; $i++) {
 				echo "<form action='dungeons.php#display' method='post'><input type='hidden' name='targetrow' value='$transrow[$i]'><input type='hidden' name='targetcol' value='$transcol[$i]'>";
 				echo "<input type='submit' value='Transportalize to " . strval($transrow[$i]) . "," . strval($transcol[$i]) . "'></form>";
-				$i++;
 			}
 		}
 		echo "</div>";
