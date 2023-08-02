@@ -301,7 +301,7 @@ function terminateStrife(array $userrow, int $result)
 			else
 				$downstr = "dreamdown";
 
-			query("UPDATE Players SET :down = 1 WHERE username = :username LIMIT 1 ;", ['down' => $downstr, 'username' => $username]);
+			query("UPDATE Players SET $downstr = 1 WHERE username = :username LIMIT 1 ;", ['username' => $username]);
 			$userrow[$downstr] = 1; //Makes messages appear.
 		}
 

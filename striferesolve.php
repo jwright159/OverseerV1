@@ -40,7 +40,7 @@ if (empty($_SESSION['username'])) {
 } elseif (!empty($_POST['abscond']) && $userrow['cantabscond'] == 1) {
 	$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
 	$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string("CAN'T ABSCOND, BRO!") . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
-	include("strife.php");
+	include "strife.php";
 } elseif (!empty($_POST['abscond'])) {
 	if ($userrow['dreamingstatus'] == "Prospit") {
 		echo 'You abscond from "strife".<br/>';
@@ -77,7 +77,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	$mysqli->query("UPDATE Players SET allies = '" . $mysqli->real_escape_string($userrow['allies']) . "' WHERE username = '$username'");
-	include("strife.php");
+	include "strife.php";
 } else {
 	$dontcheckvictory = false;
 	if ($_POST['focusenemy'] > 1 && !empty($userrow["enemy" . strval($_POST['focusenemy']) . "name"])) {
@@ -474,22 +474,22 @@ if (empty($_SESSION['username'])) {
 							$specialarg = explode(":", $thatstatus[$ts]);
 							if ($specialarg[0] == "SPECIAL") {
 								switch ($specialarg[1]) {
-									case NOCAP:
+									case 'NOCAP':
 										$bonuseffects .= "WATERYGEL:" . $specialarg[2] . "|";
 										break;
-									case POISON:
+									case 'POISON':
 										$bonuseffects .= "POISON:" . $specialarg[2] . ":" . $specialarg[3] . "|";
 										break;
-									case CONFUSE:
+									case 'CONFUSE':
 										$bonuseffects .= "DISORIENTED:" . $specialarg[2] . ":" . $specialarg[3] . "|";
 										break;
-									case STUN:
+									case 'STUN':
 										$bonuseffects .= "KNOCKDOWN:" . $specialarg[2] . "|";
 										break;
-									case BURNING:
+									case 'BURNING':
 										$bonuseffects .= "BURNING:" . $specialarg[2] . ":" . $specialarg[3] . "|";
 										break;
-									case HASEFFECT:
+									case 'HASEFFECT':
 										$imbue = str_replace("SPECIAL:HASEFFECT:", "", $thatstatus[$ts]); //cuts off the haseffect tag and adds everything else to bonuseffects
 										$bonuseffects .= $imbue . "|";
 										break;
@@ -941,7 +941,7 @@ if (empty($_SESSION['username'])) {
 						}
 						if (strpos($currentstatus, $timestopstr) !== false) { //This enemy is frozen in time.
 							$message = $message . $userrow[$enemystr] . " is frozen in time!<br/>";
-							if ($timestopped == false) { //Enemy was not stopped by a weapon strike this round
+							if (!$timestopped) { //Enemy was not stopped by a weapon strike this round
 								$currentstatus = str_replace($timestopstr, "", $currentstatus);
 							} else {
 								$timestopped = false;
@@ -950,7 +950,7 @@ if (empty($_SESSION['username'])) {
 						} elseif ((strpos($currentstatus, $glitchstr) !== false) && $glitchedroll < 30) { //Glitching out stops the enemy from trying to get up.
 							$message = $message . generateGlitchString();
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
-						} elseif ($frozed == true) { //Time stopped/frozen enemies can't get up from knockdown.
+						} elseif ($frozed) { //Time stopped/frozen enemies can't get up from knockdown.
 							$message = $message . $userrow[$enemystr] . " remains frozen in ice and cannot move!<br/>";
 							$userrow[$healthstr] = $newenemyhealth; //Gotta update this here or it won't get done.
 						} elseif (strpos($currentstatus, $knockdownstr) !== false) { //Time stopped/frozen enemies can't get up from knockdown.
@@ -1077,7 +1077,7 @@ if (empty($_SESSION['username'])) {
 									}
 									$p++;
 								}
-								if ($lockeddown == false)
+								if (!$lockeddown)
 									$message = $message . $userrow[$enemystr] . " recovers from lockdown!<br/>"; //if we're here, it can only mean all instances of lockdown just wore off
 								else
 									$message = $message . $userrow[$enemystr] . " remains locked down and can't use special abilities.<br/>";
@@ -1281,7 +1281,7 @@ if (empty($_SESSION['username'])) {
 						$enemyrow = $_SESSION[$userrow[$enemystr]];
 						$enemyrowexists = true;
 					}
-					if ($enemyrowexists == true) {
+					if ($enemyrowexists) {
 						$poisonstr = ($statustr . "POISON");
 						$waterygelstr = ($statustr . "WATERYGEL|");
 						$unluckystr = ($statustr . "UNLUCKY|");
@@ -1599,8 +1599,8 @@ if (empty($_SESSION['username'])) {
 				$userrow = terminateStrife($userrow, 0);
 			} else {
 				$userrow = refreshEnemydata($userrow);
-				include("strife.php");
-				if ($userrow[$downstr] != 1 && $enemydown != true) { //Print this if neither player nor enemy slain
+				include "strife.php";
+				if ($userrow[$downstr] != 1 && !$enemydown) { //Print this if neither player nor enemy slain
 					$mysqli->query("UPDATE `Players` SET `strifemessage` = '' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //This is apparently necessary for some inscrutable reason.
 					$mysqli->query("UPDATE `Players` SET `strifemessage` = '" . $mysqli->real_escape_string($message) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //APOSTROPHEEEEEEEEES
 				} else {
@@ -1613,4 +1613,3 @@ if (empty($_SESSION['username'])) {
 	}
 }
 require_once "footer.php";
-?>
