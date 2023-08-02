@@ -5,35 +5,36 @@ require_once 'includes/chaincheck.php';
 require_once 'includes/glitches.php'; //For displaying glitchy nonsense
 require_once "header.php";
 require_once 'includes/fieldparser.php';
-if (!empty($_SESSION['username'])) {
+
+if (empty($_SESSION['username'])) {
+	echo "Log in to engage in strife.<br/>";
+	include "loginer.php";
+} elseif ($userrow['sessionbossengaged'] == 1) {
+	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a><br/>";
+} else {
 	if ($userrow['dreamingstatus'] == "Awake") {
 		$healthcurrent = strval(floor(($userrow['Health_Vial'] / $userrow['Gel_Viscosity']) * 100));
 	} else {
 		$healthcurrent = strval(floor(($userrow['Dream_Health_Vial'] / $userrow['Gel_Viscosity']) * 100));
 	}
 	$aspectcurrent = strval(floor(($userrow['Aspect_Vial'] / $userrow['Gel_Viscosity']) * 100));
-}
-$healthname = strtolower($userrow['colour']);
-if (empty($healthname))
-	$healthname = "black";
-if (empty($aspectname))
-	$aspectname = "doom";
-$aspectname = strtolower($userrow['Aspect']);
-echo '</body><head><script src="jquery.min.js"></script><style type="text/css"></style>
-		<script src="raphael-min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="html5slider.js" type="text/javascript" charset="utf-8"></script>
-		<script src="vials.js" type="text/javascript" charset="utf-8"></script>
-		<script>window.onload = function () {
-	drawVial("health", "' . $healthname . '", ' . strval($healthcurrent) . ');
-	drawVial("aspect", "' . $aspectname . '", ' . strval($aspectcurrent) . ');
-}</script></head><body>';
-$max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
-if (empty($_SESSION['username'])) {
-	echo "Log in to engage in strife.<br/>";
-	include("loginer.php");
-} elseif ($userrow['sessionbossengaged'] == 1) {
-	echo "You are currently fighting a session-wide boss! <a href='sessionboss.php'>Go here.</a><br/>";
-} else {
+
+	$healthname = strtolower($userrow['colour']);
+	if (empty($healthname))
+		$healthname = "black";
+	if (empty($aspectname))
+		$aspectname = "doom";
+	$aspectname = strtolower($userrow['Aspect']);
+	echo '</body><head><script src="jquery.min.js"></script><style type="text/css"></style>
+			<script src="raphael-min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="html5slider.js" type="text/javascript" charset="utf-8"></script>
+			<script src="vials.js" type="text/javascript" charset="utf-8"></script>
+			<script>window.onload = function () {
+		drawVial("health", "' . $healthname . '", ' . strval($healthcurrent) . ');
+		drawVial("aspect", "' . $aspectname . '", ' . strval($aspectcurrent) . ');
+	}</script></head><body>';
+	$max_enemies = 5; //Note that this is ALSO in monstermaker.php. That isn't ideal, but eh. (Also in striferesolve.php. Bluh. AND strifeselect.php. I should make a constants file at some stage)
+	
 	$userrow = parseEnemydata($userrow);
 	$userrow = parseLastfought($userrow);
 	if ($userrow['dreamingstatus'] == "Prospit") {
