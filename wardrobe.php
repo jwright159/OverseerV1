@@ -847,13 +847,19 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 }
-$totaldef = $headdef + $facedef + $bodydef + $accdef;
+
+$totaldef = 0;
+if (isset($headdef)) $totaldef += $headdef;
+if (isset($facedef)) $totaldef += $facedef;
+if (isset($bodydef)) $totaldef += $bodydef;
+if (isset($accdef)) $totaldef += $accdef;
+
 echo "Current defense bonus from wearables: $totaldef <br/>";
 $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 echo $username;
 echo "'s captchalogued wearables:<br/><br/>";
 $reachinv = false;
-while (($col = $invresult->fetch_field())) {
+while ($col = $invresult->fetch_field()) {
 	$invslot = $col->name;
 	if ($invslot == "inv1") {
 		//Reached the start of the inventory.
