@@ -388,12 +388,16 @@ if ($dona == "Gold") {
 								} elseif ($powerdiff > 0) {
 									$ramtext = "You think it might be a little stronger than what you're currently using, but you can't say for sure.";
 								}
-							} elseif (strrpos($shopkind[$csi], "headgear") || strrpos($shopkind[$csi], "facegear") || strrpos($shopkind[$csi], "bodygear") || strrpos($shopkind[$csi], "accessory")) {
-								$ramtext = "This looks like something you can wear.";
-							} elseif (strrpos($shopkind[$csi], "computer")) {
-								$ramtext = "You think you can use this to communicate with your friends.";
-							} elseif (!(strrpos($shopkind[$csi], "notaweapon") === false)) {
-								$ramtext = "This item doesn't look like it can be equipped.";
+							} elseif (!empty($shopkind[$csi])) {
+								if (strrpos($shopkind[$csi], "headgear") || strrpos($shopkind[$csi], "facegear") || strrpos($shopkind[$csi], "bodygear") || strrpos($shopkind[$csi], "accessory")) {
+									$ramtext = "This looks like something you can wear.";
+								} elseif (strrpos($shopkind[$csi], "computer")) {
+									$ramtext = "You think you can use this to communicate with your friends.";
+								} elseif (strrpos($shopkind[$csi], "notaweapon") !== false) {
+									$ramtext = "This item doesn't look like it can be equipped.";
+								} else {
+									$ramtext = "You can't wield this weapon.";
+								}
 							} else {
 								$ramtext = "You can't wield this weapon.";
 							}
