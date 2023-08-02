@@ -490,10 +490,8 @@ if (empty($_SESSION['username'])) {
 							echo "You are tasked with neutralizing the following:<br/>";
 							if (!empty($qrow['req_grist'])) {
 								$enemygrists = explode("|", $qrow['req_grist']);
-								$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-								$prow = $result1->fetch_array();
-								$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-								$lrow = $result2->fetch_array();
+								$prow = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'")->fetch_array();
+								$lrow = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'")->fetch_array();
 							}
 							$enemynames = explode("|", $qrow['req_keyword']);
 							$i = 0;
