@@ -450,14 +450,14 @@ if (empty($_SESSION['username'])) {
 					}
 				}
 			}
-			if ($itemfound == true && $canafford == false) {
+			if ($itemfound && !$canafford) {
 				if ($numberalched == 1) {
 					echo "<br/>You cannot afford to make this item, whatever it is.<br/>";
 				} else {
 					echo "<br/>You cannot afford to make that many copies of this item, whatever it is.<br/>";
 				}
 			}
-			if ($itemfound == false)
+			if (!$itemfound)
 				echo 'The alchemiter informs you that the code you have inputted refers to an item that does not exist yet. <a href="feedback.php?type=item&newcode=' . $_POST['alchcode'] . '">Suggest this item!</a><br/>';
 		} else
 			echo "The code you have inputted is not in your Atheneum yet. In Challenge Mode, you must acquire a code before an item can be made with it.<br/>";
