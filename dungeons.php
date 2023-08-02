@@ -87,8 +87,7 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 		$selected = false;
 		$itemsresult = fetchAll("SELECT `name` FROM Captchalogue $exstr");
 		$totalitems = count($itemsresult);
-		$item = rand(1, $totalitems); //Starting point for the item search.
-		$item--; //otherwise it will eliminate 1 item from the search and if there's only 1 item dats bad
+		$item = rand(0, $totalitems - 1); //Starting point for the item search.
 		$loopies = $totalitems;
 		$min = ceil($min * (1 + ($distance / 16)));
 		$max = ceil($max * (1 + ($distance / 16)));
@@ -111,10 +110,11 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 					$min = floor($min / 2);
 					$max = ceil($max * 2); //Ceil not necessary, but symmetry is pretty.
 					$loopies = $totalitems;
-				} elseif ($item >= $totalitems) { //We hit the end of the database.
-					$item = 0; //Wraparound
 				} else {
 					$item++; //Check the next item to see if it works.
+					if ($item >= $totalitems) { //We hit the end of the database.
+						$item = 0; //Wraparound
+					}
 				}
 			}
 		}
