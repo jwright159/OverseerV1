@@ -2,7 +2,7 @@
 require_once "header.php";
 if (empty($_SESSION['username'])) {
 	echo "Log in to administrate your session.<br/>";
-	include("loginer.php");
+	include "loginer.php";
 } else {
 
 	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '" . $userrow['session_name'] . "'");
@@ -143,7 +143,7 @@ if (empty($_SESSION['username'])) {
 				echo "$nullrow[username] has been ejected from their dungeon.<br/>";
 			}
 		}
-		if ($sessionrow['admin'] == $username) {
+		if (!empty($sessionrow) && $sessionrow['admin'] == $username) {
 			if (!empty($_POST['admingrant'])) { //Attempting to grant administrative privileges.
 				$playerresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $_POST['admingrant'] . "'");
 				$adminrow = $playerresult->fetch_array();
@@ -300,4 +300,3 @@ if (empty($_SESSION['username'])) {
 	}
 }
 require_once "footer.php";
-?>
