@@ -43,7 +43,7 @@ if (empty($_SESSION['username'])) {
 				}
 			}
 		}
-		if ($fail != true) {
+		if (!$fail) {
 			switch ($userrow[$_POST['consume']]) { //Determine the consumable and act accordingly.
 				case "Klatchian Coffee":
 					echo "As you drink the coffee, everything begins to clear up... AAAAAAAA-<br/>";
@@ -328,7 +328,7 @@ if (empty($_SESSION['username'])) {
 						}
 						$heal = $actualheal;
 						if ($heal + $userrow['Health_Vial'] > $userrow['Gel_Viscosity'] && $heal > 0)
-							$heal = $userrow['Gel_Viscosity'] - $userrow['Health_Vial']; //don't let consumable overheal player  
+							$heal = $userrow['Gel_Viscosity'] - $userrow['Health_Vial']; //don't let consumable overheal player
 						$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					}
 					if ($userrow['enemydata'] != "") {
@@ -343,7 +343,7 @@ if (empty($_SESSION['username'])) {
 						}
 						$heal = $actualheal;
 						if ($heal + $userrow['Health_Vial'] > $userrow['Gel_Viscosity'] && $heal > 0)
-							$heal = $userrow['Gel_Viscosity'] - $userrow['Health_Vial']; //don't let consumable overheal player  
+							$heal = $userrow['Gel_Viscosity'] - $userrow['Health_Vial']; //don't let consumable overheal player
 						$mysqli->query("UPDATE `Players` SET `Health_Vial` = $userrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 					} elseif ($userrow['aiding'] != "") {
 						echo "You down the Kero-Kero Cola, finishing with a burp that sounds remarkably like a ribbit. You and all of your friends feel much better!";
@@ -359,7 +359,7 @@ if (empty($_SESSION['username'])) {
 						$targetrow = $targetresult->fetch_array();
 						$heal = $actualheal;
 						if ($heal + $targetrow['Health_Vial'] > $targetrow['Gel_Viscosity'] && $heal > 0)
-							$heal = $targetrow['Gel_Viscosity'] - $targetrow['Health_Vial']; //don't let consumable overheal player  
+							$heal = $targetrow['Gel_Viscosity'] - $targetrow['Health_Vial']; //don't let consumable overheal player
 						$mysqli->query("UPDATE `Players` SET `Health_Vial` = $targetrow[Health_Vial]+$heal WHERE `Players`.`username` = '" . $targetrow['username'] . "' LIMIT 1 ;");
 					} else {
 						echo "It seems like an awful waste to drink this thing outside of strife, although you're not entirely sure why.";
@@ -707,7 +707,7 @@ if (empty($_SESSION['username'])) {
 							$fail = true;
 						}
 						if ($userrow['enemydata'] == "" && $userrow['aiding'] == "") { //user not strifing
-							if ($fail == false)
+							if (!$fail)
 								echo $crow['message_outside'];
 							$noenemies = true;
 							if ($crow['outsideuse'] == 0) {
@@ -718,26 +718,26 @@ if (empty($_SESSION['username'])) {
 							if ($crow['selfifnotarget'] == 1)
 								$noheal = true; //don't perform actions on player if this item is meant to be used on enemies
 							if ($userrow['aiding'] == "") { //user is main strifer; I THINK that this will be blank if fighting black king
-								if ($fail == false)
+								if (!$fail)
 									echo $crow['message_battle'];
 								if ($crow['battleuse'] == 0) {
 									$fail = true;
 								}
 							} else {
-								if ($fail == false)
+								if (!$fail)
 									echo $crow['message_aiding'];
 								if ($crow['aiduse'] == 0) {
 									$fail = true;
-								} elseif ($crow['allypercentage'] != 0) { //set the target of the comsumable to the player the user is aiding (for healing and enemies) 
+								} elseif ($crow['allypercentage'] != 0) { //set the target of the comsumable to the player the user is aiding (for healing and enemies)
 									$allyresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '" . $userrow['aiding'] . "'");
 									$affectrow = $allyresult->fetch_array();
 									$allyheal = $crow['allypercentage'] / 100;
 								}
 							}
 						}
-						if ($fail == false) {
+						if (!$fail) {
 							$affectrow = parseEnemydata($affectrow);
-							if ($noenemies == false) {
+							if (!$noenemies) {
 								$debuff = $crow['debuff_exact'];
 								$debuff = floor(rand($debuff - ($debuff * $randpercent), $debuff + ($debuff * $randpercent)) * $allyheal);
 								$damage = $crow['damage_exact'];
@@ -758,9 +758,9 @@ if (empty($_SESSION['username'])) {
 										$tempdebuff += floor($affectrow[$powerstr] * ($crow['debuff_scale'] / 100));
 									if ($crow['damage_scale'] != 0)
 										$tempdamage += floor($affectrow[$maxhealthstr] * ($crow['damage_scale'] / 100));
-									if ($tempdebuff > $affectrow[$powerstr])
+									if (!empty($affectrow[$powerstr]) && $tempdebuff > $affectrow[$powerstr])
 										$tempdebuff = $affectrow[$powerstr] - 1;
-									if ($tempdamage > $affectrow[$healthstr])
+									if (!empty($affectrow[$healthstr]) && $tempdamage > $affectrow[$healthstr])
 										$tempdamage = $affectrow[$healthstr] - 1;
 									if (!empty($enemyrow)) { //Not a grist enemy.
 										if ($enemyrow['massiveresist'] != 100 && $tempdamage > (floor($affectrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
@@ -791,7 +791,7 @@ if (empty($_SESSION['username'])) {
 								writeEnemydata($affectrow);
 								$alreadywritten = true;
 							}
-							if ($noheal == false) {
+							if (!$noheal) {
 								$heal = $crow['heal_exact'];
 								$heal = floor(rand($heal - ($heal * $randpercent), $heal + ($heal * $randpercent)) * $allyheal);
 								if ($crow['heal_scale'] != 0)
@@ -895,7 +895,7 @@ if (empty($_SESSION['username'])) {
 		if (!$fail) {
 			if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 				$mysqli->query("UPDATE `Players` SET `combatconsume` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
-				if ($alreadywritten == false)
+				if (!$alreadywritten)
 					writeEnemydata($userrow);
 			}
 		}
@@ -919,7 +919,7 @@ if (empty($_SESSION['username'])) {
 			if ($invslot == "abstratus1") { //Reached the end of the inventory.
 				$reachinv = false;
 			}
-			if ($reachinv == true && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
+			if ($reachinv && $userrow[$invslot] != "") { //This is a non-empty inventory slot.
 				$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 				$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 				while ($row = $captchalogue->fetch_array()) {
@@ -947,4 +947,3 @@ if (empty($_SESSION['username'])) {
 	}
 }
 require_once "footer.php";
-?>
