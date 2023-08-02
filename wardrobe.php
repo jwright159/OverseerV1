@@ -36,54 +36,44 @@ function heaviestBonus($workrow)
 
 function refreshLuck($userrow)
 {
-	$slot = 0;
-	while ($slot < 6) {
-		switch ($slot) {
-			case 0:
-				$invslot = $userrow['equipped'];
-				break;
-			case 1:
-				$invslot = $userrow['offhand'];
-				break;
-			case 2:
-				$invslot = $userrow['headgear'];
-				break;
-			case 3:
-				$invslot = $userrow['facegear'];
-				break;
-			case 4:
-				$invslot = $userrow['bodygear'];
-				break;
-			case 5:
-				$invslot = $userrow['accessory'];
-				break;
-		}
+	foreach ([
+		$userrow['equipped'],
+		$userrow['offhand'],
+		$userrow['headgear'],
+		$userrow['facegear'],
+		$userrow['bodygear'],
+		$userrow['accessory']
+	] as $invslot) {
 		if ($invslot != "" && $invslot != "2HAND")
 		{
 			$realname = escapeItemName($userrow[$invslot]);
 			$row = fetchOne("SELECT `name`, effects FROM Captchalogue WHERE `name` = :name LIMIT 1;", ['name' => $realname]);
-			$realname = unescapeItemName($row['name']);
-			if ($realname == $userrow[$invslot]) {
-				$effects = $row['effects'];
-				$effectarray = explode('|', $effects);
-				$effectnumber = 0;
-				$totalluck = 0;
-				while (!empty($effectarray[$effectnumber])) {
-					$currenteffect = $effectarray[$effectnumber];
-					$currentarray = explode(':', $currenteffect);
-					//Note that what each array entry means depends on the effect.
-					switch ($currentarray[0]) {
-						case 'LUCK':
-							$totalluck += $currentarray[1];
-							break;
-						default:
-							break;
+			if ($row)
+			{
+				$realname = unescapeItemName($row['name']);
+				if ($realname == $userrow[$invslot]) {
+					$effects = $row['effects'];
+					$effectarray = explode('|', $effects);
+					$effectnumber = 0;
+					$totalluck = 0;
+					while (!empty($effectarray[$effectnumber])) {
+						$currenteffect = $effectarray[$effectnumber];
+						$currentarray = explode(':', $currenteffect);
+						//Note that what each array entry means depends on the effect.
+						switch ($currentarray[0]) {
+							case 'LUCK':
+								$totalluck += $currentarray[1];
+								break;
+							default:
+								break;
+						}
+						$effectnumber++;
 					}
-					$effectnumber++;
 				}
+			} else {
+				echo "ERROR: Couldn't fetch the item with the name '$userrow[$invslot]' (escaped as '$realname')";
 			}
 		}
-		$slot++;
 	}
 	if ($totalluck != $userrow['Luck'])
 		query("UPDATE Players SET Luck = :luck WHERE username = :username", ['luck' => $totalluck, 'username' => $userrow['username']]);
@@ -274,7 +264,7 @@ if (empty($_SESSION['username'])) {
 							echo "You wear your $itemname as an accessory.<br/>";
 							//NOTE - Unauthorized equipping prevented by menu options not being there.
 							$_SESSION['accrow'] = $itemrow;
-							$mysqli->query("UPDATE `Players` SET `accessory` = '" . $_POST['equipacc'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+							$mysqli->query("UPDATE `Players` SET `accessory` = '$_POST[equipacc]' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							autoUnequip($userrow, "accessory", $equippedacc);
 							$userrow['accessory'] = $_POST['equipacc'];
 							compuRefresh($userrow);
