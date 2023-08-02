@@ -87,10 +87,12 @@ if (!empty($_GET['view'])) {
 	}
 	//echo '<form action="news.php" method="post">Look at news stories<input id="build" name="startpoint" type="text" />entries back:<br/>';
 //echo '<input type="submit" value="Read it!" /></form>';
-	if ($startpoint < $newestrow['ID'])
-		echo '<div style = "float: right;"><a href="news.php?startpoint=' . strval($_GET['startpoint'] - 10) . '">Next 10 posts ==&gt;</a></div>';
-	if ($endpoint > 1)
-		echo '<a href="news.php?startpoint=' . strval($_GET['startpoint'] + 10) . '">&lt;== Previous 10 posts</a>';
+	if (isset($endpoint))
+	{
+		if ($startpoint < $newestrow['ID'])
+			echo '<div style = "float: right;"><a href="news.php?startpoint=' . strval($_GET['startpoint'] - 10) . '">Next 10 posts ==&gt;</a></div>';
+		if ($endpoint > 1)
+			echo '<a href="news.php?startpoint=' . strval($_GET['startpoint'] + 10) . '">&lt;== Previous 10 posts</a>';
+	}
 }
 require_once "footer.php";
-?>
