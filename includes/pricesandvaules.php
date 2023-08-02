@@ -73,10 +73,10 @@ function getDialogue($dtype, $userrow, $land1, $land2, $gate = 1)
 		$gate = 1;
 	$poolresult = fetchAll("SELECT ID FROM Consort_Dialogue WHERE context = :context AND gate <= :gate", ['context' => $dtype, 'gate' => $gate]);
 	$pickrow = $poolresult[array_rand($poolresult)];
-	if (!empty($pickrow['dialogue']))
-		$pickrow = parseDialogue($pickrow, $userrow, $land1, $land2);
+	if (empty($pickrow['dialogue']))
+		$pickrow['dialogue'] = "I don't have any $dtype-like dialogue when you're only at gate $gate!";
 	else
-		$pickrow['dialogue'] = "I AM ERROR.";
+		$pickrow = parseDialogue($pickrow, $userrow, $land1, $land2);
 	return $pickrow;
 }
 
