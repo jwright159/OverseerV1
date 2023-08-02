@@ -388,7 +388,7 @@ if (empty($_SESSION['username'])) {
 					foreach ($gristname as $grist) {
 						$gristcost = $grist . "_Cost";
 						$actualcost = 0;
-						$actualcost = $itemrow[$gristcost] * ($numberalched + $actualstore);
+						$actualcost = $itemrow[$gristcost] * ($numberalched + (isset($actualstore) ? $actualstore : 0));
 						if ($actualcost != 0)
 							$costquery = $costquery . "`$grist` = $userrow[$grist]-$actualcost, ";
 						$gristcount++;
