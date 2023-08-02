@@ -363,7 +363,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				$counter = 1;
 				while ($counter <= $max_enemies) {
 					$healthstr = "enemy" . strval($counter) . "health";
-					$userrow[$healthstr] += 1250; //Yes, this can overheal. 
+					$userrow[$healthstr] += 1250; //Yes, this can overheal.
 					$counter++;
 				}
 			} else { //Small power buff to all surviving minions
@@ -434,6 +434,7 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				while ($slot <= $max_enemies) {
 					$healthstr = "enemy" . strval($slot) . "health";
 					$powerstr = "enemy" . strval($slot) . "power";
+					if (!isset($userrow[$healthstr]) || !isset($userrow[$powerstr])) continue;
 					$userrow[$healthstr] += rand(500, 2000);
 					$userrow[$powerstr] += rand(1, 25) * 10;
 					$slot++;
