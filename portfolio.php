@@ -320,7 +320,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 		echo "<br/>Current Echeladder rung: $newrung <br/>";
 	} else {
 		$echestr = "rung" . strval($userrow['Echeladder']);
-		if ($echerow[$echestr] != "") {
+		if (!empty($echerow[$echestr])) {
 			echo "<br/>Current Echeladder rung: $echerow[$echestr]<br/>";
 		} else {
 			echo '<form action="portfolio.php" method="post">';
