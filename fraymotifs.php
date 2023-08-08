@@ -7,8 +7,7 @@ if (empty($_SESSION['username'])) {
 	$userrow = parseEnemydata($userrow);
 	//This will register which abilities the player has in $abilities. The standard check is if (!empty($abilities[ID of ability to be checked for>]))
 	//We check abilities in this file because some interact with fraymotifs.
-	$abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
-AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
+	$abilityresult = $mysqli->query("SELECT `ID`, `Usagestr` FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Godtierreq` BETWEEN 0 AND $userrow[Godtier] ORDER BY `Abilities`.`Rungreq` DESC;");
 	$abilities = array(0 => "Null ability. No, not void.");
 	while ($temp = $abilityresult->fetch_array()) {
 		$abilities[$temp['ID']] = $temp['Usagestr']; //Create entry in abilities array for the ability the player has. We save the usage message in, so pulling the usage message is as simple
@@ -29,7 +28,7 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 	} else {
 		$mainpower = 0;
 	}
-	if ($userrow['offhand'] != "" && $userrow['offhand'] != $equippedmain && $userrow['offhand'] != "2HAND") {
+	if ($userrow['offhand'] != "" && $userrow['offhand'] != $userrow['equipped'] && $userrow['offhand'] != "2HAND") {
 		$itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 		$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 		while ($row = $itemresult->fetch_array()) {
