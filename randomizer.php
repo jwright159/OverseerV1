@@ -27,7 +27,7 @@ if (empty($_SESSION['username'])) {
 	}
 
 	$sessionname = $userrow['session_name'];
-	$sessionresult = $mysqli->query("SELECT * FROM Sessions WHERE `Sessions`.`name` = '$sessionname'");
+	$sessionresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '$sessionname'");
 	$sessionrow = $sessionresult->fetch_array();
 	$challenge = $sessionrow['challenge'];
 
@@ -37,7 +37,7 @@ if (empty($_SESSION['username'])) {
 	}
 
 	if (!empty($_POST['newitem'])) { //User is submitting an item.
-		$systemresult = $mysqli->query("SELECT * FROM System");
+		$systemresult = $mysqli->query("SELECT * FROM `System`");
 		$systemrow = $systemresult->fetch_array();
 		$newid = $systemrow['totalsubmissions'];
 		$newitem = $mysqli->real_escape_string(str_replace(';', ':', $_POST['newitem']));
