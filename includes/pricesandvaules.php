@@ -41,7 +41,7 @@ function totalBooncost($countrow, $landrow, $gristname, $sessionname)
 {
 	$totalcost = 0;
 	foreach ($gristname as $grist) {
-		if ($countrow[$grist . "_Cost"] != 0) {
+		if (!empty($countrow[$grist . "_Cost"])) {
 			$gristvalue = 0;
 			if ($grist == "Build_Grist")
 				$gristvalue = 20;
