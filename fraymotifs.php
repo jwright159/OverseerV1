@@ -86,16 +86,21 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 			$fail = true;
 		} else {
 			//Check for enemy flags and stuff here. The first two arrays are used to store the new values for health/power resulting from a fraymotif.
-			$monsterpowers = array(1 => $userrow['enemy1power'], $userrow['enemy2power'], $userrow['enemy3power'], $userrow['enemy4power'], $userrow['enemy5power']);
-			$monsterhealth = array(1 => $userrow['enemy1health'], $userrow['enemy2health'], $userrow['enemy3health'], $userrow['enemy4health'], $userrow['enemy5health']);
-			$oldpowers = array(1 => $userrow['enemy1power'], $userrow['enemy2power'], $userrow['enemy3power'], $userrow['enemy4power'], $userrow['enemy5power']);
-			$oldhealth = array(1 => $userrow['enemy1health'], $userrow['enemy2health'], $userrow['enemy3health'], $userrow['enemy4health'], $userrow['enemy5health']);
-			$reductionresist = array(1 => 0, 0, 0, 0, 0);
-			$massiveresist = array(1 => 100, 100, 100, 100, 100);
-			$i = 1;
-			while ($i <= $max_enemies) {
-				$enemystr = "enemy" . strval($i) . "name";
-				$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
+			$monsterpowers = [1 => 0, 0, 0, 0, 0];
+			$monsterhealth= [1 => 0, 0, 0, 0, 0];
+			$oldpowers = [1 => 0, 0, 0, 0, 0];
+			$oldhealth = [1 => 0, 0, 0, 0, 0];
+			$reductionresist = [1 => 0, 0, 0, 0, 0];
+			$massiveresist = [1 => 100, 100, 100, 100, 100];
+			for ($i = 1; $i <= $max_enemies && isset($userrow["enemy" . strval($i) . "name"]); $i++) {
+				$enemybasename = "enemy" . strval($i);
+
+				$monsterpowers[$i] = $userrow[$enemybasename . "power"];
+				$monsterhealth[$i] = $userrow[$enemybasename . "health"];
+				$oldpowers[$i] = $userrow[$enemybasename . "power"];
+				$oldhealth = $userrow[$enemybasename . "health"];
+
+				$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemybasename . "name"] . "'");
 				if ($enemyrow = $enemyresult->fetch_array()) { //Didn't have grist appended to it.
 					if ($enemyrow['reductionresist'] != 0) { //Enemy resists having their power reduced.
 						$reductionresist[$i] = $enemyrow['reductionresist'];
@@ -104,7 +109,6 @@ AND `Abilities`.`Rungreq` BETWEEN 0 AND $userrow[Echeladder] AND `Abilities`.`Go
 						$massiveresist[$i] = $enemyrow['massiveresist'];
 					}
 				}
-				$i++;
 			}
 			$powerlevel = ($userrow['Echeladder'] * pow(2, $userrow['Godtier'])) + $userrow['powerboost'] + $userrow['temppowerboost'] + $mainpower + $offpower;
 			$offensepower = $powerlevel + $userrow['offenseboost'] + $userrow['tempoffenseboost'];
