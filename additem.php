@@ -189,17 +189,14 @@ function storageSpace($storestring)
 {
 	global $mysqli;
 	$boom = explode("|", $storestring);
-	$totalitems = count($boom);
-	$i = 0;
 	$space = 0;
-	while ($i <= $totalitems) {
+	for ($i = 0; $i < count($boom); $i++) {
 		$args = explode(":", $boom[$i]);
 		$irow = $mysqli->query("SELECT `captchalogue_code`,`size` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$args[0]' LIMIT 1")->fetch_array();
 		if (!empty($irow)) { //Item found.
 			$space += itemSize($irow['size']) * $args[1];
 		} else
 			echo "ERROR: Items with code $args[0] stored, but no matching item was found. Please inform a dev immediately.<br/>";
-		$i++;
 	}
 	return $space;
 }
