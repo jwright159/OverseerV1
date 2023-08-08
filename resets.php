@@ -82,7 +82,7 @@ if (empty($_SESSION['username'])) {
 	if (!empty($_POST['newgrist'])) {
 		if ($userrow['Echeladder'] > 10) {
 			echo "You are too high on your echeladder to terraform your land.<br/>";
-		} elseif ($userrow['House_Build_Grist'] > 100) {
+		} elseif (isset($userrow['House_Build_Grist']) && $userrow['House_Build_Grist'] > 100) {
 			echo "You have already built your house too high on your land. Terraforming now would destroy it!<br/>";
 		} else {
 			$mysqli->query("UPDATE `Players` SET `grist_type` = '" . $_POST['newgrist'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -100,4 +100,3 @@ if (empty($_SESSION['username'])) {
 	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
 }
 require_once "footer.php";
-?>
