@@ -337,7 +337,7 @@ function makeSidepath($roomarray, $entryrow, $entrycol, $baselength, $gate, $rep
 			if ($branchdir == $branchstart) { //clearly there isn't a path to go from here
 				$branchdir = 0; //make this a transportalizer because we're cool like that
 				$pass = true;
-				while (!empty($roomarray[$oldroom]) || strpos($roomarray[$oldroom], "ENTRANCE") !== false) {
+				while (!empty($roomarray[$oldroom]) && strpos($roomarray[$oldroom], "ENTRANCE") !== false) {
 					$oldrow = rand(1, 10);
 					$oldcol = rand(1, 10);
 					$oldroom = strval($oldrow) . "," . strval($oldcol);
