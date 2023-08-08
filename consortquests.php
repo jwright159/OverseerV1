@@ -183,7 +183,7 @@ if (empty($_SESSION['username'])) {
 
 
 						$KABLOOEY = explode("|", $dgnrow[$room]);
-						for ($i = 1; $i <= count($KABLOOEY); $i++) {
+						for ($i = 0; $i < count($KABLOOEY); $i++) {
 							if (strpos($KABLOOEY[$i], "QUESTGOAL") !== false) {
 								unset($KABLOOEY[$i]);
 								break;
@@ -218,13 +218,9 @@ if (empty($_SESSION['username'])) {
 							$victory = false;
 							//echo "Searching for keyword(s) " . $qrow['req_keyword'] . "<br/>";
 							$boom = explode("|", $qrow['req_keyword']);
-							$boomcount = count($boom);
-							$counter = 0;
-							while ($counter <= $boomcount && !$victory) {
-								if (strripos($qirow['name'], $boom[$counter]) !== false)
+							for ($i = 0; $i < count($boom) && !$victory; $i++)
+								if (strripos($qirow['name'], $boom[$i]) !== false)
 									$victory = true; //item matches one of the keywords
-								$counter++;
-							}
 							if (!$victory && empty($failreason))
 								$failreason = "It seems that this item isn't quite what they had in mind.";
 						}
@@ -232,13 +228,9 @@ if (empty($_SESSION['username'])) {
 							$victory = false;
 							//echo "Searching for abstratus(i) " . $qrow['req_abstratus'] . "<br/>";
 							$boom = explode("|", $qrow['req_abstratus']);
-							$boomcount = count($boom);
-							$counter = 0;
-							while ($counter <= $boomcount && !$victory) {
+							for ($i = 0; $i < count($boom) && !$victory; $i++)
 								if (strripos($qirow['abstratus'], $boom[$counter]) !== false)
 									$victory = true; //item matches one of the abstrati
-								$counter++;
-							}
 							if (!$victory && empty($failreason))
 								$failreason = "This isn't the right kind of item.";
 						}
@@ -246,15 +238,9 @@ if (empty($_SESSION['username'])) {
 							$victory = false;
 							//echo "Searching for grist(s) " . $qrow['req_grist'] . "<br/>";
 							$boom = explode("|", $qrow['req_grist']);
-							$boomcount = count($boom);
-							$counter = 0;
-							while ($counter <= $boomcount && !$victory) {
-								if ($boom[$counter] == "Artifact_Grist" && $qirow[$boom[$counter] . '_Cost'] < 0)
+							for ($i = 0; $i < $boomcount && !$victory; $i++)
+								if (($boom[$counter] == "Artifact_Grist" && $qirow[$boom[$counter] . '_Cost'] < 0) || $qirow[$boom[$counter] . '_Cost'] > 0)
 									$victory = true; //if artifact is required, checks if negative
-								elseif ($qirow[$boom[$counter] . '_Cost'] > 0)
-									$victory = true; //item costs one of the required grists
-								$counter++;
-							}
 							if (!$victory and empty($failreason))
 								$failreason = "Something about the item's style is off.";
 						}
