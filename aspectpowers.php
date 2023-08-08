@@ -291,8 +291,7 @@ if (empty($_SESSION['username'])) {
 								$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
 								if ($echerow[$echestr] != "")
 									echo "<br/>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
-								$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
-AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
+								$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
 								while ($levelerability = $levelerabilities->fetch_array()) {
 									echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 								}
@@ -329,6 +328,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$i = 1;
 							$j = 1;
 							$currentstatus = $striferow['strifestatus'];
+							$statustr = "";
 							while ($j <= $patternrow[$maxtargetstr] && $i <= $max_enemies) { //j increments on successful enemy hit, i increments on any slot passed.
 								$enemystr = "enemy" . strval($i) . "name";
 								if ($striferow[$enemystr] != "") {
@@ -452,7 +452,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 										$message = "";
 										$thisisconsumablepage = true; //for the failedmessages; this won't have any other effect
 										$werow = $striferow;
-										include("includes/strife_weaponeffects.php");
+										include "includes/strife_weaponeffects.php";
 										echo $message;
 									}
 									$j++;
@@ -491,7 +491,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$mysqli->query("UPDATE `Ability_Patterns` SET `defenseupuses` = $patternrow[defenseupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
 						if ($powerboost != 0)
 							$mysqli->query("UPDATE `Ability_Patterns` SET `powerupuses` = $patternrow[powerupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
-						if ($temp == false) {
+						if (!$temp) {
 							if ($patternrow[$offenseupstr] != 0)
 								$mysqli->query("UPDATE `Players` SET `offenseboost` = $targetrow[offenseboost]+$patternrow[$offenseupstr] WHERE `Players`.`username` = '$target'");
 							if ($patternrow[$defenseupstr] != 0)
@@ -657,8 +657,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 									$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
 									if ($echerow[$echestr] != "")
 										echo "<br/>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
-									$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
-AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
+									$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
 									while ($levelerability = $levelerabilities->fetch_array()) {
 										echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 									}
@@ -865,4 +864,3 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 		echo "Once you've used your aspect powers a bit more, you'll get hints here.";
 }
 require_once "footer.php";
-?>
