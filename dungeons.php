@@ -6,6 +6,9 @@ require_once 'includes/chaincheck.php';
 require_once "header.php";
 $canusespecibus = true;
 
+/**
+ * Links two spaces, creating the "new" or first one if it did not exist.
+ */
 function roomlink($roomarray, $newrow, $newcol, $oldrow, $oldcol)
 {
 	$newentry = strval($newrow) . "," . strval($newcol);
@@ -439,20 +442,19 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 			$roomarray = roomlink($roomarray, $oldrow, $oldcol, $entryrow, $entrycol); //link function will link two spaces, creating the "new" or first one if it did not exist.
 			$previousdir = $i; //We start off coming from that direction.
 			$continue = 1;
-			while ($continue && $armlength[$i] < 13) { //This will turn up as false if continue ends up as zero. Paranoia: We're not supposed to be continuing if armlength is 13 or higher.
+			for ($armlength[$i] = 0; $continue && $armlength[$i] < 13; $armlength[$i]++) { //This will turn up as false if continue ends up as zero. Paranoia: We're not supposed to be continuing if armlength is 13 or higher.
 				$continue = rand(0, 24 - ($armlength[$i] * 2)); //Fail to perpetuate this arm on a 0. Guaranteed to terminate after twelve steps.
 				$teleport = rand(1, 100);
 				if ($teleport <= $transchance) { //default: 1 in 10 chance
-					$randomrow = rand(1, 10);
-					$randomcol = rand(1, 10);
-					$randomsquare = strval($randomrow) . "," . strval($randomcol);
-					while (empty($roomarray[$randomsquare]) || strpos($roomarray[$randomsquare], "ENTRANCE") === false || strpos($roomarray[$randomsquare], "STAIRS") === false) { //Keep re-selecting if we hit the entrance/stairs. 1% chance per loop
+					do
+					{
 						$randomrow = rand(1, 10);
 						$randomcol = rand(1, 10);
 						$randomsquare = strval($randomrow) . "," . strval($randomcol);
 					}
+					while (empty($roomarray[$randomsquare]) || strpos($roomarray[$randomsquare], "ENTRANCE") !== false || strpos($roomarray[$randomsquare], "STAIRS") !== false); //Keep re-selecting if we hit the entrance/stairs. 1% chance per loop
 					$previousdir = 0; //All bets are off!
-					$roomarray = roomlink($roomarray, $randomrow, $randomcol, $oldrow, $oldcol); //link function links two spaces, creating the "new" or first one if it did not exist.
+					$roomarray = roomlink($roomarray, $randomrow, $randomcol, $oldrow, $oldcol);
 					$oldrow = $randomrow;
 					$oldcol = $randomcol;
 				} else {
@@ -516,7 +518,6 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 						$oldcol = $newcol;
 					}
 				}
-				$armlength[$i]++;
 			}
 		}
 		$i++;
