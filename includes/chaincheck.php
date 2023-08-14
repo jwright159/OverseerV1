@@ -65,12 +65,9 @@ function chainArray($startrow)
 			$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
 			$currentrow = $currentresult->fetch_array();
 			$currentrow['highgate'] = highestGate($gaterow, $currentrow['house_build_grist']);
-			if ($step == 1 && $minus1row['highgate'] >= 1)
-				$clientcan = true;
-			if ($step == 2 && $minus2row['highgate'] >= 3)
-				$clientcan = true;
-			if ($step == 3 && $minus3row['highgate'] >= 5)
-				$clientcan = true;
+			$clientcan = $step == 1 && $minus1row['highgate'] >= 1
+				|| $step == 2 && $minus2row['highgate'] >= 3
+				|| $step == 3 && $minus3row['highgate'] >= 5;
 			if (($currentrow['highgate'] < ($step * 2) || !$clientcan) && !$fly) {
 				$step++; //check for the next highest gate pair
 				if ($step > 3)
