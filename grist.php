@@ -57,7 +57,7 @@ if (empty($_SESSION['username'])) {
 							$mysqli->query("UPDATE `Players` SET `$type` = $userrow[$type]-$modifier WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							$quantity = $userrow[$type] - $modifier;
 							$mysqli->query("UPDATE `Players` SET `$type` = $wirerow[$type]+$modifier WHERE `Players`.`username` = '$wirerow[username]' LIMIT 1 ;");
-							$timestr = produceIST(initTime($con));
+							$timestr = produceIST(initTime());
 							$event = $timestr . ": Sent $wirerow[username] $modifier $type";
 							//logEvent($event,$username);
 							$event = $timestr . ": Received $modifier $type from $userrow[username]";
