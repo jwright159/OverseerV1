@@ -368,13 +368,12 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 				}
 			} else { //Small power buff to all surviving minions
 				$message = $message . "The Lich Queen attempts to empower any minions she might have accrued, regardless of whether she has actually accrued any.<br/>";
-				$slot = 2; //Does not self-empower
-				while ($slot <= $max_enemies) {
+				for ($slot = 2; $slot <= $max_enemies; $slot++) { //Does not self-empower
 					$powerstr = "enemy" . strval($slot) . "power";
 					$maxpowerstr = "enemy" . strval($slot) . "maxpower";
+					if (!isset($userrow[$powerstr])) continue;
 					$userrow[$powerstr] += 250;
 					$userrow[$maxpowerstr] += 250;
-					$slot++;
 				}
 			}
 			break;
