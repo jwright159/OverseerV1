@@ -91,13 +91,12 @@ if (empty($_SESSION['username'])) {
 			$oldhealth = [1 => 0, 0, 0, 0, 0];
 			$reductionresist = [1 => 0, 0, 0, 0, 0];
 			$massiveresist = [1 => 100, 100, 100, 100, 100];
-			for ($i = 1; $i <= $max_enemies && isset($userrow["enemy" . strval($i) . "name"]); $i++) {
+			for ($i = 1; $i <= $max_enemies; $i++) {
 				$enemybasename = "enemy" . strval($i);
+				if (!isset($userrow[$enemybasename . "name"])) continue;
 
-				$monsterpowers[$i] = $userrow[$enemybasename . "power"];
-				$monsterhealth[$i] = $userrow[$enemybasename . "health"];
-				$oldpowers[$i] = $userrow[$enemybasename . "power"];
-				$oldhealth = $userrow[$enemybasename . "health"];
+				$oldpowers[$i] = $monsterpowers[$i] = isset($userrow[$enemybasename . "power"]) ? $userrow[$enemybasename . "power"] : 0;
+				$oldhealth[$i] = $monsterhealth[$i] = isset($userrow[$enemybasename . "health"]) ? $userrow[$enemybasename . "health"] : 0;
 
 				$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemybasename . "name"] . "'");
 				if ($enemyrow = $enemyresult->fetch_array()) { //Didn't have grist appended to it.
@@ -143,14 +142,13 @@ if (empty($_SESSION['username'])) {
 					switch ($userrow['Aspect']) { //We're using a solo motif. Grab the player's aspect and go!
 						case "Breath": //Feathercadence
 							$usagestr = "Your enemies are buffeted by powerful winds, making it harder for them to fight.";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$powerstr = "enemy" . strval($i) . "power";
+								if (!isset($userrow[$powerstr])) continue;
 								$newpower = floor($userrow[$powerstr] / 2);
 								$monsterpowers[$i] = $newpower;
 								//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = " . strval($newpower) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$powerstr] = $newpower;
-								$i++;
 							}
 							break;
 						case "Heart":
@@ -175,10 +173,10 @@ if (empty($_SESSION['username'])) {
 							break;
 						case "Mind":
 							$usagestr = "You lash out at the minds of your enemies, injuring them and impairing their judgment.";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$powerstr = "enemy" . strval($i) . "power";
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								$newpower = $userrow[$powerstr] - 1200;
 								$newhealth = $userrow[$healthstr] - 12000;
 								if ($newpower < 0)
@@ -191,15 +189,14 @@ if (empty($_SESSION['username'])) {
 								$userrow[$powerstr] = $newpower;
 								//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . $newhealth . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$healthstr] = $newhealth;
-								$i++;
 							}
 							break;
 						case "Blood":
 							$usagestr = "You strike your enemies hard, their wounds inspiring your bloodlust.";
-							$i = 1;
 							$boost = 0;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								$newhealth = $userrow[$healthstr] - 9001;
 								if ($newhealth < 1)
 									$newhealth = 1;
@@ -207,20 +204,18 @@ if (empty($_SESSION['username'])) {
 								//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . $newhealth . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$healthstr] = $newhealth;
 								$boost = $boost + floor(($userrow[$healthstr] - $newhealth) / 30);
-								$i++;
 							}
 							$mysqli->query("UPDATE `Players` SET `powerboost` = " . strval($userrow['powerboost'] + $boost) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							break;
 						case "Doom":
 							$usagestr = "You strike your opponents with dark tendrils, bringing them closer to death.";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								$newhealth = floor(($userrow[$healthstr] / 5) * 2);
 								$monsterhealth[$i] = $newhealth;
 								//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . $newhealth . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$healthstr] = $newhealth;
-								$i++;
 							}
 							break;
 						case "Rage": //Allaggressimo
@@ -230,10 +225,10 @@ if (empty($_SESSION['username'])) {
 							break;
 						case "Void": //Missing Notes
 							$usagestr = "A bunch of things that look like glitchy blocks of pixels appear around your enemies, which messes them up pretty bad.";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$healthstr = "enemy" . strval($i) . "health";
 								$powerstr = "enemy" . strval($i) . "power";
+								if (!isset($userrow[$healthstr])) continue;
 								$newhealth = rand(1, $userrow[$healthstr]);
 								$newpower = rand(1, $userrow[$powerstr]);
 								$monsterpowers[$i] = $newpower;
@@ -242,24 +237,22 @@ if (empty($_SESSION['username'])) {
 								$userrow[$healthstr] = $newhealth;
 								//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = " . $newpower . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$powerstr] = $newpower;
-								$i++;
 							}
 							break;
 						case "Space":
 							$usagestr = "You bend space around a single enemy, grievously injuring them.";
 							$highestpower = -1;
 							$target = "";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$enemystr = "enemy" . strval($i) . "name";
 								$powerstr = "enemy" . strval($i) . "power";
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								if ($userrow[$powerstr] > $highestpower && !empty($userrow[$enemystr])) {
 									$highestpower = $userrow[$powerstr];
 									$target = $healthstr;
 									$j = $i;
 								}
-								$i++;
 							}
 							$newhealth = $userrow[$target] - 61200;
 							if ($newhealth < 1)
@@ -270,16 +263,15 @@ if (empty($_SESSION['username'])) {
 							break;
 						case "Time":
 							$usagestr = "You strike your foes, then turn back time to strike them again!"; //Tehcnically deals flat damage rather than simulating an attack, but still.
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								$damage = $powerlevel;
 								if (($userrow[$healthstr] - $damage) < 1)
 									$damage = $userrow[$healthstr] - 1;
 								$monsterhealth[$i] = $userrow[$healthstr] - $damage;
 								//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . ($userrow[$healthstr] - $damage) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$healthstr] = ($userrow[$healthstr] - $damage);
-								$i++;
 							}
 							break;
 						default:
@@ -292,31 +284,29 @@ if (empty($_SESSION['username'])) {
 					switch ($userrow['Aspect']) { //We're using a solo motif. Grab the player's aspect and go!
 						case "Breath": //Pneumatic Progression
 							$usagestr = "Pockets of highly pressurized air slam into your enemies, inflicting heavy damage.";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								$newhealth = $userrow[$healthstr] - 50000;
 								if ($newhealth < 1)
 									$newhealth = 1;
 								$monsterhealth[$i] = $newhealth;
 								//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . $newhealth . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$healthstr] = $newhealth;
-								$i++;
 							}
 							break;
 						case "Heart":
 							$usagestr = "With perfect form you strike each enemy in turn, combining your power and theirs into a devastating blow.";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$powerstr = "enemy" . strval($i) . "power";
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								$newhealth = $userrow[$healthstr] - (($userrow[$powerstr] * 2) + ($powerlevel * 2));
 								if ($newhealth < 1)
 									$newhealth = 1;
 								$monsterhealth[$i] = $newhealth;
 								//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . $newhealth . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$healthstr] = $newhealth;
-								$i++;
 							}
 							break;
 						case "Life":
@@ -328,16 +318,15 @@ if (empty($_SESSION['username'])) {
 							$usagestr = "You discourage one of your enemies so completely that they no longer possess the will to fight.";
 							$highestpower = 0;
 							$target = "";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$enemystr = "enemy" . strval($i) . "name";
 								$powerstr = "enemy" . strval($i) . "power";
+								if (!isset($userrow[$healthstr])) continue;
 								if ($userrow[$powerstr] > $highestpower && !empty($userrow[$enemystr])) {
 									$highestpower = $userrow[$powerstr];
 									$target = $powerstr;
 									$j = $i;
 								}
-								$i++;
 							}
 							$monsterpowers[$j] = 0;
 							//$mysqli->query("UPDATE `Players` SET `" . $target . "` = 0 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -345,13 +334,13 @@ if (empty($_SESSION['username'])) {
 							break;
 						case "Light":
 							$usagestr = "A barrage of scintillating colours strike your foes, invoking a bizarre assortment of effects!";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$powerstr = "enemy" . strval($i) . "power";
 								$healthstr = "enemy" . strval($i) . "health";
 								$maxhealthstr = "enemy" . strval($i) . "maxhealth";
 								$namestr = "enemy" . strval($i) . "name";
 								$descstr = "enemy" . strval($i) . "desc";
+								if (!isset($userrow[$healthstr])) continue;
 								$rolls = 1;
 								$damage = 0;
 								if (!empty($userrow[$namestr])) {
@@ -430,7 +419,6 @@ if (empty($_SESSION['username'])) {
 										$userrow[$healthstr] = $newhealth;
 									}
 								}
-								$i++;
 							}
 							break;
 						case "Mind":
@@ -442,33 +430,31 @@ if (empty($_SESSION['username'])) {
 							break;
 						case "Blood":
 							$usagestr = "The mournful tune slows the pulses of your opponents, their movements becoming sluggish.";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$powerstr = "enemy" . strval($i) . "power";
+								if (!isset($userrow[$powerstr])) continue;
 								$newpower = $userrow[$powerstr] - 3000;
 								if ($newpower < 0)
 									$newpower = 0;
 								$monsterpowers[$i] = $newpower;
 								//$mysqli->query("UPDATE `Players` SET `" . $powerstr . "` = " . strval($newpower) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 								$userrow[$powerstr] = $newpower;
-								$i++;
 							}
 							break;
 						case "Doom":
 							$usagestr = "Dark power curses an enemy, sealing their fate.";
 							$highestpower = 0;
 							$target = "";
-							$i = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$namestr = "enemy" . strval($i) . "name";
 								$powerstr = "enemy" . strval($i) . "power";
 								$healthstr = "enemy" . strval($i) . "health";
+								if (!isset($userrow[$healthstr])) continue;
 								if ($userrow[$powerstr] > $highestpower && $userrow[$namestr] != "") {
 									$highestpower = $userrow[$powerstr];
 									$target = $healthstr;
 									$j = $i;
 								}
-								$i++;
 							}
 							$monsterhealth[$j] = 1;
 							//$mysqli->query("UPDATE `Players` SET `" . $target . "` = 1 WHERE `Players`.`username` = '$username' LIMIT 1 ;");
@@ -476,13 +462,12 @@ if (empty($_SESSION['username'])) {
 							break;
 						case "Rage":
 							$usagestr = "Unbridled rage courses through your enemies, causing them to turn on each other.";
-							$i = 1;
-							$j = 1;
-							while ($i <= $max_enemies) {
+							for ($i = 1; $i <= $max_enemies; $i++) {
 								$powerstr = "enemy" . strval($i) . "power";
 								$namestr = "enemy" . strval($i) . "name";
+								if (!isset($userrow[$powerstr])) continue;
 								if ($userrow[$namestr] != "") { //Enemy exists, perform attacks.
-									while ($j <= $max_enemies) {
+									for ($j = 1; $j <= $max_enemies; $j++) {
 										$healthstr = "enemy" . strval($j) . "health";
 										$newhealth = $userrow[$healthstr] - ceil($userrow[$powerstr] / 2);
 										if ($newhealth < 1)
@@ -492,10 +477,8 @@ if (empty($_SESSION['username'])) {
 											$monsterhealth[$j] = 1; //Needs to be done this way because damage is inflicted multiple times.
 										//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . $newhealth . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 										$userrow[$healthstr] = $newhealth; //So that damage is recorded properly.
-										$j++;
 									}
 								}
-								$i++;
 							}
 							break;
 						case "Void":
@@ -761,7 +744,7 @@ if (empty($_SESSION['username'])) {
 								$combo = true; //Applicable player found.
 						}
 					}
-					if ($combo == false) { //No assisting player with the correct aspect and fraymotif
+					if (!$combo) { //No assisting player with the correct aspect and fraymotif
 						echo "You are not being assisted by any player able to help you perform this fraymotif!<br/>";
 						$fail = true;
 					} else { //Gogogo!
@@ -1159,15 +1142,14 @@ if (empty($_SESSION['username'])) {
 					break;
 			}
 		}
-		if ($fail == false) {
+		if (!$fail) {
 			$userrow['fraymotifuses'] -= 1;
 			$userrow['combatmotifuses'] -= 1;
 			$mysqli->query("UPDATE `Players` SET `fraymotifuses` = " . $userrow['fraymotifuses'] . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			$mysqli->query("UPDATE `Players` SET `combatmotifuses` = " . $userrow['combatmotifuses'] . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 			echo "You use the fraymotif, $motifname:<br/>$usagestr<br/>";
 			//Check for enemy resists here.
-			$i = 1;
-			while ($i <= $max_enemies) {
+			for ($i = 1; $i <= $max_enemies; $i++) {
 				$enemystr = "enemy" . strval($i) . "name";
 				$healthstr = "enemy" . strval($i) . "health";
 				$maxhealthstr = "enemy" . strval($i) . "maxhealth";
@@ -1182,7 +1164,6 @@ if (empty($_SESSION['username'])) {
 					//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = " . ($oldhealth[$i] - (floor($userrow[$maxhealthstr] / 100) * $massiveresist[$i])) . " WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 					$userrow[$healthstr] = ($oldhealth[$i] - (floor($userrow[$maxhealthstr] / 100) * $massiveresist[$i]));
 				}
-				$i++;
 			}
 		}
 		writeEnemydata($userrow);
