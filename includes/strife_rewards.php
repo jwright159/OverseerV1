@@ -441,7 +441,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 	default:
 		$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
 		$denizenrow = $denizenresult->fetch_array();
-		if ($userrow[$enemystr] == $denizenrow[$userrow['Aspect']]) { //Denizen defeated.
+		if (isset($userrow['Aspect']) && $userrow[$enemystr] == $denizenrow[$userrow['Aspect']]) { //Denizen defeated.
 			echo "You have defeated your denizen. You may now access the Battlefield, and you have contributed the Hoard to the session's victory requirement.<br/>";
 			if (!empty($userrow['pesternoteUsername']))
 				sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Defeated $userrow[$enemystr], my Denizen.");
