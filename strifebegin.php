@@ -57,7 +57,7 @@ if (empty($_SESSION['username'])) {
 					if (($userrow['battlefield_access'] == 1 && $enemyrow['appearson'] == "Battlefield" && $_POST[$griststr] == "None") || $enemyrow['appearson'] == "Event" || ($userrow['dreamingstatus'] == "Awake" && $enemyrow['appearson'] == "Lands") || ($enemyrow['appearson'] == $userrow['dreamingstatus'] && $_POST[$griststr] == "None"))
 						$cheatyface = false; //Event foes have different protected setups.
 				}
-				if ($cheatyface == false) {
+				if (!$cheatyface) {
 					$enemyexists = true;
 					generateEnemy($userrow, $_POST['gristtype'], $_POST[$griststr], $_POST[$enemystr], false); //Make the enemy and assign them to combat.
 					$userrow = refreshEnemydata($userrow);

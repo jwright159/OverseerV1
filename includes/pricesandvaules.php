@@ -8,22 +8,16 @@ function randomItem($griststring, $costcap, $gristname, $specialstring)
 	} else {
 		$specialstring = "`Captchalogue`.`$griststring` > 0";
 	}
-	$poolresult = fetchAll("SELECT `name` FROM Captchalogue WHERE $specialstring AND effects NOT LIKE '%NOCONSORT|%'");
-	$foundone = false;
-	$attempts = 0;
+	$poolresult = fetchAll("SELECT * FROM Captchalogue WHERE $specialstring AND effects NOT LIKE '%NOCONSORT|%'");
 	$attemptscap = 100;
-	while (!$foundone && $attempts < $attemptscap) {
+	for ($attempts = 0; $attempts < $attemptscap; $attempts++) {
 		$pickrow = $poolresult[array_rand($poolresult)];
 		//echo $pickrow['name'] . " found<br/>";
 		$thiscost = totalGristcost($pickrow, $gristname);
 		if ($thiscost <= $costcap)
-			$foundone = true;
-		$attempts++;
+			return $pickrow;
 	}
-	if ($foundone)
-		return $pickrow;
-	else
-		return false;
+	return false;
 }
 
 function totalGristcost($countrow, $gristname)

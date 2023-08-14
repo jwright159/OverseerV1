@@ -252,8 +252,7 @@ if (empty($_SESSION['username'])) {
 				} else {
 					echo 'Current opponents:<br/>';
 				}
-				$i = 1;
-				while ($i <= $max_enemies) {
+				for ($i = 1; $i <= $max_enemies; $i++) {
 					$enemystr = "enemy" . strval($i) . "name";
 					$powerstr = "enemy" . strval($i) . "power";
 					$healthstr = "enemy" . strval($i) . "health";
@@ -322,7 +321,6 @@ if (empty($_SESSION['username'])) {
 							echo "Locked Down: This enemy is unable to use any of its special abilities for the time being.<br/>";
 						}
 					}
-					$i++;
 				}
 				echo '<div id="health"></div>';
 				echo '<b>Health Vial: ' . strval($healthcurrent) . '%</b>';
