@@ -133,7 +133,7 @@ if (empty($_SESSION['username'])) {
 						} else {
 							$mainpower = 0;
 						}
-						if ($userrow['offhand'] != "" && $userrow['offhand'] != $equippedmain && $userrow['offhand'] != "2HAND") {
+						if ($userrow['offhand'] != "" && $userrow['offhand'] != $userrow['equipped'] && $userrow['offhand'] != "2HAND") {
 							$itemname = str_replace("'", "\\\\''", $userrow[$userrow['offhand']]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 							$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 							while ($row = $itemresult->fetch_array()) {
@@ -218,11 +218,11 @@ if (empty($_SESSION['username'])) {
 								if ($userrow['encounters'] > 0) {
 									if ($strifing) {
 										echo "$abilityrow[Usagestr]<br/>";
-										$i = 1;
-										while ($i <= $max_enemies) {
+										for ($i = 1; $i <= $max_enemies; $i++) {
 											$enemystr = "enemy" . strval($i) . "name";
 											$powerstr = "enemy" . strval($i) . "power";
 											$healthstr = "enemy" . strval($i) . "health";
+											if (empty($userrow[$enemystr])) continue;
 											$enemydamage = rand(floor($powerlevel * (0.85 + ($luck * 0.003))), ceil($powerlevel * 1.15)) - floor($userrow[$powerstr]);
 											if ($enemydamage < 0)
 												$enemydamage = 0; //No healing the enemy!
@@ -231,7 +231,6 @@ if (empty($_SESSION['username'])) {
 												$newenemyhealth = 1; //Abilities can't be fatal.
 											//$mysqli->query("UPDATE `Players` SET `" . $healthstr . "` = '" . strval($newenemyhealth) . "' WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 											$userrow[$healthstr] = $newenemyhealth;
-											$i++;
 										}
 									} else {
 										echo "A version of you with slight temporal displacement appears. You ask how the future/past/alternate timeline is going. You say it's going pretty well, thank you. You ask how things are in the present. You say they're doing okay. It's pretty chill.<br/>";
@@ -249,7 +248,8 @@ if (empty($_SESSION['username'])) {
 								$mysqli->query("UPDATE `Players` SET `combatconsume` = 1 WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;"); //Only do this if strifing.
 							$mysqli->query("UPDATE `Players` SET `Aspect_Vial` = $userrow[Aspect_Vial]-$abilityrow[Aspect_Cost] WHERE `Players`.`username` = '" . $username . "' LIMIT 1 ;");
 							$userrow['Aspect_Vial'] -= $abilityrow['Aspect_Cost']; //Only do this on success.
-							writeEnemydata($targetrow);
+							if ($targetfound)
+								writeEnemydata($targetrow);
 						}
 					} else {
 						echo "You have already used your action for this round of strife!<br/>";
