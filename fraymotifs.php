@@ -1174,7 +1174,7 @@ if (empty($_SESSION['username'])) {
 	} else {
 		echo "WARNING - Currently, only the solo fraymotifs actually do anything. Although I doubt anyone can raise the cash for anything else, they currently do nothing.<br/>";
 		$time = time();
-		$interval = 86400; //This is where the interval between fraymotif ticks is set. The reset is currently once per day.
+		$interval = 3600; //This is where the interval between fraymotif ticks is set. The reset is currently once per day.
 		if (!empty($abilities[16]))
 			$interval = floor($interval * 0.9); //Temporal Warp is active, cooldown is 90%
 		$lasttick = $userrow['fraymotiftimer'];
