@@ -309,20 +309,19 @@ if ($dona == "Gold") {
 							$shopinflation = 1 + ((rand(90, 110) - econonyLevel($currentrow['econony'])) / 100); //shop prices deviate +/- 10% from the norm
 							if ($shopinflation < 0.5)
 								$shopinflation = 0.5;
-							$tsi = 0; //total shop items
 							$shopstring = "";
 							$maxshopitems = 3 + ($shopgate * 2) + rand(0, $shopgate); //the amount of items this shop will have when we're done
 							$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 							$landrow = $landresult->fetch_array();
-							while ($tsi < $maxshopitems) {
+							for ($i = 0; $i < $maxshopitems; $i++) {
 								$thisgrist = $landrow['grist' . strval(rand(1, 9))]; //pick a random grist type from that land
 								$shopitemrow = randomItem($thisgrist . '_Cost', $gaterow['gate' . strval($shopgate)], $gristname, "");
-								$shopitem[$tsi] = $shopitemrow['name'];
-								$shopprice[$tsi] = round(totalBooncost($shopitemrow, $landrow, $gristname, $currentrow['session_name']) * $shopinflation);
-								$shoppower[$tsi] = $shopitemrow['power'];
-								$shopkind[$tsi] = $shopitemrow['abstratus'];
-								$shopstring = $shopstring . $shopitem[$tsi] . "==" . strval($shopprice[$tsi]) . "==" . strval($shoppower[$tsi]) . "==" . strval($shopkind[$tsi]) . "|";
-								$tsi++;
+								if (!$shopitemrow) continue;
+								$shopitem[$i] = $shopitemrow['name'];
+								$shopprice[$i] = round(totalBooncost($shopitemrow, $landrow, $gristname, $currentrow['session_name']) * $shopinflation);
+								$shoppower[$i] = $shopitemrow['power'];
+								$shopkind[$i] = $shopitemrow['abstratus'];
+								$shopstring = $shopstring . $shopitem[$i] . "==" . strval($shopprice[$i]) . "==" . strval($shoppower[$i]) . "==" . strval($shopkind[$i]) . "|";
 							}
 							$mysqli->query("UPDATE `Players` SET `shopstock` = '$shopstring', `lastshoptick` = " . strval(time()) . " WHERE `Players`.`username` = '" . $currentrow['username'] . "'");
 							$currentrow['lastshoptick'] = time();
