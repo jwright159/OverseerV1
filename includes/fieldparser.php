@@ -2,13 +2,12 @@
 
 function parseEnemydata($userrow)
 {
-	$enemies = explode("|", $userrow['enemydata']);
+	$enemies = !empty($userrow['enemydata']) ? explode("|", $userrow['enemydata']) : [];
 	//$allenemies = count($enemies);
 	//if ($allenemies > 50)
 	$allenemies = 50;
 	$actualenemies = $allenemies;
-	$i = 0;
-	while ($i < $allenemies) {
+	for ($i = 0; $i < $allenemies; $i++) {
 		if (!empty($enemies[$i])) {
 			$thisenemy = explode(":", $enemies[$i]);
 			$enstr = 'enemy' . strval($i + 1);
@@ -26,7 +25,6 @@ function parseEnemydata($userrow)
 			$enstr = 'enemy' . strval($i + 1);
 			$userrow[$enstr . 'name'] = "";
 		}
-		$i++;
 	}
 	//$userrow['maxenemies'] = $actualenemies; //"maxenemies" doesn't exist as a user field, but it's inserted into the userrow so that the function can return it. It's also for some reason causing a bug that prevents more than one enemy from existing, so it's commented out for now.
 	return $userrow;
