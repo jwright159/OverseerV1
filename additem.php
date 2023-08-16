@@ -35,8 +35,7 @@ function addItem($item, $userrow, $incode = "00000000")
 				compuRefresh($userrow);
 				return $invstr;
 			} else {
-				$j = 0;
-				while ($j < $invslots) {
+				for ($j = 1; $j <= $invslots; $j++) {
 					$jnvstr = "inv" . strval($j);
 					$compuname = str_replace("'", "\\\\''", $userrow[$jnvstr]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 					$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
@@ -55,7 +54,6 @@ function addItem($item, $userrow, $incode = "00000000")
 							return "inv-1"; //we didn't actually obtain the item, so return failure
 						}
 					}
-					$j++;
 				}
 				echo "<br/>This item is too big for you to captchalogue! You will need to find a way to upgrade your Fetch Modus first.<br/>";
 				return "inv-1";
