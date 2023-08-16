@@ -360,11 +360,10 @@ if (!($userrow['motifcounter'] > 0 && $userrow['Aspect'] == "Void") && $lockeddo
 			} elseif ($roll >= 50) { //Reprieve! Nothing happens.
 			} elseif ($roll >= 40) { //Heal self and minions.
 				$message = $message . "The Lich Queen strengthens unlife within the room, increasing the health of basically everything except you.<br/>";
-				$counter = 1;
-				while ($counter <= $max_enemies) {
-					$healthstr = "enemy" . strval($counter) . "health";
+				for ($i = 1; $i <= $max_enemies; $i++) {
+					$healthstr = "enemy" . strval($i) . "health";
+					if (!isset($userrow[$healthstr])) continue;
 					$userrow[$healthstr] += 1250; //Yes, this can overheal.
-					$counter++;
 				}
 			} else { //Small power buff to all surviving minions
 				$message = $message . "The Lich Queen attempts to empower any minions she might have accrued, regardless of whether she has actually accrued any.<br/>";
