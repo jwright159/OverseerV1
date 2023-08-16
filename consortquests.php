@@ -229,7 +229,7 @@ if (empty($_SESSION['username'])) {
 							//echo "Searching for abstratus(i) " . $qrow['req_abstratus'] . "<br/>";
 							$boom = explode("|", $qrow['req_abstratus']);
 							for ($i = 0; $i < count($boom) && !$victory; $i++)
-								if (strripos($qirow['abstratus'], $boom[$counter]) !== false)
+								if (strripos($qirow['abstratus'], $boom[$i]) !== false)
 									$victory = true; //item matches one of the abstrati
 							if (!$victory && empty($failreason))
 								$failreason = "This isn't the right kind of item.";
@@ -238,8 +238,8 @@ if (empty($_SESSION['username'])) {
 							$victory = false;
 							//echo "Searching for grist(s) " . $qrow['req_grist'] . "<br/>";
 							$boom = explode("|", $qrow['req_grist']);
-							for ($i = 0; $i < $boomcount && !$victory; $i++)
-								if (($boom[$counter] == "Artifact_Grist" && $qirow[$boom[$counter] . '_Cost'] < 0) || $qirow[$boom[$counter] . '_Cost'] > 0)
+							for ($i = 0; $i < count($boom) && !$victory; $i++)
+								if (($boom[$i] == "Artifact_Grist" && $qirow[$boom[$i] . '_Cost'] < 0) || $qirow[$boom[$i] . '_Cost'] > 0)
 									$victory = true; //if artifact is required, checks if negative
 							if (!$victory and empty($failreason))
 								$failreason = "Something about the item's style is off.";
