@@ -318,7 +318,7 @@ if (empty($_SESSION['username'])) {
 						if ($itemname == $row[$row['bodygear']]) {
 							if ($row['dreamingstatus'] != "Awake")
 								$itemrow = $blankrow; //Blank row if assister is asleep.
-							if ($row['hybrid'] == 1)
+							if ($itemrow['hybrid'] == 1)
 								$itemrow = convertHybrid($itemrow, true);
 							$aiddef += $itemrow['power'];
 							$aidbodyrow = $itemrow;
@@ -334,7 +334,7 @@ if (empty($_SESSION['username'])) {
 						if ($itemname == $row[$row['accessory']]) {
 							if ($row['dreamingstatus'] != "Awake")
 								$itemrow = $blankrow; //Blank row if assister is asleep.
-							if ($row['hybrid'] == 1)
+							if ($itemrow['hybrid'] == 1)
 								$itemrow = convertHybrid($itemrow, false);
 							$aiddef += $itemrow['power'];
 							$aidaccrow = $itemrow;
