@@ -491,6 +491,8 @@ function wearableAffinity($resistances, $aspect, $effects)
 				$affadd = $arg[2];
 				if ($arg[1] != $aspect)
 					$affadd = floor($affadd * 0.8);
+				if (!isset($resistances[$arg[1]]))
+					$resistances[$arg[1]] = 0;
 				$resistances[$arg[1]] += $affadd;
 				if ($resistances[$arg[1]] > 100)
 					$resistances[$arg[1]] = 100;
