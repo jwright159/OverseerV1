@@ -498,7 +498,7 @@ if (empty($_SESSION['username'])) {
 						$report = 0;
 						$reported[$report] = true;
 						while ($returns > 0) {
-							while ($reported[$report] == true) {
+							while (!empty($reported[$report])) {
 								$report = rand(1, $foundcombos);
 							}
 							$reported[$report] = true;
