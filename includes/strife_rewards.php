@@ -18,7 +18,7 @@ if ($userrow[$categorystr] != "None")
 	$gristrow = $_SESSION[$userrow[$categorystr]];
 $rarity = 1;
 $typestr = "grist" . strval($rarity);
-while (isset($gristrow) && $gristrow[$typestr] != $grist && $rarity <= 9) { //Nine types of grist.
+while (isset($gristrow) && $rarity <= 9 && $gristrow[$typestr] != $grist) { //Nine types of grist.
 	$rarity++;
 	$typestr = "grist" . strval($rarity);
 }
