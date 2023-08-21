@@ -435,7 +435,7 @@ if (empty($_SESSION['username'])) {
 					}
 					$imbue = str_replace("HASEFFECT:$statusarg[1]:", "", $thisstatus[$st]); //cuts off the haseffect tag and adds everything else to bonuseffects
 					$bonuseffects .= $imbue . "|";
-				} elseif ($statusarg[1] == "CHARMED") { //enemy has a charmed effect
+				} elseif (isset($statusarg[1]) && $statusarg[1] == "CHARMED") { //enemy has a charmed effect
 					$thischarm = substr($statusarg[0], 4); //find out which enemy it is
 					if (empty($charmed[intval($thischarm)])) { //only one instance of CHARMED can work at a time
 						$charmstr = "enemy" . $thischarm . "name";
