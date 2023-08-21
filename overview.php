@@ -493,7 +493,7 @@ if (empty($_SESSION['username'])) {
 		$i++;
 	}
 	echo strval($gates) . "<br/>";
-	if (($gates == 7 && $userrow['dreamingstatus'] == "Awake" && $userrow['denizendown'] == 0 && !empty($userrow['Aspect'])) || $fly) {
+	if (($gates == 7 || $fly) && $userrow['dreamingstatus'] == "Awake" && $userrow['denizendown'] == 0 && !empty($userrow['Aspect'])) {
 		if ($userrow['enemydata'] == "" && $userrow['aiding'] == "") {
 			$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
 			$denizenrow = $denizenresult->fetch_array();
