@@ -448,7 +448,7 @@ if (empty($_SESSION['username'])) {
 				$st++;
 			}
 		}
-		if (!empty($userrow['allies']) && $userrow['dreamstatus'] == "Awake") { //no allies while dreaming!
+		if (!empty($userrow['allies']) && !empty($userrow['dreamstatus']) && $userrow['dreamstatus'] == "Awake") { //no allies while dreaming!
 			$thisstatus = explode("|", $userrow['allies']);
 			$st = 0;
 			while (!empty($thisstatus[$st])) {
