@@ -13,7 +13,7 @@ function replacer($userrow, $string)
 	}
 	$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen'");
 	$denizenrow = $denizenresult->fetch_array();
-	$string = str_replace("%denizen%", $denizenrow[$userrow['Aspect']], $string);
+	$string = str_replace("%denizen%", isset($denizenrow[$userrow['Aspect']]) ? $denizenrow[$userrow['Aspect']] : "", $string);
 	return $string;
 }
 
