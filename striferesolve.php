@@ -448,7 +448,7 @@ if (empty($_SESSION['username'])) {
 				$st++;
 			}
 		}
-		if (!empty($userrow['allies']) && !empty($userrow['dreamstatus']) && $userrow['dreamstatus'] == "Awake") { //no allies while dreaming!
+		if (!empty($userrow['allies']) && $userrow['dreamingstatus'] == "Awake") { //no allies while dreaming!
 			$thisstatus = explode("|", $userrow['allies']);
 			$st = 0;
 			while (!empty($thisstatus[$st])) {
@@ -1163,7 +1163,7 @@ if (empty($_SESSION['username'])) {
 				$newhealth = $userrow['Gel_Viscosity'];
 				$userrow[$healthvialstr] = $userrow['Gel_Viscosity'];
 			}
-			if (!empty($userrow['allies']) && $userrow['dreamstatus'] == "Awake") { //here, we'll explode the currentstatus to see if we have any NPC allies
+			if (!empty($userrow['allies']) && $userrow['dreamingstatus'] == "Awake") { //here, we'll explode the currentstatus to see if we have any NPC allies
 				$thisstatus = explode("|", $userrow['allies']);
 				$st = 0;
 				$npcaidmsg = "";
