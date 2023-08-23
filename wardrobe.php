@@ -752,7 +752,7 @@ if (empty($_SESSION['username'])) {
 			}
 		}
 	} else {
-		if ($userrow['facegear'] != "" && $userrow['facegear'] != $equippedhead && $equippedface != "2HAND") {
+		if ($userrow['facegear'] != "" && $userrow['facegear'] != $equippedhead && $equippedface != "2HAND" && $userrow['facegear'] !== "2HAND") {
 			$itemname = str_replace("'", "\\\\''", $userrow[$userrow['facegear']]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
