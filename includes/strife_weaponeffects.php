@@ -31,14 +31,14 @@ while ($mainoff < 4) { //1 for main, 2 for off. 3 for bonus effects from HASEFFE
 	while (!empty($effectarray[$effectnumber])) {
 		$currenteffect = $effectarray[$effectnumber];
 		$currentarray = explode(':', $currenteffect); //Note that what each array entry means depends on the effect.
-		if ($currentarray[0] == "RANDEFFECT") { //transform into a random effect, format is RANDEFFECT:<% chance>:<effectiveness>
+		if ($currentarray[0] == "RANDEFFECT") { //transform into a random effect, format is RANDEFFECT:<percent chance>:<effectiveness>
 			$currentarray[0] = getRandeffect();
 			//for most effects, argument 2 is the amount of turns the effect will last if applicable
 			if ($currentarray[0] == "BURNING")
 				$currentarray[2] *= 100;
 			if ($currentarray[0] == "POISON")
 				$currentarray[2] /= 2;
-			if ($currentarray[0] == "LIFESTEAL" || $currentarray[0] == "SOULSTEAL" || $currantarray[0] == "RECOIL")
+			if ($currentarray[0] == "LIFESTEAL" || $currentarray[0] == "SOULSTEAL" || $currentarray[0] == "RECOIL")
 				$currentarray[2] *= 20;
 		}
 		switch ($currentarray[0]) {
