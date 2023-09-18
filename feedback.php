@@ -361,7 +361,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	if (!empty($_POST['newart'])) { //User is submitting art.
-		$systemresult = $mysqli->query("SELECT * FROM System");
+		$systemresult = $mysqli->query("SELECT * FROM `System`");
 		$systemrow = $systemresult->fetch_array();
 		$newid = $systemrow['totalsubmissions'];
 		$newitem = $mysqli->real_escape_string(str_replace(';', ':', $_POST['artitem']));
@@ -383,7 +383,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	if (!empty($_POST['bugdesc'])) { //User is submitting a bug report.
-		$systemresult = $mysqli->query("SELECT * FROM System");
+		$systemresult = $mysqli->query("SELECT * FROM `System`");
 		$systemrow = $systemresult->fetch_array();
 		$newid = $systemrow['totalsubmissions'];
 		$newother = $mysqli->real_escape_string($_POST['bugdesc']);
@@ -400,7 +400,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	if (!empty($_POST['gamefeedback'])) { //User is submitting a suggestion.
-		$systemresult = $mysqli->query("SELECT * FROM System");
+		$systemresult = $mysqli->query("SELECT * FROM `System`");
 		$systemrow = $systemresult->fetch_array();
 		$newid = $systemrow['totalsubmissions'];
 		$newother = $mysqli->real_escape_string($_POST['gamefeedback']);
@@ -417,7 +417,7 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 	if (!empty($_POST['qprompt'])) {
-		$systemresult = $mysqli->query("SELECT * FROM System");
+		$systemresult = $mysqli->query("SELECT * FROM `System`");
 		$systemrow = $systemresult->fetch_array();
 		$newid = $systemrow['totalsubmissions'];
 		$newprompt = $mysqli->real_escape_string($_POST['qprompt']);

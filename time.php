@@ -126,7 +126,7 @@ function produceIST($init)
 function initTime()
 { //Grabs the initialization time from the System table (in seconds since the Epoch)
 	global $mysqli;
-	$result = $mysqli->query("SELECT * FROM System");
+	$result = $mysqli->query("SELECT * FROM `System`");
 	$row = $result->fetch_array();
 	return $row['time'];
 }

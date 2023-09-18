@@ -399,7 +399,7 @@ if (empty($_SESSION['username'])) {
 	elseif ($mode == "black")
 		$modestring = "AND `Feedback`.`defunct` = 0 AND `Feedback`.`clarify` = 0 AND `Feedback`.`greenlight` = 0 AND `Feedback`.`suspended` = 0 ";
 	elseif ($mode == "aotw") {
-		$aotwresult = $mysqli->query("SELECT `abstratusoftheweek` FROM System WHERE 1");
+		$aotwresult = $mysqli->query("SELECT `abstratusoftheweek` FROM `System` WHERE 1");
 		$aotwrow = $aotwresult->fetch_array();
 		$aotwstring = $aotwrow['abstratusoftheweek'];
 		$modestring = "AND `Feedback`.`comments` LIKE '%" . $aotwstring . "%' ";

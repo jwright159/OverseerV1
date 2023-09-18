@@ -18,7 +18,7 @@ if (empty($_SESSION['username'])) {
 			$realname = str_replace("\\", "", $row['name']);
 			echo "$realname - $row[captchalogue_code] - $row[abstratus]<br/>";
 		}
-		$sresult = $mysqli->query("SELECT * FROM System");
+		$sresult = $mysqli->query("SELECT * FROM `System`");
 		$srow = $sresult->fetch_array();
 		$newaddlog = $srow['debuglog'] . "<br/>Dev Captchalist accessed by " . $username;
 		$newaddlog = $mysqli->real_escape_string($newaddlog);
