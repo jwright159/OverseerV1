@@ -19,7 +19,7 @@ function canFly($checkrow)
 			$chname = str_replace("'", "\\\\''", $checkrow[$invstring]);
 			$chresult = $mysqli->query("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
 			$chrow = $chresult->fetch_array();
-			if (strrpos($chrow['abstratus'], "flying"))
+			if ($chrow && strrpos($chrow['abstratus'], "flying")) // Captcha cards are marked as "Captchalogue Card (CODE:xxxxxxxx)" which isn't valid for lookup
 				return true;
 		}
 	}

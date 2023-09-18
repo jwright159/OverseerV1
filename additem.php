@@ -5,8 +5,7 @@ function addItem($item, $userrow, $incode = "00000000")
 { //Adds an item to a user's inventory. Returns true if successful, or false if the user's inventory is full.
 	global $mysqli;
 	$invslots = 50; //Placed here so function can use it.
-	$i = 1;
-	while ($i <= $invslots) {
+	for ($i = 1; $i <= $invslots; $i++) {
 		$invstr = "inv" . strval($i);
 		//echo $invstr;
 		if ($userrow[$invstr] == "") { //First empty inventory card
@@ -59,7 +58,6 @@ function addItem($item, $userrow, $incode = "00000000")
 				return "inv-1";
 			}
 		}
-		$i++;
 	}
 	return "inv-1";
 }
