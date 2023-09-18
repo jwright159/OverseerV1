@@ -10,7 +10,7 @@ if (empty($_SESSION['username'])) {
 	$result = $mysqli->query("SELECT * FROM Logs WHERE `Logs`.`username` = '$username'");
 	while ($row = $result->fetch_array()) {
 		if ($row['username'] == $username) {
-			echo "It is currently " . produceIST(initTime($con)) . "<br/>";
+			echo "It is currently " . produceIST(initTime()) . "<br/>";
 			echo "Events for " . $username . ":<br/>";
 			$result2 = $mysqli->query("SELECT * FROM Logs");
 			$col = $result2->fetch_field(); //Skip the username.
