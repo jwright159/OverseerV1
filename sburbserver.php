@@ -21,18 +21,18 @@ if (empty($_SESSION['username'])) {
 	} else {
 		if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 			if ($userrow['hascomputer'] < 3) {
-				if ($compugood == true)
+				if ($compugood)
 					echo "You don't have a hands-free computer equipped, so you can't use the SBURB server program during strife.<br/>";
 				$compugood = false;
 			}
 		}
 		if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
-			if ($compugood == true)
+			if ($compugood)
 				echo "You don't have a portable computer in your inventory, so you can't use the SBURB server program while away from home.<br/>";
 			$compugood = false;
 		}
 		if ($userrow['hascomputer'] == 0) {
-			if ($compugood == true)
+			if ($compugood)
 				echo "You need a computer in storage or your inventory to use the SBURB server program.<br/>";
 			$compugood = false;
 		}
@@ -54,14 +54,14 @@ if (empty($_SESSION['username'])) {
 						echo "Client registered.<br/>";
 						$userrow['client_player'] = $client;
 					} else {
-						if ($row['server_player'] != "" && $playerfound != true) {
+						if ($row['server_player'] != "" && !$playerfound) {
 							$playerfound = true;
 							echo "Client already possesses a server player: " . $row['server_player'] . "<br/>";
 						}
 					}
 				}
 			}
-			if ($playerfound == false) {
+			if (!$playerfound) {
 				echo "Target player was not found in your session.<br/>";
 			}
 		}
@@ -107,17 +107,17 @@ if (empty($_SESSION['username'])) {
 							$currentstack = $existtag[1];
 						else
 							$currentstack = 0;
-						if ($deploytag[1] == "MAXSTORE")
+						if (!empty($deploytag[1]) && $deploytag[1] == "MAXSTORE")
 							$fullstack = $deploytag[2];
 						else
 							$fullstack = 1;
 						if ($currentstack < $fullstack || $drow['captchalogue_code'] == "11111111") { //the user doesn't have this in their storage yet
 							$canafford = false;
-							if ($deploytag[1] == "FREE") {
+							if (!empty($deploytag[1]) && $deploytag[1] == "FREE") {
 								$canafford = true;
 								$coststring = "Build_Grist";
 								$newgrist = $clientrow['Build_Grist'];
-							} elseif ($deploytag[1] == "TIER1") {
+							} elseif (!empty($deploytag[1]) && $deploytag[1] == "TIER1") {
 								$coststring = $tier1grist;
 								if ($clientrow[$tier1grist] > $deploytag[2]) {
 									$canafford = true;
@@ -168,7 +168,6 @@ if (empty($_SESSION['username'])) {
 									echo "You recycle your client's " . $irow['name'] . " x " . strval($_POST['q-' . $args[0]]) . " into ";
 									if (!$gristed) {
 										$gristname = initGrists();
-										$totalgrists = count($gristname);
 										$gristed = true;
 									}
 									$deploytag = specialArray($irow['effects'], "DEPLOYABLE"); //should always return an array because of the search query above
@@ -178,20 +177,17 @@ if (empty($_SESSION['username'])) {
 										$irow[$tier1grist . '_Cost'] = 0;
 										$irow['Build_Grist_Cost'] = 0;
 									}
-									$gristcount = 0;
 									$refundquery = "UPDATE Players SET ";
-									while ($gristcount <= $totalgrists) {
-										$gristtype = $gristname[$gristcount];
-										$gristcost = $gristtype . "_Cost";
+									foreach ($gristname as $grist) {
+										$gristcost = $grist . "_Cost";
 										if ($irow[$gristcost] != 0) { //Item requires some of this grist. Or produces some. Either way.
 											$nothing = false; //Item costs something.
 											$totalthiscost = $irow[$gristcost] * $_POST['q-' . $args[0]];
-											$refundquery = $refundquery . "`$gristtype` = " . strval($clientrow[$gristtype]) . "+" . strval($totalthiscost) . ", ";
-											$clientrow[$gristtype] += $irow[$gristcost];
-											echo '<img src="Images/Grist/' . gristNameToImagePath($gristtype) . '" height="50" width="50" title="' . $gristtype . '"></img>';
+											$refundquery = $refundquery . "`$grist` = " . strval($clientrow[$grist]) . "+" . strval($totalthiscost) . ", ";
+											$clientrow[$grist] += $irow[$gristcost];
+											echo '<img src="Images/Grist/' . gristNameToImagePath($grist) . '" height="50" width="50" title="' . $grist . '"></img>';
 											echo " <gristvalue2>" . strval($totalthiscost) . "</gristvalue2>";
 										}
-										$gristcount++;
 									}
 									if ($nothing) { //Item costs nothing! SORD.....
 										echo '<img src="Images/Grist/Build_Grist.png" height="50" width="50" title="Build_Grist"></img>';
@@ -204,7 +200,7 @@ if (empty($_SESSION['username'])) {
 									$args[1] -= $_POST['q-' . $args[0]];
 									echo '<br/>';
 								} else
-									"Error: Client does not have " . $args[1] . " of " . $irow['name'] . "<br/>";
+									echo "Error: Client does not have " . $args[1] . " of " . $irow['name'] . "<br/>";
 							} else {
 								echo 'Error: unknown item<br/>';
 							}
@@ -300,4 +296,3 @@ if (empty($_SESSION['username'])) {
 }
 
 require_once "footer.php";
-?>

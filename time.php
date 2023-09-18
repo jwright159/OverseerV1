@@ -130,4 +130,3 @@ function initTime()
 	$row = $result->fetch_array();
 	return $row['time'];
 }
-?>

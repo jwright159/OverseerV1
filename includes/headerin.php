@@ -89,6 +89,7 @@ if (empty($_SESSION['username'])) {
 	} else { //Player has not had a tick yet.
 		$lasttick = $time;
 	}
+	$sessioname = str_replace("'", "''", $userrow['session_name']);
 	if ($encounters > $userrow['encounters'] && ($userrow['down'] == 1 || $userrow['dreamdown'] == 1)) { //Both downs recover after a single encounter is earned.
 		$sessionresult = $mysqli->query("SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '$sessioname' LIMIT 1;");
 		$sessionrow = $sessionresult->fetch_array();

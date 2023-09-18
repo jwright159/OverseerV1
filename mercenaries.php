@@ -47,9 +47,9 @@ if (empty($_SESSION['username'])) {
 				if (!$aok)
 					echo "You can't reach that land.<br/>";
 			}
-			if ($aok) { //preliminary checks pass, let's look for someone to hire
-				$landresult = $mysqli->query("SELECT * FROM Players WHERE username = '" . $_POST['land'] . "'");
-				$landrow = $landresult->fetch_array();
+			$landresult = $mysqli->query("SELECT * FROM Players WHERE username = '" . $_POST['land'] . "'");
+			$landrow = $landresult->fetch_array();
+			if ($aok && !empty($landrow)) { //preliminary checks pass, let's look for someone to hire
 				$landrow = mercRefresh($landrow); //might as well do this here
 				$landname = "The Land of " . $landrow['land1'] . " and " . $landrow['land2'];
 				$offer = $_POST['boons'];

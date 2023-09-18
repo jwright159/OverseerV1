@@ -209,18 +209,17 @@ if ($dona == "Gold") {
 			$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 			$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
 			$reachgrist = false;
-			$terminateloop = false;
 			$totalgrists = 0;
-			while (($col = $result2->fetch_field()) && $terminateloop == false) {
+			while (($col = $result2->fetch_field())) {
 				$gristtype = $col->name;
 				if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 					$reachgrist = true;
 				}
 				if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 					$reachgrist = false;
-					$terminateloop = true;
+					break;
 				}
-				if ($reachgrist == true) {
+				if ($reachgrist) {
 					$gristname[$totalgrists] = $gristtype;
 					$totalgrists++;
 				}
@@ -245,10 +244,10 @@ if ($dona == "Gold") {
 						$landcount++;
 					}
 					echo '</select><input type="submit" value="Shop here"></form>';
-					/*$debugitem = randomItem('Amber_Cost', 1000, $gristname, $totalgrists);
+					/*$debugitem = randomItem('Amber_Cost', 1000, $gristname);
 					$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 					  $landrow = $landresult->fetch_array();
-					$debugprice = totalBooncost($debugitem, $landrow, $gristname, $totalgrists);
+					$debugprice = totalBooncost($debugitem, $landrow, $gristname);
 					echo strval($debugprice);*/
 					echo '<br/><br/><a href="shtop.php">If you are having troubles with the shop for some reason, click here to use the simplified shop page.</a>';
 				} else {
@@ -301,9 +300,7 @@ if ($dona == "Gold") {
 							}
 						}
 
-						$forcerefresh = false;
-						if ($_GET['forcerefresh'] == "yes" && $userrow['session_name'] == "Developers")
-							$forcerefresh = true;
+						$forcerefresh = !empty($_GET['forcerefresh']) && $_GET['forcerefresh'] == "yes" && $userrow['session_name'] == "Developers";
 
 						if (empty($currentrow['shopstock']) || (time() - $currentrow['lastshoptick'] > 86400) || $forcerefresh) { //the shop is empty or a day has passed since the shop was last refreshed
 							$shopgate = highestGate($gaterow, $currentrow['house_build_grist']);
@@ -312,20 +309,19 @@ if ($dona == "Gold") {
 							$shopinflation = 1 + ((rand(90, 110) - econonyLevel($currentrow['econony'])) / 100); //shop prices deviate +/- 10% from the norm
 							if ($shopinflation < 0.5)
 								$shopinflation = 0.5;
-							$tsi = 0; //total shop items
 							$shopstring = "";
 							$maxshopitems = 3 + ($shopgate * 2) + rand(0, $shopgate); //the amount of items this shop will have when we're done
 							$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 							$landrow = $landresult->fetch_array();
-							while ($tsi < $maxshopitems) {
+							for ($i = 0; $i < $maxshopitems; $i++) {
 								$thisgrist = $landrow['grist' . strval(rand(1, 9))]; //pick a random grist type from that land
-								$shopitemrow = randomItem($thisgrist . '_Cost', $gaterow['gate' . strval($shopgate)], $gristname, $totalgrists, "");
-								$shopitem[$tsi] = $shopitemrow['name'];
-								$shopprice[$tsi] = round(totalBooncost($shopitemrow, $landrow, $gristname, $totalgrists, $currentrow['session_name']) * $shopinflation);
-								$shoppower[$tsi] = $shopitemrow['power'];
-								$shopkind[$tsi] = $shopitemrow['abstratus'];
-								$shopstring = $shopstring . $shopitem[$tsi] . "==" . strval($shopprice[$tsi]) . "==" . strval($shoppower[$tsi]) . "==" . strval($shopkind[$tsi]) . "|";
-								$tsi++;
+								$shopitemrow = randomItem($thisgrist . '_Cost', $gaterow['gate' . strval($shopgate)], $gristname, "");
+								if (!$shopitemrow) continue;
+								$shopitem[$i] = $shopitemrow['name'];
+								$shopprice[$i] = round(totalBooncost($shopitemrow, $landrow, $gristname, $currentrow['session_name']) * $shopinflation);
+								$shoppower[$i] = $shopitemrow['power'];
+								$shopkind[$i] = $shopitemrow['abstratus'];
+								$shopstring = $shopstring . $shopitem[$i] . "==" . strval($shopprice[$i]) . "==" . strval($shoppower[$i]) . "==" . strval($shopkind[$i]) . "|";
 							}
 							$mysqli->query("UPDATE `Players` SET `shopstock` = '$shopstring', `lastshoptick` = " . strval(time()) . " WHERE `Players`.`username` = '" . $currentrow['username'] . "'");
 							$currentrow['lastshoptick'] = time();
@@ -391,12 +387,16 @@ if ($dona == "Gold") {
 								} elseif ($powerdiff > 0) {
 									$ramtext = "You think it might be a little stronger than what you're currently using, but you can't say for sure.";
 								}
-							} elseif (strrpos($shopkind[$csi], "headgear") || strrpos($shopkind[$csi], "facegear") || strrpos($shopkind[$csi], "bodygear") || strrpos($shopkind[$csi], "accessory")) {
-								$ramtext = "This looks like something you can wear.";
-							} elseif (strrpos($shopkind[$csi], "computer")) {
-								$ramtext = "You think you can use this to communicate with your friends.";
-							} elseif (!(strrpos($shopkind[$csi], "notaweapon") === false)) {
-								$ramtext = "This item doesn't look like it can be equipped.";
+							} elseif (!empty($shopkind[$csi])) {
+								if (strrpos($shopkind[$csi], "headgear") || strrpos($shopkind[$csi], "facegear") || strrpos($shopkind[$csi], "bodygear") || strrpos($shopkind[$csi], "accessory")) {
+									$ramtext = "This looks like something you can wear.";
+								} elseif (strrpos($shopkind[$csi], "computer")) {
+									$ramtext = "You think you can use this to communicate with your friends.";
+								} elseif (strrpos($shopkind[$csi], "notaweapon") !== false) {
+									$ramtext = "This item doesn't look like it can be equipped.";
+								} else {
+									$ramtext = "You can't wield this weapon.";
+								}
 							} else {
 								$ramtext = "You can't wield this weapon.";
 							}

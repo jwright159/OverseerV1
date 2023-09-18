@@ -17,26 +17,26 @@ if (empty($_SESSION['username'])) {
 	}
 	if ($userrow['enemydata'] != "" || $userrow['aiding'] != "") {
 		if ($userrow['hascomputer'] < 3) {
-			if ($compugood == true)
+			if ($compugood)
 				echo "You don't have a hands-free computer equipped, so you can't wire grist during strife.<br/>";
 			$compugood = false;
 		}
 	}
 	if ($userrow['indungeon'] != 0 && $userrow['hascomputer'] < 2) {
-		if ($compugood == true)
+		if ($compugood)
 			echo "You don't have a portable computer in your inventory, so you can't wire grist while away from home.<br/>";
 		$compugood = false;
 	}
 	if ($userrow['hascomputer'] == 0) {
-		if ($compugood == true)
+		if ($compugood)
 			echo "You need a computer in storage or your inventory to wire grist to other players.<br/>";
 		$compugood = false;
 	}
 
-	if ($compugood == true) {
+	if ($compugood) {
 		//--Begin wiring code here--
 
-		if (intval($_POST['amount']) > 0) { //Player is attempting to wire a positive amount of grist.
+		if (!empty($_POST['amount']) && intval($_POST['amount']) > 0) { //Player is attempting to wire a positive amount of grist.
 			if ($_POST['intarget'] != "")
 				$_POST['target'] = $_POST['intarget'];
 			if ($_POST['target'] == $username) { //Player is trying to mail themselves grist!
@@ -68,10 +68,10 @@ if (empty($_SESSION['username'])) {
 							$check = 1;
 							$max_inbox = 50;
 							$foundempty = false;
-							while ($check <= $max_inbox && $foundempty == false) { //make sure there's a free spot in recipient's inbox
+							while ($check <= $max_inbox && !$foundempty) { //make sure there's a free spot in recipient's inbox
 								if ($sendrow['msg' . strval($check)] == "")
 									$foundempty = true;
-								if ($foundempty == false)
+								if (!$foundempty)
 									$check++;
 							}
 							if ($foundempty) {
@@ -93,9 +93,9 @@ if (empty($_SESSION['username'])) {
 					$quantity = $userrow[$type];
 					$poor = true;
 				}
-				if ($targetfound == true) {
+				if ($targetfound) {
 					echo "Transaction successful. You now have $quantity $type after sending $modifier $type to $wirename";
-				} else if ($poor == false) {
+				} elseif (!$poor) {
 					echo "Transaction failed: Target $_POST[target] does not exist.";
 				}
 				echo "<br/>";
@@ -115,17 +115,16 @@ if (empty($_SESSION['username'])) {
 		echo '</select><br/>Target username (other): <input id="target" name="target" type="text" /><br/> Type of grist: <select name="grist_type"> ';
 		$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;");
 		$reachgrist = false;
-		$terminateloop = false;
-		while (($col = $result2->fetch_field()) && $terminateloop == false) {
+		while ($col = $result2->fetch_field()) {
 			$gristtype = $col->name;
 			if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 				$reachgrist = true;
 			}
 			if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 				$reachgrist = false;
-				$terminateloop = true;
+				break;
 			}
-			if ($reachgrist == true) {
+			if ($reachgrist) {
 				echo '<option value="' . $gristtype . '">' . $gristtype . '</option>'; //Produce an option in the dropdown menu for this grist.
 			}
 		}
@@ -136,17 +135,16 @@ if (empty($_SESSION['username'])) {
 	$result2 = $mysqli->query("SELECT * FROM Players LIMIT 1 ;");
 	echo "<div class='grister'>";
 	$rowcount = 1;
-	$terminateloop = false;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
+	while ($col = $result2->fetch_field()) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 			$reachgrist = true;
 		}
 		if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 			$reachgrist = false;
-			$terminateloop = true;
+			break;
 		}
-		if (($reachgrist == true) && ($userrow[$gristtype] != 0)) { //Print grist, grist image, and grist total.
+		if ($reachgrist && $userrow[$gristtype] != 0) { //Print grist, grist image, and grist total.
 			echo "<div class='grist $gristtype'>";
 			if ($gristtype == "Opal" || $gristtype == "Polychromite" || $gristtype == "Rainbow") { //Special cases for animated grists.
 				echo '<center><img src="Images/Grist/' . $gristtype . '.gif " height="50" width="50"></img></center>' . $gristtype . ' - ';
@@ -170,4 +168,3 @@ if (empty($_SESSION['username'])) {
 	$mysqli->close();
 }
 require_once "footer.php";
-?> 

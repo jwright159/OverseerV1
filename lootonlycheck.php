@@ -8,12 +8,9 @@ if (empty($_SESSION['username'])) {
 		echo "Hey! This tool is for the developers only. Nice try, pal.";
 	} else {
 		$gristname = initGrists();
-		$totalgrists = count($gristname);
-		$i = 0;
-		while ($i < $totalgrists) {
-			$maxgain[$gristname[$i] . '_Cost'] = 0;
-			$items[$gristname[$i] . '_Cost'] = 0;
-			$i++;
+		foreach ($gristname as $grist) {
+			$maxgain[$grist . '_Cost'] = 0;
+			$items[$grist . '_Cost'] = 0;
 		}
 		$gateitems[1] = 0;
 		$gateitems[3] = 0;
@@ -23,10 +20,9 @@ if (empty($_SESSION['username'])) {
 		while ($row = $result->fetch_array()) {
 			$maxgaint = $maxgain;
 			echo $row['name'] . " acknowledged";
-			$i = 0;
 			$totalcost = 0;
-			while ($i < $totalgrists) {
-				$gristcost = $gristname[$i] . '_Cost';
+			foreach ($gristname as $grist) {
+				$gristcost = $grist . '_Cost';
 				if ($row[$gristcost] > 0) {
 					if ($row[$gristcost] > $maxgaint[$gristcost] && $row[$gristcost] <= 800000) {
 						$maxgaint[$gristcost] = $row[$gristcost];
@@ -34,7 +30,6 @@ if (empty($_SESSION['username'])) {
 					$totalcost += $row[$gristcost];
 					$items[$gristcost]++;
 				}
-				$i++;
 			}
 			if ($totalcost >= 5 && $totalcost <= 2000) {
 				$gateitems[1]++;
@@ -60,11 +55,8 @@ if (empty($_SESSION['username'])) {
 		echo strval($gateitems[3]) . " gate 3 items<br/>";
 		echo strval($gateitems[5]) . " gate 5 items<br/>";
 		echo strval($defunctitems) . " gate x items<br/>";
-		$i = 0;
-		while ($i < $totalgrists) {
-			echo $gristname[$i] . " has " . strval($items[$gristname[$i] . '_Cost']) . " items and " . strval($maxgain[$gristname[$i] . '_Cost']) . " max gain<br/>";
-			$i++;
+		foreach ($gristname as $grist) {
+			echo $grist . " has " . strval($items[$grist . '_Cost']) . " items and " . strval($maxgain[$grist . '_Cost']) . " max gain<br/>";
 		}
 	}
 }
-?>

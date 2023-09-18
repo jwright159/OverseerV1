@@ -145,7 +145,6 @@ if ($seisopen == false) {
 				$timeenabled = false;
 
 			$gristname = initGrists();
-			$totalgrists = count($gristname);
 			$updatetime = 21600; //holds the amount of time between stock updates (in seconds), currently 6 hours
 
 			$forceupdate = false;
@@ -163,11 +162,10 @@ if ($seisopen == false) {
 					elseif ($_GET['devaction'] == "scramble") {
 						$stockresult = $mysqli->query("SELECT * FROM `Grist_Exchange` WHERE `name` = '$xchangename'");
 						$stockrow = $stockresult->fetch_array();
-						$i = 0;
-						while ($i < $totalgrists) {
-							$buystr = $gristname[$i] . "_bought";
-							$sellstr = $gristname[$i] . "_sold";
-							$supplystr = $gristname[$i] . "_supply";
+						foreach ($gristname as $grist) {
+							$buystr = $grist . "_bought";
+							$sellstr = $grist . "_sold";
+							$supplystr = $grist . "_supply";
 							$newbuy = rand(1, 1000000);
 							$newsell = rand(1, 1000000);
 							$newsupply = $stockrow[$supplystr] + $newsell - $newbuy;
@@ -175,7 +173,6 @@ if ($seisopen == false) {
 							$stockrow[$buystr] = $newbuy;
 							$stockrow[$sellstr] = $newsell;
 							$stockrow[$supplystr] = $newsupply;
-							$i++;
 						}
 					}
 				}
@@ -187,39 +184,36 @@ if ($seisopen == false) {
 			$stockrow = $stockresult->fetch_array();
 
 			if ($forcereset) {
-				$i = 0;
-				while ($i < $totalgrists) { //second loop is for actual price calculation
-					$griststr = $gristname[$i] . "_price";
-					$buystr = $gristname[$i] . "_bought";
-					$sellstr = $gristname[$i] . "_sold";
-					$changestr = $gristname[$i] . "_change";
-					$supplystr = $gristname[$i] . "_supply";
-					$newprice = getBasecost($gristname[$i]);
+				foreach ($gristname as $grist) { //second loop is for actual price calculation
+					$griststr = $grist . "_price";
+					$buystr = $grist . "_bought";
+					$sellstr = $grist . "_sold";
+					$changestr = $grist . "_change";
+					$supplystr = $grist . "_supply";
+					$newprice = getBasecost($grist);
 					$mysqli->query("UPDATE `Grist_Exchange` SET `$griststr` = $newprice, `$buystr` = 0, `$sellstr` = 0, `$changestr` = 0, `$supplystr` = 10000000 WHERE `Grist_Exchange`.`name` = '$xchangename'");
 					$stockrow[$griststr] = $newprice;
 					$stockrow[$buystr] = 0;
 					$stockrow[$sellstr] = 0;
 					$stockrow[$changestr] = 0;
 					$stockrow[$supplystr] = 10000000;
-					$i++;
 				}
 			}
 
 			$currenttime = time();
 			if ($stockrow['tick'] + $updatetime < $currenttime || $forceupdate) { //time to update the stocks!
-				$i = 0;
 				$ratiocap = 0;
 				$newprice = 0;
 				$pricehike = 0;
-				while ($i < $totalgrists) { //second loop is for actual price calculation
+				foreach ($gristname as $grist) { //second loop is for actual price calculation
 					$thechange = 1;
 					$pricehike = 0;
-					//echo "<br/>" . $gristname[$i];
-					$griststr = $gristname[$i] . "_price";
-					$buystr = $gristname[$i] . "_bought";
-					$sellstr = $gristname[$i] . "_sold";
-					$changestr = $gristname[$i] . "_change";
-					$supplystr = $gristname[$i] . "_supply";
+					//echo "<br/>" . $grist;
+					$griststr = $grist . "_price";
+					$buystr = $grist . "_bought";
+					$sellstr = $grist . "_sold";
+					$changestr = $grist . "_change";
+					$supplystr = $grist . "_supply";
 					if ($stockrow[$sellstr] == 0)
 						$stockrow[$sellstr] = 1; //divide by zero protection
 					if ($stockrow[$buystr] == 0)
@@ -247,7 +241,7 @@ if ($seisopen == false) {
 					$newprice = ($stockrow[$griststr] * $thechange) + $pricehike;
 					if ($newprice < 1)
 						$newprice = 1;
-					if ($gristname[$i] == "Artifact_Grist")
+					if ($grist == "Artifact_Grist")
 						$newprice = 0; //Artifact will always be worth absolutely nothing but it's on the exchange because of reasons
 					$difference = $newprice - $stockrow[$griststr];
 					$mysqli->query("UPDATE `Grist_Exchange` SET `$griststr` = $newprice, `$buystr` = 0, `$sellstr` = 0, `$changestr` = $difference WHERE `Grist_Exchange`.`name` = '$xchangename'");
@@ -255,7 +249,6 @@ if ($seisopen == false) {
 					$stockrow[$buystr] = 0;
 					$stockrow[$sellstr] = 0;
 					$stockrow[$changestr] = intval($difference * 100) / 100;
-					$i++;
 				}
 				while ($stockrow['tick'] + $updatetime < $currenttime) {
 					$stockrow['tick'] += $updatetime;
@@ -353,18 +346,17 @@ if ($seisopen == false) {
 			}
 
 			if ($timeenabled) {
-				$i = 0;
 				$ratiocap = 0;
 				$newprice = 0;
-				while ($i < $totalgrists) { //second loop is for actual price calculation
+				foreach ($gristname as $grist) { //second loop is for actual price calculation
 					$thechange = 1;
 					$pricehike = 0;
-					//echo "<br/>" . $gristname[$i];
-					$griststr = $gristname[$i] . "_price";
-					$buystr = $gristname[$i] . "_bought";
-					$sellstr = $gristname[$i] . "_sold";
-					$changestr = $gristname[$i] . "_change";
-					$supplystr = $gristname[$i] . "_supply";
+					//echo "<br/>" . $grist;
+					$griststr = $grist . "_price";
+					$buystr = $grist . "_bought";
+					$sellstr = $grist . "_sold";
+					$changestr = $grist . "_change";
+					$supplystr = $grist . "_supply";
 					if ($stockrow[$sellstr] == 0)
 						$stockrow[$sellstr] = 1; //divide by zero protection
 					if ($stockrow[$buystr] == 0)
@@ -388,11 +380,10 @@ if ($seisopen == false) {
 					$newprice = ($stockrow[$griststr] * $thechange) + $pricehike;
 					if ($newprice < 1)
 						$newprice = 1;
-					if ($gristname[$i] == "Artifact_Grist")
+					if ($grist == "Artifact_Grist")
 						$newprice = 0; //Artifact will always be worth absolutely nothing but it's on the exchange because of reasons
 					$difference = $newprice - $stockrow[$griststr];
-					$projectedchange[$i] = intval($difference * 100) / 100;
-					$i++;
+					$projectedchange[$grist] = intval($difference * 100) / 100;
 				}
 			}
 			$lresult = $mysqli->query("SELECT `land1`,`land2` FROM `Players` WHERE `Players`.`username` = '$sessionrow[exchangeland]'");
@@ -425,43 +416,39 @@ if ($seisopen == false) {
 				echo '<td>Bought</td><td>Sold</td><td>Supply</td>';
 			}
 			echo '</tr>';
-			$i = 0;
-			while ($i < $totalgrists) {
-				$griststr = $gristname[$i] . "_price";
-				$buystr = $gristname[$i] . "_bought";
-				$sellstr = $gristname[$i] . "_sold";
-				$changestr = $gristname[$i] . "_change";
-				$supplystr = $gristname[$i] . "_supply";
+			foreach ($gristname as $grist) {
+				$griststr = $grist . "_price";
+				$buystr = $grist . "_bought";
+				$sellstr = $grist . "_sold";
+				$changestr = $grist . "_change";
+				$supplystr = $grist . "_supply";
 				if ($stockrow[$changestr] > 0)
 					$change = "<greenlit>+$stockrow[$changestr]</greenlit>";
 				elseif ($stockrow[$changestr] < 0)
 					$change = "<defunct>$stockrow[$changestr]</defunct>";
 				else
 					$change = "<clarify>$stockrow[$changestr]</clarify>";
-				echo "<tr><td><img src='/Images/Grist/" . gristNameToImagePath($gristname[$i]) . "' height='15' width='15' alt = 'xcx'/>$gristname[$i]</td><td>$stockrow[$griststr]</td><td>$change</td>";
+				echo "<tr><td><img src='/Images/Grist/" . gristNameToImagePath($grist) . "' height='15' width='15' alt = 'xcx'/>$grist</td><td>$stockrow[$griststr]</td><td>$change</td>";
 				if ($timeenabled) {
-					if ($projectedchange[$i] > 0)
-						$pchange = "<greenlit>+$projectedchange[$i]</greenlit>";
-					elseif ($projectedchange[$i] < 0)
-						$pchange = "<defunct>$projectedchange[$i]</defunct>";
+					if ($projectedchange[$grist] > 0)
+						$pchange = "<greenlit>+$projectedchange[$grist]</greenlit>";
+					elseif ($projectedchange[$grist] < 0)
+						$pchange = "<defunct>$projectedchange[$grist]</defunct>";
 					else
-						$pchange = "<clarify>$projectedchange[$i]</clarify>";
+						$pchange = "<clarify>$projectedchange[$grist]</clarify>";
 					echo "<td>$pchange</td>";
 				}
 				if ($userrow['session_name'] == "Developers") {
 					echo "<td>$stockrow[$buystr]</td><td>$stockrow[$sellstr]</td><td>$stockrow[$supplystr]</td>";
 				}
 				echo "</tr>";
-				$i++;
 			}
 			echo '</table><br/><br/>';
 
 			echo '<form method="post" action="gristexchange.php">Buy Grist:<br/>Type: <select name="buygrist">';
-			$i = 0;
-			while ($i < $totalgrists) {
-				$griststr = $gristname[$i] . "_price";
-				echo '<option value="' . $gristname[$i] . '">' . $gristname[$i] . ' (Cost: ' . strval($stockrow[$griststr]) . ' boondollars/unit)</option>';
-				$i++;
+			foreach ($gristname as $grist) {
+				$griststr = $grist . "_price";
+				echo '<option value="' . $grist . '">' . $grist . ' (Cost: ' . strval($stockrow[$griststr]) . ' boondollars/unit)</option>';
 			}
 			echo '</select><br/>';
 			if ($timeenabled)
@@ -469,11 +456,9 @@ if ($seisopen == false) {
 			echo 'Amount to buy: <input type="text" name="buyamount"><input type="submit" value="Buy!"></form><br/><br/>';
 
 			echo '<form method="post" action="gristexchange.php">Sell Grist:<br/>Type: <select name="sellgrist">';
-			$i = 0;
-			while ($i < $totalgrists) {
-				$griststr = $gristname[$i] . "_price";
-				echo '<option value="' . $gristname[$i] . '">' . $gristname[$i] . ' (Value: ' . strval($stockrow[$griststr]) . ' boondollars/unit)</option>';
-				$i++;
+			foreach ($gristname as $grist) {
+				$griststr = $grist . "_price";
+				echo '<option value="' . $grist . '">' . $grist . ' (Value: ' . strval($stockrow[$griststr]) . ' boondollars/unit)</option>';
 			}
 			echo '</select><br/>';
 			if ($timeenabled)
@@ -483,4 +468,3 @@ if ($seisopen == false) {
 	}
 }
 require_once "footer.php";
-?>

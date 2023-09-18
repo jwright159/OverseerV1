@@ -36,54 +36,44 @@ function heaviestBonus($workrow)
 
 function refreshLuck($userrow)
 {
-	$slot = 0;
-	while ($slot < 6) {
-		switch ($slot) {
-			case 0:
-				$invslot = $userrow['equipped'];
-				break;
-			case 1:
-				$invslot = $userrow['offhand'];
-				break;
-			case 2:
-				$invslot = $userrow['headgear'];
-				break;
-			case 3:
-				$invslot = $userrow['facegear'];
-				break;
-			case 4:
-				$invslot = $userrow['bodygear'];
-				break;
-			case 5:
-				$invslot = $userrow['accessory'];
-				break;
-		}
+	foreach ([
+		$userrow['equipped'],
+		$userrow['offhand'],
+		$userrow['headgear'],
+		$userrow['facegear'],
+		$userrow['bodygear'],
+		$userrow['accessory']
+	] as $invslot) {
 		if ($invslot != "" && $invslot != "2HAND")
 		{
 			$realname = escapeItemName($userrow[$invslot]);
 			$row = fetchOne("SELECT `name`, effects FROM Captchalogue WHERE `name` = :name LIMIT 1;", ['name' => $realname]);
-			$realname = unescapeItemName($row['name']);
-			if ($realname == $userrow[$invslot]) {
-				$effects = $row['effects'];
-				$effectarray = explode('|', $effects);
-				$effectnumber = 0;
-				$totalluck = 0;
-				while (!empty($effectarray[$effectnumber])) {
-					$currenteffect = $effectarray[$effectnumber];
-					$currentarray = explode(':', $currenteffect);
-					//Note that what each array entry means depends on the effect.
-					switch ($currentarray[0]) {
-						case 'LUCK':
-							$totalluck += $currentarray[1];
-							break;
-						default:
-							break;
+			if ($row)
+			{
+				$realname = unescapeItemName($row['name']);
+				if ($realname == $userrow[$invslot]) {
+					$effects = $row['effects'];
+					$effectarray = explode('|', $effects);
+					$effectnumber = 0;
+					$totalluck = 0;
+					while (!empty($effectarray[$effectnumber])) {
+						$currenteffect = $effectarray[$effectnumber];
+						$currentarray = explode(':', $currenteffect);
+						//Note that what each array entry means depends on the effect.
+						switch ($currentarray[0]) {
+							case 'LUCK':
+								$totalluck += $currentarray[1];
+								break;
+							default:
+								break;
+						}
+						$effectnumber++;
 					}
-					$effectnumber++;
 				}
+			} else {
+				echo "ERROR: Couldn't fetch the item with the name '$userrow[$invslot]' (escaped as '$realname')";
 			}
 		}
-		$slot++;
 	}
 	if ($totalluck != $userrow['Luck'])
 		query("UPDATE Players SET Luck = :luck WHERE username = :username", ['luck' => $totalluck, 'username' => $userrow['username']]);
@@ -274,7 +264,7 @@ if (empty($_SESSION['username'])) {
 							echo "You wear your $itemname as an accessory.<br/>";
 							//NOTE - Unauthorized equipping prevented by menu options not being there.
 							$_SESSION['accrow'] = $itemrow;
-							$mysqli->query("UPDATE `Players` SET `accessory` = '" . $_POST['equipacc'] . "' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
+							$mysqli->query("UPDATE `Players` SET `accessory` = '$_POST[equipacc]' WHERE `Players`.`username` = '$username' LIMIT 1 ;");
 							autoUnequip($userrow, "accessory", $equippedacc);
 							$userrow['accessory'] = $_POST['equipacc'];
 							compuRefresh($userrow);
@@ -333,9 +323,8 @@ if (empty($_SESSION['username'])) {
 	if ($headname != "Nothing")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
+	while ($col = $invresult->fetch_field()) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
@@ -344,9 +333,9 @@ if (empty($_SESSION['username'])) {
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
 			$reachinv = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachinv == true && $userrow[$invslot] != "") {
+		if ($reachinv && $userrow[$invslot] != "") {
 			//This is a non-empty inventory slot.
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -358,10 +347,10 @@ if (empty($_SESSION['username'])) {
 				$firstabstratus = "";
 				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == false) {
+				if (strrchr($row['abstratus'], ',') === false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != true) {
+					while (!$foundcomma) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
@@ -378,11 +367,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != false) {
+						while (strrchr($itemabstrati, ',') !== false) {
 							//Comma means there's still another abstratus in there to check.
 							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != true) {
+							while (!$foundcomma) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -427,9 +416,8 @@ if (empty($_SESSION['username'])) {
 	if ($facename != "Nothing" && $facename != "Covered by headgear")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
+	while ($col = $invresult->fetch_field()) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
@@ -438,9 +426,9 @@ if (empty($_SESSION['username'])) {
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
 			$reachinv = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $userrow['headgear'] && $invslot != $equippedhead) {
+		if ($reachinv && $userrow[$invslot] != "" && $invslot != $userrow['headgear'] && $invslot != $equippedhead) {
 			//This is a non-empty inventory slot that isn't worn on the head
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -452,10 +440,10 @@ if (empty($_SESSION['username'])) {
 				$firstabstratus = "";
 				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == false) {
+				if (strrchr($row['abstratus'], ',') === false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != true) {
+					while (!$foundcomma) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
@@ -472,11 +460,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != false) {
+						while (strrchr($itemabstrati, ',') !== false) {
 							//Comma means there's still another abstratus in there to check.
 							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != true) {
+							while (!$foundcomma) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -513,9 +501,8 @@ if (empty($_SESSION['username'])) {
 	if ($bodyname != "Basic clothes")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
+	while ($col = $invresult->fetch_field()) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
@@ -524,9 +511,9 @@ if (empty($_SESSION['username'])) {
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
 			$reachinv = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
+		if ($reachinv && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
 			//This is a non-empty inventory slot that isn't worn on the head
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -538,10 +525,10 @@ if (empty($_SESSION['username'])) {
 				$firstabstratus = "";
 				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == false) {
+				if (strrchr($row['abstratus'], ',') === false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != true) {
+					while (!$foundcomma) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
@@ -558,11 +545,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != false) {
+						while (strrchr($itemabstrati, ',') !== false) {
 							//Comma means there's still another abstratus in there to check.
 							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != true) {
+							while (!$foundcomma) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -599,9 +586,8 @@ if (empty($_SESSION['username'])) {
 	if ($accname != "Nothing")
 		echo '<option value="none">Remove</option>';
 	$reachinv = false;
-	$terminateloop = false;
 	$invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
-	while (($col = $invresult->fetch_field()) && $terminateloop == false) {
+	while ($col = $invresult->fetch_field()) {
 		$invslot = $col->name;
 		if ($invslot == "inv1") {
 			//Reached the start of the inventory.
@@ -610,9 +596,9 @@ if (empty($_SESSION['username'])) {
 		if ($invslot == "abstratus1") {
 			//Reached the end of the inventory.
 			$reachinv = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachinv == true && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
+		if ($reachinv && $userrow[$invslot] != "" && $invslot != $userrow['headgear']) {
 			//This is a non-empty inventory slot that isn't worn on the head
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -624,10 +610,10 @@ if (empty($_SESSION['username'])) {
 				$firstabstratus = "";
 				$foundcomma = false;
 				$j = 0;
-				if (strrchr($row['abstratus'], ',') == false) {
+				if (strrchr($row['abstratus'], ',') === false) {
 					$firstabstratus = $row['abstratus'];
 				} else {
-					while ($foundcomma != true) {
+					while (@$foundcomma) {
 						$char = "";
 						$char = substr($row['abstratus'], $j, 1);
 						if ($char == ",") {
@@ -644,11 +630,11 @@ if (empty($_SESSION['username'])) {
 					$i = 1;
 					while ($i <= $userrow['abstrati']) {
 						$itemabstrati = $row['abstratus'];
-						while (strrchr($itemabstrati, ',') != false) {
+						while (strrchr($itemabstrati, ',') !== false) {
 							//Comma means there's still another abstratus in there to check.
 							$foundcomma = false;
 							$j = 0;
-							while ($foundcomma != true) {
+							while (!$foundcomma) {
 								$char = "";
 								$char = substr($itemabstrati, $j, 1);
 								if ($char == ",") {
@@ -751,7 +737,7 @@ if (empty($_SESSION['username'])) {
 			$headdef = 0;
 		}
 	}
-	if ($equippedface != "") {
+	if ($equippedface != "" && $equippedface !== "2HAND") {
 		$itemname = str_replace("'", "\\\\''", $userrow[$equippedface]);
 		//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 		$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
@@ -766,7 +752,7 @@ if (empty($_SESSION['username'])) {
 			}
 		}
 	} else {
-		if ($userrow['facegear'] != "" && $userrow['facegear'] != $equippedhead && $equippedface != "2HAND") {
+		if ($userrow['facegear'] != "" && $userrow['facegear'] != $equippedhead && $equippedface != "2HAND" && $userrow['facegear'] !== "2HAND") {
 			$itemname = str_replace("'", "\\\\''", $userrow[$userrow['facegear']]);
 			//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			$itemresult = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
@@ -851,14 +837,19 @@ if (empty($_SESSION['username'])) {
 		}
 	}
 }
-$totaldef = $headdef + $facedef + $bodydef + $accdef;
+
+$totaldef = 0;
+if (isset($headdef)) $totaldef += $headdef;
+if (isset($facedef)) $totaldef += $facedef;
+if (isset($bodydef)) $totaldef += $bodydef;
+if (isset($accdef)) $totaldef += $accdef;
+
 echo "Current defense bonus from wearables: $totaldef <br/>";
 $invresult = $mysqli->query("SELECT * FROM Players LIMIT 1;");
 echo $username;
 echo "'s captchalogued wearables:<br/><br/>";
 $reachinv = false;
-$terminateloop = false;
-while (($col = $invresult->fetch_field()) && $terminateloop == false) {
+while ($col = $invresult->fetch_field()) {
 	$invslot = $col->name;
 	if ($invslot == "inv1") {
 		//Reached the start of the inventory.
@@ -867,9 +858,9 @@ while (($col = $invresult->fetch_field()) && $terminateloop == false) {
 	if ($invslot == "abstratus1") {
 		//Reached the end of the inventory.
 		$reachinv = false;
-		$terminateloop = true;
+		break;
 	}
-	if ($reachinv == true && $userrow[$invslot] != "") {
+	if ($reachinv && $userrow[$invslot] != "") {
 		//This is a non-empty inventory slot.
 		$itemname = str_replace("'", "\\\\''", $userrow[$invslot]);
 		//Add escape characters so we can find item correctly in database. Also those backslashes are retarded.

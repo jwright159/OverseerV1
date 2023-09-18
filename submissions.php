@@ -81,7 +81,7 @@ if (empty($_SESSION['username'])) {
 							} else {
 								$aok = true;
 							}
-							if ($aok == true) {
+							if ($aok) {
 								$mysqli->query("UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
 								$mysqli->query("UPDATE `Feedback` SET `$dostring` = 1 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
 								echo 'Submission moderated.<br/>';
@@ -475,7 +475,7 @@ if (empty($_SESSION['username'])) {
 		echo 'Next page';
 	}
 	echo "<br/>Total results: $alltotal</center><br/><br/>";
-	echo '<form action="submissions.php" method="get"><input type="hidden" name="view" value="' . strval($feedrow['ID']) . '"><table width="100%" cellpadding="3" cellspacing="3"><tr><td><center>Show only:</center><br/>';
+	echo '<form action="submissions.php" method="get"><input type="hidden" name="view" value="' . (!empty($feedrow) ? strval($feedrow['ID']) : '') . '"><table width="100%" cellpadding="3" cellspacing="3"><tr><td><center>Show only:</center><br/>';
 	echo '<input type="radio" name="mode" value="none" checked /> All<br/><input type="radio" name="mode" value="yours" /> Your submissions<br/><input type="radio" name="mode" value="black" /> Unmarked<br/><input type="radio" name="mode" value="red" /> Defunct<br/><input type="radio" name="mode" value="yellow" /> Clarification needed<br/><input type="radio" name="mode" value="green" /> Greenlit<br/><input type="radio" name="mode" value="blue" /> Challenge Mode<br/><input type="radio" name="mode" value="gray" /> Suspended<br/><input type="radio" name="mode" value="orange" /> Randomized<br/><input type="radio" name="mode" value="white" /> Dev requested</td>';
 	echo '<td><center>Sort by:</center><br/>';
 	echo '<input type="radio" name="sort" value="id" checked /> ID<br/><input type="radio" name="sort" value="name" /> Name<br/><input type="radio" name="sort" value="like" /> Likes<br/><input type="radio" name="sort" value="comm" /> Comments<br/><input type="radio" name="sort" value="time" /> Time since last update</td>';
@@ -505,4 +505,3 @@ if (empty($_SESSION['username'])) {
 	}
 }
 require_once "footer.php";
-?>

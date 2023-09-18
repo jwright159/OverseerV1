@@ -2,7 +2,7 @@
 
 $foundspace = false;
 $j = 0;
-while ($foundspace != true) {
+while (!$foundspace) {
 	$char = substr($userrow[$enemystr], $j, 1);
 	if ($char == " ") { //Found the gap between grist type and enemy. Note that depending on enemy, these values may not be used.
 		$grist = substr($userrow[$enemystr], 0, $j);
@@ -14,10 +14,11 @@ while ($foundspace != true) {
 		$j++;
 	}
 }
-$gristrow = $_SESSION[$userrow[$categorystr]];
+if ($userrow[$categorystr] != "None")
+	$gristrow = $_SESSION[$userrow[$categorystr]];
 $rarity = 1;
 $typestr = "grist" . strval($rarity);
-while ($gristrow[$typestr] != $grist && $rarity < 10) { //Nine types of grist.
+while (isset($gristrow) && $rarity <= 9 && $gristrow[$typestr] != $grist) { //Nine types of grist.
 	$rarity++;
 	$typestr = "grist" . strval($rarity);
 }
@@ -205,7 +206,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			$headhp = "enemy" . strval($hcount) . "health";
 			if (strpos($userrow[$headstr], "Hydra Head") !== false) {
 				$userrow[$headhp] = 0;
-				if ($foundthehydra == false) { //go ahead and execute reward for heads before this hydra in the list, in case the user switched focus around
+				if (!$foundthehydra) { //go ahead and execute reward for heads before this hydra in the list, in case the user switched focus around
 					echo "<br/>The $userrow[$headstr] is severed and crashes to the ground, degenerating into grist: ";
 					$gristlevel = 1;
 					while ($gristlevel <= 3) {
@@ -289,7 +290,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 			$splitchance = ceil($totalchance / $totalabs);
 		}
 		$roll = rand(1, 100);
-		if ($bossdead == true)
+		if ($bossdead)
 			$splitchance = 0; //hydra is dead, don't split
 		if ($roll < $splitchance) {
 			echo "When you look up at the hydra again after collecting your grist, you notice that there are now two heads in the old one's place! It seems the sever was so clean that the hydra was able to regenerate its lost appendages twofold!<br/>";
@@ -346,7 +347,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 					$nonhydrafoes = true;
 				$hcount++;
 			}
-			if ($moreheads == false && $bossdead == false && $thehydra != "enemy0name") { //that's it! hydra is down, and there was a hydra to begin with (so not The Bug)
+			if (!$moreheads && !$bossdead && $thehydra != "enemy0name") { //that's it! hydra is down, and there was a hydra to begin with (so not The Bug)
 				$userrow[$thehydra] = ""; //blank the name so the body disappears
 				$bossdead = true;
 				if ($nonhydrafoes)
@@ -440,7 +441,7 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 	default:
 		$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen';");
 		$denizenrow = $denizenresult->fetch_array();
-		if ($userrow[$enemystr] == $denizenrow[$userrow['Aspect']]) { //Denizen defeated.
+		if (isset($userrow['Aspect']) && $userrow[$enemystr] == $denizenrow[$userrow['Aspect']]) { //Denizen defeated.
 			echo "You have defeated your denizen. You may now access the Battlefield, and you have contributed the Hoard to the session's victory requirement.<br/>";
 			if (!empty($userrow['pesternoteUsername']))
 				sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Defeated $userrow[$enemystr], my Denizen.");
@@ -568,6 +569,3 @@ switch ($enemytype) { //Legacy: doesn't actually do anything.
 			}
 		}
 }
-
-
-?>

@@ -35,8 +35,7 @@ function addItem($item, $userrow, $incode = "00000000")
 				compuRefresh($userrow);
 				return $invstr;
 			} else {
-				$j = 0;
-				while ($j < $invslots) {
+				for ($j = 1; $j <= $invslots; $j++) {
 					$jnvstr = "inv" . strval($j);
 					$compuname = str_replace("'", "\\\\''", $userrow[$jnvstr]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 					$compuname = str_replace("\\\\\\", "\\\\", $compuname); //really hope this works
@@ -55,7 +54,6 @@ function addItem($item, $userrow, $incode = "00000000")
 							return "inv-1"; //we didn't actually obtain the item, so return failure
 						}
 					}
-					$j++;
 				}
 				echo "<br/>This item is too big for you to captchalogue! You will need to find a way to upgrade your Fetch Modus first.<br/>";
 				return "inv-1";
@@ -189,18 +187,14 @@ function storageSpace($storestring)
 {
 	global $mysqli;
 	$boom = explode("|", $storestring);
-	$totalitems = count($boom);
-	$i = 0;
 	$space = 0;
-	while ($i <= $totalitems) {
+	for ($i = 0; $i < count($boom); $i++) {
 		$args = explode(":", $boom[$i]);
-		$itemresult = $mysqli->query("SELECT `captchalogue_code`,`size` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$args[0]' LIMIT 1");
-		$irow = $itemresult->fetch_array();
-		if ($irow['captchalogue_code'] == $args[0]) { //Item found.
+		$irow = $mysqli->query("SELECT `captchalogue_code`,`size` FROM `Captchalogue` WHERE `Captchalogue`.`captchalogue_code` = '$args[0]' LIMIT 1")->fetch_array();
+		if (!empty($irow)) { //Item found.
 			$space += itemSize($irow['size']) * $args[1];
 		} else
 			echo "ERROR: Items with code $args[0] stored, but no matching item was found. Please inform a dev immediately.<br/>";
-		$i++;
 	}
 	return $space;
 }
@@ -212,13 +206,15 @@ function compuRefresh($userrow)
 	$complevel = 0;
 	if (strpos($userrow['storeditems'], "ISCOMPUTER") !== false)
 		$complevel = 1; //the player has a computer in storage
-	$max_items = 50;
-	$i = 1;
-	$captchalogue = "SELECT `name`,`abstratus`,`size` FROM Captchalogue WHERE";
+	$maxitems = 50;
+	$captchalogue = "SELECT `name`,`abstratus`,`size` FROM Captchalogue WHERE ";
 	$firstinvslot = array();
-	while ($i <= $max_items) {
+	$hasitems = false;
+	for ($i = 1; $i <= $maxitems; $i++)
+	{
 		$invslot = 'inv' . strval($i);
 		if ($userrow[$invslot] != "") { //This is a non-empty inventory slot.
+			$hasitems = true;
 			$pureitemname = str_replace("\\", "", $userrow[$invslot]);
 			$pureitemname = str_replace("'", "", $pureitemname);
 			$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
@@ -227,37 +223,43 @@ function compuRefresh($userrow)
 			if (empty($captchaloguequantities[$pureitemname])) {
 				$captchalogue = $captchalogue . "`Captchalogue`.`name` = '" . $itemname . "' OR ";
 				$firstinvslot[$pureitemname] = $invslot;
+				$captchaloguequantities[$pureitemname] = 1;
 			} else {
 				$captchaloguequantities[$pureitemname] += 1;
 			}
 		}
-		$i++;
 	}
-	$captchalogue = substr($captchalogue, 0, -4);
-	//echo $captchalogue . "<br/>";
-	$captchalogueresult = $mysqli->query($captchalogue);
-	while ($compurow = $captchalogueresult->fetch_array()) {
-		$pureitemname = str_replace("\\", "", $compurow['name']);
-		$pureitemname = str_replace("'", "", $pureitemname);
-		$invstr = $firstinvslot[$pureitemname];
-		if (strrpos($compurow['abstratus'], "computer") !== false) {
-			if (itemSize($compurow['size']) <= itemSize("average") && $complevel <= 1)
-				$complevel = 2; //the computer is portable and can be used from inventory
-			if ($complevel <= 2) {
-				if ($userrow['equipped'] == $invstr)
-					$complevel = 3;
-				if ($userrow['offhand'] == $invstr)
-					$complevel = 3;
-				if ($userrow['headgear'] == $invstr)
-					$complevel = 3;
-				if ($userrow['facegear'] == $invstr)
-					$complevel = 3;
-				if ($userrow['bodygear'] == $invstr)
-					$complevel = 3;
-				if ($userrow['accessory'] == $invstr)
-					$complevel = 3;
+
+	if ($hasitems)
+	{
+		$captchalogue = substr($captchalogue, 0, -4);
+		//echo $captchalogue . "<br/>";
+		$captchalogueresult = $mysqli->query($captchalogue);
+		while ($compurow = $captchalogueresult->fetch_array())
+		{
+			$pureitemname = str_replace("\\", "", $compurow['name']);
+			$pureitemname = str_replace("'", "", $pureitemname);
+			$invstr = $firstinvslot[$pureitemname];
+			if (strrpos($compurow['abstratus'], "computer") !== false)
+			{
+				if (itemSize($compurow['size']) <= itemSize("average") && $complevel <= 1)
+					$complevel = 2; //the computer is portable and can be used from inventory
+				if ($complevel <= 2) {
+					if ($userrow['equipped'] == $invstr)
+						$complevel = 3;
+					if ($userrow['offhand'] == $invstr)
+						$complevel = 3;
+					if ($userrow['headgear'] == $invstr)
+						$complevel = 3;
+					if ($userrow['facegear'] == $invstr)
+						$complevel = 3;
+					if ($userrow['bodygear'] == $invstr)
+						$complevel = 3;
+					if ($userrow['accessory'] == $invstr)
+						$complevel = 3;
+				}
+				//echo "complevel is $complevel<br/>";
 			}
-			//echo "complevel is $complevel<br/>";
 		}
 	}
 	//echo "final compulevel: $complevel<br/>";
@@ -344,7 +346,7 @@ function storeItem($item, $tostorage, $userrow, $stackcode = "00000000")
 				$args[2] = "";
 			}
 		}
-		if ($args[0] == $itemrow['captchalogue_code'] && (strpos($args[2], $stackwith) !== false || empty($stackwith))) {
+		if ($args[0] == $itemrow['captchalogue_code'] && (empty($stackwith) || strpos($args[2], $stackwith) !== false)) {
 			while ($tostorage > 0) {
 				if ($space + $storesize <= $maxstorage) {
 					$tostorage--;
@@ -369,4 +371,3 @@ function storeItem($item, $tostorage, $userrow, $stackcode = "00000000")
 	}
 	return $actualstore; //returns number of items stored
 }
-?>

@@ -6,6 +6,9 @@ require_once 'includes/chaincheck.php';
 require_once "header.php";
 $canusespecibus = true;
 
+/**
+ * Links two spaces, creating the "new" or first one if it did not exist.
+ */
 function roomlink($roomarray, $newrow, $newcol, $oldrow, $oldcol)
 {
 	$newentry = strval($newrow) . "," . strval($newcol);
@@ -87,8 +90,7 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 		$selected = false;
 		$itemsresult = fetchAll("SELECT `name` FROM Captchalogue $exstr");
 		$totalitems = count($itemsresult);
-		$item = rand(1, $totalitems); //Starting point for the item search.
-		$item--; //otherwise it will eliminate 1 item from the search and if there's only 1 item dats bad
+		$item = rand(0, $totalitems - 1); //Starting point for the item search.
 		$loopies = $totalitems;
 		$min = ceil($min * (1 + ($distance / 16)));
 		$max = ceil($max * (1 + ($distance / 16)));
@@ -98,11 +100,10 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 			$itemname = $itemrow['name'];
 			//if ($debugprintbossloots) echo "checking $itemname<br/>";
 			$total = 0;
-			$grist = 0;
-			while (!empty($gristname[$grist])) {
-				$gristcost = $gristname[$grist] . "_Cost";
-				$total += $itemrow[$gristcost];
-				$grist++;
+			foreach ($gristname as $grist) {
+				$gristcost = $grist . "_Cost";
+				if (!empty($itemrow[$gristcost]))
+					$total += $itemrow[$gristcost];
 			}
 			if ($total >= $min && $total <= $max) { //Item has an acceptable grist cost.
 				$selected = true;
@@ -112,10 +113,11 @@ function generateLoot($roomarray, $row, $col, $distance, $gate, $lootonly, $boon
 					$min = floor($min / 2);
 					$max = ceil($max * 2); //Ceil not necessary, but symmetry is pretty.
 					$loopies = $totalitems;
-				} elseif ($item >= $totalitems) { //We hit the end of the database.
-					$item = 0; //Wraparound
 				} else {
 					$item++; //Check the next item to see if it works.
+					if ($item >= $totalitems) { //We hit the end of the database.
+						$item = 0; //Wraparound
+					}
 				}
 			}
 		}
@@ -338,7 +340,7 @@ function makeSidepath($roomarray, $entryrow, $entrycol, $baselength, $gate, $rep
 			if ($branchdir == $branchstart) { //clearly there isn't a path to go from here
 				$branchdir = 0; //make this a transportalizer because we're cool like that
 				$pass = true;
-				while (!empty($roomarray[$oldroom]) || strpos($roomarray[$oldroom], "ENTRANCE") !== false) {
+				while (!empty($roomarray[$oldroom]) && strpos($roomarray[$oldroom], "ENTRANCE") !== false) {
 					$oldrow = rand(1, 10);
 					$oldcol = rand(1, 10);
 					$oldroom = strval($oldrow) . "," . strval($oldcol);
@@ -440,20 +442,19 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 			$roomarray = roomlink($roomarray, $oldrow, $oldcol, $entryrow, $entrycol); //link function will link two spaces, creating the "new" or first one if it did not exist.
 			$previousdir = $i; //We start off coming from that direction.
 			$continue = 1;
-			while ($continue && $armlength[$i] < 13) { //This will turn up as false if continue ends up as zero. Paranoia: We're not supposed to be continuing if armlength is 13 or higher.
+			for ($armlength[$i] = 0; $continue && $armlength[$i] < 13; $armlength[$i]++) { //This will turn up as false if continue ends up as zero. Paranoia: We're not supposed to be continuing if armlength is 13 or higher.
 				$continue = rand(0, 24 - ($armlength[$i] * 2)); //Fail to perpetuate this arm on a 0. Guaranteed to terminate after twelve steps.
 				$teleport = rand(1, 100);
 				if ($teleport <= $transchance) { //default: 1 in 10 chance
-					$randomrow = rand(1, 10);
-					$randomcol = rand(1, 10);
-					$randomsquare = strval($randomrow) . "," . strval($randomcol);
-					while (strpos($roomarray[$randomsquare], "ENTRANCE") !== false && strpos($roomarray[$randomsquare], "STAIRS") !== false) { //Keep re-selecting if we hit the entrance/stairs. 1% chance per loop
+					do
+					{
 						$randomrow = rand(1, 10);
 						$randomcol = rand(1, 10);
 						$randomsquare = strval($randomrow) . "," . strval($randomcol);
 					}
+					while (empty($roomarray[$randomsquare]) || strpos($roomarray[$randomsquare], "ENTRANCE") !== false || strpos($roomarray[$randomsquare], "STAIRS") !== false); //Keep re-selecting if we hit the entrance/stairs. 1% chance per loop
 					$previousdir = 0; //All bets are off!
-					$roomarray = roomlink($roomarray, $randomrow, $randomcol, $oldrow, $oldcol); //link function links two spaces, creating the "new" or first one if it did not exist.
+					$roomarray = roomlink($roomarray, $randomrow, $randomcol, $oldrow, $oldcol);
 					$oldrow = $randomrow;
 					$oldcol = $randomcol;
 				} else {
@@ -517,7 +518,6 @@ function makeDungeon($userrow, $gate, $floor, $finalfloor, $land, $basedistance,
 						$oldcol = $newcol;
 					}
 				}
-				$armlength[$i]++;
 			}
 		}
 		$i++;
@@ -944,7 +944,6 @@ if (empty($_SESSION['username'])) {
 			$mysqli->query("UPDATE `Players` SET `dungeoncol` = $userrow[olddungeoncol] WHERE `Players`.`username` = '$username' LIMIT 1;");
 			$userrow['dungeonrow'] = $userrow['olddungeonrow']; //I don't think this is actually necessary, but just in case
 			$userrow['dungeoncol'] = $userrow['olddungeoncol'];
-			header('location:/dungeons.php');
 		} elseif ($userrow['dungeonstrife'] == 2) { //Victory!
 			echo "You have defeated the enemies guarding this room!<br/>";
 			$room = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
@@ -958,7 +957,6 @@ if (empty($_SESSION['username'])) {
 		} elseif ($userrow['dungeonstrife'] == 3) { //Failure (dungeon guardian)
 			$mysqli->query("UPDATE `Players` SET `indungeon` = 0 WHERE `Players`.`username` = '$username' LIMIT 1;");
 			$userrow['indungeon'] = 0;
-			header('location:/dungeons.php');
 		} elseif ($userrow['dungeonstrife'] == 4) { //Victory (dungeon guardian)!
 			echo "You enter the dungeon. The danger has only just begun...<br/>";
 		}
@@ -1802,7 +1800,7 @@ if (empty($_SESSION['username'])) {
 		echo "<br/>";
 		if ($onentrance && empty($encounterargs)) {
 			echo "<br/>";
-			if ($isquestcomplete) {
+			if (!empty($isquestcomplete)) {
 				echo "<form action='consortquests.php' method='post'><input type='hidden' name='turnindungeonquest' value='yes'><input type='submit' value='Claim the quest reward before leaving the dungeon!'></form>";
 			} else {
 				echo "<form action='dungeons.php#display' method='post'><input type='hidden' name='exitdungeon' value='yep'><input type='submit' value='Exit the dungeon (WARNING - ALL DUNGEON CONTENT WILL DISAPPEAR!)'></form>";
@@ -1839,12 +1837,10 @@ if (empty($_SESSION['username'])) {
 		} else
 			echo "<img src='/Images/Dungeontiles/dgnbtn_south_blocked.png'>";
 		echo "</td><td><img src='/Images/symbols/nobody.png'></td></tr></table><br/>";
-		if ($transrows > 0) {
-			$i = 1;
-			while ($i <= $transrows) {
+		if (!empty($transrows) && $transrows > 0) {
+			for ($i = 1; $i <= $transrows; $i++) {
 				echo "<form action='dungeons.php#display' method='post'><input type='hidden' name='targetrow' value='$transrow[$i]'><input type='hidden' name='targetcol' value='$transcol[$i]'>";
 				echo "<input type='submit' value='Transportalize to " . strval($transrow[$i]) . "," . strval($transcol[$i]) . "'></form>";
-				$i++;
 			}
 		}
 		echo "</div>";

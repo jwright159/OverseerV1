@@ -1,6 +1,7 @@
 <?php
 function replacer($userrow, $string)
 {
+	global $mysqli;
 	$string = str_replace("%username%", $userrow['username'], $string);
 	$string = str_replace("%title%", $userrow['Class'] . " of " . $userrow['Aspect'], $string);
 	$string = str_replace("%land1%", $userrow['land1'], $string);
@@ -12,9 +13,10 @@ function replacer($userrow, $string)
 	}
 	$denizenresult = $mysqli->query("SELECT * FROM Titles WHERE `Titles`.`Class` = 'Denizen'");
 	$denizenrow = $denizenresult->fetch_array();
-	$string = str_replace("%denizen%", $denizenrow[$userrow['Aspect']], $string);
+	$string = str_replace("%denizen%", isset($denizenrow[$userrow['Aspect']]) ? $denizenrow[$userrow['Aspect']] : "", $string);
 	return $string;
 }
+
 function linkchecker($userrow, $explorow, $num)
 {
 	$pass = true;
@@ -24,6 +26,7 @@ function linkchecker($userrow, $explorow, $num)
 	//NOTE - Conditions on the link will be investigated for satisfaction here.
 	return $pass;
 }
+
 require_once "header.php";
 $max_links = 5; //Both standard and random event.
 $max_enemies = 5;

@@ -291,8 +291,7 @@ if (empty($_SESSION['username'])) {
 								$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
 								if ($echerow[$echestr] != "")
 									echo "<br/>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
-								$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
-AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
+								$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
 								while ($levelerability = $levelerabilities->fetch_array()) {
 									echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 								}
@@ -329,6 +328,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$i = 1;
 							$j = 1;
 							$currentstatus = $striferow['strifestatus'];
+							$statustr = "";
 							while ($j <= $patternrow[$maxtargetstr] && $i <= $max_enemies) { //j increments on successful enemy hit, i increments on any slot passed.
 								$enemystr = "enemy" . strval($i) . "name";
 								if ($striferow[$enemystr] != "") {
@@ -452,7 +452,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 										$message = "";
 										$thisisconsumablepage = true; //for the failedmessages; this won't have any other effect
 										$werow = $striferow;
-										include("includes/strife_weaponeffects.php");
+										include "includes/strife_weaponeffects.php";
 										echo $message;
 									}
 									$j++;
@@ -491,7 +491,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 							$mysqli->query("UPDATE `Ability_Patterns` SET `defenseupuses` = $patternrow[defenseupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
 						if ($powerboost != 0)
 							$mysqli->query("UPDATE `Ability_Patterns` SET `powerupuses` = $patternrow[powerupuses]+1 WHERE `Ability_Patterns`.`username` = '$username' LIMIT 1;");
-						if ($temp == false) {
+						if (!$temp) {
 							if ($patternrow[$offenseupstr] != 0)
 								$mysqli->query("UPDATE `Players` SET `offenseboost` = $targetrow[offenseboost]+$patternrow[$offenseupstr] WHERE `Players`.`username` = '$target'");
 							if ($patternrow[$defenseupstr] != 0)
@@ -657,8 +657,7 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 									$echestr = "rung" . strval($userrow['Echeladder'] + $rungs);
 									if ($echerow[$echestr] != "")
 										echo "<br/>You scrabble madly up your Echeladder, coming to rest on rung: $echerow[$echestr]!";
-									$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') 
-AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
+									$levelerabilities = $mysqli->query("SELECT * FROM `Abilities` WHERE `Abilities`.`Aspect` IN ('$userrow[Aspect]','All') AND `Abilities`.`Class` IN ('$userrow[Class]','All') AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder]+$rungs AND `Abilities`.`Godtierreq` = 0 ORDER BY `Abilities`.`Rungreq` DESC;");
 									while ($levelerability = $levelerabilities->fetch_array()) {
 										echo "<br/>You obtain new roletech: Lv. $levelerability[Rungreq] $levelerability[Name]!";
 									}
@@ -800,69 +799,71 @@ AND `Abilities`.`Rungreq` BETWEEN $userrow[Echeladder]+1 AND $userrow[Echeladder
 	//Code for pattern hints will go here.
 	echo "<br/>";
 	$hint = false;
-	if ($patternrow['damageuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Damage'] * $classrow['Damage']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for direct damage is $hintstr<br/>";
-	}
-	if ($patternrow['powerdownuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Power_down'] * $classrow['Power_down']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for power reduction is $hintstr<br/>";
-	}
-	if ($patternrow['offenseupuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Offense_up'] * $classrow['Offense_up']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for purely offensive boosts is $hintstr<br/>";
-	}
-	if ($patternrow['defenseupuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Defense_up'] * $classrow['Defense_up']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for purely defensive boosts is $hintstr<br/>";
-	}
-	if ($patternrow['powerupuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Power_up'] * $classrow['Power_up']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for balanced power boosts is $hintstr<br/>";
-	}
-	if ($patternrow['invulnuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Invulnerability'] * $classrow['Invulnerability']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for granting invulnerability is $hintstr<br/>";
-	}
-	if ($patternrow['healuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Heal'] * $classrow['Heal']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for healing is $hintstr<br/>";
-	}
-	if ($patternrow['multitargetuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Multitarget'] * $classrow['Multitarget']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		//echo strval($effectiveness);
-		echo "Your classpect combination's potential for targeting multiple enemies is $hintstr<br/>";
-	}
-	if ($patternrow['aspectvialuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Aspect_vial'] * $classrow['Aspect_vial']; //Note that 10k is the average.
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for Aspect Vial conservation is $hintstr<br/>";
-	}
-	if ($patternrow['temporaryuses'] >= 5) {
-		$hint = true;
-		$effectiveness = $aspectrow['Temporary'] * $aspectrow['Temporary'] * 625; //This sets a temporary boosting value of 4 as average (12500)
-		$hintstr = getHintStr($effectiveness);
-		echo "Your classpect combination's potential for performing temporary boosts is $hintstr<br/>";
+	if (!empty($patternrow))
+	{
+		if ($patternrow['damageuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Damage'] * $classrow['Damage']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for direct damage is $hintstr<br/>";
+		}
+		if ($patternrow['powerdownuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Power_down'] * $classrow['Power_down']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for power reduction is $hintstr<br/>";
+		}
+		if ($patternrow['offenseupuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Offense_up'] * $classrow['Offense_up']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for purely offensive boosts is $hintstr<br/>";
+		}
+		if ($patternrow['defenseupuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Defense_up'] * $classrow['Defense_up']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for purely defensive boosts is $hintstr<br/>";
+		}
+		if ($patternrow['powerupuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Power_up'] * $classrow['Power_up']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for balanced power boosts is $hintstr<br/>";
+		}
+		if ($patternrow['invulnuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Invulnerability'] * $classrow['Invulnerability']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for granting invulnerability is $hintstr<br/>";
+		}
+		if ($patternrow['healuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Heal'] * $classrow['Heal']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for healing is $hintstr<br/>";
+		}
+		if ($patternrow['multitargetuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Multitarget'] * $classrow['Multitarget']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			//echo strval($effectiveness);
+			echo "Your classpect combination's potential for targeting multiple enemies is $hintstr<br/>";
+		}
+		if ($patternrow['aspectvialuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Aspect_vial'] * $classrow['Aspect_vial']; //Note that 10k is the average.
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for Aspect Vial conservation is $hintstr<br/>";
+		}
+		if ($patternrow['temporaryuses'] >= 5) {
+			$hint = true;
+			$effectiveness = $aspectrow['Temporary'] * $aspectrow['Temporary'] * 625; //This sets a temporary boosting value of 4 as average (12500)
+			$hintstr = getHintStr($effectiveness);
+			echo "Your classpect combination's potential for performing temporary boosts is $hintstr<br/>";
+		}
 	}
 	if (!$hint)
 		echo "Once you've used your aspect powers a bit more, you'll get hints here.";
 }
 require_once "footer.php";
-?>

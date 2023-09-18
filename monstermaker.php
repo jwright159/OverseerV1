@@ -186,4 +186,3 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 	}
 	return $slot; //This will be -1 if no slot was found, or the slot the enemy was placed in if one was.
 }
-?>

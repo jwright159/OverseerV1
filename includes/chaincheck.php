@@ -1,12 +1,9 @@
 <?php
 function highestGate($gaterow, $grist)
 {
-	$gatecount = 0;
-	while ($gatecount < 7) { //going off the assumption that there will never be more than 7 gates
+	for ($gatecount = 0; $gatecount < 7; $gatecount++) //going off the assumption that there will never be more than 7 gates
 		if ($grist < $gaterow['gate' . strval($gatecount + 1)])
 			return $gatecount;
-		$gatecount++;
-	}
 	return 7;
 }
 
@@ -15,9 +12,8 @@ function canFly($checkrow)
 	global $mysqli;
 	if ($checkrow['Godtier'] > 0)
 		return true; //player is godtier and can fly no matter what
-	$invcheck = 1;
 	$inv_slots = 50;
-	while ($invcheck <= $inv_slots) {
+	for ($invcheck = 1; $invcheck <= $inv_slots; $invcheck++) {
 		$invstring = 'inv' . strval($invcheck);
 		if (!empty($checkrow[$invstring])) {
 			$chname = str_replace("'", "\\\\''", $checkrow[$invstring]);
@@ -26,7 +22,6 @@ function canFly($checkrow)
 			if (strrpos($chrow['abstratus'], "flying"))
 				return true;
 		}
-		$invcheck++;
 	}
 	return false;
 }
@@ -70,18 +65,15 @@ function chainArray($startrow)
 			$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$currentrow[server_player]';");
 			$currentrow = $currentresult->fetch_array();
 			$currentrow['highgate'] = highestGate($gaterow, $currentrow['house_build_grist']);
-			if ($step == 1 && $minus1row['highgate'] >= 1)
-				$clientcan = true;
-			if ($step == 2 && $minus2row['highgate'] >= 3)
-				$clientcan = true;
-			if ($step == 3 && $minus3row['highgate'] >= 5)
-				$clientcan = true;
+			$clientcan = $step == 1 && $minus1row['highgate'] >= 1
+				|| $step == 2 && $minus2row['highgate'] >= 3
+				|| $step == 3 && $minus3row['highgate'] >= 5;
 			if (($currentrow['highgate'] < ($step * 2) || !$clientcan) && !$fly) {
 				$step++; //check for the next highest gate pair
 				if ($step > 3)
 					$done = true; //This house is unreachable. Chain is broken here.
 			} else {
-				if ($subgates[$currentrow['username']] == 1) {
+				if (isset($subgates[$currentrow['username']]) && $subgates[$currentrow['username']] == 1) {
 					$subgates[$currentrow['username']] = 2; //subgate can be reached via regular gates
 					$canusesubgate = true;
 				}
@@ -94,7 +86,7 @@ function chainArray($startrow)
 		} else {
 			$done = true; //No further steps.
 		}
-		if ($done == true && $canusesubgate) {
+		if ($done && $canusesubgate) {
 			while ($countb <= $subgatecount) {
 				if ($subgates[$subgate[$countb]] == 1) { //user with a subgate that can't be reached via standard gates
 					$currentresult = $mysqli->query("SELECT * FROM Players WHERE `Players`.`username` = '$subgate[$countb]';");
@@ -112,4 +104,3 @@ function chainArray($startrow)
 	}
 	return $chain;
 }
-?>

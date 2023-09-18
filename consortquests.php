@@ -9,7 +9,7 @@ $max_items = 50; //number of items the player's inventory can hold
 
 function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 {
-	global $gristname, $totalgrists;
+	global $gristname, $mysqli;
 	$reward = rand(1, (100 - (($userrow['Luck'] + $userrow['Brief_Luck']) / 2))); //chance of getting an item instead of boons
 	$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 	$landrow = $landresult->fetch_array();
@@ -33,8 +33,8 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 			}
 		} else {
 			$thisgrist = $landrow['grist' . strval(rand(1, 9))] . "_Cost"; //pick a random grist type from that land
-			$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, $totalgrists, $qrow['specialreward']);
-			$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $totalgrists, $currentrow['session_name']);
+			$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, $qrow['specialreward']);
+			$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $currentrow['session_name']);
 			$basecost = $realbasecost - $rewarditemcost;
 			$basecost = ceil($basecost * (1 + ($inflation / 100)));
 			$rewardname = str_replace("\\", "", $rewarditem['name']);
@@ -50,8 +50,8 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 		}
 	} elseif ($reward < 10) { //10% chance normally of getting an item in return, 20% if max luck
 		$thisgrist = $landrow['grist' . strval(rand(1, 9))] . "_Cost"; //pick a random grist type from that land
-		$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, $totalgrists, "");
-		$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $totalgrists, $currentrow['session_name']);
+		$rewarditem = randomItem($thisgrist, floor($realbasecost / 20), $gristname, "");
+		$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $currentrow['session_name']);
 		$basecost = $realbasecost - $rewarditemcost;
 		$basecost = ceil($basecost * (1 + ($inflation / 100)));
 		$rewardname = str_replace("\\", "", $rewarditem['name']);
@@ -115,18 +115,17 @@ if (empty($_SESSION['username'])) {
 	$gaterow = $gateresult->fetch_array(); //Gates only has one row.
 	$result2 = $mysqli->query("SELECT * FROM `Players` LIMIT 1;"); //document grist types now so we don't have to do it later
 	$reachgrist = false;
-	$terminateloop = false;
 	$totalgrists = 0;
-	while (($col = $result2->fetch_field()) && $terminateloop == false) {
+	while (($col = $result2->fetch_field()) ) {
 		$gristtype = $col->name;
 		if ($gristtype == "Build_Grist") { //Reached the start of the grists.
 			$reachgrist = true;
 		}
 		if ($gristtype == "End_of_Grists") { //Reached the end of the grists.
 			$reachgrist = false;
-			$terminateloop = true;
+			break;
 		}
-		if ($reachgrist == true) {
+		if ($reachgrist) {
 			$gristname[$totalgrists] = $gristtype;
 			$totalgrists++;
 		}
@@ -152,7 +151,7 @@ if (empty($_SESSION['username'])) {
 					$room = strval($userrow['dungeonrow']) . "," . strval($userrow['dungeoncol']);
 					$dgnresult = $mysqli->query("SELECT `$room` FROM `Dungeons` WHERE `Dungeons`.`username` = '" . $userrow['currentdungeon'] . "' LIMIT 1;");
 					$dgnrow = $dgnresult->fetch_array();
-					if ((!(strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . ":") === false) || !(strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . "|") === false)) && strpos($dgnrow[$room], "ENCOUNTER|") === false) {
+					if ((strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . ":") !== false || strpos($dgnrow[$room], "QUESTGOAL:" . strval($userrow['currentquest']) . "|") !== false) && strpos($dgnrow[$room], "ENCOUNTER|") === false) {
 						//user is at the quest goal and any encounter here was taken care of
 						$realbasecost = $qrow['req_power'] * 1000; //standard base cost for dungeon quests is variable; should be based on the difficulty
 						$newquest = 0;
@@ -184,8 +183,8 @@ if (empty($_SESSION['username'])) {
 
 
 						$KABLOOEY = explode("|", $dgnrow[$room]);
-						for ($i = 1; $i <= count($KABLOOEY); $i++) {
-							if (!(strpos($KABLOOEY[$i], "QUESTGOAL") === false)) {
+						for ($i = 0; $i < count($KABLOOEY); $i++) {
+							if (strpos($KABLOOEY[$i], "QUESTGOAL") !== false) {
 								unset($KABLOOEY[$i]);
 								break;
 							}
@@ -219,43 +218,29 @@ if (empty($_SESSION['username'])) {
 							$victory = false;
 							//echo "Searching for keyword(s) " . $qrow['req_keyword'] . "<br/>";
 							$boom = explode("|", $qrow['req_keyword']);
-							$boomcount = count($boom);
-							$counter = 0;
-							while ($counter <= $boomcount && !$victory) {
-								if (strripos($qirow['name'], $boom[$counter]) !== false)
+							for ($i = 0; $i < count($boom) && !$victory; $i++)
+								if (strripos($qirow['name'], $boom[$i]) !== false)
 									$victory = true; //item matches one of the keywords
-								$counter++;
-							}
-							if (!$victory and empty($failreason))
+							if (!$victory && empty($failreason))
 								$failreason = "It seems that this item isn't quite what they had in mind.";
 						}
 						if (!empty($qrow['req_abstratus']) && $victory) {
 							$victory = false;
 							//echo "Searching for abstratus(i) " . $qrow['req_abstratus'] . "<br/>";
 							$boom = explode("|", $qrow['req_abstratus']);
-							$boomcount = count($boom);
-							$counter = 0;
-							while ($counter <= $boomcount && !$victory) {
-								if (strripos($qirow['abstratus'], $boom[$counter]) !== false)
+							for ($i = 0; $i < count($boom) && !$victory; $i++)
+								if (strripos($qirow['abstratus'], $boom[$i]) !== false)
 									$victory = true; //item matches one of the abstrati
-								$counter++;
-							}
-							if (!$victory and empty($failreason))
+							if (!$victory && empty($failreason))
 								$failreason = "This isn't the right kind of item.";
 						}
 						if (!empty($qrow['req_grist']) && $victory) {
 							$victory = false;
 							//echo "Searching for grist(s) " . $qrow['req_grist'] . "<br/>";
 							$boom = explode("|", $qrow['req_grist']);
-							$boomcount = count($boom);
-							$counter = 0;
-							while ($counter <= $boomcount && !$victory) {
-								if ($boom[$counter] == "Artifact_Grist" && $qirow[$boom[$counter] . '_Cost'] < 0)
+							for ($i = 0; $i < count($boom) && !$victory; $i++)
+								if (($boom[$i] == "Artifact_Grist" && $qirow[$boom[$i] . '_Cost'] < 0) || $qirow[$boom[$i] . '_Cost'] > 0)
 									$victory = true; //if artifact is required, checks if negative
-								elseif ($qirow[$boom[$counter] . '_Cost'] > 0)
-									$victory = true; //item costs one of the required grists
-								$counter++;
-							}
 							if (!$victory and empty($failreason))
 								$failreason = "Something about the item's style is off.";
 						}
@@ -324,9 +309,9 @@ if (empty($_SESSION['username'])) {
 							$landresult = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '" . $currentrow['grist_type'] . "'");
 							$landrow = $landresult->fetch_array();
 							$landgate = highestGate($gaterow, $currentrow['house_build_grist']);
-							$offercost = totalGristcost($qirow, $gristname, $totalgrists);
+							$offercost = totalGristcost($qirow, $gristname);
 							if ($offercost <= $gaterow['gate' . strval($landgate)]) { //see if the consort has access to wealth sufficient to pay for the item
-								$realbasecost = totalBooncost($qirow, $landrow, $gristname, $totalgrists, $currentrow['session_name']);
+								$realbasecost = totalBooncost($qirow, $landrow, $gristname, $currentrow['session_name']);
 								autoUnequip($userrow, "none", $_POST['questitem']);
 								$mysqli->query("UPDATE Players SET `$_POST[questitem]` = '' WHERE `Players`.`username` = '$username'"); //reward player and clear quest
 								$userrow[$_POST['questitem']] = "";
@@ -491,10 +476,8 @@ if (empty($_SESSION['username'])) {
 							echo "You are tasked with neutralizing the following:<br/>";
 							if (!empty($qrow['req_grist'])) {
 								$enemygrists = explode("|", $qrow['req_grist']);
-								$result1 = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'");
-								$prow = $result1->fetch_array();
-								$result2 = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'");
-								$lrow = $result2->fetch_array();
+								$prow = $mysqli->query("SELECT `username`,`grist_type` FROM `Players` WHERE `Players`.`username` = '$userrow[questland]'")->fetch_array();
+								$lrow = $mysqli->query("SELECT * FROM `Grist_Types` WHERE `Grist_Types`.`name` = '$prow[grist_type]'")->fetch_array();
 							}
 							$enemynames = explode("|", $qrow['req_keyword']);
 							$i = 0;
@@ -615,4 +598,3 @@ if (empty($_SESSION['username'])) {
 	}
 }
 require_once "footer.php";
-?>

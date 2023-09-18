@@ -95,7 +95,7 @@ if (!empty($_POST['mako']) && $_POST['mako'] == "kawaii") {
 			echo "true";
 		}
 	}
-	if ($loggedin == false) {
+	if (!$loggedin) {
 		echo "false";
 	}
 	$mysqli->close();

@@ -2,13 +2,12 @@
 
 function parseEnemydata($userrow)
 {
-	$enemies = explode("|", $userrow['enemydata']);
+	$enemies = !empty($userrow['enemydata']) ? explode("|", $userrow['enemydata']) : [];
 	//$allenemies = count($enemies);
 	//if ($allenemies > 50)
 	$allenemies = 50;
 	$actualenemies = $allenemies;
-	$i = 0;
-	while ($i < $allenemies) {
+	for ($i = 0; $i < $allenemies; $i++) {
 		if (!empty($enemies[$i])) {
 			$thisenemy = explode(":", $enemies[$i]);
 			$enstr = 'enemy' . strval($i + 1);
@@ -26,7 +25,6 @@ function parseEnemydata($userrow)
 			$enstr = 'enemy' . strval($i + 1);
 			$userrow[$enstr . 'name'] = "";
 		}
-		$i++;
 	}
 	//$userrow['maxenemies'] = $actualenemies; //"maxenemies" doesn't exist as a user field, but it's inserted into the userrow so that the function can return it. It's also for some reason causing a bug that prevents more than one enemy from existing, so it's commented out for now.
 	return $userrow;
@@ -74,9 +72,9 @@ function refreshEnemydata($userrow)
 function endStrife($userrow)
 { //a quick function to reset all strife values and ensure they don't return via megaquery
 	global $mysqli;
-	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0, 
- `tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0, 
-`cantabscond` = 0, `motifcounter` = 0, `strifestatus` = '', `sessionbossengaged` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;"); //Power boosts wear off.
+	$mysqli->query("UPDATE `Players` SET `powerboost` = 0, `offenseboost` = 0, `defenseboost` = 0, `temppowerboost` = 0,
+		`tempoffenseboost` = 0, `tempdefenseboost` = 0, `Brief_Luck` = 0, `invulnerability` = 0, `buffstrip` = 0, `noassist` = 0,
+		`cantabscond` = 0, `motifcounter` = 0, `strifestatus` = '', `sessionbossengaged` = 1 WHERE `Players`.`username` = '" . $userrow['username'] . "' LIMIT 1 ;"); //Power boosts wear off.
 	$userrow['powerboost'] = 0;
 	$userrow['offenseboost'] = 0;
 	$userrow['defenseboost'] = 0;
@@ -126,6 +124,8 @@ function addSpecibus($userrow, $newabs)
 
 function matchesAbstratus($userabs, $abstr)
 {
+	if (empty($userabs) || empty($abstr)) return false;
+
 	$itemabs = explode(", ", $abstr);
 	$abs = explode("|", $userabs);
 	$totalitem = count($itemabs);
@@ -178,7 +178,7 @@ function writeLastfought($userrow)
 		if (!empty($userrow['oldenemy' . $enstr]) || !empty($userrow['olddreamenemy' . $enstr])) { //name will be blanked when enemy is defeated, so we'll blank all of its stats
 			//echo "data found: ";
 			$endatastr .= (!empty($userrow['oldenemy' . $enstr]) ? $userrow['oldenemy' . $enstr] : '') . ":";
-			$endatastr .= $userrow['oldgrist' . $enstr] . ":";
+			$endatastr .= (!empty($userrow['oldgrist' . $enstr]) ? $userrow['oldgrist' . $enstr] : "None") . ":";
 			$endatastr .= (!empty($userrow['olddreamenemy' . $enstr]) ? $userrow['olddreamenemy' . $enstr] : '');
 			$endatastr .= "|";
 			//echo $endatastr . "<br/>";
