@@ -258,7 +258,7 @@ if (empty($_SESSION['username'])) {
 		} else {
 			$existresult = $mysqli->query("SELECT `name` FROM `Captchalogue` WHERE `name` = '" . $mysqli->real_escape_string($newitem) . "'");
 			$existrow = $existresult->fetch_array();
-			if ($existrow['name'] == $newitem) {
+			if ($existrow && $existrow['name'] == $newitem) {
 				echo "Submission error: an item with that name ($newitem) already exists; if you're sure your submission is different enough from the existing item to warrant both of them being in the game, you must change the name<br/>";
 				$aok = false;
 			}
