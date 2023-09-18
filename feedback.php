@@ -335,7 +335,7 @@ if (empty($_SESSION['username'])) {
 		if ($aok) {
 			$editid = intval($_POST['editing']);
 			if ($editid == 0) {
-				$systemresult = $mysqli->query("SELECT * FROM System");
+				$systemresult = $mysqli->query("SELECT * FROM `System`");
 				$systemrow = $systemresult->fetch_array();
 				$newid = $systemrow['totalsubmissions'];
 				$currenttime = time();
