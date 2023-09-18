@@ -284,7 +284,7 @@ if (empty($_SESSION['username'])) {
 		}
 		if (strrpos($newother, "bladekind"))
 			echo "ahahaha bladekind you so funny<br/>";
-		if ($_POST['advanced'] == "yes")
+		if (!empty($_POST['advanced']) && $_POST['advanced'] == "yes")
 			$advanced = true;
 		else
 			$advanced = false;
