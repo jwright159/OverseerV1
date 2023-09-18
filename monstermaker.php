@@ -4,7 +4,7 @@ function generateEnemy($userrow, $gristtype, $grist, $enemytype, $canusespecibus
 { //Takes a userrow, enemy, and grist type and level, and adds the enemy to the user's enemies.
 	//Grist entries are blank for non-grist enemies.
 	global $mysqli;
-	$max_enemies = 50; //Max number of enemies per encounter. May need changing. Probably not.
+	$max_enemies = 5; //Max number of enemies per encounter. May need changing. Probably not.
 	//$userrow = parseEnemydata($userrow);
 	$power = -1;
 	$slot = -1;

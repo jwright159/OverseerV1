@@ -28,7 +28,7 @@ function refreshSingular($slot, $target, $userrow)
 }
 
 $userrow = parseEnemydata($userrow);
-$max_enemies = 50;
+$max_enemies = 5;
 if (empty($_SESSION['username'])) {
 	echo "Log in to engage in strife.<br/>";
 	echo '<a href="/">Home</a> <a href="controlpanel.php">Control Panel</a><br/>';
