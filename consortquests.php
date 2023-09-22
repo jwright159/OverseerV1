@@ -81,9 +81,14 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 		} else
 			$userrow[$rewarded] = $rewardname;
 	}
-	$mysqli->query("UPDATE Players SET `Boondollars` = $userrow[Boondollars]+$basecost WHERE `Players`.`username` = '$userrow[username]'"); //reward player
-	$userrow['Boondollars'] += $basecost;
-	$mysqli->query("UPDATE `Players` SET `econony` = " . strval($currentrow['econony'] + $realbasecost) . " WHERE `Players`.`username` = '$currentrow[username]'");
+
+	if (isset($basecost))
+	{
+		$mysqli->query("UPDATE Players SET `Boondollars` = $userrow[Boondollars]+$basecost WHERE `Players`.`username` = '$userrow[username]'"); //reward player
+		$userrow['Boondollars'] += $basecost;
+		$mysqli->query("UPDATE `Players` SET `econony` = " . strval($currentrow['econony'] + $realbasecost) . " WHERE `Players`.`username` = '$currentrow[username]'");
+	}
+	
 	return $userrow;
 }
 
