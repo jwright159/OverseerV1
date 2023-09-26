@@ -12,7 +12,7 @@ function canFly($checkrow)
 		if (!empty($checkrow[$invstring])) {
 			$chname = str_replace("'", "\\\\''", $checkrow[$invstring]);
 			$chrow = fetchOne("SELECT `name`,`abstratus` FROM Captchalogue WHERE `Captchalogue`.`name` = '$chname' LIMIT 1;");
-			if (strrpos($chrow['abstratus'], "flying"))
+			if (!empty($chrow) && strrpos($chrow['abstratus'], "flying"))
 				return true;
 		}
 		$invcheck++;
