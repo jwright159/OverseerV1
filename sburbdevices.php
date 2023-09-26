@@ -615,12 +615,10 @@ if (empty($_SESSION['username'])) {
 			echo "The extension does nothing on its own, but you can manipulate the shunts from here.<br/>";
 			echo "Current Alchemiter upgrades:<br/>";
 			$boom = explode("|", $userrow['storeditems']);
-			$totalitems = count($boom);
-			$i = 0;
 			$totalshunts = 0;
 			$hasanupgrade = false;
 			$newstorage = "";
-			while ($i <= $totalitems) {
+			for ($i = 0; $i < count($boom); $i++) {
 				$args = explode(":", $boom[$i]);
 				if ($args[0] == "HVdF95!Z") { //Found a shunt. Hardcoding the code so that we don't have to dip into the database for every stored item.
 					$totalshunts++;
@@ -701,7 +699,6 @@ if (empty($_SESSION['username'])) {
 					if (!empty($boom[$i]))
 						$newstorage .= $boom[$i] . "|";
 				}
-				$i++;
 			}
 			if (!$hasanupgrade)
 				echo "None yet!<br/>";

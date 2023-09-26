@@ -375,7 +375,7 @@ if (empty($_SESSION['username'])) {
 				echo "<br/>";
 				$itemname = $itemrow['name'];
 				$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
-				if ($itemslot != "inv-1" || $actualstore > 0) { //Give them the item and check to see if they got it. inv-1 is the failure return.
+				if ($itemslot != "inv-1" || !empty($actualstore)) { //Give them the item and check to see if they got it. inv-1 is the failure return.
 					$itemname = $itemrow['name'];
 					$itemname = str_replace("\\", "", $itemname); //Remove escape characters.
 					$alchitem = $itemname;
@@ -384,6 +384,7 @@ if (empty($_SESSION['username'])) {
 						$gristname = initGrists();
 						$gristed = true;
 					}
+					$gristcount = 0;
 					$costquery = "UPDATE Players SET ";
 					foreach ($gristname as $grist) {
 						$gristcost = $grist . "_Cost";
@@ -417,12 +418,12 @@ if (empty($_SESSION['username'])) {
 					//require_once "includes/SQLconnect.php";
 					echo "You have no room in your Sylladex for this item!<br/>"; //May change this to do weird things. But probably not.
 				}
-				if ($actualstore > 0) {
-					if (!$nospace)
+				if (!empty($actualstore)) {
+					if (empty($nospace))
 						echo "$itemname x $actualstore created and sent to storage.<br/>";
 					else
 						echo "$itemname x $actualstore created and sent to storage before running out of storage space.<br/>";
-				} elseif ($nospace)
+				} elseif (!empty($nospace))
 					echo "You have no room in storage for this item!<br/>";
 				if (strpos($itemrow['abstratus'], "bladekind") !== false && $userrow['down'] == 0 && $userrow['enemydata'] == "" && $userrow['aiding'] == "") { //random chance of summoning the blade cloud, gasp!
 					$bcchance = floor($itemrow['power'] / 100); //max chance of 99% for endgame weapons
@@ -668,14 +669,15 @@ if (empty($_SESSION['username'])) {
 			}
 			if (strpos($pureitemname, "(CODE:") !== false) { //this item is holding a code, like a captchalogue card or a cruxite dowel
 				$pureitemname = substr($pureitemname, 0, -16);
-				$itemname = str_replace("'", "\\\\''", substr($userrow[$invslot], 0, -16));
+				$itemname = substr($userrow[$invslot], 0, -16);
 			} else {
-				$itemname = str_replace("'", "\\\\''", $userrow[$invslot]); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
+				$itemname = $userrow[$invslot];
 			}
 			$itemname = str_replace(" (ghost image)", "", $itemname);
+			$itemname = str_replace("'", "\\\\''", $itemname); //Add escape characters so we can find item correctly in database. Also those backslashes are retarded.
 			//$captchalogue = $mysqli->query("SELECT * FROM Captchalogue WHERE `Captchalogue`.`name` = '" . $itemname . "'");
 			if (empty($captchaloguequantities[$pureitemname])) {
-				$captchalogue = $captchalogue . "`Captchalogue`.`name` = '" . $itemname . "' OR ";
+				$captchalogue .= "`Captchalogue`.`name` = '" . $itemname . "' OR ";
 				$captchaloguequantities[$pureitemname] = 1;
 				$firstinvslot[$pureitemname] = $invslot;
 			} else {
