@@ -60,6 +60,7 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 				$userrow['motifvar'] = 0;
 			}
 			break;
+			
 		case "Heart":
 			$usagestr = $usagestr . "The melody brings up reserves of power from deep within you.<br/>";
 			$aspectregen = $userrow['motifcounter'] * 600;
@@ -70,6 +71,7 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 				$newaspect = $userrow['Gel_Viscosity'];
 			$userrow['Aspect_Vial'] = $newaspect; //Juuuust in case.
 			break;
+
 		case "Life":
 			$usagestr = $usagestr . "Life infuses you, regenerating your health.<br/>";
 			$regen = $userrow['motifcounter'] * 200;
@@ -80,17 +82,21 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 				$newhealth = $userrow['Gel_Viscosity'];
 			$userrow[$healthvialstr] = $newhealth; //Juuuust in case.
 			break;
+
 		case "Hope":
 			$usagestr = $usagestr . "The aura of Hope surrounding you grows stronger.<br/>"; //Hope's effect is handled up in the death code.
 			break;
+
 		case "Light": //This enables critical hits. Handled in enemy damage code.
 			$usagestr = $usagestr . "The song makes your attacks feel luckier, somehow.";
 			break;
+
 		case "Mind":
 			$usagestr = $usagestr . "The music helps you relax and focus on the task at hand. That being delivering a righteous smackdown.<br/>";
 			$powerboost = 1000;
 			$userrow['powerboost'] += $powerboost; //Juuuust in case.
 			break;
+
 		case "Blood":
 			$usagestr = $usagestr . "Life force is drained from your enemies, flowing through you as power.<br/>";
 			$damage = 8000;
@@ -118,6 +124,7 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 			}
 			$userrow['powerboost'] += $boost; //Juuuust in case.
 			break;
+
 		case "Doom":
 			$usagestr = $usagestr . "The slow, toxic inevitability of Death afflicts your enemies.<br/>";
 			$enemies = 1;
@@ -140,6 +147,7 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 				$enemies++;
 			}
 			break;
+
 		case "Rage":
 			if ($userrow['motifcounter'] == 1) {
 				$usagestr = $usagestr . "A deep, primordial fury wells up within you.<br/>";
@@ -153,9 +161,11 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 			}
 			$userrow['offenseboost'] = $offenseboost; //Juuuust in case.
 			break;
+
 		case "Void": //Suppresses special monster abilities. Handled in the monster ability area.
 			$usagestr = $usagestr . "The power of Void suppresses enemy abilities.<br/>";
 			break;
+
 		case "Space":
 			$zillystr = "";
 			if (empty($luck))
@@ -216,13 +226,13 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 					break;
 			}
 			$usagestr = $usagestr . $itemstr . " appears out of thin air and assaults your enemies, then disappears.<br/>";
-			$enemies = 1;
-			while ($enemies <= $max_enemies) {
+			
+			for ($enemies = 1; $enemies <= $max_enemies; $enemies++) {
 				$enemystr = "enemy" . strval($enemies) . "name";
-				$enemyresult = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'");
-				$enemyrow = $enemyresult->fetch_array();
 				$healthstr = "enemy" . strval($enemies) . "health";
 				$maxhealthstr = "enemy" . strval($enemies) . "maxhealth";
+				
+				$enemyrow = $mysqli->query("SELECT * FROM Enemy_Types WHERE `Enemy_Types`.`basename` = '" . $userrow[$enemystr] . "'")->fetch_array();
 				if (!empty($enemyrow)) { //Not a grist enemy.
 					if ($enemyrow['massiveresist'] != 100 && $damage > (floor($userrow[$maxhealthstr] / 100) * $enemyrow['massiveresist'])) { //Enemy resists massive damage applied.
 						$usagestr = $usagestr . $userrow[$enemystr] . " resists the massive damage!<br/>";
@@ -235,18 +245,23 @@ if ($userrow['motifcounter'] > 0) { //Player's tier 3 fraymotif is active. The e
 						}
 					}
 				}
-				if ($damage > $userrow[$healthstr])
-					$damage = $userrow[$healthstr] - 1;
-				$userrow[$healthstr] = $userrow[$healthstr] - $damage;
-				$enemies++;
+
+				if (isset($userrow[$healthstr]))
+				{
+					if ($damage > $userrow[$healthstr])
+						$damage = $userrow[$healthstr] - 1;
+					$userrow[$healthstr] = $userrow[$healthstr] - $damage;
+				}
 			}
 			break;
+
 		case "Time": //Prevents boosts from ticking down as well, this is handled elsewhere. Prints "INFINITY TURNS" as the duration.
 			$usagestr = $usagestr . "The sonata extends and magnifies your temporary boosts.<br/>";
 			$userrow['temppowerboost'] += 50;
 			$userrow['tempoffenseboost'] += 50;
 			$userrow['tempdefenseboost'] += 50;
 			break;
+
 		default:
 			$message = $message . "Player aspect $userrow[Aspect] unrecognized. This is probably a bug.<br/>";
 			break;
