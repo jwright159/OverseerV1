@@ -130,8 +130,8 @@ if (empty($_SESSION['username'])) {
 				$healthname = "black";
 			if (empty($aspectname))
 				$aspectname = "doom";
-			echo 'drawVial("health' . $buddyrow[username] . '", "' . $healthname . '", ' . strval($healthcurrent) . ');
-			drawVial("aspect' . $buddyrow[username] . '", "' . $aspectname . '", ' . strval($aspectcurrent) . ');';
+			echo 'drawVial("health' . $buddyrow['username'] . '", "' . $healthname . '", ' . strval($healthcurrent) . ');';
+			echo 'drawVial("aspect' . $buddyrow['username'] . '", "' . $aspectname . '", ' . strval($aspectcurrent) . ');';
 		}
 		echo '}</script></head><body>';
 	}
