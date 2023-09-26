@@ -117,21 +117,13 @@ function parseDialogue($pickrow, $userrow, $land1, $land2)
 function abbreviateLand($land1, $land2)
 {
 	$landshort = "LO";
-	$boom = explode(" ", $land1);
-	$bcount = 0;
-	while ($bcount <= count($boom))
-	{
-		$landshort .= strtoupper(substr($boom[$bcount], 0, 1));
-		$bcount++;
-	}
+	foreach (explode(" ", $land1) as $word)
+		$landshort .= strtoupper(substr($word, 0, 1));
+
 	$landshort .= "A";
-	$boom = explode(" ", $land2);
-	$bcount = 0;
-	while ($bcount <= count($boom))
-	{
-		$landshort .= strtoupper(substr($boom[$bcount], 0, 1));
-		$bcount++;
-	}
+	foreach (explode(" ", $land2) as $word)
+		$landshort .= strtoupper(substr($word, 0, 1));
+
 	return $landshort;
 }
 
