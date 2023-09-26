@@ -169,7 +169,7 @@ function generateEncounter($roomarray, $row, $col, $distance, $gate, $enemies, $
 					if ($isboss == 1)
 						$boss = "Lich Queen";
 					if ($isboss == 2)
-						$boss = "true Hekatonchire";
+						$boss = "True Hekatonchire";
 					break;
 				default:
 					$boss = "The Bug";

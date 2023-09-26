@@ -86,10 +86,10 @@ switch ($userrow[$enemystr]) { //Catches specical case enemies with special inte
 		}
 		echo ".<br/>";
 		break;
-	case "true Hekatonchire":
+	case "True Hekatonchire":
 		$bossdead = true;
 		if (!empty($userrow['pesternoteUsername']))
-			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a true Hekatonchire to clear a 5-floor gate 5 dungeon!");
+			sendPost($userrow['pesternoteUsername'], $userrow['pesternotePassword'], "Just defeated a True Hekatonchire to clear a 5-floor gate 5 dungeon!");
 		echo "You have slain the true Hetakomabob! Yeah, you've decided to forget trying to pronounce these names and just snag the loot: ";
 		$buildgrist = 105000 + (rand(0, 1) * 10000) + (rand(0, 1) * 60000) + (floor(rand(0, 2) / 2) * 200000) + (rand(0, $luck) * 900);
 		echo "<img src='Images/Grist/" . gristNameToImagePath("Build_Grist") . "' height='15' width='15' alt = 'xcx'/> $buildgrist";
