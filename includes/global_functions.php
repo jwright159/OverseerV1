@@ -3,7 +3,7 @@ function logDebugMessage(string $debugmsg)
 {
 	$time = time();
 	$debugmsg = "($time) $debugmsg <br/>\n";
-	query("UPDATE System SET debuglog = CONCAT(debuglog, :msg) WHERE 1", ['msg' => $debugmsg]);
+	query("UPDATE `System` SET debuglog = CONCAT(debuglog, :msg) WHERE 1", ['msg' => $debugmsg]);
 }
 
 function logModMessage(string $debugmsg, string $id)
@@ -13,7 +13,7 @@ function logModMessage(string $debugmsg, string $id)
 		$debugmsg = "<a href='https://www.overseerreboot.xyz/submissions.php?view=$id'>(ID: $id @ $time)</a> $debugmsg <br/>\n";
 	else
 		$debugmsg = "(ID: N/A @ $time) $debugmsg <br/>\n";
-	query("UPDATE System SET modlog = CONCAT(modlog, :msg) WHERE 1", ['msg' => $debugmsg]);
+	query("UPDATE `System` SET modlog = CONCAT(modlog, :msg) WHERE 1", ['msg' => $debugmsg]);
 }
 
 /**
