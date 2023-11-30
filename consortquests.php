@@ -37,15 +37,15 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 			$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $currentrow['session_name']);
 			$basecost = $realbasecost - $rewarditemcost;
 			$basecost = ceil($basecost * (1 + ($inflation / 100)));
-			$rewardname = str_replace("\\", "", $rewarditem['name']);
+			if ($rewarditem)
+				$rewardname = str_replace("\\", "", $rewarditem['name']);
 			if ($basecost <= 0) {
 				$basecost = 0;
-				$rewardnameex = $rewardname . " x1";
-				echo "$rewardnameex!<br/>";
+				echo "$rewardname x1!<br/>";
 			} else {
 				if (!empty($rewardname))
-					$rewardnameex = $rewardname . " x1, and";
-				echo "$rewardnameex $basecost Boondollars!<br/>";
+					echo "$rewardname x1, and ";
+				echo "$basecost Boondollars!<br/>";
 			}
 		}
 	} elseif ($reward < 10) { //10% chance normally of getting an item in return, 20% if max luck
@@ -54,12 +54,16 @@ function phatLoot($userrow, $qrow, $currentrow, $realbasecost, $gaterow)
 		$rewarditemcost = totalBooncost($rewarditem, $landrow, $gristname, $currentrow['session_name']);
 		$basecost = $realbasecost - $rewarditemcost;
 		$basecost = ceil($basecost * (1 + ($inflation / 100)));
-		$rewardname = str_replace("\\", "", $rewarditem['name']);
+		if ($rewarditem)
+			$rewardname = str_replace("\\", "", $rewarditem['name']);
 		if ($basecost <= 0) {
 			$basecost = 0;
 			echo "$rewardname x1!<br/>";
-		} else
-			echo "$rewardname x1, and $basecost Boondollars!<br/>";
+		} else {
+			if (!empty($rewardname))
+				echo "$rewardname x1, and ";
+			echo "$basecost Boondollars!<br/>";
+		}
 	} else {
 		if ($realbasecost <= 0) {
 			$realbasecost = rand(1, $gaterow['gate' . strval($landgate)]);

@@ -33,6 +33,9 @@ function totalGristcost($countrow, $gristname)
 
 function totalBooncost($countrow, $landrow, $gristname, $sessionname)
 {
+	if (!$countrow)
+		return 0;
+
 	$totalcost = 0;
 	foreach ($gristname as $grist) {
 		if (!empty($countrow[$grist . "_Cost"])) {
